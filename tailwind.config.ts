@@ -8,6 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      borderRadius: {
+        sm: "4px",
+        md: "8px",
+        lg: "12px",
+        xl: "20px",
+      },
       colors: {
         primary: {
           normal: "#13C2C2",

@@ -3,10 +3,12 @@
 @tailwind utilities;
 
 :root {
+  /* Color/Primary */
   --primary-normal: #13c2c2;
   --primary-strong: #00a5a1;
   --primary-heavy: #008781;
 
+  /* Color/Label */
   --label-normal: #171719;
   --label-strong: #000000;
   --label-neutral: #5a5c63;
@@ -14,22 +16,27 @@
   --label-assistive: #aeb0b6;
   --label-disable: #e1e2e4;
 
+  /* Color/Background */
   --background-normal-normal: #ffffff;
   --background-normal-alternative: #f7f7f8;
   --background-elevated-normal: #ffffff;
   --background-elevated-alternative: #f7f7f8;
 
+  /* Color/Interaction */
   --interaction-inactive: #989ba2;
   --interaction-disable: #f4f4f5;
 
+  /* Color/Line */
   --line-normal: #70737c38;
   --line-neutral: #70737c29;
   --line-alternative: #f7f7f8;
 
+  /* Color/Status */
   --status-positive: #00bf40;
   --status-cautionary: #ff9200;
   --status-destructive: #ff4242;
 
+  /* Color/Accent */
   --accent-lime: #58cf04;
   --accent-cyan: #13c2c2;
   --accent-light_blue: #008dcf;
@@ -37,29 +44,87 @@
   --accent-skin1: #ffcca8;
   --accent-skin2: #fdbe92;
 
+  /* Color/Inverse */
   --inverse-primary: #08979c;
   --inverse-background: #1b1c1e;
   --inverse-label: #f7f7f8;
 
+  /* Color/Static */
   --static-white: #ffffff;
   --static-black: #000000;
 
+  /* Component/Fill */
   --fill-normal: #70737c14;
   --fill-strong: #70737c29;
   --fill-alternative: #70737c0d;
 
+  /* Component/Material */
   --material-dimmer: #17171985;
 
+  /* Shadow */
   --elevation-normal: 0px 1px 2px 0px #0000001f;
   --elevation-emphasize: 0px 2px 8px 0px #0000001f;
   --elevation-strong: 0px 6px 12px 0px #0000001f;
   --elevation-heavy: 0px 16px 20px 0px #0000001f;
 
+  /* Palette/Neutral */
+  --neutral-5: #0f0f0f;
+  --neutral-10: #171717;
+  --neutral-15: #1c1c1c;
+  --neutral-20: #2a2a2a;
+  --neutral-22: #303030;
+  --neutral-30: #474747;
+  --neutral-40: #5c5c5c;
+  --neutral-50: #737373;
+  --neutral-60: #8a8a8a;
+  --neutral-70: #9b9b9b;
+  --neutral-80: #b0b0b0;
+  --neutral-90: #c4c4c4;
+  --neutral-95: #dcdcdc;
+  --neutral-99: #f7f7f7;
+
+  /* Palette/Cool Neutral */
+  --cool-neutral-5: #0f0f10;
+  --cool-neutral-7: #141415;
+  --cool-neutral-10: #171719;
+  --cool-neutral-15: #1b1c1e;
+  --cool-neutral-17: #212225;
+  --cool-neutral-20: #292a2d;
+  --cool-neutral-22: #2e2f33;
+  --cool-neutral-23: #333438;
+  --cool-neutral-25: #37383c;
+  --cool-neutral-30: #46474c;
+  --cool-neutral-40: #5a5c63;
+  --cool-neutral-50: #70737c;
+  --cool-neutral-60: #878a93;
+  --cool-neutral-70: #989ba2;
+  --cool-neutral-80: #aeb0b6;
+  --cool-neutral-90: #c2c4c8;
+  --cool-neutral-95: #dbdcdf;
+  --cool-neutral-96: #e1e2e4;
+  --cool-neutral-97: #eaebec;
+  --cool-neutral-98: #f4f4f5;
+  --cool-neutral-99: #f7f7f8;
+
+  /* Palette/Primary Colour Palette */
+  --cyan-50: #dff4f5;
+  --cyan-100: #ade4e5;
+  --cyan-200: #72d4d5;
+  --cyan-300: #13c2c2;
+  --cyan-400: #00b4b2;
+  --cyan-500: #00a5a1;
+  --cyan-600: #009792;
+  --cyan-700: #008781;
+  --cyan-800: #007770;
+  --cyan-900: #005a51;
+
   @media (prefers-color-scheme: dark) {
+    /* Color/Primary */
     --primary-normal: #13c2c2;
     --primary-strong: #08979c;
     --primary-heavy: #006a60;
 
+    /* Color/Label */
     --label-normal: #f7f7f8;
     --label-strong: #ffffff;
     --label-neutral: #aeb0b6;
@@ -67,22 +132,27 @@
     --label-assistive: #37383c;
     --label-disable: #1b1c1e;
 
+    /* Color/Background */
     --background-normal-normal: #1b1c1e;
     --background-normal-alternative: #0f0f10;
     --background-elevated-normal: #212225;
     --background-elevated-alternative: #141415;
 
+    /* Color/Interaction */
     --interaction-inactive: #5a5c63;
     --interaction-disable: #2e2f33;
 
+    /* Color/Line */
     --line-normal: #70737c52;
     --line-neutral: #70737c47;
     --line-alternative: #0f0f10;
 
+    /* Color/Status */
     --status-positive: #1ed45a;
     --status-cautionary: #ffa938;
     --status-destructive: #ff6363;
 
+    /* Color/Accent */
     --accent-lime: #6be016;
     --accent-cyan: #13c2c2;
     --accent-light_blue: #008dcf;
@@ -92,19 +162,24 @@
     --accent-skin1: #ffcca8;
     --accent-skin2: #fdbe92;
 
+    /* Color/Inverse */
     --inverse-primary: #08979c;
     --inverse-background: #1b1c1e;
     --inverse-label: #f7f7f8;
 
+    /* Color/Static */
     --static-white: #ffffff;
     --static-black: #000000;
 
+    /* Component/Fill */
     --fill-normal: #70737c38;
     --fill-strong: #70737c47;
     --fill-alternative: #70737c1f;
 
+    /* Component/Material */
     --material-dimmer: #171719bd;
 
+    /* Shadow */
     --elevation-normal: 0px 1px 2px 0px #0000001f;
     --elevation-emphasize: 0px 2px 8px 0px #0000001f;
     --elevation-strong: 0px 6px 12px 0px #0000001f;

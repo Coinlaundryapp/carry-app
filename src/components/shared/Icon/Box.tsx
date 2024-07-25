@@ -1,5 +1,5 @@
 import React from "react";
-import { IconProps } from "./Icons";
+import { IconProps } from "./";
 
 const Box = ({ className, outline }: IconProps) => {
   if (outline) {

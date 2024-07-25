@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import Link from "next/link";
 import React from "react";
-import Icons from "@/components/Icon/Icons";
+import Icons from "@/components/shared/Icon";
 
 type NavigationBarType = {
   title: string;

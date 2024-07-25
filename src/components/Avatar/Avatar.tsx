@@ -1,7 +1,5 @@
 import Image from "next/image";
-import React, { PropsWithChildren } from "react";
-
-const Item = () => {};
+import React from "react";
 
 type Props = {
   amount?: number;
@@ -20,7 +18,7 @@ const Group = ({ avatarList, sort = "desc" }: Props) => {
             zIndex: sort === "desc" ? list.length - index : index + 1,
             marginLeft: index === 0 ? 0 : -8,
           }}
-          className={`relative rounded-full overflow-hidden bg-gray-500 border-[1px]`}
+          className={`relative rounded-full overflow-hidden border-[1px]`}
         >
           <Image
             src={avatar}
@@ -36,6 +34,5 @@ const Group = ({ avatarList, sort = "desc" }: Props) => {
 };
 
 export const Avatar = {
-  Item,
   Group,
 };

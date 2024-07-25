@@ -31,7 +31,7 @@ export default function TopNavigation({
       </button>
 
       <p className="font-headline-1 text-label-strong">{title}</p>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center w-9 h-9">
         {rightClick && (
           <button onClick={rightClick} className="p-1.5">
             <GeneralSearchIcon />

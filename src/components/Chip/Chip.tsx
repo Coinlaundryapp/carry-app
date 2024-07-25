@@ -1,19 +1,26 @@
-import React, { PropsWithChildren } from "react";
+import React, { forwardRef, PropsWithChildren } from "react";
 
 type Props = PropsWithChildren<{
   isActive: boolean;
   onClick: VoidFunction;
 }>;
 
-const Chip = ({ isActive, children, onClick }: Props) => {
-  return (
-    <button
-      className={`rounded-xl border-[1px] ${isActive ? "border-primary-normal" : "border-label-disable"} ${isActive ? "bg-primary-normal" : "bg-static-white"} font-caption-1 ${isActive ? "text-static-white" : "text-label-neutral"} px-[10px] py-[6px]`}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
+const Chip = forwardRef<HTMLButtonElement, Props>(
+  ({ isActive, children, onClick }, ref) => {
+    return (
+      <button
+        className={`rounded-xl border-[1px] ${isActive ? "border-primary-normal" : "border-label-disable"} ${isActive ? "bg-primary-normal" : "bg-static-white"} font-caption-1 ${isActive ? "text-static-white" : "text-label-neutral"} px-[10px] py-[6px]`}
+        onClick={onClick}
+        ref={ref}
+      >
+        {children}
+      </button>
+    );
+  }
+);
 
 export default Chip;
+
+// ERROR: Component definition is missing display nameeslintreact/display-name
+// eslint error 해결
+Chip.displayName = "Chip";

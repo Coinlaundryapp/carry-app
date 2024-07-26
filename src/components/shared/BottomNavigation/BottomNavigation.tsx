@@ -1,23 +1,27 @@
-import { headers } from "next/headers";
+"use client";
+
+import Box from "@/assets/icons/box";
+import Cloth from "@/assets/icons/cloth";
+import Home from "@/assets/icons/home";
+import My from "@/assets/icons/my";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
-import Icons from "@/components/shared/Icon";
 
 type NavigationBarType = {
   title: string;
   path: string;
-  icon: keyof typeof Icons;
+  icon: React.FC<{ outline: boolean }>;
 };
 
 const BottomNavigation = () => {
-  const headerList = headers();
-  const pathname = headerList.get("x-current-path");
+  const pathname = usePathname();
 
   const navigationBarList: NavigationBarType[] = [
-    { title: "홈", path: "/", icon: "Home" },
-    { title: "팀, 알뜰 세탁", path: "/team", icon: "Cloth" },
-    { title: "내 세탁 현황", path: "/status", icon: "Box" },
-    { title: "마이페이지", path: "/my", icon: "My" },
+    { title: "홈", path: "/", icon: Home },
+    { title: "팀, 알뜰 세탁", path: "/team", icon: Box },
+    { title: "내 세탁 현황", path: "/status", icon: Cloth },
+    { title: "마이페이지", path: "/my", icon: My },
   ];
 
   return (
@@ -29,7 +33,6 @@ const BottomNavigation = () => {
     >
       <ul className="flex gap-[14px] justify-between">
         {navigationBarList.map((item) => {
-          const Icon = Icons[item.icon];
           const isCurrentPage = pathname === item.path;
 
           return (
@@ -39,7 +42,7 @@ const BottomNavigation = () => {
             >
               <Link href={item.path}>
                 <figure className="flex flex-col items-center gap-[4px] w-[75px] font-caption-1 font-semibold">
-                  <Icon className="" outline={!isCurrentPage} />
+                  <item.icon outline={!isCurrentPage} />
                   <figcaption>{item.title}</figcaption>
                 </figure>
               </Link>

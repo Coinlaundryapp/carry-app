@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import Button from './Button';
-import { fn } from '@storybook/test';
 
 const meta: Meta<typeof Button> = {
   title: 'Button',
@@ -16,30 +15,6 @@ const meta: Meta<typeof Button> = {
     },
     text: { control: 'text' },
   },
-
-  // title: 'Button',
-  // component: Button,
-  // parameters: {
-  //   layout: 'centered',
-  // },
-  // tags: ['autodocs'],
-  // argTypes: {
-  //   backgroundColor: { control: 'color' },
-
-  //   borderColor: { control: 'color' },
-  //   color: { control: 'color' },
-  //   size: {
-  //     control: 'radio',
-  //     options: ['small', 'medium', 'large'],
-  //   },
-  //   text: {
-  //     control: 'text',
-  //   },
-  // },
-  // args: {
-  //   onClick: fn(),
-  //   type: 'button',
-  // },
 };
 
 export default meta;

@@ -5,7 +5,7 @@ type TProps = {
   text: string;
   borderStyle?: string;
   backgroundColor?: string;
-  color: string;
+  color?: string;
   borderColor?: string;
   size?: 'small' | 'medium' | 'large';
   onClick: () => void;
@@ -15,10 +15,10 @@ function Button({
   text,
   onClick,
   type = 'button',
-  backgroundColor = 'bg-white',
+  backgroundColor = 'bg-primary-normal',
   borderStyle = 'border-solid',
-  borderColor = 'border-gray-300',
-  color = 'text-black',
+  borderColor = 'border-primary-normal',
+  color = 'text-white',
   size = 'medium',
   ...rest
 }: TProps) {

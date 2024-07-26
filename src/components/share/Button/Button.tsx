@@ -32,8 +32,12 @@ const Button: React.FC<TProps> = ({
     <button
       type={type}
       onClick={onClick}
-      style={{ color }}
-      className={`font_body_1_normal rounded-md h-[52px]  ${sizeClass[size]} ${backgroundColor}`}
+      style={{
+        borderColor,
+        color,
+      }}
+      className={`border font_body_1_normal rounded-md h-[52px] ${sizeClass[size]} ${backgroundColor} ${borderColor} ${color}`}
+      // className={`font_body_1_normal rounded-md h-[52px]  ${sizeClass[size]} ${backgroundColor}`}
       {...rest}
     >
       {text}

@@ -1,9 +1,6 @@
 import { cn } from "@/utils/cn";
 
-interface SearchIconProps {
-  className?: string;
-}
-export default function SearchIcon({ className }: SearchIconProps) {
+export default function SearchIcon(props: React.ComponentProps<"svg">) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -11,7 +8,8 @@ export default function SearchIcon({ className }: SearchIconProps) {
       height="1em"
       viewBox="0 0 24 24"
       fill="none"
-      className={cn("w-6 h-6", { className })}
+      {...props}
+      className={cn("w-6 h-6", props.className)}
     >
       <path
         d="M20 20L14 14"

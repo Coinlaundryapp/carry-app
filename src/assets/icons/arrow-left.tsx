@@ -1,10 +1,6 @@
 import { cn } from "@/utils/cn";
 
-interface ArrowLeftIconProps {
-  className?: string;
-}
-
-export default function ArrowLeftIcon({ className }: ArrowLeftIconProps) {
+export default function ArrowLeftIcon(props: React.ComponentProps<"svg">) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +8,8 @@ export default function ArrowLeftIcon({ className }: ArrowLeftIconProps) {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      className={cn("w-6 h-6 text-[#292929]", className)}
+      {...props}
+      className={cn("w-6 h-6 text-[#292929]", props.className)}
     >
       <path
         d="M5 12H19"

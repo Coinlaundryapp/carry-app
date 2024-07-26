@@ -1,9 +1,9 @@
 import React from 'react';
 
 type TProps = {
-  type: 'button' | 'submit' | 'reset';
+  type?: 'button' | 'submit' | 'reset';
   text: string;
-  borderStyle: string;
+  borderStyle?: string;
   backgroundColor?: string;
   color: string;
   borderColor?: string;
@@ -11,38 +11,33 @@ type TProps = {
   onClick: () => void;
 };
 
-const Button: React.FC<TProps> = ({
+function Button({
   text,
   onClick,
   type = 'button',
   backgroundColor = 'bg-white',
-  borderStyle,
-  borderColor,
-  color,
+  borderStyle = 'border-solid',
+  borderColor = 'border-gray-300',
+  color = 'text-black',
   size = 'medium',
   ...rest
-}) => {
+}: TProps) {
   const sizeClass = {
-    small: 'w-[140px]  py-1 px-2 ',
-    medium: 'w-[310px]  py-2 px-4 ',
-    large: 'w-[342px] py-3 px-6 ',
+    small: 'w-[140px] py-1 px-2',
+    medium: 'w-[310px] py-2 px-4',
+    large: 'w-[342px] py-3 px-6',
   };
 
   return (
     <button
       type={type}
       onClick={onClick}
-      style={{
-        borderColor,
-        color,
-      }}
-      className={`border font_body_1_normal rounded-md h-[52px] ${sizeClass[size]} ${backgroundColor} ${borderColor} ${color}`}
-      // className={`font_body_1_normal rounded-md h-[52px]  ${sizeClass[size]} ${backgroundColor}`}
+      className={`border ${borderStyle} ${backgroundColor} ${borderColor} ${color} font_body_1_normal rounded-md h-[52px] ${sizeClass[size]}`}
       {...rest}
     >
       {text}
     </button>
   );
-};
+}
 
 export default Button;

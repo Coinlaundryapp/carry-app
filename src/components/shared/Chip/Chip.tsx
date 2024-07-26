@@ -1,19 +1,39 @@
 import React, { forwardRef, PropsWithChildren } from "react";
+import { cva } from "class-variance-authority";
+import { cn } from "@/utils/cn";
 
-type Props = PropsWithChildren<{
+type Props = {
   isActive: boolean;
   onClick: VoidFunction;
-}>;
+  text: string;
+};
+
+const ChipVariants = cva(
+  `rounded-xl border-[1px] font-caption-1 px-[10px] py-[6px] whitespace-pre`,
+  {
+    variants: {
+      variant: {
+        active: "border-primary-normal bg-primary-normal text-static-white",
+        inactive: "border-label-disable bg-static-white text-label-neutral",
+      },
+    },
+    defaultVariants: {
+      variant: "inactive",
+    },
+  }
+);
 
 const Chip = forwardRef<HTMLButtonElement, Props>(
-  ({ isActive, children, onClick }, ref) => {
+  ({ isActive, text, onClick }, ref) => {
     return (
       <button
-        className={`rounded-xl border-[1px] ${isActive ? "border-primary-normal" : "border-label-disable"} ${isActive ? "bg-primary-normal" : "bg-static-white"} font-caption-1 ${isActive ? "text-static-white" : "text-label-neutral"} px-[10px] py-[6px]`}
+        className={cn(
+          ChipVariants({ variant: isActive ? "active" : "inactive" })
+        )}
         onClick={onClick}
         ref={ref}
       >
-        {children}
+        {text || " "}
       </button>
     );
   }

@@ -18,16 +18,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Active: Story = {
+export const Default: Story = {
   args: {
     isActive: true,
-    children: "Chip",
-  },
-};
-
-export const InActive: Story = {
-  args: {
-    isActive: false,
-    children: "Chip",
+    text: "Chip",
   },
 };

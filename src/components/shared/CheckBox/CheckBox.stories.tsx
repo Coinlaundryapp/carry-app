@@ -21,14 +21,14 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Active: Story = {
+export const CheckBoxWithLabel: Story = {
   args: {
     checked: true,
     label: "텍스트",
   },
 };
 
-export const InActive: Story = {
+export const Default: Story = {
   args: {
     checked: false,
   },

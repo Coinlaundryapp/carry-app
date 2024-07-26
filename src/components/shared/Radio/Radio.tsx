@@ -1,3 +1,5 @@
+import { cn } from "@/utils/cn";
+import { cva } from "class-variance-authority";
 import React, { createContext, PropsWithChildren, useContext } from "react";
 
 type Props = {
@@ -6,27 +8,7 @@ type Props = {
   size?: "small" | "big";
 };
 
-type ContextType = Props;
-
-const RadioContext = createContext<ContextType | null>(null);
-
-const Button = ({ value }: Pick<Props, "value">) => {
-  const context = useContext(RadioContext);
-  const checked = context?.value === value;
-  const size =
-    context?.size === "small"
-      ? "w-[16px] h-[16px] checked:border-[4.5px]"
-      : "w-[20px] h-[20px] checked:border-[6px]";
-
-  return (
-    <input
-      type="radio"
-      checked={checked}
-      onChange={(e) => context?.onChange(e.target.value)}
-      className={`${size} rounded-full appearance-none border-[1.5px] bg-static-white checked:bg-cyan-50 border-label-assistive checked:border-primary-normal`}
-    />
-  );
-};
+const RadioContext = createContext<Props | null>(null);
 
 const Group = ({
   children,
@@ -38,6 +20,44 @@ const Group = ({
     <RadioContext.Provider value={{ value, onChange, size }}>
       {children}
     </RadioContext.Provider>
+  );
+};
+
+const RadioButtonVariants = cva(
+  `rounded-full appearance-none border-[1.5px] cursor-pointer`,
+  {
+    variants: {
+      variant: {
+        active: "bg-cyan-50 border-primary-normal",
+        inactive: "bg-static-white border-label-assistive",
+      },
+      size: {
+        small: "w-[16px] h-[16px] checked:border-[4.5px]",
+        big: "w-[20px] h-[20px] checked:border-[6px]",
+      },
+    },
+    defaultVariants: {
+      variant: "inactive",
+    },
+  }
+);
+
+const Button = ({ value }: Pick<Props, "value">) => {
+  const context = useContext(RadioContext);
+  const checked = context?.value === value;
+
+  return (
+    <input
+      type="radio"
+      checked={checked}
+      onChange={() => context?.onChange(value)}
+      className={cn(
+        RadioButtonVariants({
+          variant: checked ? "active" : "inactive",
+          size: context?.size,
+        })
+      )}
+    />
   );
 };
 

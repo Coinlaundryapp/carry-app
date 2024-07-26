@@ -1,7 +1,11 @@
 import React from "react";
-import { IconProps } from "./";
 
-const Box = ({ className, outline }: IconProps) => {
+type Props = {
+  className?: string;
+  outline?: boolean;
+};
+
+export const Box = ({ className, outline }: Props) => {
   if (outline) {
     return (
       <svg
@@ -33,6 +37,7 @@ const Box = ({ className, outline }: IconProps) => {
       </svg>
     );
   }
+
   return (
     <svg
       width="24"

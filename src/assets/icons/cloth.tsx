@@ -1,7 +1,11 @@
 import React from "react";
-import { IconProps } from "./";
 
-const Cloth = ({ className, outline }: IconProps) => {
+type Props = {
+  className?: string;
+  outline?: boolean;
+};
+
+const Cloth = ({ className, outline }: Props) => {
   if (outline) {
     return (
       <svg

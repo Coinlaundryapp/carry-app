@@ -4,7 +4,7 @@ import { Meta } from '@storybook/react';
 import BasicModal, { TBasicModalProps } from './BasicModal';
 
 const meta: Meta<typeof BasicModal> = {
-  title: 'Components/BasicModal',
+  title: 'BasicModal',
   component: BasicModal,
   argTypes: {
     isOpen: { control: 'boolean' },

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
-import { Input, InputProps } from '@/components/share/input/input';
+import { Input, InputProps } from './Input';
 import SearchIcon from '@/assets/icons/search';
 import CheckIcon from '@/assets/icons/check';
 import CancelIcon from '@/assets/icons/cancel';

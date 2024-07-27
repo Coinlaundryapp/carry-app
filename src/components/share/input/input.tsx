@@ -1,5 +1,5 @@
 import { cva } from 'class-variance-authority';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import CancelIcon from '@/assets/icons/cancel';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {

@@ -1,7 +1,7 @@
 import ArrowLeftIcon from '@/assets/icons/arrow-left';
 import CloseIcon from '@/assets/icons/close';
 import GeneralSearchIcon from '@/assets/icons/general-search';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 
 interface TopNavigationProps {
   type: 'back' | 'close';

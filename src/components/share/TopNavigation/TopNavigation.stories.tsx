@@ -1,4 +1,4 @@
-import TopNavigation from '@/components/share/top-navigation/top-navigation';
+import TopNavigation from './TopNavigation';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

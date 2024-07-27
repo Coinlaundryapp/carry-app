@@ -1,16 +1,16 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { Button } from "./example";
+import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
+import { Button } from './example';
 
 const meta = {
-  title: "Example",
+  title: 'Example',
   component: Button,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
-    backgroundColor: { control: "color" },
+    backgroundColor: { control: 'color' },
   },
   args: { onClick: fn() },
 } satisfies Meta<typeof Button>;
@@ -21,26 +21,26 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     primary: true,
-    label: "Button",
+    label: 'Button',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    label: "Button",
+    label: 'Button',
   },
 };
 
 export const Large: Story = {
   args: {
-    size: "large",
-    label: "Button",
+    size: 'large',
+    label: 'Button',
   },
 };
 
 export const Small: Story = {
   args: {
-    size: "small",
-    label: "Button",
+    size: 'small',
+    label: 'Button',
   },
 };

@@ -1,0 +1,32 @@
+import { cn } from '@/lib/utils';
+import { CloseIcon, ArrowLeftIcon, SearchTopIcon } from '@/components/share/Icons';
+
+interface TopNavigationProps {
+  type: 'back' | 'close';
+  title?: string;
+  leftClick: () => void;
+  rightClick?: () => void;
+}
+export default function TopNavigation({ type, title, leftClick, rightClick }: TopNavigationProps) {
+  return (
+    <nav className="flex h-[52px] w-full items-center justify-between px-3">
+      <button
+        onClick={leftClick}
+        className={cn('p-1.5', {
+          'p-2': type === 'close',
+        })}
+      >
+        {type === 'close' ? <CloseIcon className="h-5 w-5" /> : <ArrowLeftIcon />}
+      </button>
+
+      <p className="text-label-strong font-headline-1">{title}</p>
+      <div className="flex h-9 w-9 items-center justify-center">
+        {rightClick && (
+          <button onClick={rightClick} className="p-1.5">
+            <SearchTopIcon />
+          </button>
+        )}
+      </div>
+    </nav>
+  );
+}

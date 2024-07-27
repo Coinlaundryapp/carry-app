@@ -1,12 +1,12 @@
-import TopNavigation from "@/components/share/top-navigation/top-navigation";
-import type { Meta, StoryObj } from "@storybook/react";
+import TopNavigation from '@/components/share/top-navigation/top-navigation';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
-  title: "Components/TopNavigation",
+  title: 'Components/TopNavigation',
   component: TopNavigation,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
   argTypes: {},
   args: {
@@ -14,7 +14,7 @@ const meta = {
   },
   decorators: [
     (Story: React.ComponentType) => (
-      <div className="w-96 mx-auto border h-[200px]">
+      <div className="mx-auto h-[200px] w-96 border">
         <Story />
       </div>
     ),
@@ -27,33 +27,33 @@ type Story = StoryObj<typeof meta>;
 
 export const Back: Story = {
   args: {
-    type: "back",
-    title: "Title",
+    type: 'back',
+    title: 'Title',
   },
 };
 
 export const Close: Story = {
   args: {
-    type: "close",
-    title: "Title",
+    type: 'close',
+    title: 'Title',
   },
 };
 export const WithoutTitle: Story = {
   args: {
-    type: "back",
+    type: 'back',
     leftClick: () => {},
   },
 };
 export const BackWithoutTitle: Story = {
   args: {
-    type: "back",
+    type: 'back',
   },
 };
 
 export const BackWithSearch: Story = {
   args: {
-    type: "back",
-    title: "Title",
+    type: 'back',
+    title: 'Title',
     rightClick: () => {},
   },
 };

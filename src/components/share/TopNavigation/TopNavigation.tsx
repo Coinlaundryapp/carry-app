@@ -1,7 +1,5 @@
-import ArrowLeftIcon from '@/assets/icons/arrow-left';
-import CloseIcon from '@/assets/icons/close';
-import GeneralSearchIcon from '@/assets/icons/general-search';
 import { cn } from '@/lib/utils';
+import { CloseIcon, ArrowLeftIcon, SearchTopIcon } from '@/components/share/Icons';
 
 interface TopNavigationProps {
   type: 'back' | 'close';
@@ -25,7 +23,7 @@ export default function TopNavigation({ type, title, leftClick, rightClick }: To
       <div className="flex h-9 w-9 items-center justify-center">
         {rightClick && (
           <button onClick={rightClick} className="p-1.5">
-            <GeneralSearchIcon />
+            <SearchTopIcon />
           </button>
         )}
       </div>

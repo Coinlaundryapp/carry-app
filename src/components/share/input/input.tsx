@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import CancelIcon from '@/assets/icons/cancel';
+import { CircleCloseIcon } from '@/components/share/Icons';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type: 'text' | 'number';
@@ -93,7 +93,7 @@ export function Input({
         {status === 'error' && errorIcon && <div>{errorIcon}</div>}
         {canValueClear && (
           <button type="button" onClick={onClear}>
-            <CancelIcon />
+            <CircleCloseIcon />
           </button>
         )}
       </div>

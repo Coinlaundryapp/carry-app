@@ -2,9 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import { Input, InputProps } from './Input';
-import SearchIcon from '@/assets/icons/search';
-import CheckIcon from '@/assets/icons/check';
-import CancelIcon from '@/assets/icons/cancel';
+import { CircleCheckIcon, CircleCloseIcon, SearchIcon } from '@/components/share/Icons';
 
 const meta = {
   title: 'components/Input',
@@ -48,7 +46,7 @@ export const Success: Story = {
     value: 'lorem@ipsum.com',
     status: 'success',
     statusMessage: 'Success message',
-    successIcon: <CheckIcon />,
+    successIcon: <CircleCheckIcon />,
   },
   render,
 };
@@ -58,7 +56,7 @@ export const Error: Story = {
     value: 'lorem@ipsum.com',
     status: 'error',
     statusMessage: 'Error message',
-    errorIcon: <CancelIcon className="text-status-destructive" />,
+    errorIcon: <CircleCloseIcon className="text-status-destructive" />,
   },
   render,
 };

@@ -1,27 +1,50 @@
 'use client';
 
-import Box from '@/assets/icons/box';
-import Cloth from '@/assets/icons/cloth';
-import Home from '@/assets/icons/home';
-import My from '@/assets/icons/my';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
+import BoxOffIcon from '@/../public/assets/icons/box-off.svg';
+import BoxOnIcon from '@/../public/assets/icons/box-on.svg';
+import ClothOffIcon from '@/../public/assets/icons/cloth-off.svg';
+import ClothOnIcon from '@/../public/assets/icons/cloth-on.svg';
+import HomeOffIcon from '@/../public/assets/icons/home-off.svg';
+import HomeOnIcon from '@/../public/assets/icons/home-on.svg';
+import MyOnIcon from '@/../public/assets/icons/my-on.svg';
+import MyOffIcon from '@/../public/assets/icons/my-off.svg';
+
+const Icon = {
+  Home: {
+    active: <HomeOnIcon />,
+    inactive: <HomeOffIcon />,
+  },
+  Cloth: {
+    active: <ClothOnIcon />,
+    inactive: <ClothOffIcon />,
+  },
+  Box: {
+    active: <BoxOnIcon />,
+    inactive: <BoxOffIcon />,
+  },
+  My: {
+    active: <MyOnIcon />,
+    inactive: <MyOffIcon />,
+  },
+};
 
 type NavigationBarType = {
   title: string;
   path: string;
-  icon: React.FC<{ outline: boolean }>;
+  icon: keyof typeof Icon;
 };
 
 export function BottomNavigation() {
   const pathname = usePathname();
 
   const navigationBarList: NavigationBarType[] = [
-    { title: '홈', path: '/', icon: Home },
-    { title: '팀, 알뜰 세탁', path: '/team', icon: Box },
-    { title: '내 세탁 현황', path: '/status', icon: Cloth },
-    { title: '마이페이지', path: '/my', icon: My },
+    { title: '홈', path: '/', icon: 'Home' },
+    { title: '팀, 알뜰 세탁', path: '/team', icon: 'Cloth' },
+    { title: '내 세탁 현황', path: '/status', icon: 'Box' },
+    { title: '마이페이지', path: '/my', icon: 'My' },
   ];
 
   return (
@@ -42,7 +65,7 @@ export function BottomNavigation() {
             >
               <Link href={item.path}>
                 <figure className="flex w-[75px] flex-col items-center gap-[4px] font-semibold font-caption-1">
-                  <item.icon outline={!isCurrentPage} />
+                  {isCurrentPage ? Icon[item.icon].active : Icon[item.icon].inactive}
                   <figcaption>{item.title}</figcaption>
                 </figure>
               </Link>

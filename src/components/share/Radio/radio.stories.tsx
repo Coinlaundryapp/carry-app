@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Radio } from "./Radio";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Radio } from './radio';
+import { fn } from '@storybook/test';
 
 const meta = {
-  title: "Components/RadioGroup",
+  title: 'Components/RadioGroup',
   component: ({ value, size }) => (
     <Radio.Group value={value} size={size} onChange={() => {}}>
       <Radio.Button value="1" />
@@ -11,20 +11,20 @@ const meta = {
     </Radio.Group>
   ),
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
   argTypes: {
     size: {
       control: {
-        type: "radio",
+        type: 'radio',
       },
-      options: ["small", "big"],
+      options: ['small', 'big'],
     },
     value: {
       control: {
-        type: "radio",
+        type: 'radio',
       },
-      options: ["1", "2"],
+      options: ['1', '2'],
     },
   },
   args: {
@@ -39,7 +39,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    value: "1",
-    size: "small",
+    value: '1',
+    size: 'small',
   },
 };

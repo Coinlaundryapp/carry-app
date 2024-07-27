@@ -1,16 +1,16 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import Chip from "./Chip";
+import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
+import Chip from './chip';
 
 const meta = {
-  title: "Components/Chip",
+  title: 'Components/Chip',
   component: Chip,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
-    isActive: { control: "boolean" },
+    isActive: { control: 'boolean' },
   },
   args: { onClick: fn() },
 } satisfies Meta<typeof Chip>;
@@ -21,6 +21,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     isActive: true,
-    text: "Chip",
+    text: 'Chip',
   },
 };

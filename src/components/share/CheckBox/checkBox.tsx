@@ -1,6 +1,6 @@
-import React, { useId } from "react";
-import { cva } from "class-variance-authority";
-import { cn } from "@/utils/cn";
+import React, { useId } from 'react';
+import { cva } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 
 type Props = {
   checked: boolean;
@@ -15,39 +15,32 @@ const CheckBoxVariants = cva(
       variant: {
         active:
           "bg-no-repeat bg-center checked:bg-[url('/image/check.svg')] border-primary-normal bg-primary-normal",
-        inactive: "border-label-assistive bg-static-white",
+        inactive: 'border-label-assistive bg-static-white',
       },
     },
     defaultVariants: {
-      variant: "inactive",
+      variant: 'inactive',
     },
-  }
+  },
 );
 
-const CheckBox = ({ checked, onClick, label }: Props) => {
+export function CheckBox({ checked, onClick, label }: Props) {
   const id = useId();
 
   return (
-    <div className="flex gap-[8px] items-center">
+    <div className="flex items-center gap-[8px]">
       <input
         onClick={onClick}
         id={id}
         type="checkbox"
         checked={checked}
-        className={cn(
-          CheckBoxVariants({ variant: checked ? "active" : "inactive" })
-        )}
+        className={cn(CheckBoxVariants({ variant: checked ? 'active' : 'inactive' }))}
       />
       {label && (
-        <label
-          htmlFor={id}
-          className="cursor-pointer font-body-2-normal text-label-normal"
-        >
+        <label htmlFor={id} className="cursor-pointer text-label-normal font-body-2-normal">
           {label}
         </label>
       )}
     </div>
   );
-};
-
-export default CheckBox;
+}

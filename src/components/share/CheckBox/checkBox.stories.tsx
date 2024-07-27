@@ -1,16 +1,16 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import CheckBox from "./CheckBox";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from '@storybook/react';
+import { CheckBox } from './checkBox';
+import { fn } from '@storybook/test';
 
 const meta = {
-  title: "Components/CheckBox",
+  title: 'Components/CheckBox',
   component: CheckBox,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
-    checked: { control: "boolean" },
+    checked: { control: 'boolean' },
   },
   args: {
     onClick: fn(),
@@ -24,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const CheckBoxWithLabel: Story = {
   args: {
     checked: true,
-    label: "텍스트",
+    label: '텍스트',
   },
 };
 

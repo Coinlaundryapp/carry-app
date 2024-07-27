@@ -1,13 +1,13 @@
-import Image from "next/image";
-import React from "react";
+import Image from 'next/image';
+import React from 'react';
 
 type Props = {
   amount?: number;
   avatarList: string[];
-  sort?: "asc" | "desc";
+  sort?: 'asc' | 'desc';
 };
 
-const Group = ({ avatarList, sort = "desc" }: Props) => {
+const Group = ({ avatarList, sort = 'desc' }: Props) => {
   return (
     <ul className="relative flex">
       {avatarList.map((avatar, index, list) => (
@@ -15,10 +15,10 @@ const Group = ({ avatarList, sort = "desc" }: Props) => {
           key={index}
           // TODO: tailwind z-index 안 먹음..
           style={{
-            zIndex: sort === "desc" ? list.length - index : index + 1,
+            zIndex: sort === 'desc' ? list.length - index : index + 1,
             marginLeft: index === 0 ? 0 : -8,
           }}
-          className={`relative rounded-full overflow-hidden border-[1px]`}
+          className={`relative overflow-hidden rounded-full border-[1px]`}
         >
           <Image
             src={avatar}

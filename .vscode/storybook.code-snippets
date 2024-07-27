@@ -1,0 +1,26 @@
+{
+  "Storybook Template": {
+    "prefix": "sb",
+    "body": [
+      "import type { Meta, StoryObj } from '@storybook/react';",
+      "import ${1} from './${1}';",
+      " ",
+      "const meta = {",
+      "  title: 'Components/${1}',",
+      "  component: ${1},",
+      "  parameters: {",
+      "layout: 'centered'",
+      "},",
+      "argTypes: {},",
+      "args: {},",
+      "} satisfies Meta<typeof ${1}>;",
+      " ",
+      "export default meta;",
+      " ",
+      "type Story = StoryObj<typeof meta>;",
+      " ",
+      "export const Template: Story = {};",
+    ],
+    "description": "create storybook template",
+  },
+}

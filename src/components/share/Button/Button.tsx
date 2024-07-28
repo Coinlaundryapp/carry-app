@@ -1,20 +1,20 @@
 import React from 'react';
 
 type TProps = {
-  type?: 'button' | 'submit' | 'reset';
   text: string;
   borderStyle?: string;
   backgroundColor?: string;
   color?: string;
   borderColor?: string;
   size?: 'small' | 'medium' | 'large';
+  state: 'fillPrimary' | 'fillSecondary';
   onClick: () => void;
 };
 
 function Button({
   text,
   onClick,
-  type = 'button',
+  state,
   backgroundColor = 'bg-primary-normal',
   borderStyle = 'border-solid',
   borderColor = 'border-primary-normal',
@@ -28,11 +28,15 @@ function Button({
     large: 'w-[342px] py-3 px-6',
   };
 
+  const stateClass = {
+    fillPrimary: ' bg-primary-normal border-primary-normal text-white',
+    fillSecondary: ' bg-label-neutral border-primary-normal text-white',
+  };
+
   return (
     <button
-      type={type}
       onClick={onClick}
-      className={`border ${borderStyle} ${backgroundColor} ${borderColor} ${color} font_body_1_normal rounded-md h-[52px] ${sizeClass[size]}`}
+      className={`border ${borderStyle} ${backgroundColor} ${borderColor} ${color} font_body_1_normal rounded-md h-[52px] ${sizeClass[size]} ${stateClass[state]}`}
       {...rest}
     >
       {text}

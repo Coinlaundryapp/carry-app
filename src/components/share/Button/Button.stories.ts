@@ -23,9 +23,7 @@ type Story = StoryObj<typeof meta>;
 export const LargePrimary: Story = {
   args: {
     text: 'Large Button',
-    backgroundColor: 'bg-primary-normal ',
-    borderColor: 'bg-primary-normal',
-    color: '#FFFFFF',
+    state: 'fillPrimary',
     size: 'large',
   },
 };

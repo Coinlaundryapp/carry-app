@@ -27,7 +27,7 @@ export const LargePrimary: Story = {
   args: {
     text: 'Large Primary',
     state: 'primary',
-    size: "large",
+    size: 'large',
   },
 };
 
@@ -64,80 +64,80 @@ export const Default: Story = {
 
 export const MedumPrimary: Story = {
   args: {
-    text: "Medium Primary",
-    state: "primary",
-    size: "medium"
-  }
+    text: 'Medium Primary',
+    state: 'primary',
+    size: 'medium',
+  },
 };
 
 export const MediumSecondary: Story = {
   args: {
-    text: "Medium Secondary",
-    state: "secondary",
-    size: "medium"
-  }
+    text: 'Medium Secondary',
+    state: 'secondary',
+    size: 'medium',
+  },
 };
 
 export const MediumFillPrimary: Story = {
   args: {
-    text: "MediumFillPrimary",
-    state: "fillPrimary",
-    size: "medium"
-  }
+    text: 'MediumFillPrimary',
+    state: 'fillPrimary',
+    size: 'medium',
+  },
 };
 
 export const MediumFillSecondary: Story = {
   args: {
-    text: "Medium Fill Secondary",
-    state: "fillSecondary",
-    size: "medium"
-  }
+    text: 'Medium Fill Secondary',
+    state: 'fillSecondary',
+    size: 'medium',
+  },
 };
 
 export const MediumDefaultSecondary: Story = {
   args: {
-    text: "Medium Default Secondary",
-    state: "default",
-    size: "medium"
-  }
+    text: 'Medium Default Secondary',
+    state: 'default',
+    size: 'medium',
+  },
 };
 
 export const SmallDefault: Story = {
   args: {
-    text: "Small Default",
-    state: "default",
-    size: "small"
-  }
+    text: 'Small Default',
+    state: 'default',
+    size: 'small',
+  },
 };
 
 export const SmallFillSecondary: Story = {
   args: {
-    text: "SmallFSecondary",
-    state: "fillSecondary",
-    size: "small"
-  }
+    text: 'SmallFSecondary',
+    state: 'fillSecondary',
+    size: 'small',
+  },
 };
 
 export const SmallFillPrimary: Story = {
   args: {
-    text: "FillPrimary",
-    state: "fillPrimary",
-    size: "small"
-  }
+    text: 'FillPrimary',
+    state: 'fillPrimary',
+    size: 'small',
+  },
 };
 
 export const SmallSecondary: Story = {
   args: {
-    text: "Secondary",
-    state: "secondary",
-    size: "small"
-  }
+    text: 'Secondary',
+    state: 'secondary',
+    size: 'small',
+  },
 };
 
 export const SmallPrimary: Story = {
   args: {
-    text: "Primary",
-    state: "primary",
-    size: "small"
-  }
+    text: 'Primary',
+    state: 'primary',
+    size: 'small',
+  },
 };

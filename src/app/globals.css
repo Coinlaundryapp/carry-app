@@ -1,6 +1,6 @@
 @tailwind base;
-@tailwind components;
 @tailwind utilities;
+@tailwind components;
 
 @layer base {
   :root {
@@ -158,6 +158,8 @@
     --cyan-700: #008781;
     --cyan-800: #007770;
     --cyan-900: #005a51;
+
+    --base-blue-6: #1677ff;
   }
 
   .dark {

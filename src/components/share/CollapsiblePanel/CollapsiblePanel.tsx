@@ -3,13 +3,19 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '..
 type TProps = {
   title: string;
   value: string;
+  additionalContent?: React.ReactNode;
   children: React.ReactNode;
 };
-function CollapsiblePanel({ value, title, children }: TProps) {
+function CollapsiblePanel({ value, title, children, additionalContent }: TProps) {
   return (
-    <Accordion type="single" collapsible>
+    <Accordion type="single" collapsible className="h-[26px]">
       <AccordionItem value={value}>
-        <AccordionTrigger>{title}</AccordionTrigger>
+        <AccordionTrigger>
+          <div className="flex w-full items-center justify-between">
+            <span>{title}</span>
+            {additionalContent}
+          </div>
+        </AccordionTrigger>
         <AccordionContent>{children}</AccordionContent>
       </AccordionItem>
     </Accordion>

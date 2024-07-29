@@ -17,17 +17,15 @@ interface AlertProps {
 }
 export default function Alert({ status, label }: AlertProps) {
   return (
-    <div className="mx-4 mt-4">
-      <div className={cn(alertVariants({ status }))}>
-        <CircleCheckIcon
-          className={clsx('h-[18px] w-[18px] fill-white', {
-            'fill-status-positive': status === 'success',
-            'fill-base-blue-6': status === 'done',
-          })}
-        />
+    <div className={cn(alertVariants({ status }))}>
+      <CircleCheckIcon
+        className={clsx('h-[18px] w-[18px] fill-white', {
+          'fill-status-positive': status === 'success',
+          'fill-base-blue-6': status === 'done',
+        })}
+      />
 
-        <p className="font-semibold text-white font-body-2-normal">{label}</p>
-      </div>
+      <p className="font-semibold text-white font-body-2-normal">{label}</p>
     </div>
   );
 }

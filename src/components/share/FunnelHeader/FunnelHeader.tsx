@@ -4,23 +4,23 @@ type Props = {
   title: string;
   subTitle: string;
   containerClassName?: string;
-  questionClassName?: string;
-  answerClassName?: string;
+  titleClassName?: string;
+  subTitleClassName?: string;
 };
 
-const QuestionAnswer: React.FC<Props> = ({
+function FunnelHeader({
   title,
   subTitle,
   containerClassName,
-  questionClassName,
-  answerClassName,
-}) => {
+  titleClassName = 'font_heading_1',
+  subTitleClassName,
+}: Props) {
   return (
     <div className={containerClassName}>
-      <p className={`${questionClassName}`}>{title}</p>
-      <p className={` ${answerClassName}`}>{subTitle}</p>
+      <p className={`${titleClassName}`}>{title}</p>
+      <p className={` ${subTitleClassName}`}>{subTitle}</p>
     </div>
   );
-};
+}
 
-export default QuestionAnswer;
+export default FunnelHeader;

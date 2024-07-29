@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '../ui/accordion';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '../ui/Accordion';
 
 type TProps = {
   title: string;

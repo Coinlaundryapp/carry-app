@@ -13,7 +13,7 @@ function CollapsiblePanel({ value, title, children, additionalContent }: TProps)
         <AccordionTrigger>
           <div className="flex w-full items-center justify-between">
             <span>{title}</span>
-            {additionalContent}
+            {additionalContent && additionalContent}
           </div>
         </AccordionTrigger>
         <AccordionContent>{children}</AccordionContent>

@@ -9,8 +9,8 @@ const meta: Meta<typeof FunnelHeader> = {
     title: { control: 'text' },
     subTitle: { control: 'text' },
     containerClassName: { control: 'text' },
-    questionClassName: { control: 'text' },
-    answerClassName: { control: 'text' },
+    titleClassName: { control: 'text' },
+    subTitleClassName: { control: 'text' },
   },
 };
 
@@ -19,10 +19,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: 'What is your name?',
-    subTitle: 'My name is John Doe.',
-    containerClassName: 'p-4 bg-gray-100 rounded-lg',
-    questionClassName: 'text-xl font-bold',
-    answerClassName: 'text-lg text-gray-700',
+    title: '현재 관악구에 살고 계시나요?',
+    subTitle: '지역 위치의 확인이 필요합니다.',
+    containerClassName: 'p-4 ',
+    titleClassName: 'font_heading_1',
+    subTitleClassName: 'font_body_1_normal text-cool-neutral-60',
   },
 };

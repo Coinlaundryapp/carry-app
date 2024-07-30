@@ -1,7 +1,7 @@
-import { CircleCheckIcon } from '@/components/share/Icons';
 import { cn } from '@/lib/utils';
 import { cva } from 'class-variance-authority';
 import clsx from 'clsx';
+import { CircleCheckIcon } from '@assets/icons';
 
 const alertVariants = cva('flex px-4 py-3 gap-3 items-center rounded-lg', {
   variants: {
@@ -19,7 +19,7 @@ export default function Alert({ status, label }: AlertProps) {
   return (
     <div className={cn(alertVariants({ status }))}>
       <CircleCheckIcon
-        className={clsx('h-[18px] w-[18px] fill-white', {
+        className={clsx('h-[18px] w-[18px]', {
           'fill-status-positive': status === 'success',
           'fill-base-blue-6': status === 'done',
         })}

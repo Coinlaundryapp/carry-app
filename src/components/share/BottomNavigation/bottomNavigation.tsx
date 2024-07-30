@@ -3,14 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import BoxOffIcon from '@/../public/assets/icons/box-off.svg';
-import BoxOnIcon from '@/../public/assets/icons/box-on.svg';
-import ClothOffIcon from '@/../public/assets/icons/cloth-off.svg';
-import ClothOnIcon from '@/../public/assets/icons/cloth-on.svg';
-import HomeOffIcon from '@/../public/assets/icons/home-off.svg';
-import HomeOnIcon from '@/../public/assets/icons/home-on.svg';
-import MyOnIcon from '@/../public/assets/icons/my-on.svg';
-import MyOffIcon from '@/../public/assets/icons/my-off.svg';
+import {
+  BoxOffIcon,
+  BoxOnIcon,
+  ClothOffIcon,
+  ClothOnIcon,
+  HomeOffIcon,
+  HomeOnIcon,
+  MyOnIcon,
+  MyOffIcon,
+} from '@assets/icons';
 
 const Icon = {
   Home: {

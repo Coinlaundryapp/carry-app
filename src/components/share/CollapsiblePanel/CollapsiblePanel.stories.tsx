@@ -1,13 +1,13 @@
 import { Meta, StoryObj } from '@storybook/react';
 import CollapsiblePanel from './CollapsiblePanel';
-import IconAvatar3 from '../../../../public/assets/icons/avatar-girl-icon.svg';
+import { AvatarGirlIcon } from '@assets/icons';
 
 const additionalContent = (
   <div className="flex items-center pr-2">
     <div className="flex -space-x-3.5">
-      <IconAvatar3 />
-      <IconAvatar3 />
-      <IconAvatar3 />
+      <AvatarGirlIcon />
+      <AvatarGirlIcon />
+      <AvatarGirlIcon />
     </div>
     <span className="ml-2">
       총 <span className="text-primary-normal">3</span>명

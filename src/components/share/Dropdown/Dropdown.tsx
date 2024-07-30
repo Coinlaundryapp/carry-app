@@ -1,6 +1,6 @@
-import { ArrowDownIcon, RadioOffIcon, RadioOnIcon } from '@/components/share/Icons';
-import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { ArrowDownIcon, RadioOffIcon, RadioOnIcon } from '@assets/icons';
 
 export interface DropdownProps {
   data: {
@@ -15,9 +15,9 @@ export interface DropdownProps {
 
 function RadioIndicator({ checked }: { checked: boolean }) {
   if (checked) {
-    return <RadioOnIcon />;
+    return <RadioOnIcon className="h-6 w-6" />;
   }
-  return <RadioOffIcon />;
+  return <RadioOffIcon className="h-6 w-6" />;
 }
 
 export default function Dropdown({
@@ -42,11 +42,14 @@ export default function Dropdown({
           {value === '' ? placeholder : data.find((item) => item.value === value)?.label}
         </p>
         <ArrowDownIcon
-          className={cn('flex-shrink-0 transition-transform duration-200', isOpen && 'rotate-180')}
+          className={cn(
+            'h-[14px] w-[14px] flex-shrink-0 fill-label-assistive transition-transform duration-200',
+            isOpen && 'rotate-180',
+          )}
         />
       </button>
       {isOpen && (
-        <div className="shadow-emphasize absolute top-[60px] z-50 h-48 w-full overflow-y-auto rounded-[10px] border bg-white font-semibold text-label-neutral font-body-2-reading data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+        <div className="absolute top-[60px] z-50 h-48 w-full overflow-y-auto rounded-[10px] border bg-white font-semibold text-label-neutral shadow-emphasize font-body-2-reading data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
           {data.map((item) => (
             <button
               key={item.value}

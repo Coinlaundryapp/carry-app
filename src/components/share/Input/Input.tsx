@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { CircleCloseIcon } from '@/components/share/Icons';
+import { InputDeleteIcon } from '@assets/icons';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type: 'text' | 'number';
@@ -30,8 +30,7 @@ const inputBoxVariants = cva(
   {
     variants: {
       status: {
-        default:
-          'border border-line-normal has-[:focus]:border-cool-neutral-22 has-[:focus]:text-cool-neutral-22',
+        default: 'border border-line-normal has-[:focus]:border-cool-neutral-22',
         error: 'border border-status-destructive bg-background-normal-alternative',
         success: 'border border-status-positive bg-background-normal-alternative',
         done: 'bg-background-normal-alternative',
@@ -93,7 +92,7 @@ export function Input({
         {status === 'error' && errorIcon && <div>{errorIcon}</div>}
         {canValueClear && (
           <button type="button" onClick={onClear}>
-            <CircleCloseIcon />
+            <InputDeleteIcon />
           </button>
         )}
       </div>

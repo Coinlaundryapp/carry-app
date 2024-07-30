@@ -202,85 +202,71 @@
 @layer utilities {
   .font_title_1 {
     font-size: 24px;
-    font-weight: 700;
     line-height: 32px;
   }
 
   .font_heading_1 {
     font-size: 22px;
-    font-weight: 600;
     line-height: 30px;
   }
 
   .font_heading_2 {
     font-size: 20px;
-    font-weight: 600;
     line-height: 28px;
   }
 
   .font_headline_1 {
     font-size: 18px;
-    font-weight: 600;
     line-height: 26px;
   }
 
   .font_headline_2 {
     font-size: 17px;
-    font-weight: 600;
     line-height: 24px;
   }
 
   .font_body_1_normal {
     font-size: 16px;
-    font-weight: 400;
     line-height: 24px;
   }
 
   .font_body_1_reading {
     font-size: 16px;
-    font-weight: 400;
     line-height: 26px;
   }
 
   .font_body_2_normal {
     font-size: 15px;
-    font-weight: 400;
     line-height: 22px;
   }
 
   .font_body_2_reading {
     font-size: 15px;
-    font-weight: 400;
     line-height: 24px;
   }
 
   .font_label_1_normal {
     font-size: 14px;
-    font-weight: 600;
     line-height: 20px;
   }
 
   .font_label_1_reading {
     font-size: 14px;
-    font-weight: 600;
     line-height: 20px;
   }
 
   .font_label_2 {
     font-size: 13px;
-    font-weight: 400;
     line-height: 18px;
   }
 
   .font_caption_1 {
     font-size: 12px;
-    font-weight: 400;
     line-height: 16px;
   }
 
   .font_caption_2 {
     font-size: 11px;
-    font-weight: 400;
     line-height: 14px;
   }
 }

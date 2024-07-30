@@ -169,6 +169,12 @@ const config = {
           },
         },
       },
+      boxShadow: {
+        normal: 'var(--elevation-normal)',
+        emphasize: 'var(--elevation-emphasize)',
+        strong: 'var(--elevation-strong)',
+        heavy: 'var(--elevation-heavy)',
+      },
       borderRadius: {
         sm: '4px',
         md: '8px',

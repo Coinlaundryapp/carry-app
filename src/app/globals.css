@@ -1,6 +1,6 @@
 @tailwind base;
-@tailwind components;
 @tailwind utilities;
+@tailwind components;
 
 @layer base {
   :root {
@@ -101,7 +101,8 @@
     /* Shadow */
 
     --elevation-normal: 0px 1px 2px 0px #0000001f;
-    --elevation-emphasize: 0px 2px 8px 0px #0000001f;
+    --elevation-emphasize: 0px 2px 8px 0px rgba(0, 0, 0, 0.12), 0px 1px 4px 0px rgba(0, 0, 0, 0.08),
+      0px 0px 1px 0px rgba(0, 0, 0, 0.08);
     --elevation-strong: 0px 6px 12px 0px #0000001f;
     --elevation-heavy: 0px 16px 20px 0px #0000001f;
 
@@ -158,6 +159,8 @@
     --cyan-700: #008781;
     --cyan-800: #007770;
     --cyan-900: #005a51;
+
+    --base-blue-6: #1677ff;
   }
 
   .dark {
@@ -200,85 +203,71 @@
 @layer utilities {
   .font_title_1 {
     font-size: 24px;
-    font-weight: 700;
     line-height: 32px;
   }
 
   .font_heading_1 {
     font-size: 22px;
-    font-weight: 600;
     line-height: 30px;
   }
 
   .font_heading_2 {
     font-size: 20px;
-    font-weight: 600;
     line-height: 28px;
   }
 
   .font_headline_1 {
     font-size: 18px;
-    font-weight: 600;
     line-height: 26px;
   }
 
   .font_headline_2 {
     font-size: 17px;
-    font-weight: 600;
     line-height: 24px;
   }
 
   .font_body_1_normal {
     font-size: 16px;
-    font-weight: 400;
     line-height: 24px;
   }
 
   .font_body_1_reading {
     font-size: 16px;
-    font-weight: 400;
     line-height: 26px;
   }
 
   .font_body_2_normal {
     font-size: 15px;
-    font-weight: 400;
     line-height: 22px;
   }
 
   .font_body_2_reading {
     font-size: 15px;
-    font-weight: 400;
     line-height: 24px;
   }
 
   .font_label_1_normal {
     font-size: 14px;
-    font-weight: 600;
     line-height: 20px;
   }
 
   .font_label_1_reading {
     font-size: 14px;
-    font-weight: 600;
     line-height: 20px;
   }
 
   .font_label_2 {
     font-size: 13px;
-    font-weight: 400;
     line-height: 18px;
   }
 
   .font_caption_1 {
     font-size: 12px;
-    font-weight: 400;
     line-height: 16px;
   }
 
   .font_caption_2 {
     font-size: 11px;
-    font-weight: 400;
     line-height: 14px;
   }
 }

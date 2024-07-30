@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { CloseIcon, ArrowLeftIcon, SearchTopIcon } from '@/components/share/Icons';
+import { CloseIcon, ArrowLeftIcon, SearchTopIcon } from '@assets/icons';
 
 interface TopNavigationProps {
   type: 'back' | 'close';
@@ -16,7 +16,7 @@ export default function TopNavigation({ type, title, leftClick, rightClick }: To
           'p-2': type === 'close',
         })}
       >
-        {type === 'close' ? <CloseIcon className="h-5 w-5" /> : <ArrowLeftIcon />}
+        {type === 'close' ? <CloseIcon /> : <ArrowLeftIcon />}
       </button>
 
       <p className="text-label-strong font-headline-1">{title}</p>

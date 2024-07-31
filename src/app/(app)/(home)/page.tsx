@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import HomeCard from '@/components/card/HomeCard';
+import ScrollUpButton from '@/components/ScrollUpButton';
 import Tooltip from '@/components/Tooltip';
 import {
   ADDRESS,
@@ -20,13 +22,12 @@ import {
   SneakersIcon,
   VolumeIcon,
 } from '@assets/icons';
-import Link from 'next/link';
 
 export default function HomePage() {
   return (
     <main>
       <section className="bg-background-normal-alternative px-5 pb-[25px]">
-        <header className="flex w-full justify-between py-4">
+        <header className="flex w-full justify-between py-4" id="top">
           <LogoIcon />
           <div className="flex items-center gap-5">
             <Link href="#" className="font-normal text-label-neutral font-label-1-normal">

@@ -37,6 +37,7 @@ import ShirtIcon from './shirt.svg';
 import ShirtBeddingIcon from './shirt-bedding.svg';
 import LocationIcon from './location.svg';
 import ToolTipBoxIcon from './tooltip-box.svg';
+import ArrowUpIcon from './arrow-up.svg';
 export {
   ArrowDownIcon,
   ArrowLeftIcon,
@@ -77,4 +78,5 @@ export {
   ShirtBeddingIcon,
   LocationIcon,
   ToolTipBoxIcon,
+  ArrowUpIcon,
 };

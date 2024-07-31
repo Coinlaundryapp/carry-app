@@ -167,6 +167,9 @@ const config = {
           blue: {
             6: 'var(--base-blue-6)',
           },
+          gold: {
+            1: 'var(--base-gold-1)',
+          },
         },
       },
       boxShadow: {

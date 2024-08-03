@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { debounce } from 'es-toolkit';
-import ScrollUpButton from '@/components/ScrollUpButton';
+import ScrollUpButton from '@/components/share/ScrollUpButton/ScrollUpButton';
 import { BottomNavigation } from '@/components/share/BottomNavigation';
 
 export default function Layout({

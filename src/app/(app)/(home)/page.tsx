@@ -1,7 +1,5 @@
 import Link from 'next/link';
-import HomeCard from '@/components/card/HomeCard';
-import ScrollUpButton from '@/components/ScrollUpButton';
-import Tooltip from '@/components/Tooltip';
+import HomeCard from '@/components/ui/HomeCard';
 import {
   ADDRESS,
   BUSINESS_NUMBER,
@@ -22,6 +20,7 @@ import {
   SneakersIcon,
   VolumeIcon,
 } from '@assets/icons';
+import Tooltip from '@/components/share/Tooltip';
 
 export default function HomePage() {
   return (
@@ -51,7 +50,7 @@ export default function HomePage() {
               </Tooltip>
             </button>
           </div>
-          <div className="bg-base-gold-1 flex items-center gap-2 rounded-sm px-2 py-2">
+          <div className="flex items-center gap-2 rounded-sm bg-base-gold-1 px-2 py-2">
             <VolumeIcon />
             <p className="font-medium text-cool-neutral-40 font-label-2">
               색이 섞일까 걱정이시죠? 저희는{' '}

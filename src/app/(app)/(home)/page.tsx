@@ -22,6 +22,32 @@ import {
 } from '@assets/icons';
 import Tooltip from '@/components/share/Tooltip';
 
+const CARD_DATA = [
+  {
+    title: '일반 세탁',
+    description: '의류, 속옷, 양말 등',
+    href: '#',
+    icon: <ShirtIcon className="h-[52px] w-[52px]" />,
+  },
+  {
+    title: '이불 세탁',
+    description: '극세사 겨울 이불 까지!',
+    href: '#',
+    icon: <ShirtBeddingIcon className="h-[52px] w-[52px]" />,
+  },
+  {
+    title: '신발 세탁',
+    description: '의류, 속옷, 양말, 이불 구분없이 한 번에',
+    href: '#',
+    icon: <ShirtBeddingIcon className="h-[52px] w-[52px]" />,
+  },
+  {
+    title: '신발 세탁',
+    description: '운동화',
+    href: '#',
+    icon: <SneakersIcon className="h-[52px] w-[52px]" />,
+  },
+];
 export default function HomePage() {
   return (
     <main>
@@ -59,30 +85,15 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid grid-cols-2 gap-x-5 gap-y-6">
-            <HomeCard
-              title="일반 세탁"
-              description="의류, 속옷, 양말 등"
-              href="#"
-              icon={<ShirtIcon className="h-[52px] w-[52px]" />}
-            />
-            <HomeCard
-              title="이불 세탁"
-              description="극세사 겨울 이불 까지!"
-              href="#"
-              icon={<ShirtBeddingIcon className="h-[52px] w-[52px]" />}
-            />
-            <HomeCard
-              title="신발 세탁"
-              description="의류, 속옷, 양말, 이불 구분없이 한 번에"
-              href="#"
-              icon={<ShirtBeddingIcon className="h-[52px] w-[52px]" />}
-            />
-            <HomeCard
-              title="신발 세탁"
-              description="운동화"
-              href="#"
-              icon={<SneakersIcon className="h-[52px] w-[52px]" />}
-            />
+            {CARD_DATA.map((data, index) => (
+              <HomeCard
+                key={index}
+                title={data.title}
+                description={data.description}
+                href={data.href}
+                icon={data.icon}
+              />
+            ))}
           </div>
 
           <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-[18px]">
@@ -93,7 +104,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <section className="flex flex-col gap-5 bg-white px-5 pt-10">
+      <footer className="flex flex-col gap-5 bg-white px-5 pt-10">
         <p className="font-bold font-label-1-reading">세탁의 민족</p>
         <div className="flex flex-col gap-2 font-medium text-label-assistive font-caption-1">
           <p>사업자 등록번호 : {BUSINESS_NUMBER}</p>
@@ -109,7 +120,7 @@ export default function HomePage() {
           <div className="h-3 w-[1px] bg-label-assistive" />
           <Link href="#">개인정보 처리방침</Link>
         </div>
-      </section>
+      </footer>
     </main>
   );
 }

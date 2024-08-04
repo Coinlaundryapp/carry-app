@@ -26,6 +26,18 @@ import StarHalfIcon from './star-half.svg';
 import InputSuccessIcon from './input-success.svg';
 import InputErrorIcon from './input-error.svg';
 import InputDeleteIcon from './input-delete.svg';
+import LogoIcon from './logo.svg';
+import BellBadgeIcon from './bell-badge.svg';
+import ArrowRightIcon from './arrow-right.svg';
+import InformationCircle from './information-circle.svg';
+import VolumeIcon from './volume.svg';
+import BeddingIcon from './bedding.svg';
+import SneakersIcon from './sneakers.svg';
+import ShirtIcon from './shirt.svg';
+import ShirtBeddingIcon from './shirt-bedding.svg';
+import LocationIcon from './location.svg';
+import ToolTipBoxIcon from './tooltip-box.svg';
+import ArrowUpIcon from './arrow-up.svg';
 export {
   ArrowDownIcon,
   ArrowLeftIcon,
@@ -55,4 +67,16 @@ export {
   InputSuccessIcon,
   InputErrorIcon,
   InputDeleteIcon,
+  LogoIcon,
+  BellBadgeIcon,
+  ArrowRightIcon,
+  InformationCircle,
+  VolumeIcon,
+  BeddingIcon,
+  SneakersIcon,
+  ShirtIcon,
+  ShirtBeddingIcon,
+  LocationIcon,
+  ToolTipBoxIcon,
+  ArrowUpIcon,
 };

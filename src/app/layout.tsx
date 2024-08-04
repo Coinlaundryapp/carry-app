@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import localFont from 'next/font/local';
+import clsx from 'clsx';
 
 export const pretendard = localFont({
   src: '../../public/fonts/PretendardVariable.woff2',
@@ -19,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={pretendard.className}>{children}</body>
+      <body className={clsx(pretendard.className, 'overflow-hidden bg-black')}>{children}</body>
     </html>
   );
 }

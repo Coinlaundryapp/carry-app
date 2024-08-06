@@ -17,11 +17,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         user = {
           name: 'Test User',
         };
-
+        console.log(user);
         if (!user) {
           throw new Error('User not found.');
         }
-
         return user;
       },
     }),

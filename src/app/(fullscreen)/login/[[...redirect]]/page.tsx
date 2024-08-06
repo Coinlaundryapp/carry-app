@@ -5,11 +5,19 @@ import { KakaoIcon } from '@assets/icons';
 const KAKAO_REST_API_KEY = process.env.KAKAO_REST_API_KEY as string;
 const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL as string;
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
-export default async function Login() {
+export default async function Login({
+  params,
+}: {
+  params: {
+    redirect: string;
+  };
+}) {
   const url = new URL(KAKAO_REDIRECT_URL);
+  const redirect = params.redirect;
   url.searchParams.append('client_id', KAKAO_REST_API_KEY);
   url.searchParams.append('response_type', 'code');
   url.searchParams.append('redirect_uri', NEXT_PUBLIC_BASE_URL + '/api/kakao');
+  url.searchParams.append('state', redirect);
   return (
     <main className="flex flex-col items-center gap-10 px-4 pt-[84px] text-center">
       <div>
@@ -29,7 +37,7 @@ export default async function Login() {
       <Image src="/assets/images/login-image.png" alt="Laundry" width={390} height={308} />
 
       <Link
-        href={url}
+        href={url.toString()}
         className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#FEE500] p-4 font-bold font-body-1-reading"
         type="submit"
       >

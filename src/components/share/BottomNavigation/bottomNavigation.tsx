@@ -3,14 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import BoxOffIcon from '@/../public/assets/icons/box-off.svg';
-import BoxOnIcon from '@/../public/assets/icons/box-on.svg';
-import ClothOffIcon from '@/../public/assets/icons/cloth-off.svg';
-import ClothOnIcon from '@/../public/assets/icons/cloth-on.svg';
-import HomeOffIcon from '@/../public/assets/icons/home-off.svg';
-import HomeOnIcon from '@/../public/assets/icons/home-on.svg';
-import MyOnIcon from '@/../public/assets/icons/my-on.svg';
-import MyOffIcon from '@/../public/assets/icons/my-off.svg';
+import {
+  BoxOffIcon,
+  BoxOnIcon,
+  ClothOffIcon,
+  ClothOnIcon,
+  HomeOffIcon,
+  HomeOnIcon,
+  MyOnIcon,
+  MyOffIcon,
+} from '@assets/icons';
 
 const Icon = {
   Home: {
@@ -52,9 +54,9 @@ export function BottomNavigation() {
       style={{
         boxShadow: '0px -2px 6px 0px #878A931A',
       }}
-      className="fixed bottom-0 w-full rounded-tl-xl rounded-tr-xl px-[24px] pb-[34px] pt-[10px]"
+      className="w-full rounded-tl-xl rounded-tr-xl px-[24px] pb-[34px] pt-[10px]"
     >
-      <ul className="flex justify-between gap-[14px]">
+      <ul className="flex w-full justify-between gap-[14px]">
         {navigationBarList.map((item) => {
           const isCurrentPage = pathname === item.path;
 
@@ -64,7 +66,7 @@ export function BottomNavigation() {
               className={`${isCurrentPage ? 'text-primary-normal' : 'text-interaction-inactive'}`}
             >
               <Link href={item.path}>
-                <figure className="flex w-[75px] flex-col items-center gap-[4px] font-semibold font-caption-1">
+                <figure className="flex w-[62px] flex-col items-center gap-[4px] font-medium font-caption-1">
                   {isCurrentPage ? Icon[item.icon].active : Icon[item.icon].inactive}
                   <figcaption>{item.title}</figcaption>
                 </figure>

@@ -23,7 +23,7 @@ const Group = ({ avatarList, sort = 'desc' }: Props) => {
           <Image
             src={avatar}
             alt={avatar}
-            blurDataURL="/image/empty_avatar.svg"
+            blurDataURL="/assets/icons/empty-avatar.svg"
             width={32}
             height={32}
           />

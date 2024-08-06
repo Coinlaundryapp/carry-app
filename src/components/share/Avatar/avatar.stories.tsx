@@ -17,11 +17,11 @@ const meta = {
   },
   args: {
     avatarList: [
-      '/image/empty_avatar.svg',
-      '/image/empty_avatar.svg',
-      '/image/empty_avatar.svg',
-      '/image/empty_avatar.svg',
-      '/image/empty_avatar.svg',
+      '/assets/icons/empty-avatar.svg',
+      '/assets/icons/empty-avatar.svg',
+      '/assets/icons/empty-avatar.svg',
+      '/assets/icons/empty-avatar.svg',
+      '/assets/icons/empty-avatar.svg',
     ],
     sort: 'asc',
   },

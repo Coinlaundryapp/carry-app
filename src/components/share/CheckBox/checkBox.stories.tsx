@@ -25,6 +25,7 @@ export const CheckBoxWithLabel: Story = {
   args: {
     checked: true,
     label: '텍스트',
+    textClassName: '',
   },
 };
 

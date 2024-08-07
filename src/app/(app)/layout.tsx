@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { debounce } from 'es-toolkit';
 import ScrollUpButton from '@/components/share/ScrollUpButton/ScrollUpButton';
 import { BottomNavigation } from '@/components/share/BottomNavigation';
+import Toast from '@/components/share/Toast';
 
 export default function Layout({
   children,
@@ -37,6 +38,7 @@ export default function Layout({
       </div>
       {isVisible && <ScrollUpButton onClick={scrollToTop} />}
       <BottomNavigation />
+      <Toast />
     </div>
   );
 }

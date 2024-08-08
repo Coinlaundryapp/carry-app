@@ -38,6 +38,8 @@ import ShirtBeddingIcon from './shirt-bedding.svg';
 import LocationIcon from './location.svg';
 import ToolTipBoxIcon from './tooltip-box.svg';
 import ArrowUpIcon from './arrow-up.svg';
+import DeliveryManSadIcon from './delivery-man-sad.svg';
+import ModalOkIcon from './modal-ok.svg';
 export {
   ArrowDownIcon,
   ArrowLeftIcon,
@@ -79,4 +81,6 @@ export {
   LocationIcon,
   ToolTipBoxIcon,
   ArrowUpIcon,
+  DeliveryManSadIcon,
+  ModalOkIcon,
 };

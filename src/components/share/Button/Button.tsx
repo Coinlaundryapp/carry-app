@@ -16,6 +16,7 @@ function Button({ text, onClick, state, size = 'medium', ...rest }: TProps) {
     small: 'w-[140px] py-1 px-2',
     medium: 'w-[310px] py-2 px-4',
     large: 'w-[342px] py-3 px-6',
+    full: 'flex w-full items-center justify-center',
   };
 
   const stateClass = {

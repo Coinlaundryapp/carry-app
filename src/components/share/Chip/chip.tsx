@@ -1,38 +1,17 @@
-import React, { forwardRef } from 'react';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
-
 type Props = {
-  isActive: boolean;
-  onClick: VoidFunction;
   text: string;
+  onClick: () => void;
 };
 
-const ChipVariants = cva(
-  `rounded-xl border-[1px] font-caption-1 px-[10px] py-[6px] whitespace-pre`,
-  {
-    variants: {
-      variant: {
-        active: 'border-primary-normal bg-primary-normal text-static-white',
-        inactive: 'border-label-disable bg-static-white text-label-neutral',
-      },
-    },
-    defaultVariants: {
-      variant: 'inactive',
-    },
-  },
-);
-
-function Chip({ isActive, text, onClick }: Props, ref: React.Ref<HTMLButtonElement>) {
+function Chip({ text, onClick }: Props) {
   return (
     <button
-      className={cn(ChipVariants({ variant: isActive ? 'active' : 'inactive' }))}
+      className="whitespace-pre rounded-xl border-[1px] border-label-disable bg-static-white px-[10px] py-[6px] font-medium text-label-neutral font-caption-1 active:border-primary-normal active:bg-primary-normal active:text-static-white"
       onClick={onClick}
-      ref={ref}
     >
-      {text || ' '}
+      {text}
     </button>
   );
 }
 
-export default forwardRef(Chip);
+export default Chip;

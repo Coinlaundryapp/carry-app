@@ -39,6 +39,7 @@ import LocationIcon from './location.svg';
 import ToolTipBoxIcon from './tooltip-box.svg';
 import ArrowUpIcon from './arrow-up.svg';
 import KakaoIcon from './kakao.svg';
+import AddPlusIcon from './add-plus.svg';
 export {
   ArrowDownIcon,
   ArrowLeftIcon,
@@ -81,4 +82,5 @@ export {
   ToolTipBoxIcon,
   ArrowUpIcon,
   KakaoIcon,
+  AddPlusIcon,
 };

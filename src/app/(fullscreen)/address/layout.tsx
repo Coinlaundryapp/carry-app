@@ -1,3 +1,5 @@
+import BackHead from '@/components/share/BackHead';
+
 export default function Layout({
   children,
 }: Readonly<{
@@ -5,7 +7,8 @@ export default function Layout({
 }>) {
   return (
     <div className="relative mx-auto flex h-dvh max-w-[600px] flex-col justify-between overflow-hidden bg-white">
-      <div className="h-full w-full overflow-scroll">{children}</div>
+      <BackHead title="배송지 추가" />
+      {children}
     </div>
   );
 }

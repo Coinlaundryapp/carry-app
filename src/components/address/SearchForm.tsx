@@ -2,21 +2,22 @@
 import React, { useState } from 'react';
 import { Input } from '@/components/share/Input';
 import { SearchIcon } from '@assets/icons';
-import { useRouter } from 'next/navigation';
 import { useAddressStore } from '@/store/address-store';
 
-interface Address {
+type TAddress = {
   main: string;
   sub: string;
-}
+};
+type TPros = {
+  onAddressChange: (value: string) => void;
+};
 
-function SearchForm() {
+function SearchForm({ onAddressChange }: TPros) {
+  const { addressModalOpen, setAddressModalOpen } = useAddressStore();
   const [value, setValue] = useState('');
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const router = useRouter();
-  const setSelectedAddress = useAddressStore((state) => state.setSelectedAddress);
+  const [addresses, setAddresses] = useState<TAddress[]>([]);
 
-  const DUMMYDATA_ADDRESS: Address[] = [
+  const DUMMYDATA_ADDRESS: TAddress[] = [
     {
       main: '서울특별시 용산구 서빙고로 4-2 (한강로3가)',
       sub: '서울특별시 한강로3가 44-7',
@@ -35,10 +36,10 @@ function SearchForm() {
     },
   ];
 
-  const handleClick = (address: Address) => {
+  const handleClick = (address: TAddress) => {
     setValue(address.main);
-    setSelectedAddress(address.main);
-    router.push('/address/form');
+    onAddressChange(address.main);
+    setAddressModalOpen(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

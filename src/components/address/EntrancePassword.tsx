@@ -5,7 +5,8 @@ import { InformationCircleRed } from '@assets/icons';
 
 type TProps = {
   entranceValue: { value: string; text: string };
-  onChange: (value: string, text: string) => void;
+  onChange: (value: string) => void;
+  onExtraInfoChange: (text: string) => void;
 };
 
 const ENTRANCE_PASSWORD = [
@@ -16,13 +17,14 @@ const ENTRANCE_PASSWORD = [
   { value: '5', label: '기타' },
 ];
 
-const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange }) => {
+const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraInfoChange }) => {
   const { value, text } = entranceValue;
 
   const [extraInfo, setExtraInfo] = useState<string>(text);
 
   const handleChange = (value: string) => {
-    onChange(value, extraInfo);
+    onExtraInfoChange('');
+    onChange(value);
   };
   return (
     <div className="mb-4">
@@ -44,9 +46,9 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange }) => {
                 type="text"
                 status="primary"
                 placeholder="비밀번호를 입력하세요"
-                value={extraInfo}
+                value={text}
                 className="ml-6"
-                onChange={(e) => setExtraInfo(e.target.value)}
+                onChange={(e) => onExtraInfoChange(e.target.value)}
               />
             )}
             {item.value === '5' && value === '5' && (
@@ -55,9 +57,9 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange }) => {
                   type="text"
                   status="primary"
                   placeholder="예) 뒤쪽 문은 항상 열려있습니다"
-                  value={extraInfo}
+                  value={text}
                   className="ml-6"
-                  onChange={(e) => setExtraInfo(e.target.value)}
+                  onChange={(e) => onExtraInfoChange(e.target.value)}
                 />
                 <p className="ml-6 mt-4 flex items-center justify-start gap-1 text-xs">
                   <InformationCircleRed />

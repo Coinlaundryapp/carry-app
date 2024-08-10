@@ -5,6 +5,8 @@ import EntrancePassword from '@/components/address/EntrancePassword';
 import Button from '@/components/share/Button';
 import { Input } from '@/components/share/Input';
 import Dropdown from '@/components/share/Dropdown/Dropdown';
+import SearchForm from '@/components/address/SearchForm';
+import { useAddressStore } from '@/store/address-store';
 
 const REQUES_OPTIONS = [
   { value: '1', label: '문 앞에 놓아주세요.' },
@@ -14,13 +16,14 @@ const REQUES_OPTIONS = [
 ];
 
 const AddressFormpage = () => {
+  const { addressModalOpen } = useAddressStore();
   const [step, setStep] = useState(1);
   const [address, setAddress] = useState({ main: '', detail: '' });
   const [selectedValue, setSelectedValue] = useState({
     value: '1',
     text: '',
   });
-  const [selectedRequest, setSelectedRequest] = useState('1');
+  const [selectedRequest, setSelectedRequest] = useState({ value: '1', requestText: '' });
   const [isValid, setIsValid] = useState<boolean>(false);
   const [allStepsValid, setAllStepsValid] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -28,9 +31,16 @@ const AddressFormpage = () => {
     phone: '',
   });
 
-    console.log("dddd",selectedValue)
-  const handleChange = (value: string, text: string) => {
-    setSelectedValue(() => ({ text: text, value: value }));
+  const handleChange = (value: string) => {
+    setSelectedValue((pre) => ({ ...pre, value: value }));
+  };
+
+  const handleMainAdressChange = (value: string) => {
+    setAddress((pre) => ({ ...pre, main: value }));
+  };
+
+  const handleExtraInfoChange = (text: string) => {
+    setSelectedValue((pre) => ({ ...pre, text: text }));
   };
 
   const handleNext = () => {
@@ -40,7 +50,7 @@ const AddressFormpage = () => {
   };
 
   const handleChangeRequest = (value: string) => {
-    setSelectedRequest(value);
+    setSelectedRequest((pre) => ({ ...pre, value }));
   };
 
   const handleConfirm = () => {
@@ -55,30 +65,35 @@ const AddressFormpage = () => {
   }, [step, formData, address, selectedValue, selectedRequest]);
 
   const validateForm = () => {
-    switch (step) {
-      case 1:
-        setIsValid(formData.name.trim() !== '');
-        break;
-      case 2:
-        setIsValid(address.main.trim() !== '' && address.detail.trim() !== '');
-        break;
-      case 3:
-        if (selectedValue.value === '1' || selectedValue.value === '5') {
-          setIsValid(selectedValue.text.trim() !== '');
-        } else {
-          setIsValid(selectedValue.value.trim() !== '');
-        }
-        break;
-      case 4:
-        setIsValid(selectedRequest.trim() !== '');
-        break;
-      case 5:
-        setIsValid(/^01[0-9]{8,9}$/.test(formData.phone));
-        break;
-      default:
-        setIsValid(true);
-    }
-  };
+  switch (step) {
+    case 1:
+      setIsValid(formData.name.trim() !== '');
+      break;
+    case 2:
+      setIsValid(address.main.trim() !== '' && address.detail.trim() !== '');
+      break;
+    case 3:
+      if (selectedValue.value === '1' || selectedValue.value === '5') {
+        setIsValid(selectedValue.text.trim() !== '');
+      } else {
+        setIsValid(selectedValue.value.trim() !== '');
+      }
+      break;
+    case 4:
+      if (selectedRequest.value === '4') {
+        setIsValid(selectedRequest.requestText.trim() !== '');
+      } else {
+        setIsValid(selectedRequest.value.trim() !== '');
+      }
+      break;
+    case 5:
+      setIsValid(/^01[0-9]{8,9}$/.test(formData.phone));
+      break;
+    default:
+      setIsValid(true);
+  }
+};
+
 
   const validateAllSteps = () => {
     const allValid =
@@ -88,10 +103,13 @@ const AddressFormpage = () => {
       (selectedValue.value === '1' || selectedValue.value === '5'
         ? selectedValue.text.trim() !== ''
         : selectedValue.value.trim() !== '') &&
-      selectedRequest.trim() !== '' &&
+      (selectedRequest.value === '4'
+        ? selectedRequest.requestText.trim() !== ''
+        : selectedRequest.value.trim() !== '') &&
       /^01[0-9]{8,9}$/.test(formData.phone);
     setAllStepsValid(allValid);
   };
+
 
   const renderStepContent = () => {
     return (
@@ -113,14 +131,33 @@ const AddressFormpage = () => {
             <label className="font-bold">배송 요청사항</label>
             <Dropdown
               data={REQUES_OPTIONS}
-              value={selectedRequest}
+              value={selectedRequest.value}
               indicator="radio"
               placeholder="문 앞에 놓아 주세요."
               onChange={handleChangeRequest}
             />
+            {selectedRequest.value === '4' && (
+              <Input
+                className="mb-4 mt-4"
+                status="primary"
+                type="text"
+                fontStyle="strong"
+                placeholder="내용을 자세히 입력해주세요."
+                value={selectedRequest.requestText}
+                onChange={(e) =>
+                  setSelectedRequest({ ...selectedRequest, requestText: e.target.value })
+                }
+              />
+            )}
           </div>
         )}
-        {step >= 3 && <EntrancePassword onChange={handleChange} entranceValue={selectedValue} />}
+        {step >= 3 && (
+          <EntrancePassword
+            onChange={handleChange}
+            entranceValue={selectedValue}
+            onExtraInfoChange={handleExtraInfoChange}
+          />
+        )}
         {step >= 2 && <AddressForm address={address} setAddress={setAddress} />}
         {step >= 1 && (
           <Input
@@ -140,28 +177,36 @@ const AddressFormpage = () => {
 
   return (
     <div className="flex h-full w-full flex-col overflow-scroll p-4 pb-12">
-      {renderStepContent()}
-      {step < 5 && (
-        <div className="absolute bottom-0 flex w-full justify-center bg-white">
-          <Button
-            onClick={handleNext}
-            state={isValid ? 'fillPrimary' : 'fillSecondary'}
-            disabled={!isValid}
-          >
-            다음
-          </Button>
+      {addressModalOpen ? (
+        <div className="relative z-50 max-h-full w-full max-w-full overflow-hidden bg-white">
+          <SearchForm onAddressChange={handleMainAdressChange} />
         </div>
-      )}
-      {step >= 5 && (
-        <div className="absolute bottom-0 flex w-full justify-center bg-white">
-          <Button
-            onClick={handleConfirm}
-            state={allStepsValid ? 'fillPrimary' : 'fillSecondary'}
-            disabled={!allStepsValid}
-          >
-            추가하기
-          </Button>
-        </div>
+      ) : (
+        <>
+          {renderStepContent()}
+          {step < 5 && (
+            <div className="absolute bottom-0 flex w-full justify-center bg-white">
+              <Button
+                onClick={handleNext}
+                state={isValid ? 'fillPrimary' : 'fillSecondary'}
+                disabled={!isValid}
+              >
+                다음
+              </Button>
+            </div>
+          )}
+          {step >= 5 && (
+            <div className="absolute bottom-0 flex w-full justify-center bg-white">
+              <Button
+                onClick={handleConfirm}
+                state={allStepsValid ? 'fillPrimary' : 'fillSecondary'}
+                disabled={!allStepsValid}
+              >
+                추가하기
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

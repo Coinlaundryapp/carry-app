@@ -1,9 +1,7 @@
 'use clinet';
-import React, { useState } from 'react';
-import DaumPostcode from 'react-daum-postcode';
+import React from 'react';
 import { Input } from '../share/Input';
-
-import Link from 'next/link';
+import { useAddressStore } from '@/store/address-store';
 
 interface Address {
   main: string;
@@ -15,39 +13,20 @@ type TProps = {
 };
 
 const AddressForm = ({ address, setAddress }: TProps) => {
-  const [showPostcode, setShowPostcode] = useState<boolean>(false);
-
-  const handleAddressComplete = (data: any) => {
-    const roadAddress = data.roadAddress;
-    setAddress({ ...address, main: roadAddress });
-    setShowPostcode(false);
-  };
-
+  const { setAddressModalOpen } = useAddressStore();
   return (
     <div className="mb-4">
-      <Link href="/address/searchform">
-        <Input
-          type="text"
-          title="배송 받으실 주소"
-          fontStyle="strong"
-          value={address.main}
-          placeholder="건물, 지번 또는 도로명 검색"
-          status="primary"
-          className="mb-2"
-          readOnly
-        />
-      </Link>
-
-      {showPostcode && (
-        <div className="relative">
-          <DaumPostcode
-            onComplete={handleAddressComplete}
-            className="z-100 h-400 absolute left-0 top-0 w-full"
-            autoClose={false}
-            defaultQuery=""
-          />
-        </div>
-      )}
+      <Input
+        onClick={() => setAddressModalOpen(true)}
+        type="text"
+        title="배송 받으실 주소"
+        fontStyle="strong"
+        value={address.main}
+        placeholder="건물, 지번 또는 도로명 검색"
+        status="primary"
+        className="mb-2"
+        readOnly
+      />
       <Input
         type="text"
         value={address.detail}

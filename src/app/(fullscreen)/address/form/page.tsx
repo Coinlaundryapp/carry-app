@@ -173,10 +173,9 @@ const AddressFormpage = () => {
       </>
     );
   };
-  
 
   return (
-    <div className="flex h-full w-full flex-col overflow-scroll pb-12">
+    <div className="flex h-full w-full flex-col overflow-scroll pb-16">
       {addressModalOpen ? (
         <div className="relative z-50 max-h-full w-full max-w-full overflow-hidden bg-white">
           <SearchForm onAddressChange={handleMainAdressChange} />

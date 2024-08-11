@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Radio } from '../share/Radio';
 import { Input } from '../share/Input';
 import { InformationCircleRed } from '@assets/icons';

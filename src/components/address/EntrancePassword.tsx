@@ -39,33 +39,38 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraIn
               <Radio.Button value={item.value} />
               <span>{item.label}</span>
             </label>
-            {item.value === '1' && value === '1' && (
-              <div className="ml-6">
-                <Input
-                  type="text"
-                  status="primary"
-                  placeholder="비밀번호를 입력하세요"
-                  value={text}
-                  onChange={(e) => onExtraInfoChange(e.target.value)}
-                />
-              </div>
-            )}
-            {item.value === '5' && value === '5' && (
-              <>
-                <Input
-                  type="text"
-                  status="primary"
-                  placeholder="예) 뒤쪽 문은 항상 열려있습니다"
-                  value={text}
-                  className="ml-6"
-                  onChange={(e) => onExtraInfoChange(e.target.value)}
-                />
-                <p className="ml-6 mt-4 flex items-center justify-start gap-1 text-xs">
-                  <InformationCircleRed />
-                  <span>입력한 방법으로 출입이 불가능한 경우, 수거/배송이 어렵습니다.</span>
-                </p>
-              </>
-            )}
+            <div className="ml-6">
+              {item.value === '1' && value === '1' && (
+                <>
+                  <Input
+                    type="text"
+                    status="primary"
+                    placeholder="비밀번호를 입력하세요"
+                    value={text}
+                    onChange={(e) => onExtraInfoChange(e.target.value)}
+                  />
+                  <p className="mt-4 flex items-center justify-start gap-1 text-xs">
+                    <InformationCircleRed />
+                    <span>입력한 방법으로 출입이 불가능한 경우, 수거/배송이 어렵습니다.</span>
+                  </p>
+                </>
+              )}
+              {item.value === '5' && value === '5' && (
+                <>
+                  <Input
+                    type="text"
+                    status="primary"
+                    placeholder="예) 뒤쪽 문은 항상 열려있습니다"
+                    value={text}
+                    onChange={(e) => onExtraInfoChange(e.target.value)}
+                  />
+                  <p className="mt-4 flex items-center justify-start gap-1 text-xs">
+                    <InformationCircleRed />
+                    <span>입력한 방법으로 출입이 불가능한 경우, 수거/배송이 어렵습니다.</span>
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </Radio.Group>

@@ -1,5 +1,6 @@
 'use client';
-import BackHead from '@/components/share/BackHead';
+
+import { TopNavigation } from '@/components/share/TopNavigation';
 import { useAddressStore } from '@/store/address-store';
 import { useRouter } from 'next/navigation';
 
@@ -13,17 +14,16 @@ export default function Layout({
 
   const handleBackClick = () => {
     if (addressModalOpen) {
-      
       setAddressModalOpen(false);
     } else {
-      
       router.push('/');
     }
   };
 
   return (
     <div className="relative mx-auto flex h-dvh max-w-[600px] flex-col justify-between overflow-hidden bg-white">
-      <BackHead title="배송지 추가" onClick={handleBackClick} />
+      <TopNavigation type="back" title="배송지 추가" leftClick={handleBackClick} />
+
       {children}
     </div>
   );

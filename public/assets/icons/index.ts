@@ -40,6 +40,8 @@ import ToolTipBoxIcon from './tooltip-box.svg';
 import ArrowUpIcon from './arrow-up.svg';
 import DeliveryManSadIcon from './delivery-man-sad.svg';
 import ModalOkIcon from './modal-ok.svg';
+import KakaoIcon from './kakao.svg';
+
 export {
   ArrowDownIcon,
   ArrowLeftIcon,
@@ -83,4 +85,5 @@ export {
   ArrowUpIcon,
   DeliveryManSadIcon,
   ModalOkIcon,
+  KakaoIcon,
 };

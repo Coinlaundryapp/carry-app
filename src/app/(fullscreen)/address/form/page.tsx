@@ -7,6 +7,7 @@ import { Input } from '@/components/share/Input';
 import Dropdown from '@/components/share/Dropdown/Dropdown';
 import SearchForm from '@/components/address/SearchForm';
 import { useAddressStore } from '@/store/address-store';
+import AddressButton from '@/components/address/AddressButton';
 
 const REQUES_OPTIONS = [
   { value: '1', label: '문 앞에 놓아주세요.' },
@@ -65,35 +66,34 @@ const AddressFormpage = () => {
   }, [step, formData, address, selectedValue, selectedRequest]);
 
   const validateForm = () => {
-  switch (step) {
-    case 1:
-      setIsValid(formData.name.trim() !== '');
-      break;
-    case 2:
-      setIsValid(address.main.trim() !== '' && address.detail.trim() !== '');
-      break;
-    case 3:
-      if (selectedValue.value === '1' || selectedValue.value === '5') {
-        setIsValid(selectedValue.text.trim() !== '');
-      } else {
-        setIsValid(selectedValue.value.trim() !== '');
-      }
-      break;
-    case 4:
-      if (selectedRequest.value === '4') {
-        setIsValid(selectedRequest.requestText.trim() !== '');
-      } else {
-        setIsValid(selectedRequest.value.trim() !== '');
-      }
-      break;
-    case 5:
-      setIsValid(/^01[0-9]{8,9}$/.test(formData.phone));
-      break;
-    default:
-      setIsValid(true);
-  }
-};
-
+    switch (step) {
+      case 1:
+        setIsValid(formData.name.trim() !== '');
+        break;
+      case 2:
+        setIsValid(address.main.trim() !== '' && address.detail.trim() !== '');
+        break;
+      case 3:
+        if (selectedValue.value === '1' || selectedValue.value === '5') {
+          setIsValid(selectedValue.text.trim() !== '');
+        } else {
+          setIsValid(selectedValue.value.trim() !== '');
+        }
+        break;
+      case 4:
+        if (selectedRequest.value === '4') {
+          setIsValid(selectedRequest.requestText.trim() !== '');
+        } else {
+          setIsValid(selectedRequest.value.trim() !== '');
+        }
+        break;
+      case 5:
+        setIsValid(/^01[0-9]{8,9}$/.test(formData.phone));
+        break;
+      default:
+        setIsValid(true);
+    }
+  };
 
   const validateAllSteps = () => {
     const allValid =
@@ -109,7 +109,6 @@ const AddressFormpage = () => {
       /^01[0-9]{8,9}$/.test(formData.phone);
     setAllStepsValid(allValid);
   };
-
 
   const renderStepContent = () => {
     return (
@@ -174,36 +173,39 @@ const AddressFormpage = () => {
       </>
     );
   };
+  
 
   return (
-    <div className="flex h-full w-full flex-col overflow-scroll p-4 pb-12">
+    <div className="flex h-full w-full flex-col overflow-scroll pb-12">
       {addressModalOpen ? (
         <div className="relative z-50 max-h-full w-full max-w-full overflow-hidden bg-white">
           <SearchForm onAddressChange={handleMainAdressChange} />
         </div>
       ) : (
         <>
-          {renderStepContent()}
+          <div className="p-4">{renderStepContent()}</div>
+
           {step < 5 && (
-            <div className="absolute bottom-0 flex w-full justify-center bg-white">
-              <Button
+            <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-4">
+              <AddressButton
+                className={isValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}
                 onClick={handleNext}
-                state={isValid ? 'fillPrimary' : 'fillSecondary'}
                 disabled={!isValid}
               >
                 다음
-              </Button>
+              </AddressButton>
             </div>
           )}
           {step >= 5 && (
             <div className="absolute bottom-0 flex w-full justify-center bg-white">
-              <Button
+              <AddressButton
                 onClick={handleConfirm}
-                state={allStepsValid ? 'fillPrimary' : 'fillSecondary'}
+                className={allStepsValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}
+                // state={allStepsValid ? 'fillPrimary' : 'fillSecondary'}
                 disabled={!allStepsValid}
               >
                 추가하기
-              </Button>
+              </AddressButton>
             </div>
           )}
         </>

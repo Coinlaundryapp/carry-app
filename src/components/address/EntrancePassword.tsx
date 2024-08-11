@@ -20,8 +20,6 @@ const ENTRANCE_PASSWORD = [
 const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraInfoChange }) => {
   const { value, text } = entranceValue;
 
-  const [extraInfo, setExtraInfo] = useState<string>(text);
-
   const handleChange = (value: string) => {
     onExtraInfoChange('');
     onChange(value);
@@ -42,14 +40,15 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraIn
               <span>{item.label}</span>
             </label>
             {item.value === '1' && value === '1' && (
-              <Input
-                type="text"
-                status="primary"
-                placeholder="비밀번호를 입력하세요"
-                value={text}
-                className="ml-6"
-                onChange={(e) => onExtraInfoChange(e.target.value)}
-              />
+              <div className="ml-6">
+                <Input
+                  type="text"
+                  status="primary"
+                  placeholder="비밀번호를 입력하세요"
+                  value={text}
+                  onChange={(e) => onExtraInfoChange(e.target.value)}
+                />
+              </div>
             )}
             {item.value === '5' && value === '5' && (
               <>

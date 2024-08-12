@@ -4,15 +4,9 @@ import RenderStepContent from '../RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';
+import { validateAllSteps, validateForm } from '../validations/addressValidaton';
 
-export const REQUES_OPTIONS = [
-  { value: '1', label: '문 앞에 놓아주세요.' },
-  { value: '2', label: '경비실에 맡겨 주세요' },
-  { value: '3', label: '택배함에 넣어 주세요.' },
-  { value: '4', label: '직접 입력' },
-];
-
-const EditFormPage = ({ renderAllAtOnce = false }) => {
+const AddressAddPage = () => {
   const { addressModalOpen } = useAddressStore();
   const [step, setStep] = useState(1);
   const [address, setAddress] = useState({ main: '', detail: '' });
@@ -61,54 +55,10 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
   };
 
   useEffect(() => {
-    validateForm();
-    validateAllSteps();
+    const validationInput = { step, formData, address, selectedValue, selectedRequest };
+    setIsValid(validateForm(validationInput));
+    setAllStepsValid(validateAllSteps(validationInput));
   }, [step, formData, address, selectedValue, selectedRequest]);
-
-  const validateForm = () => {
-    switch (step) {
-      case 1:
-        setIsValid(formData.name.trim() !== '');
-        break;
-      case 2:
-        setIsValid(address.main.trim() !== '' && address.detail.trim() !== '');
-        break;
-      case 3:
-        if (selectedValue.value === '1' || selectedValue.value === '5') {
-          setIsValid(selectedValue.text.trim() !== '');
-        } else {
-          setIsValid(selectedValue.value.trim() !== '');
-        }
-        break;
-      case 4:
-        if (selectedRequest.value === '4') {
-          setIsValid(selectedRequest.requestText.trim() !== '');
-        } else {
-          setIsValid(selectedRequest.value.trim() !== '');
-        }
-        break;
-      case 5:
-        setIsValid(/^01[0-9]{8,9}$/.test(formData.phone));
-        break;
-      default:
-        setIsValid(true);
-    }
-  };
-
-  const validateAllSteps = () => {
-    const allValid =
-      formData.name.trim() !== '' &&
-      address.main.trim() !== '' &&
-      address.detail.trim() !== '' &&
-      (selectedValue.value === '1' || selectedValue.value === '5'
-        ? selectedValue.text.trim() !== ''
-        : selectedValue.value.trim() !== '') &&
-      (selectedRequest.value === '4'
-        ? selectedRequest.requestText.trim() !== ''
-        : selectedRequest.value.trim() !== '') &&
-      /^01[0-9]{8,9}$/.test(formData.phone);
-    setAllStepsValid(allValid);
-  };
 
   return (
     <div className="flex h-full w-full flex-col overflow-scroll pb-16">
@@ -137,7 +87,7 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
             />
           </div>
 
-          {!renderAllAtOnce && step < 5 && (
+          {step < 5 && (
             <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-4">
               <AddressButton
                 className={isValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}
@@ -148,7 +98,7 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
               </AddressButton>
             </div>
           )}
-          {renderAllAtOnce || step >= 5 ? (
+          {step >= 5 ? (
             <div className="absolute bottom-0 flex w-full justify-center bg-white">
               <AddressButton
                 onClick={handleConfirm}
@@ -165,4 +115,4 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
   );
 };
 
-export default EditFormPage;
+export default AddressAddPage;

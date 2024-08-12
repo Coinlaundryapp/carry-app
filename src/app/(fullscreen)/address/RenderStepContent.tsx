@@ -2,9 +2,7 @@
 import React from 'react';
 import AddressForm from '@/components/address/AddressForm';
 import EntrancePassword from '@/components/address/EntrancePassword';
-import Dropdown from '@/components/share/Dropdown/Dropdown';
 import { Input } from '@/components/share/Input';
-import { REQUES_OPTIONS } from './form/page';
 import AddressRequest from '@/components/address/AddressRequest';
 
 interface RenderStepContentProps {
@@ -37,7 +35,6 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
   handleChangeRequest,
   renderSteps,
   setSelectedRequest,
-  onChangeRequestText,
 
   renderAllAtOnce = false,
 }) => {
@@ -69,8 +66,6 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
           />
         );
       case 4:
-        
-
         return (
           <AddressRequest
             key={4}
@@ -78,7 +73,6 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
             setSelectedRequest={setSelectedRequest}
             selectedRequest={selectedRequest}
           />
-          
         );
       case 5:
         return (
@@ -103,8 +97,8 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
     return (
       <>
         {renderSteps
-          .slice() // 원본 배열을 복사
-          .sort((a, b) => b - a) // 내림차순으로 정렬하여 마지막 단계가 상단에 렌더링되도록 설정
+          .slice() 
+          .sort((a, b) => b - a)
           .map((currentStep) => renderComponents(currentStep))}
       </>
     );
@@ -115,7 +109,7 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
     <>
       {renderSteps
         .filter((currentStep) => step >= currentStep)
-        .reverse() // 추가되는 단계가 위로 쌓이도록 역순으로 렌더링
+        .reverse() 
         .map((currentStep) => renderComponents(currentStep))}
     </>
   );

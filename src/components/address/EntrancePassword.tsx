@@ -47,9 +47,10 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraIn
                     status="primary"
                     placeholder="비밀번호를 입력하세요"
                     value={text}
+                    className="mb-2"
                     onChange={(e) => onExtraInfoChange(e.target.value)}
                   />
-                  <p className="mt-4 flex items-center justify-start gap-1 text-xs">
+                  <p className="flex items-center justify-start gap-1 text-xs">
                     <InformationCircleRed />
                     <span>입력한 방법으로 출입이 불가능한 경우, 수거/배송이 어렵습니다.</span>
                   </p>

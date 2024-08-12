@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropdown from '../share/Dropdown/Dropdown';
-import { REQUES_OPTIONS } from '@/app/(fullscreen)/address/form/page';
+import { REQUES_OPTIONS } from '@/app/(fullscreen)/address/constants/request-options';
 import { Input } from '../share/Input';
 
 type TProps = {

@@ -4,8 +4,9 @@ import RenderStepContent from '../RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';
+import { validateAllSteps, validateForm } from '../validations/addressValidaton';
 
-const EditFormPage = ({ renderAllAtOnce = false }) => {
+const EditFormPage = () => {
   const { addressModalOpen } = useAddressStore();
   const [step, setStep] = useState(1);
   const [address, setAddress] = useState({ main: '', detail: '' });
@@ -54,54 +55,12 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
   };
 
   useEffect(() => {
-    validateForm();
-    validateAllSteps();
+    const validationInput = { step, formData, address, selectedValue, selectedRequest };
+    setIsValid(validateForm(validationInput));
+    setAllStepsValid(validateAllSteps(validationInput));
   }, [step, formData, address, selectedValue, selectedRequest]);
 
-  const validateForm = () => {
-    switch (step) {
-      case 1:
-        setIsValid(formData.name.trim() !== '');
-        break;
-      case 2:
-        setIsValid(address.main.trim() !== '' && address.detail.trim() !== '');
-        break;
-      case 3:
-        if (selectedValue.value === '1' || selectedValue.value === '5') {
-          setIsValid(selectedValue.text.trim() !== '');
-        } else {
-          setIsValid(selectedValue.value.trim() !== '');
-        }
-        break;
-      case 4:
-        if (selectedRequest.value === '4') {
-          setIsValid(selectedRequest.requestText.trim() !== '');
-        } else {
-          setIsValid(selectedRequest.value.trim() !== '');
-        }
-        break;
-      case 5:
-        setIsValid(/^01[0-9]{8,9}$/.test(formData.phone));
-        break;
-      default:
-        setIsValid(true);
-    }
-  };
-
-  const validateAllSteps = () => {
-    const allValid =
-      formData.name.trim() !== '' &&
-      address.main.trim() !== '' &&
-      address.detail.trim() !== '' &&
-      (selectedValue.value === '1' || selectedValue.value === '5'
-        ? selectedValue.text.trim() !== ''
-        : selectedValue.value.trim() !== '') &&
-      (selectedRequest.value === '4'
-        ? selectedRequest.requestText.trim() !== ''
-        : selectedRequest.value.trim() !== '') &&
-      /^01[0-9]{8,9}$/.test(formData.phone);
-    setAllStepsValid(allValid);
-  };
+ 
 
   return (
     <div className="flex h-full w-full flex-col overflow-scroll pb-16">

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import RenderStepContent from '../RenderStepContent'
+import RenderStepContent from '../RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';
@@ -21,7 +21,6 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
     text: '',
   });
   const [selectedRequest, setSelectedRequest] = useState({ value: '1', requestText: '' });
-
   const [isValid, setIsValid] = useState<boolean>(false);
   const [allStepsValid, setAllStepsValid] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -52,11 +51,9 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
   };
 
   const handleChangeRequestText = (requestText: string) => {
-    
     setSelectedRequest((pre) => ({ ...pre, requestText }));
   };
 
- 
   const handleConfirm = () => {
     if (allStepsValid) {
       alert('주소가 확인되었습니다!');
@@ -132,36 +129,23 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
               handleChange={handleChange}
               handleExtraInfoChange={handleExtraInfoChange}
               selectedRequest={selectedRequest}
-              setSelectedRequest={setSelectedRequest}
               handleChangeRequest={handleChangeRequest}
               onChangeRequestText={handleChangeRequestText}
+              setSelectedRequest={setSelectedRequest}
               renderSteps={[1, 2, 3, 4, 5]}
-              renderAllAtOnce={false}
+              renderAllAtOnce={true}
             />
           </div>
 
-          {!renderAllAtOnce && step < 5 && (
-            <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-4">
-              <AddressButton
-                className={isValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}
-                onClick={handleNext}
-                disabled={!isValid}
-              >
-                다음
-              </AddressButton>
-            </div>
-          )}
-          {renderAllAtOnce || step >= 5 ? (
-            <div className="absolute bottom-0 flex w-full justify-center bg-white">
-              <AddressButton
-                onClick={handleConfirm}
-                className={allStepsValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}
-                disabled={!allStepsValid}
-              >
-                추가하기
-              </AddressButton>
-            </div>
-          ) : null}
+          <div className="absolute bottom-0 flex w-full justify-center bg-white p-4">
+            <AddressButton
+              onClick={handleConfirm}
+              className={allStepsValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}
+              disabled={!allStepsValid}
+            >
+              저장
+            </AddressButton>
+          </div>
         </>
       )}
     </div>

@@ -26,7 +26,7 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraIn
   };
   return (
     <div className="mb-4">
-      <h2 className="mb-2 font-bold">공동현관 출입 방법</h2>
+      <label className="font_headline_1 font-bold mb-2 ">공동현관 출입 방법</label>
       <p className="mb-4 text-sm text-label-alternative">
         입력된 공동현관 비밀번호는 새벽 배송을 위해 필요한 정보로,
         <br />

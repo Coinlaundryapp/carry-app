@@ -20,7 +20,7 @@ const AddressForm = ({ address, setAddress }: TProps) => {
         onClick={() => setAddressModalOpen(true)}
         type="text"
         title="배송 받으실 주소"
-        fontStyle="strong"
+        fontStyle=" font_headline_1 font-bold mb-2"
         value={address.main}
         placeholder="건물, 지번 또는 도로명 검색"
         status="primary"

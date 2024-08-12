@@ -48,7 +48,7 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
             status="primary"
             type="text"
             title="받는 분"
-            fontStyle="strong"
+            fontStyle="font_headline_1 font-bold"
             placeholder="받는 분 성함을 입력해주세요."
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -82,7 +82,7 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
             status="primary"
             type="text"
             title="전화번호"
-            fontStyle="strong"
+            fontStyle="font_headline_1 font-bold"
             placeholder="전화번호를 입력해주세요."
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -97,7 +97,7 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
     return (
       <>
         {renderSteps
-          .slice() 
+          .slice()
           .sort((a, b) => b - a)
           .map((currentStep) => renderComponents(currentStep))}
       </>
@@ -109,7 +109,7 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
     <>
       {renderSteps
         .filter((currentStep) => step >= currentStep)
-        .reverse() 
+        .reverse()
         .map((currentStep) => renderComponents(currentStep))}
     </>
   );

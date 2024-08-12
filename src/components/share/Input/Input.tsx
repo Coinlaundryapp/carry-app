@@ -13,7 +13,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   errorIcon?: React.ReactNode;
   successIcon?: React.ReactNode;
   className?: string;
-  fontStyle?: 'strong';
+  fontStyle?: string;
   iconstate?: string;
   onClear?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -77,10 +77,12 @@ export function Input({
     <div className={cn('group w-full space-y-2', className)}>
       {title && (
         <label
-          className={inputTitleVariants({
-            titleColor,
-            fontStyle,
-          })}
+          className={cn(
+            inputTitleVariants({
+              titleColor,
+            }),
+            fontStyle && fontStyle,
+          )}
         >
           {title}
         </label>

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import RenderStepContent from '../RenderStepContent'
+import RenderStepContent from '../RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';
@@ -21,7 +21,6 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
     text: '',
   });
   const [selectedRequest, setSelectedRequest] = useState({ value: '1', requestText: '' });
-
   const [isValid, setIsValid] = useState<boolean>(false);
   const [allStepsValid, setAllStepsValid] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -52,11 +51,9 @@ const EditFormPage = ({ renderAllAtOnce = false }) => {
   };
 
   const handleChangeRequestText = (requestText: string) => {
-    
     setSelectedRequest((pre) => ({ ...pre, requestText }));
   };
 
- 
   const handleConfirm = () => {
     if (allStepsValid) {
       alert('주소가 확인되었습니다!');

@@ -4,7 +4,7 @@ import RenderStepContent from '../RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';
-import { validateAllSteps, validateForm } from '../validations/addressValidaton';
+import { validateAllSteps, validateForm } from '@/validations/addressValidaton';
 
 const EditFormPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -59,8 +59,6 @@ const EditFormPage = () => {
     setIsValid(validateForm(validationInput));
     setAllStepsValid(validateAllSteps(validationInput));
   }, [step, formData, address, selectedValue, selectedRequest]);
-
- 
 
   return (
     <div className="flex h-full w-full flex-col overflow-scroll pb-16">

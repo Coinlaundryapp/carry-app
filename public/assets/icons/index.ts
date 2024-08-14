@@ -30,6 +30,7 @@ import LogoIcon from './logo.svg';
 import BellBadgeIcon from './bell-badge.svg';
 import ArrowRightIcon from './arrow-right.svg';
 import InformationCircle from './information-circle.svg';
+import InformationCircleRed from './information-circle-red.svg';
 import VolumeIcon from './volume.svg';
 import BeddingIcon from './bedding.svg';
 import SneakersIcon from './sneakers.svg';
@@ -41,11 +42,14 @@ import ArrowUpIcon from './arrow-up.svg';
 import DeliveryManSadIcon from './delivery-man-sad.svg';
 import ModalOkIcon from './modal-ok.svg';
 import KakaoIcon from './kakao.svg';
+import ChevronDown from './chevron-down.svg';
+
 
 export {
   ArrowDownIcon,
   ArrowLeftIcon,
   AvatarGirlIcon,
+  InformationCircleRed,
   BoxOffIcon,
   BoxOnIcon,
   CheckIcon,
@@ -86,4 +90,5 @@ export {
   DeliveryManSadIcon,
   ModalOkIcon,
   KakaoIcon,
+  ChevronDown,
 };

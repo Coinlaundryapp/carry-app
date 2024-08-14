@@ -4,7 +4,7 @@ import RenderStepContent from '../RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';
-import { validateAllSteps, validateForm } from '../validations/addressValidaton';
+import { validateAllSteps, validateForm } from '@/validations/addressValidaton';
 
 const AddressAddPage = () => {
   const { addressModalOpen } = useAddressStore();

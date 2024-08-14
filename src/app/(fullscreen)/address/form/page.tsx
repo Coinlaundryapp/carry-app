@@ -99,7 +99,7 @@ const AddressAddPage = () => {
             </div>
           )}
           {step >= 5 ? (
-            <div className="absolute bottom-0 flex w-full justify-center bg-white">
+            <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-4">
               <AddressButton
                 onClick={handleConfirm}
                 className={allStepsValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}

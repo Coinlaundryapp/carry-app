@@ -6,7 +6,7 @@ type TProps = {
   backgroundColor?: string;
   color?: string;
   borderColor?: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large' | 'full';
   state: 'primary' | 'secondary' | 'fillPrimary' | 'fillSecondary' | 'default';
   onClick: () => void;
 };
@@ -16,6 +16,7 @@ function Button({ text, onClick, state, size = 'medium', ...rest }: TProps) {
     small: 'w-[140px] py-1 px-2',
     medium: 'w-[310px] py-2 px-4',
     large: 'w-[342px] py-3 px-6',
+    full: 'w-full py-[14px] flex items-center justify-center',
   };
 
   const stateClass = {

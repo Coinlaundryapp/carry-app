@@ -177,6 +177,7 @@ const config = {
         emphasize: 'var(--elevation-emphasize)',
         strong: 'var(--elevation-strong)',
         heavy: 'var(--elevation-heavy)',
+        button: 'var(--elevation-button)',
       },
       borderRadius: {
         sm: '4px',

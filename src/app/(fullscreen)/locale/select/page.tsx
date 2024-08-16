@@ -55,7 +55,9 @@ const SelectLocalePage = () => {
           }
         />
       </div>
-      <Button text="다음에 이용하기" state="primary" size="large" onClick={() => router.push('')} />
+      <Button state="primary" size="large" onClick={() => {}}>
+        다음에 이용하기
+      </Button>
     </div>
   );
 };

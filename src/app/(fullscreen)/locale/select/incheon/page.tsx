@@ -36,8 +36,10 @@ const SelectIncheonPage = () => {
         }}
       />
       <div className="flex-end flex h-[120px] flex-col justify-end gap-4">
-        {selectArea && <Button text="확인" state="fillPrimary" size="large" onClick={() => {}} />}
-        <Button text="다음에 이용하기" state="primary" size="large" onClick={() => {}} />
+        {selectArea && <Button state="fillPrimary" size="large" onClick={() => {}}></Button>}
+        <Button state="primary" size="large" onClick={() => {}}>
+          다음에 이용하기
+        </Button>
       </div>
     </div>
   );

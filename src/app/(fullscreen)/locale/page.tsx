@@ -7,10 +7,24 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import LocaleImg from '@assets/images/locale-image.png';
 import { ACTIVATED_CITY } from '@/constants/activate-region';
+import { useModalStore } from '@/store/modal-store';
 
 const LocalePage = () => {
   const router = useRouter();
   const [isServiceActive, setIsServiceActive] = useState<boolean>(true);
+
+  const openModal = useModalStore((state) => state.openModal);
+
+  const cannotUseService = () => {
+    openModal({
+      type: 'confirm',
+      image: 'sad',
+      title: '서비스를 이용할 수 없어요',
+      description: '위치를 허용해주시면 서비스를 이용할 수 있어요',
+      confirmText: '허용',
+      closeText: '아니요',
+    });
+  };
 
   return (
     <div className="flex h-full w-full flex-1 flex-col items-center justify-between pb-[30px] pt-[83px]">
@@ -36,31 +50,23 @@ const LocalePage = () => {
           }
         />
         <Button
-          text="허용하기"
           state="fillPrimary"
           size="large"
           // 위치 허용 O
           onClick={() => {
-            if (isServiceActive) {
-              // 서비스 가능 지역
-              router.push('locale/allow');
-            } else {
-              // 서비스 불가 지역
-              // FIXME: 모달 변경
-              alert('서비스 불가 지역이에요!');
-            }
+            router.push('locale/allow');
           }}
-        />
+        >
+          허용하기
+        </Button>
         <Button
-          text="나중에 하기"
           state="primary"
           size="large"
           // 위치 허용 X
-          onClick={() => {
-            // FIXME: 모달 변경
-            alert('서비스를 이용 할 수 없어요');
-          }}
-        />
+          onClick={cannotUseService}
+        >
+          나중에 하기
+        </Button>
       </div>
     </div>
   );

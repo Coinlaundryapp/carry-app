@@ -1,7 +1,6 @@
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 interface CustomJwtPayload extends JwtPayload {
-  iat: number;
   exp: number;
 }
 

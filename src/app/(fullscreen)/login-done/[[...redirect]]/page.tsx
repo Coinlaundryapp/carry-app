@@ -14,21 +14,35 @@ export default function LoginDonePage({
     redirect?: string;
   };
 }) {
+  const session = useSession();
   const router = useRouter();
   const { redirect } = params;
   const redirectUrl = redirect ? '/' + redirect : '/';
   const handleRedirect = () => {
-    router.replace(redirectUrl);
+    if (session.status === 'loading') return;
+    if (session.status === 'authenticated') {
+      router.replace(redirectUrl);
+    } else {
+      router.replace(`/login/${redirect}`);
+    }
   };
   const { addToast } = useToastStore();
   useEffect(() => {
+    if (session.status === 'loading') return;
+    if (session.status === 'authenticated') {
+      addToast({
+        message: '로그인이 완료되었습니다.',
+        type: 'success',
+      });
+      return;
+    }
     addToast({
-      message: '회원가입이 완료되었습니다.',
-      type: 'success',
+      message: '로그인에 실패했습니다.',
+      type: 'error',
     });
-  }, [addToast]);
+  }, [addToast, session.status]);
   return (
-    <main className="flex h-full flex-col items-center px-6 pt-36">
+    <main className="flex flex-col items-center px-6 pb-[30px] pt-36">
       <h2 className="font-bold text-label-normal font-title-1">더이상 기다리지 마세요!</h2>
       <p className="mb-14 font-medium text-label-alternative font-body-1-normal">
         당신의 소중한 세탁 시간을 아껴드릴게요!
@@ -40,7 +54,10 @@ export default function LoginDonePage({
         height={284}
         className="mb-32"
       />
-      <Button size="full" state="fillPrimary" text="확인" onClick={handleRedirect} />
+
+      <Button size="full" state="fillPrimary" onClick={handleRedirect}>
+        <p className="font-semibold font-body-1-normal">확인</p>
+      </Button>
     </main>
   );
 }

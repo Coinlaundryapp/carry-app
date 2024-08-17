@@ -6,9 +6,7 @@ export async function GET(request: Request) {
   const state = searchParams.get('state');
   const redirectUrl = state === 'undefined' ? '/login-done' : `/login-done/${state}`;
   await signIn('credentials', {
-    formData: {
-      code,
-    },
+    code: code as string,
     redirectTo: redirectUrl,
   });
 }

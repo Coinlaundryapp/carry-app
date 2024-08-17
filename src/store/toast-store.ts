@@ -3,7 +3,7 @@ import { create } from 'zustand';
 type Toast = {
   id: string;
   message: string;
-  type: 'success' | 'done';
+  type: 'success' | 'done' | 'error';
   duration?: number;
 };
 

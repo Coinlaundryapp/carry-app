@@ -27,8 +27,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           accessToken: '',
           refreshToken: '',
         };
-        const code = credentials.code as string;
-        const res = await login({ code });
+        const authorizationCode = credentials.code as string;
+
+        const res = await login({ authorizationCode });
         if (res) {
           user = {
             accessToken: res.accessToken,
@@ -47,10 +48,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           refreshToken: user.refreshToken,
         };
       }
+
       if (token && isJwtExpired(token.accessToken as string)) {
-        const res = await refreshAccessToken(token.refreshToken as string);
-        token.accessToken = res.accessToken;
-        token.refreshToken = res.refreshToken;
+        const res = await refreshAccessToken({ refreshToken: token.refreshToken as string });
+        return {
+          ...token,
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+        };
       }
       return token;
     },

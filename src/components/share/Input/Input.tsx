@@ -4,7 +4,7 @@ import { InputDeleteIcon } from '@assets/icons';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type: 'text' | 'number';
-  status: 'default' | 'error' | 'success' | 'done';
+  status: 'default' | 'error' | 'success' | 'done' | 'primary';
   statusMessage?: string;
   title?: string;
   titleColor?: 'strong' | 'normal';
@@ -13,14 +13,19 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   errorIcon?: React.ReactNode;
   successIcon?: React.ReactNode;
   className?: string;
+  fontStyle?: string;
+  iconstate?: string;
   onClear?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const inputTitleVariants = cva('font-label-1-normal text-label-strong', {
   variants: {
     titleColor: {
-      strong: 'text-label-strong',
+      strong: 'text-label-strong ',
       normal: 'text-label-normal',
+    },
+    fontStyle: {
+      strong: 'font-bold ',
     },
   },
 });
@@ -30,6 +35,7 @@ const inputBoxVariants = cva(
   {
     variants: {
       status: {
+        primary: 'border border-line-normal has-[:focus]:border-primary-normal',
         default: 'border border-line-normal has-[:focus]:border-cool-neutral-22',
         error: 'border border-status-destructive bg-background-normal-alternative',
         success: 'border border-status-positive bg-background-normal-alternative',
@@ -46,6 +52,7 @@ const statusMessageVariants = cva('px-2 font-caption-1', {
       error: 'text-status-destructive',
       success: 'text-status-positive',
       done: '',
+      primary: '',
     },
   },
 });
@@ -60,7 +67,9 @@ export function Input({
   errorIcon,
   titleColor = 'normal',
   className,
+  fontStyle,
   onClear,
+  iconstate,
   ...props
 }: InputProps) {
   const canValueClear = props.value && status === 'default' && onClear;
@@ -68,9 +77,12 @@ export function Input({
     <div className={cn('group w-full space-y-2', className)}>
       {title && (
         <label
-          className={inputTitleVariants({
-            titleColor,
-          })}
+          className={cn(
+            inputTitleVariants({
+              titleColor,
+            }),
+            fontStyle && fontStyle,
+          )}
         >
           {title}
         </label>
@@ -85,7 +97,8 @@ export function Input({
           type="text"
           inputMode={type === 'number' ? 'numeric' : 'text'}
           readOnly={status === 'done'}
-          className="peer w-full bg-transparent text-label-normal caret-primary-normal font-body-2-normal placeholder:text-label-assistive focus:outline-none"
+          className={`peer w-full bg-transparent text-label-normal caret-primary-normal font-body-2-normal placeholder:text-label-assistive focus:outline-none ${iconstate ? iconstate : ''}`}
+          {...props}
           {...props}
         />
         {status === 'success' && successIcon && <div>{successIcon}</div>}

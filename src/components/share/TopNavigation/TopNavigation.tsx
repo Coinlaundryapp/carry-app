@@ -19,7 +19,7 @@ export default function TopNavigation({ type, title, leftClick, rightClick }: To
         {type === 'close' ? <CloseIcon /> : <ArrowLeftIcon />}
       </button>
 
-      <p className="font-semibold text-label-strong font-headline-1">{title}</p>
+      <p className="font_headline_1 font-bold text-label-strong">{title}</p>
       <div className="flex h-9 w-9 items-center justify-center">
         {rightClick && (
           <button onClick={rightClick} className="p-1.5">

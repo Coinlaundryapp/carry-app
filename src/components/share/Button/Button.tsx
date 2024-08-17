@@ -22,7 +22,7 @@ const buttonVariants = cva('font_body_1_normal h-[52px] rounded-md border', {
       small: 'w-[140px] py-1 px-2',
       medium: 'w-[310px] py-2 px-4',
       large: 'w-[342px] py-3 px-6',
-      full: 'w-full py-[14px] flex items-center justify-center',
+      full: 'flex w-full items-center justify-center',
     },
     state: {
       primary: 'border-primary-normal text-primary-normal',

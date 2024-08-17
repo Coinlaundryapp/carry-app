@@ -16,21 +16,24 @@ function Group({ children, onChange, value, size = 'small' }: PropsWithChildren<
   );
 }
 
-const RadioButtonVariants = cva(`rounded-full appearance-none border-[1.5px] cursor-pointer`, {
-  variants: {
-    variant: {
-      active: 'bg-cyan-50 border-primary-normal',
-      inactive: 'bg-static-white border-label-assistive',
+const RadioButtonVariants = cva(
+  `rounded-full appearance-none border-[1.5px] cursor-pointer flex-shrink-0 p-0.5`,
+  {
+    variants: {
+      variant: {
+        active: 'bg-cyan-50 border-primary-normal',
+        inactive: 'bg-static-white border-label-assistive',
+      },
+      size: {
+        small: 'w-[16px] h-[16px] checked:border-[4.5px]',
+        big: 'w-[20px] h-[20px] checked:border-[6px]',
+      },
     },
-    size: {
-      small: 'w-[16px] h-[16px] checked:border-[4.5px]',
-      big: 'w-[20px] h-[20px] checked:border-[6px]',
+    defaultVariants: {
+      variant: 'inactive',
     },
   },
-  defaultVariants: {
-    variant: 'inactive',
-  },
-});
+);
 
 function Button({ value }: Pick<Props, 'value'>) {
   const context = useContext(RadioContext);

@@ -42,6 +42,7 @@ import ArrowUpIcon from './arrow-up.svg';
 import DeliveryManSadIcon from './delivery-man-sad.svg';
 import ModalOkIcon from './modal-ok.svg';
 import KakaoIcon from './kakao.svg';
+import AddPlusIcon from './add-plus.svg';
 import ChevronDown from './chevron-down.svg';
 import CautionIcon from './cation.svg';
 
@@ -90,6 +91,7 @@ export {
   DeliveryManSadIcon,
   ModalOkIcon,
   KakaoIcon,
+  AddPlusIcon,
   ChevronDown,
   CautionIcon,
 };

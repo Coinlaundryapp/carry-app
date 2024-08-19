@@ -5,7 +5,7 @@ import Chip from '@/components/share/Chip/chip';
 import Tag from '@/components/share/Tag';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { getAddresses, getAddressesList } from '@/api/addressApi';
+import { getAddresses,  } from '@/api/addressApi';
 import { useSession } from 'next-auth/react';
 
 interface DeliveryAddressItemProps {

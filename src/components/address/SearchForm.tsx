@@ -1,8 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/share/Input';
 import { SearchIcon } from '@assets/icons';
 import { useAddressStore } from '@/store/address-store';
+import { getAddressSearchList } from '@/api/addressApi';
 
 type TAddress = {
   main: string;
@@ -14,27 +15,41 @@ type TPros = {
 
 function SearchForm({ onAddressChange }: TPros) {
   const { addressModalOpen, setAddressModalOpen } = useAddressStore();
-  const [value, setValue] = useState('');
-  const [addresses, setAddresses] = useState<TAddress[]>([]);
+  const [value, setValue] = useState('잠실동');
+  const [searchList, setSearchList] = useState([]);
+  const [page, setPage] = useState(0);
 
-  const DUMMYDATA_ADDRESS: TAddress[] = [
-    {
-      main: '서울특별시 용산구 서빙고로 4-2 (한강로3가)',
-      sub: '서울특별시 한강로3가 44-7',
-    },
-    {
-      main: '서울특별시 용산구 서빙고로 4-4 (한강로3가)',
-      sub: '서울특별시 한강로3가 44-8',
-    },
-    {
-      main: '서울특별시 용산구 서빙고로 4-6 (한강로3가)',
-      sub: '서울특별시 한강로3가 45-1',
-    },
-    {
-      main: '서울특별시 용산구 서빙고로 4-8 (한강로3가)',
-      sub: '서울특별시 한강로3가 45-2',
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await getAddressSearchList(value, page);
+        setSearchList(res.content);
+      } catch (error) {
+        console.error('Error fetching address:', error);
+      }
+    };
+
+    fetchData();
+  }, [value, page]);
+
+  // const DUMMYDATA_ADDRESS: TAddress[] = [
+  //   {
+  //     main: '서울특별시 용산구 서빙고로 4-2 (한강로3가)',
+  //     sub: '서울특별시 한강로3가 44-7',
+  //   },
+  //   {
+  //     main: '서울특별시 용산구 서빙고로 4-4 (한강로3가)',
+  //     sub: '서울특별시 한강로3가 44-8',
+  //   },
+  //   {
+  //     main: '서울특별시 용산구 서빙고로 4-6 (한강로3가)',
+  //     sub: '서울특별시 한강로3가 45-1',
+  //   },
+  //   {
+  //     main: '서울특별시 용산구 서빙고로 4-8 (한강로3가)',
+  //     sub: '서울특별시 한강로3가 45-2',
+  //   },
+  // ];
 
   const handleClick = (address: TAddress) => {
     setValue(address.main);
@@ -46,14 +61,14 @@ function SearchForm({ onAddressChange }: TPros) {
     const inputValue = e.target.value;
     setValue(inputValue);
 
-    if (inputValue) {
-      const filteredAddresses = DUMMYDATA_ADDRESS.filter((address) =>
-        address.main.includes(inputValue),
-      );
-      setAddresses(filteredAddresses);
-    } else {
-      setAddresses([]);
-    }
+    // if (inputValue) {
+    //   const filteredAddresses = DUMMYDATA_ADDRESS.filter((address) =>
+    //     address.main.includes(inputValue),
+    //   );
+    //   setAddresses(filteredAddresses);
+    // } else {
+    //   setAddresses([]);
+    // }
   };
 
   return (
@@ -71,14 +86,14 @@ function SearchForm({ onAddressChange }: TPros) {
       />
 
       <div className="h-2 w-full bg-cool-neutral-99" />
-      {addresses.map((address, index) => (
+      {searchList.map((address, index) => (
         <div
           onClick={() => handleClick(address)}
           key={index}
           className="flex cursor-pointer flex-col gap-2 p-4"
         >
           <div className="border-b border-cool-neutral-99 pb-4">
-            <p>{address.main}</p>
+            <p>{address.addressName}</p>
 
             <p className="flex items-center justify-start gap-2 text-sm text-gray-500">
               <span className="font_caption_2 rounded-sm border border-cool-neutral-80 p-0.5 text-cool-neutral-80">

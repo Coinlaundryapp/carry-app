@@ -7,28 +7,24 @@ import { ApiResponse, AuthResponse } from '@/types/api-types';
 // console.log('access', accessToken);
 
 export async function getAddresses(accessToken: string) {
-  const res = await fetchExtended<ApiResponse<AuthResponse>>(
-    '/api/v1/users/me/shipping-addresses',
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
+  const res = await fetchExtended<any>('/api/v1/users/me/shipping-addresses', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+  });
   const data = res.body.data;
   return data;
 }
 
-export async function getAddressesList() {
-  const res = await fetchExtended<ApiResponse<AuthResponse>>(
-    '/api/v1/addresses?query=잠실동&pageSize=5&pageNumber=0',
+export async function getAddressSearchList(keyword: string, page: number) {
+  const res = await fetchExtended<any>(
+    `/api/v1/addresses?query=${keyword}&pageSize=5&pageNumber=${page}`,
     {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        
       },
     },
   );

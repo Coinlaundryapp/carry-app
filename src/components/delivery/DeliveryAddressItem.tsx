@@ -4,6 +4,9 @@ import { useRouter, usePathname } from 'next/navigation';
 import Chip from '@/components/share/Chip/chip';
 import Tag from '@/components/share/Tag';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { getAddresses, getAddressesList } from '@/api/addressApi';
+import { useSession } from 'next-auth/react';
 
 interface DeliveryAddressItemProps {
   item: any;
@@ -13,6 +16,25 @@ interface DeliveryAddressItemProps {
 export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddressItemProps) {
   const router = useRouter();
   const pathname = usePathname();
+
+  const session = useSession();
+  const accessToken = session.data?.user?.accessToken;
+  console.log('access', accessToken);
+
+  useEffect(() => {
+    if (accessToken) {
+      const fetchData = async () => {
+        try {
+          const data = await getAddresses(accessToken);
+          console.log('data', data);
+        } catch (error) {
+          console.error('Error fetching address:', error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [accessToken]);
 
   const handleRemoveClick = () => {
     console.log('remove');

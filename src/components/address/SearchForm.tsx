@@ -3,8 +3,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from '@/components/share/Input';
 import { AddressSearchNoLIst, CancelIcon, SearchIcon } from '@assets/icons';
 import { useAddressStore } from '@/store/address-store';
-import { response } from './dummydata';
+import { debounce } from 'es-toolkit';
 import DefaultSearch from './DefaultSearch';
+import { getAddressSearchList } from '@/api/addressApi';
 
 type TPros = {
   onAddressChange: (value: string) => void;
@@ -17,6 +18,7 @@ function SearchForm({ onAddressChange }: TPros) {
   const [addresses, setAddresses] = useState<any[]>([]);
   const [addressSearchState, setAddressSearchState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasNext, setHasNext] = useState(true);
   const loader = useRef<HTMLDivElement | null>(null);
 
   const handleClick = (address: any) => {
@@ -25,57 +27,61 @@ function SearchForm({ onAddressChange }: TPros) {
     setAddressModalOpen(false);
     setAddressSearchState(false);
   };
+  const debouncedSearch = useRef(
+    debounce(async (inputValue: string) => {
+      if (inputValue.trim() !== '') {
+        setIsLoading(true);
+        try {
+          const result = await getAddressSearchList(inputValue, 1);
+          setAddresses(result.content);
+          setPage(1);
+          setHasNext(result.pagination.hasNext);
+        } catch (error) {
+          console.error('Error fetching addresses:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setAddressSearchState(false);
+        setAddresses([]);
+      }
+    }, 800),
+  ).current;
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setValue(inputValue);
 
-    if (inputValue.trim() !== '') {
-      setAddressSearchState(true);
-      setIsLoading(true);
-      // API 호출을 통해 주소 목록을 가져옵니다.
-      try {
-        // 예: 실제 API 호출
-        // const response = await instance.get(`/api/addresses?query=${inputValue}&page=1`);
-        // setAddresses(response.data.content);
-        // setPage(1); // 새로운 검색어로 검색했으므로 페이지를 1로 초기화
-        setAddresses(response.data.content); // 더미 데이터를 사용하여 즉시 업데이트
-      } catch (error) {
-        console.error('Error fetching addresses:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      setAddressSearchState(false);
-      setAddresses([]);
-    }
+    setAddressSearchState(true);
+
+    debouncedSearch(inputValue);
   };
 
   const fetchMoreAddresses = async (page: number) => {
-    // if (!addressSearchState) return;
-    // try {
-    //   const response = await instance.get(`/api/addresses?query=${value}&page=${page}`);
-    //   setAddresses((prevAddresses) => [...prevAddresses, ...response.data.content]);
-    // } catch (error) {
-    //   console.error('Error fetching more addresses:', error);
-    // }
+    if (!addressSearchState || !hasNext) return;
+    try {
+      const result = await getAddressSearchList(value, page);
+
+      setHasNext(result.pagination.hasNext);
+    } catch (error) {
+      console.error('Error fetching more addresses:', error);
+    }
   };
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
-      if (target.isIntersecting && addressSearchState && !isLoading) {
+      if (target.isIntersecting && addressSearchState && !isLoading && hasNext) {
         setPage((prevPage) => prevPage + 1);
       }
     },
-    [addressSearchState, isLoading],
+    [addressSearchState, isLoading, hasNext],
   );
 
   const handleCancelClick = () => {
-    // 검색 상태 및 검색어 초기화
     setAddressSearchState(false);
     setAddresses([]);
-    setValue(''); // 검색어 초기화
+    setValue('');
   };
 
   useEffect(() => {
@@ -125,19 +131,19 @@ function SearchForm({ onAddressChange }: TPros) {
         <DefaultSearch />
       ) : addresses.length > 0 ? (
         <div className="flex-1 overflow-y-auto">
-          {addresses.map((address: any) => (
+          {addresses.map((address: any, index) => (
             <div
               onClick={() => handleClick(address)}
-              key={address.addressType}
+              key={index}
               className="flex cursor-pointer flex-col gap-2 p-4"
             >
               <div className="border-b border-cool-neutral-99 pb-4">
-                <p>{address.regionAddress.addressName}</p>
+                <p>{address.addressName}</p>
                 <p className="flex items-center justify-start gap-2 text-sm text-gray-500">
                   <span className="font_caption_2 rounded-sm border border-cool-neutral-80 p-0.5 text-cool-neutral-80">
                     지번
                   </span>
-                  {address.roadAddress.addressName}
+                  {address.regionAddress.addressName}
                 </p>
               </div>
             </div>

@@ -45,10 +45,14 @@ import KakaoIcon from './kakao.svg';
 import AddPlusIcon from './add-plus.svg';
 import ChevronDown from './chevron-down.svg';
 import CautionIcon from './cation.svg';
+import AddressSearchNoLIst from './address-search-nolist.svg';
+import CancelIcon from './Vector.svg';
 
 export {
   ArrowDownIcon,
+  AddressSearchNoLIst,
   ArrowLeftIcon,
+  CancelIcon,
   AvatarGirlIcon,
   InformationCircleRed,
   BoxOffIcon,

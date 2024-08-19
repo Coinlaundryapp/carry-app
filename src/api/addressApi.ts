@@ -19,6 +19,7 @@ export async function getAddresses(accessToken: string) {
 }
 
 export async function getAddressSearchList(keyword: string, page: number) {
+  console.log('page', page);
   const res = await fetchExtended<any>(
     `/api/v1/addresses?query=${keyword}&pageSize=5&pageNumber=${page}`,
     {

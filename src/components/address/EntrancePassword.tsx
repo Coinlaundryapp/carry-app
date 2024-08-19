@@ -10,11 +10,11 @@ type TProps = {
 };
 
 const ENTRANCE_PASSWORD = [
-  { value: '1', label: '공동현관 비밀번호' },
-  { value: '2', label: '자유출입 가능(공동현관 없음)' },
-  { value: '3', label: '경비실 호출' },
-  { value: '4', label: '세대 호출' },
-  { value: '5', label: '기타' },
+  { value: 'PASSWORD', label: '공동현관 비밀번호' },
+  { value: 'FREE_ACCESS', label: '자유출입 가능(공동현관 없음)' },
+  { value: 'SECURITY_CALL', label: '경비실 호출' },
+  { value: 'HOUSEHOLD_CALL', label: '세대 호출' },
+  { value: 'OTHER', label: '기타' },
 ];
 
 const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraInfoChange }) => {
@@ -40,7 +40,7 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraIn
               <span className="font_body_2_normal">{item.label}</span>
             </label>
             <div className="ml-6">
-              {item.value === '1' && value === '1' && (
+              {item.value === 'PASSWORD' && value === 'PASSWORD' && (
                 <>
                   <Input
                     type="text"
@@ -56,7 +56,7 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraIn
                   </p>
                 </>
               )}
-              {item.value === '5' && value === '5' && (
+              {item.value === 'OTHER' && value === 'OTHER' && (
                 <>
                   <Input
                     type="text"

@@ -25,7 +25,6 @@ function AddressRequest({ selectedRequest, handleChangeRequest, setSelectedReque
           className="mb-4 mt-3"
           status="primary"
           type="text"
-          // fontStyle="strong"
           placeholder="내용을 자세히 입력해주세요."
           value={selectedRequest.requestText}
           onChange={(e) =>

@@ -44,7 +44,7 @@ import ModalOkIcon from './modal-ok.svg';
 import KakaoIcon from './kakao.svg';
 import AddPlusIcon from './add-plus.svg';
 import ChevronDown from './chevron-down.svg';
-
+import CautionIcon from './cation.svg';
 
 export {
   ArrowDownIcon,
@@ -93,4 +93,5 @@ export {
   KakaoIcon,
   AddPlusIcon,
   ChevronDown,
+  CautionIcon,
 };

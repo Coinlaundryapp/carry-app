@@ -4,7 +4,8 @@ import RenderStepContent from '../RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';
-import { validateAllSteps, validateForm } from '@/validations/addressValidaton';
+import { validateAllSteps, validateForm } from '@/validations/addressValidation';
+import { REQUEST_OPTIONS } from '@/constants/request-options';
 
 const AddressAddPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -18,9 +19,22 @@ const AddressAddPage = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
   const [allStepsValid, setAllStepsValid] = useState<boolean>(false);
   const [formData, setFormData] = useState({
+    addressLabel: '',
     name: '',
     phone: '',
   });
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 남기기
+
+    if (value.length > 3 && value.length <= 7) {
+      value = value.replace(/(\d{3})(\d+)/, '$1-$2');
+    } else if (value.length > 7) {
+      value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+    }
+
+    setFormData({ ...formData, phone: value });
+  };
 
   const handleChange = (value: string) => {
     setSelectedValue((pre) => ({ ...pre, value }));
@@ -49,10 +63,33 @@ const AddressAddPage = () => {
   };
 
   const handleConfirm = () => {
+    let addressRequest = '';
+    if (selectedRequest.value === '4') {
+      addressRequest = selectedRequest.requestText;
+    } else {
+      const selectedOption = REQUEST_OPTIONS.find(
+        (option) => option.value === selectedRequest.value,
+      );
+      addressRequest = selectedOption ? selectedOption.label : '';
+    }
+
+    const newAddress = {
+      addressLabe: formData.addressLabel,
+      recipientPhone: formData.phone,
+      recipientName: formData.name,
+      baseAddress: address.main,
+      detailAddress: address.detail,
+      deliveryNotes: addressRequest,
+      entranceType: selectedValue.value,
+      entranceDetail: selectedValue.text,
+    };
+    console.log('newaddress', newAddress);
+
     if (allStepsValid) {
       alert('주소가 확인되었습니다!');
     }
   };
+ 
 
   useEffect(() => {
     const validationInput = { step, formData, address, selectedValue, selectedRequest };
@@ -82,12 +119,13 @@ const AddressAddPage = () => {
               setSelectedRequest={setSelectedRequest}
               handleChangeRequest={handleChangeRequest}
               onChangeRequestText={handleChangeRequestText}
-              renderSteps={[1, 2, 3, 4, 5]}
+              onPhoneChange={handlePhoneChange}
+              renderSteps={[1, 2, 3, 4, 5, 6]}
               renderAllAtOnce={false}
             />
           </div>
 
-          {step < 5 && (
+          {step < 6 && (
             <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-4">
               <AddressButton
                 className={isValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}
@@ -98,7 +136,7 @@ const AddressAddPage = () => {
               </AddressButton>
             </div>
           )}
-          {step >= 5 ? (
+          {step >= 6 ? (
             <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-4">
               <AddressButton
                 onClick={handleConfirm}

@@ -20,6 +20,7 @@ interface RenderStepContentProps {
   renderAllAtOnce?: boolean; // 모든 단계를 한 번에 렌더링할지 여부
   onChangeRequestText: (text: string) => void;
   setSelectedRequest: any;
+  onPhoneChange: (e: any) => void;
 }
 
 const RenderStepContent: React.FC<RenderStepContentProps> = ({
@@ -35,7 +36,7 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
   handleChangeRequest,
   renderSteps,
   setSelectedRequest,
-
+  onPhoneChange,
   renderAllAtOnce = false,
 }) => {
   const renderComponents = (currentStep: number) => {
@@ -47,6 +48,20 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
             className="mb-4"
             status="primary"
             type="text"
+            title="배송지 이름"
+            fontStyle="font_headline_1 font-bold"
+            placeholder="예) 우리집 회사"
+            value={formData.addressLabel}
+            onChange={(e) => setFormData({ ...formData, addressLabel: e.target.value })}
+          />
+        );
+      case 2:
+        return (
+          <Input
+            key={2}
+            className="mb-4"
+            status="primary"
+            type="text"
             title="받는 분"
             fontStyle="font_headline_1 font-bold"
             placeholder="받는 분 성함을 입력해주세요."
@@ -54,30 +69,30 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
         );
-      case 2:
-        return <AddressForm key={2} address={address} setAddress={setAddress} />;
       case 3:
+        return <AddressForm key={3} address={address} setAddress={setAddress} />;
+      case 4:
         return (
           <EntrancePassword
-            key={3}
+            key={4}
             onChange={handleChange}
             entranceValue={selectedValue}
             onExtraInfoChange={handleExtraInfoChange}
           />
         );
-      case 4:
+      case 5:
         return (
           <AddressRequest
-            key={4}
+            key={5}
             handleChangeRequest={handleChangeRequest}
             setSelectedRequest={setSelectedRequest}
             selectedRequest={selectedRequest}
           />
         );
-      case 5:
+      case 6:
         return (
           <Input
-            key={5}
+            key={6}
             className="mb-4"
             status="primary"
             type="text"
@@ -85,7 +100,8 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
             fontStyle="font_headline_1 font-bold"
             placeholder="전화번호를 입력해주세요."
             value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            onChange={(e) => onPhoneChange(e)}
+            // onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
           />
         );
       default:

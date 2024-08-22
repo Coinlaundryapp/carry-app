@@ -2,20 +2,29 @@ import { fetchExtended } from '@/api/api-client';
 import { ApiResponse, AuthResponse } from '@/types/api-types';
 
 export async function login({ authorizationCode }: { authorizationCode: string }) {
-  const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: {
-      authorizationCode,
-    },
-  });
-  const data = res.body.data;
-  return {
-    accessToken: data.accessToken,
-    refreshToken: data.refreshToken,
-  };
+  try {
+    const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        authorizationCode,
+      },
+    });
+    const data = res.body.data;
+    return {
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === '전화번호가 없으면 서비스를 이용할 수 없습니다.') {
+        throw Error('login_error');
+      }
+    }
+    throw Error('server_error');
+  }
 }
 export async function refreshAccessToken({ refreshToken }: { refreshToken: string }) {
   const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/reissue', {

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import RenderStepContent from '../../RenderStepContent';
+import RenderStepContent from '@/components/address/RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';

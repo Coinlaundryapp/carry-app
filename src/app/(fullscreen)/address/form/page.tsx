@@ -1,11 +1,16 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import RenderStepContent from '../RenderStepContent';
+import RenderStepContent from '@/components/address/RenderStepContent';
 import { useAddressStore } from '@/store/address-store';
 import AddressButton from '@/components/address/AddressButton';
 import SearchForm from '@/components/address/SearchForm';
 import { validateAllSteps, validateForm } from '@/validations/addressValidation';
 import { REQUEST_OPTIONS } from '@/constants/request-options';
+import { postAddress } from '@/api/addressApi';
+import { useSession } from 'next-auth/react';
+import { useMutation } from '@tanstack/react-query';
+import { Alert } from '@/components/share/Alert';
+import { useRouter } from 'next/navigation';
 
 const AddressAddPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -22,6 +27,20 @@ const AddressAddPage = () => {
     addressLabel: '',
     name: '',
     phone: '',
+  });
+  const [success, setSuccess] = useState(true);
+  const session = useSession();
+  const accessToken = session.data?.user?.accessToken;
+
+  const router = useRouter();
+
+  const { mutate } = useMutation({
+    mutationFn: ({ accessToken, newAddress }: { accessToken: string; newAddress: any }) =>
+      postAddress(accessToken, newAddress),
+    onSuccess: (data) => {
+      router.push('/address/list');
+      setSuccess(true);
+    },
   });
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +93,7 @@ const AddressAddPage = () => {
     }
 
     const newAddress = {
-      addressLabe: formData.addressLabel,
+      addressLabel: formData.addressLabel,
       recipientPhone: formData.phone,
       recipientName: formData.name,
       baseAddress: address.main,
@@ -83,13 +102,15 @@ const AddressAddPage = () => {
       entranceType: selectedValue.value,
       entranceDetail: selectedValue.text,
     };
-    console.log('newaddress', newAddress);
+
+    if (accessToken) {
+      mutate({ accessToken, newAddress });
+    }
 
     if (allStepsValid) {
-      alert('주소가 확인되었습니다!');
+      //  Alert()
     }
   };
- 
 
   useEffect(() => {
     const validationInput = { step, formData, address, selectedValue, selectedRequest };
@@ -99,6 +120,7 @@ const AddressAddPage = () => {
 
   return (
     <div className="flex h-full w-full flex-col overflow-scroll pb-16">
+      {success && <Alert label="새 배송지가 추가되었습니다." status="success" />}
       {addressModalOpen ? (
         <div className="relative z-50 max-h-full w-full max-w-full overflow-hidden bg-white">
           <SearchForm onAddressChange={handleMainAdressChange} />

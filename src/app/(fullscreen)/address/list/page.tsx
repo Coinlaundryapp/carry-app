@@ -21,7 +21,6 @@ export default function AddressSetting() {
 
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
-  console.log('access', accessToken);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['addresses', accessToken],

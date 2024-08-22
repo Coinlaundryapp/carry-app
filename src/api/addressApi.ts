@@ -1,8 +1,8 @@
+import { GetAddressesResType } from '@/types/address-type';
 import { fetchExtended } from './api-client';
 import { ApiResponse, AuthResponse } from '@/types/api-types';
 
-export async function getAddresses(accessToken: string | undefined) {
-  console.log('ccc', accessToken);
+export async function getAddresses(accessToken: string | undefined): Promise<GetAddressesResType> {
   const res = await fetchExtended<any>('/api/v1/users/me/shipping-addresses', {
     method: 'GET',
     headers: {
@@ -43,7 +43,7 @@ export async function getAddress(accessToken: string, addressId: string) {
   return data;
 }
 
-export async function postAddress(accessToken: string, addressId: string, newAddress: any) {
+export async function postAddress(accessToken: string, newAddress: any) {
   const res = await fetchExtended<ApiResponse<AuthResponse>>(
     `/api/v1/users/me/shipping-addresses`,
     {
@@ -55,7 +55,8 @@ export async function postAddress(accessToken: string, addressId: string, newAdd
       body: newAddress,
     },
   );
-  const data = res.body.data;
+
+  const data = res;
   return data;
 }
 

@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import DeliveryAddressList from '@/components/delivery/DeliveryAddressList';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import { AddPlusIcon } from '@assets/icons';
+import { useQuery } from '@tanstack/react-query';
+import { getAddresses } from '@/api/addressApi';
+import { useSession } from 'next-auth/react';
 
 export default function AddressSetting() {
   const router = useRouter();
@@ -16,11 +19,21 @@ export default function AddressSetting() {
     router.push('/address/form');
   };
 
+  const session = useSession();
+  const accessToken = session.data?.user?.accessToken;
+  console.log('access', accessToken);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['addresses', accessToken],
+    queryFn: () => getAddresses(accessToken),
+    enabled: !!accessToken,
+  });
+
   return (
     <main>
       <TopNavigation type="back" title="배송지 설정" leftClick={goBack} />
       <section className="mb-4 flex flex-col px-5">
-        <DeliveryAddressList />
+        {data && data.length !== 0 && <DeliveryAddressList addressList={data} />}
         <button
           onClick={goToAddAddress}
           className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"

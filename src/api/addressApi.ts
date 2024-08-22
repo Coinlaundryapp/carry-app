@@ -1,12 +1,8 @@
-import { useSession } from 'next-auth/react';
 import { fetchExtended } from './api-client';
 import { ApiResponse, AuthResponse } from '@/types/api-types';
 
-// const session = useSession();
-// const accessToken = session.data?.user?.accessToken;
-// console.log('access', accessToken);
-
-export async function getAddresses(accessToken: string) {
+export async function getAddresses(accessToken: string | undefined) {
+  console.log('ccc', accessToken);
   const res = await fetchExtended<any>('/api/v1/users/me/shipping-addresses', {
     method: 'GET',
     headers: {
@@ -19,7 +15,6 @@ export async function getAddresses(accessToken: string) {
 }
 
 export async function getAddressSearchList(keyword: string, page: number) {
-  console.log('page', page);
   const res = await fetchExtended<any>(
     `/api/v1/addresses?query=${keyword}&pageSize=5&pageNumber=${page}`,
     {

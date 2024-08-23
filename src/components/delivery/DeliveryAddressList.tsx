@@ -4,8 +4,14 @@ import Separator from '@/components/share/Separator/Separator';
 import { AddPlusIcon } from '@assets/icons';
 import { Fragment, useState } from 'react';
 
-export default function DeliveryAddressList({ addressList }: any) {
+type TProps = {
+  addressRefetch: () => void;
+  addressList: any;
+};
+
+export default function DeliveryAddressList({ addressList, addressRefetch }: TProps) {
   const [value, setValue] = useState(1);
+  
 
   const handleRadioChange = (value: number) => {
     setValue(value);
@@ -17,7 +23,12 @@ export default function DeliveryAddressList({ addressList }: any) {
         <Fragment key={item.addressId}>
           <div className="flex items-center gap-5">
             <Radio.Button value={item.addressId} />
-            <DeliveryAddressItem item={item} selected isDefault={item.isDefault} />
+            <DeliveryAddressItem
+              item={item}
+              selected
+              isDefault={item.isDefault}
+              addressRefetch={addressRefetch}
+            />
           </div>
           {index !== addressList.length - 1 && <Separator variant="horizontal" />}
         </Fragment>

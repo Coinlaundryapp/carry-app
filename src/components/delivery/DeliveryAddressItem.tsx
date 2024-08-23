@@ -4,31 +4,65 @@ import { useRouter, usePathname } from 'next/navigation';
 import Chip from '@/components/share/Chip/chip';
 import Tag from '@/components/share/Tag';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { getAddresses } from '@/api/addressApi';
-
-import { useQuery } from '@tanstack/react-query';
-
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { deleteAddress } from '@/api/addressApi';
+import { Modal } from '../share/Modal';
+import { useModalStore } from '@/store/modal-store';
+import { useToastStore } from '@/store/toast-store';
 interface DeliveryAddressItemProps {
   item: any;
   isDefault: boolean;
   selected: boolean;
+  addressRefetch: () => void;
 }
-export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddressItemProps) {
+export default function DeliveryAddressItem({
+  item,
+  isDefault,
+  addressRefetch,
+}: DeliveryAddressItemProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
+  const session = useSession();
+  const accessToken = session.data?.user?.accessToken;
+  const openModal = useModalStore((state) => state.openModal);
+  const addToast = useToastStore((state) => state.addToast);
+
+  const { mutate } = useMutation({
+    mutationFn: ({
+      accessToken,
+      addressId,
+    }: {
+      accessToken: string;
+      addressId: string | string[];
+    }) => deleteAddress(accessToken, addressId),
+    onSuccess: (data) => {
+      console.log('data', data);
+      addressRefetch();
+      addToast({ message: '배송지가 삭제되었습니다.', type: 'success', duration: 2000 });
+      // router.push('/address/list');
+    
+    },
+  });
 
   const handleRemoveClick = () => {
-    console.log('remove');
+    setIsOpen(true);
+    openModal({
+      title: '배송지를 삭제하시겠어요?',
+      confirmText: '확인',
+      closeText: '취소',
+      type: 'confirm',
+      onConfirm: () => {
+        const { addressId } = item;
+        if (accessToken) {
+          mutate({ accessToken, addressId });
+        }
+      },
+    });
   };
   const handleEditClick = () => {
     const { addressId } = item;
-    // router.push({
-    //   pathname,
-    //   query: {
-    //     addressId,
-    //   },
-    // });
     router.push(`/address/edit/${addressId}`);
     console.log('edit');
   };
@@ -44,14 +78,7 @@ export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddress
         </div>
         <p className="font-normal text-label-normal font-label-1-normal">{item.fullAddress}</p>
         <div className="flex gap-2">
-          {/* <Link
-            href={{
-              pathname: '/address/[addressId]',
-              query: { addressId: item.addressId },
-            }}
-          > */}
           <Chip text="수정" onClick={handleEditClick} />
-          {/* </Link> */}
 
           {!isDefault && (
             <>
@@ -61,6 +88,7 @@ export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddress
           )}
         </div>
       </div>
+      {isOpen && <Modal />}
     </div>
   );
 }

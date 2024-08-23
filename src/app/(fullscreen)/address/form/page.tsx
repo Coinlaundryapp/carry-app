@@ -9,8 +9,8 @@ import { REQUEST_OPTIONS } from '@/constants/request-options';
 import { postAddress } from '@/api/addressApi';
 import { useSession } from 'next-auth/react';
 import { useMutation } from '@tanstack/react-query';
-import { Alert } from '@/components/share/Alert';
 import { useRouter } from 'next/navigation';
+import { useToastStore } from '@/store/toast-store';
 
 const AddressAddPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -28,7 +28,8 @@ const AddressAddPage = () => {
     name: '',
     phone: '',
   });
-  const [success, setSuccess] = useState(true);
+  const addToast = useToastStore((state) => state.addToast);
+
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
 
@@ -38,8 +39,8 @@ const AddressAddPage = () => {
     mutationFn: ({ accessToken, newAddress }: { accessToken: string; newAddress: any }) =>
       postAddress(accessToken, newAddress),
     onSuccess: (data) => {
+      addToast({ message: '새 배송지가 추가되었습니다.', type: 'success', duration: 2000 });
       router.push('/address/list');
-      setSuccess(true);
     },
   });
 
@@ -106,10 +107,6 @@ const AddressAddPage = () => {
     if (accessToken) {
       mutate({ accessToken, newAddress });
     }
-
-    if (allStepsValid) {
-      //  Alert()
-    }
   };
 
   useEffect(() => {
@@ -120,7 +117,6 @@ const AddressAddPage = () => {
 
   return (
     <div className="flex h-full w-full flex-col overflow-scroll pb-16">
-      {success && <Alert label="새 배송지가 추가되었습니다." status="success" />}
       {addressModalOpen ? (
         <div className="relative z-50 max-h-full w-full max-w-full overflow-hidden bg-white">
           <SearchForm onAddressChange={handleMainAdressChange} />

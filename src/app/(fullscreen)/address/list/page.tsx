@@ -7,9 +7,18 @@ import { AddPlusIcon } from '@assets/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getAddresses } from '@/api/addressApi';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { Alert } from '@/components/share/Alert';
+import Toast from '@/components/share/Toast';
+import { useToastStore } from '@/store/toast-store';
 
 export default function AddressSetting() {
   const router = useRouter();
+  const addToast = useToastStore((state) => state.addToast);
+
+  const handleToast = (message: string, type: 'success' | 'done', duration: number) => {
+    addToast({ message: message, type: type, duration: duration });
+  };
 
   const goBack = () => {
     history.back();
@@ -22,17 +31,27 @@ export default function AddressSetting() {
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['addresses', accessToken],
     queryFn: () => getAddresses(accessToken),
     enabled: !!accessToken,
   });
 
+  const addressRefetch = () => {
+    refetch();
+  };
+
   return (
     <main>
       <TopNavigation type="back" title="배송지 설정" leftClick={goBack} />
+      <div className="pl-2 pr-2">
+        <Toast />
+        {/* <Alert label="기본 배송지가 변경되었습니다." status="success" /> */}
+      </div>
       <section className="mb-4 flex flex-col px-5">
-        {data && data.length !== 0 && <DeliveryAddressList addressList={data} />}
+        {data && data.length !== 0 && (
+          <DeliveryAddressList addressList={data} addressRefetch={addressRefetch} />
+        )}
         <button
           onClick={goToAddAddress}
           className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"

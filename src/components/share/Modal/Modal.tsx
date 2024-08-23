@@ -16,9 +16,15 @@ const buttonVariants = cva('w-full h-[52px] text-center rounded-lg', {
 export default function Modal() {
   const { isOpen, title, description, confirmText, closeText, type, image, onConfirm, closeModal } =
     useModalStore();
+
   const modalRef = useRef<HTMLDivElement>(null);
+
   const handleConfirm = () => {
-    onConfirm && onConfirm();
+    console.log('handleConfirm is called');
+    if (onConfirm) {
+      onConfirm();
+    }
+
     closeModal();
   };
 

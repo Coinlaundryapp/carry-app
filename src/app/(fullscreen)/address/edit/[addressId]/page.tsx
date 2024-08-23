@@ -7,6 +7,11 @@ import SearchForm from '@/components/address/SearchForm';
 import { validateAllSteps, validateForm } from '@/validations/addressValidation';
 import { REQUEST_OPTIONS } from '@/constants/request-options';
 import { useParams } from 'next/navigation';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getAddress, putAddress } from '@/api/addressApi';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useToastStore } from '@/store/toast-store';
 
 const EditFormPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -24,10 +29,36 @@ const EditFormPage = () => {
     name: '',
     phone: '',
   });
+  const addToast = useToastStore((state) => state.addToast);
 
   const { addressId } = useParams();
 
-  console.log('sear', addressId);
+  const session = useSession();
+  const accessToken = session.data?.user?.accessToken;
+  const router = useRouter();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['address', addressId],
+    queryFn: () => getAddress(accessToken, addressId),
+    enabled: !!accessToken && !!addressId,
+    staleTime: 0,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: ({
+      accessToken,
+      editAddress,
+      addressId,
+    }: {
+      accessToken: string;
+      editAddress: any;
+      addressId: string | string[];
+    }) => putAddress(accessToken, addressId, editAddress),
+    onSuccess: () => {
+      addToast({ message: '배송지가 수정되었습니다..', type: 'success', duration: 2000 });
+      router.push('/address/list');
+    },
+  });
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/[^0-9]/g, '');
@@ -53,12 +84,6 @@ const EditFormPage = () => {
     setSelectedValue((pre) => ({ ...pre, text }));
   };
 
-  const handleNext = () => {
-    if (isValid) {
-      setStep((prevStep) => prevStep + 1);
-    }
-  };
-
   const handleChangeRequest = (value: string) => {
     setSelectedRequest((pre) => ({ ...pre, value }));
   };
@@ -66,6 +91,30 @@ const EditFormPage = () => {
   const handleChangeRequestText = (requestText: string) => {
     setSelectedRequest((pre) => ({ ...pre, requestText }));
   };
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        addressLabel: data.addressLabel || '',
+        name: data.recipientName || '',
+        phone: data.recipientPhone || '',
+      });
+      setAddress({
+        main: data.baseAddress || '',
+        detail: data.detailAddress || '',
+      });
+      setSelectedValue({
+        value: data.entranceType || '1',
+        text: data.entranceDetail || '',
+      });
+      setSelectedRequest({
+        value: data.deliveryNotes
+          ? REQUEST_OPTIONS.find((option) => option.label === data.deliveryNotes)?.value || '4'
+          : '1',
+        requestText: data.deliveryNotes || '',
+      });
+    }
+  }, [data]);
 
   const handleConfirm = () => {
     let addressRequest = '';
@@ -79,7 +128,7 @@ const EditFormPage = () => {
     }
 
     const editAddress = {
-      addressLabe: formData.addressLabel,
+      addressLabel: formData.addressLabel,
       recipientPhone: formData.phone,
       recipientName: formData.name,
       baseAddress: address.main,
@@ -88,9 +137,9 @@ const EditFormPage = () => {
       entranceType: selectedValue.value,
       entranceDetail: selectedValue.text,
     };
-    console.log('editaddress', editAddress);
-    if (allStepsValid) {
-      alert('주소가 확인되었습니다!');
+
+    if (accessToken) {
+      mutate({ accessToken, addressId, editAddress });
     }
   };
 

@@ -2,20 +2,53 @@ import { GetAddressesResType } from '@/types/address-type';
 import { fetchExtended } from './api-client';
 import { ApiResponse, AuthResponse } from '@/types/api-types';
 
-export async function getAddresses(accessToken: string | undefined): Promise<GetAddressesResType> {
-  const res = await fetchExtended<any>('/api/v1/users/me/shipping-addresses', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+export type TGetAddressSearchListRes = {
+  content: {
+    addressName: string;
+    addressType: string;
+    regionAddresss: { addressName: string };
+    roadAddress: string | null;
+  }[];
+  pagination: {
+    hasNext: boolean;
+    pageNumber: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+  };
+};
+
+export type TAddressRes = {
+  addressLabel: string;
+  baseAddress: string;
+  deliveryNotes: string;
+  detailAddress: string;
+  entranceDetail: string;
+  entranceType: string;
+  id: number;
+  isDefaultAddress: false;
+  recipientName: string;
+  recipientPhone: string;
+  userId: number;
+};
+
+export async function getAddresses(accessToken: string | undefined) {
+  const res = await fetchExtended<ApiResponse<GetAddressesResType>>(
+    '/api/v1/users/me/shipping-addresses',
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
     },
-  });
+  );
   const data = res.body.data;
   return data;
 }
 
 export async function getAddressSearchList(keyword: string, page: number) {
-  const res = await fetchExtended<any>(
+  const res = await fetchExtended<ApiResponse<TGetAddressSearchListRes>>(
     `/api/v1/addresses?query=${keyword}&pageSize=5&pageNumber=${page}`,
     {
       method: 'GET',
@@ -24,12 +57,13 @@ export async function getAddressSearchList(keyword: string, page: number) {
       },
     },
   );
+
   const data = res.body.data;
   return data;
 }
 
-export async function getAddress(accessToken: string, addressId: string) {
-  const res = await fetchExtended<ApiResponse<AuthResponse>>(
+export async function getAddress(accessToken: string | undefined, addressId: string | string[]) {
+  const res = await fetchExtended<ApiResponse<TAddressRes>>(
     `/api/v1/users/me/shipping-addresses/${addressId}`,
     {
       method: 'GET',
@@ -39,29 +73,31 @@ export async function getAddress(accessToken: string, addressId: string) {
       },
     },
   );
+
   const data = res.body.data;
   return data;
 }
 
 export async function postAddress(accessToken: string, newAddress: any) {
-  const res = await fetchExtended<ApiResponse<AuthResponse>>(
-    `/api/v1/users/me/shipping-addresses`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: newAddress,
+  const res = await fetchExtended(`/api/v1/users/me/shipping-addresses`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+    body: newAddress,
+  });
 
   const data = res;
   return data;
 }
 
-export async function putAddress(accessToken: string, addressId: string, editAddress: any) {
-  const res = await fetchExtended<ApiResponse<AuthResponse>>(
+export async function putAddress(
+  accessToken: string,
+  addressId: string | string[],
+  editAddress: any,
+) {
+  const res = await fetchExtended<ApiResponse<TAddressRes>>(
     `/api/v1/users/me/shipping-addresses/${addressId}`,
     {
       method: 'PUT',
@@ -72,22 +108,21 @@ export async function putAddress(accessToken: string, addressId: string, editAdd
       body: editAddress,
     },
   );
-  const data = res.body.data;
+  console.log('res', res);
+  const data = res;
   return data;
 }
 
-export async function deleteAddress(accessToken: string, addressId: string, editAddress: any) {
-  const res = await fetchExtended<ApiResponse<AuthResponse>>(
-    `/api/v1/users/me/shipping-addresses/${addressId}`,
-    {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: editAddress,
+export async function deleteAddress(accessToken: string, addressId: string | string[]) {
+  console.log('address', addressId);
+  const res = await fetchExtended(`/api/v1/users/me/shipping-addresses/${addressId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
-  const data = res.body.data;
+  });
+  console.log('data', res);
+  const data = res;
   return data;
 }

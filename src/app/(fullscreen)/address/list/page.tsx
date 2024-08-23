@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import DeliveryAddressList from '@/components/delivery/DeliveryAddressList';
+import DeliveryAddressList from '@/components/address/DeliveryAddressList';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import { AddPlusIcon } from '@assets/icons';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +9,6 @@ import { getAddresses } from '@/api/addressApi';
 import { useSession } from 'next-auth/react';
 import Toast from '@/components/share/Toast';
 import { useEffect } from 'react';
-import { useToastStore } from '@/store/toast-store';
 import { useAddressStore } from '@/store/address-store';
 import Loading from '@/components/share/Loading';
 

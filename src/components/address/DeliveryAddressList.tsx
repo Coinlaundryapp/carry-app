@@ -1,4 +1,4 @@
-import DeliveryAddressItem from '@/components/delivery/DeliveryAddressItem';
+import DeliveryAddressItem from './DeliveryAddressItem';
 import { Radio } from '@/components/share/Radio';
 import Separator from '@/components/share/Separator/Separator';
 import { Fragment, useState } from 'react';

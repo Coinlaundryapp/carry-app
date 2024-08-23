@@ -1,33 +1,28 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Chip from '@/components/share/Chip/chip';
 import Tag from '@/components/share/Tag';
-import Link from 'next/link';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteAddress } from '@/api/addressApi';
+import { deleteAddress, patchDefaultAddress } from '@/api/addressApi';
 import { Modal } from '../share/Modal';
 import { useModalStore } from '@/store/modal-store';
 import { useToastStore } from '@/store/toast-store';
+import { useAddressStore } from '@/store/address-store';
 interface DeliveryAddressItemProps {
   item: any;
   isDefault: boolean;
   selected: boolean;
-  addressRefetch: () => void;
 }
-export default function DeliveryAddressItem({
-  item,
-  isDefault,
-  addressRefetch,
-}: DeliveryAddressItemProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddressItemProps) {
   const router = useRouter();
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
   const openModal = useModalStore((state) => state.openModal);
   const addToast = useToastStore((state) => state.addToast);
+  const triggerRefetch = useAddressStore((state) => state.triggerRefetch);
 
   const { mutate } = useMutation({
     mutationFn: ({
@@ -37,17 +32,27 @@ export default function DeliveryAddressItem({
       accessToken: string;
       addressId: string | string[];
     }) => deleteAddress(accessToken, addressId),
-    onSuccess: (data) => {
-      console.log('data', data);
-      addressRefetch();
+    onSuccess: () => {
+      triggerRefetch();
       addToast({ message: '배송지가 삭제되었습니다.', type: 'success', duration: 2000 });
-      // router.push('/address/list');
-    
+    },
+  });
+
+  const patchDefaultAddressMutate = useMutation({
+    mutationFn: ({
+      accessToken,
+      addressId,
+    }: {
+      accessToken: string;
+      addressId: string | string[];
+    }) => patchDefaultAddress(accessToken, addressId),
+    onSuccess: () => {
+      triggerRefetch();
+      addToast({ message: '기본 배송지가 변경되었습니다.', type: 'success', duration: 2000 });
     },
   });
 
   const handleRemoveClick = () => {
-    setIsOpen(true);
     openModal({
       title: '배송지를 삭제하시겠어요?',
       confirmText: '확인',
@@ -64,10 +69,20 @@ export default function DeliveryAddressItem({
   const handleEditClick = () => {
     const { addressId } = item;
     router.push(`/address/edit/${addressId}`);
-    console.log('edit');
   };
   const handleDefaultClick = () => {
-    console.log('default');
+    openModal({
+      title: '기본 배송지를 변경하시겠어요?',
+      confirmText: '확인',
+      closeText: '취소',
+      type: 'confirm',
+      onConfirm: () => {
+        const { addressId } = item;
+        if (accessToken) {
+          patchDefaultAddressMutate.mutate({ accessToken, addressId });
+        }
+      },
+    });
   };
   return (
     <div className="flex w-full items-center justify-between gap-4 py-4">
@@ -88,7 +103,6 @@ export default function DeliveryAddressItem({
           )}
         </div>
       </div>
-      {isOpen && <Modal />}
     </div>
   );
 }

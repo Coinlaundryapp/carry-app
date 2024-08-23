@@ -11,15 +11,12 @@ import Toast from '@/components/share/Toast';
 import { useEffect } from 'react';
 import { useToastStore } from '@/store/toast-store';
 import { useAddressStore } from '@/store/address-store';
+import Loading from '@/components/share/Loading';
 
 export default function AddressSetting() {
   const router = useRouter();
   const addToast = useToastStore((state) => state.addToast);
   const { shouldRefetch, setShouldRefetch } = useAddressStore();
-
-  const handleToast = (message: string, type: 'success' | 'done', duration: number) => {
-    addToast({ message: message, type: type, duration: duration });
-  };
 
   const goBack = () => {
     history.back();
@@ -38,15 +35,16 @@ export default function AddressSetting() {
     enabled: !!accessToken,
   });
 
-  const addressRefetch = () => {
-    refetch();
-  };
   useEffect(() => {
     if (shouldRefetch) {
       refetch();
       setShouldRefetch(false);
     }
   }, [shouldRefetch, refetch, setShouldRefetch]);
+
+  if (isLoading) {
+    return <Loading text="데이터를 불러오고 있는 중입니다." />;
+  }
 
   return (
     <main className="flex h-full flex-col">
@@ -55,9 +53,7 @@ export default function AddressSetting() {
         <Toast />
       </div>
       <section className="mb-4 flex flex-grow flex-col overflow-y-auto px-5">
-        {data && data.length !== 0 && (
-          <DeliveryAddressList addressList={data} addressRefetch={addressRefetch} />
-        )}
+        {data && data.length !== 0 && <DeliveryAddressList addressList={data} />}
         <button
           onClick={goToAddAddress}
           className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"

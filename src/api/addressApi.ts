@@ -45,7 +45,7 @@ export async function getAddress(accessToken: string | undefined, addressId: str
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  console.log('res', res);
+
   const data = res.body;
   return data;
 }
@@ -77,13 +77,12 @@ export async function putAddress(
     },
     body: editAddress,
   });
-  console.log('res', res);
+
   const data = res;
   return data;
 }
 
 export async function deleteAddress(accessToken: string, addressId: string | string[]) {
-  console.log('address', addressId);
   const res = await fetchExtended(`/api/v1/users/me/shipping-addresses/${addressId}`, {
     method: 'DELETE',
     headers: {
@@ -91,7 +90,24 @@ export async function deleteAddress(accessToken: string, addressId: string | str
       Authorization: `Bearer ${accessToken}`,
     },
   });
+
+  const data = res;
+  return data;
+}
+
+export async function patchDefaultAddress(accessToken: string, addressId: string | string[]) {
+  const res = await fetchExtended(`/api/v1/users/me/shipping-addresses/${addressId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: {
+      isDefault: true,
+    },
+  });
   console.log('data', res);
+
   const data = res;
   return data;
 }

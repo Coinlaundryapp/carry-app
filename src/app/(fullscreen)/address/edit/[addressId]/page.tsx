@@ -15,6 +15,7 @@ import { useToastStore } from '@/store/toast-store';
 
 const EditFormPage = () => {
   const { addressModalOpen } = useAddressStore();
+  const triggerRefetch = useAddressStore((state) => state.triggerRefetch);
   const [step, setStep] = useState(1);
   const [address, setAddress] = useState({ main: '', detail: '' });
   const [selectedValue, setSelectedValue] = useState({
@@ -56,6 +57,7 @@ const EditFormPage = () => {
     }) => putAddress(accessToken, addressId, editAddress),
     onSuccess: () => {
       addToast({ message: '배송지가 수정되었습니다..', type: 'success', duration: 2000 });
+      triggerRefetch();
       router.push('/address/list');
     },
   });

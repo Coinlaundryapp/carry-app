@@ -1,36 +1,11 @@
 import { GetAddressesResType } from '@/types/address-type';
 import { fetchExtended } from './api-client';
-import { ApiResponse, AuthResponse } from '@/types/api-types';
-
-export type TGetAddressSearchListRes = {
-  content: {
-    addressName: string;
-    addressType: string;
-    regionAddresss: { addressName: string };
-    roadAddress: string | null;
-  }[];
-  pagination: {
-    hasNext: boolean;
-    pageNumber: number;
-    pageSize: number;
-    totalElements: number;
-    totalPages: number;
-  };
-};
-
-export type TAddressRes = {
-  addressLabel: string;
-  baseAddress: string;
-  deliveryNotes: string;
-  detailAddress: string;
-  entranceDetail: string;
-  entranceType: string;
-  id: number;
-  isDefaultAddress: false;
-  recipientName: string;
-  recipientPhone: string;
-  userId: number;
-};
+import {
+  ApiResponse,
+  TGetAddressSearchListRes,
+  TAddressRes,
+  ApiBodyResponse,
+} from '@/types/api-types';
 
 export async function getAddresses(accessToken: string | undefined) {
   const res = await fetchExtended<ApiResponse<GetAddressesResType>>(
@@ -63,18 +38,15 @@ export async function getAddressSearchList(keyword: string, page: number) {
 }
 
 export async function getAddress(accessToken: string | undefined, addressId: string | string[]) {
-  const res = await fetchExtended<ApiResponse<TAddressRes>>(
-    `/api/v1/users/me/shipping-addresses/${addressId}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
+  const res = await fetchExtended<TAddressRes>(`/api/v1/users/me/shipping-addresses/${addressId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
-
-  const data = res.body.data;
+  });
+  console.log('res', res);
+  const data = res.body;
   return data;
 }
 
@@ -97,17 +69,14 @@ export async function putAddress(
   addressId: string | string[],
   editAddress: any,
 ) {
-  const res = await fetchExtended<ApiResponse<TAddressRes>>(
-    `/api/v1/users/me/shipping-addresses/${addressId}`,
-    {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: editAddress,
+  const res = await fetchExtended(`/api/v1/users/me/shipping-addresses/${addressId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+    body: editAddress,
+  });
   console.log('res', res);
   const data = res;
   return data;

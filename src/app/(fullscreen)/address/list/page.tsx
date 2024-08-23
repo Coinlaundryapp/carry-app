@@ -7,14 +7,15 @@ import { AddPlusIcon } from '@assets/icons';
 import { useQuery } from '@tanstack/react-query';
 import { getAddresses } from '@/api/addressApi';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { Alert } from '@/components/share/Alert';
 import Toast from '@/components/share/Toast';
+import { useEffect } from 'react';
 import { useToastStore } from '@/store/toast-store';
+import { useAddressStore } from '@/store/address-store';
 
 export default function AddressSetting() {
   const router = useRouter();
   const addToast = useToastStore((state) => state.addToast);
+  const { shouldRefetch, setShouldRefetch } = useAddressStore();
 
   const handleToast = (message: string, type: 'success' | 'done', duration: number) => {
     addToast({ message: message, type: type, duration: duration });
@@ -40,15 +41,20 @@ export default function AddressSetting() {
   const addressRefetch = () => {
     refetch();
   };
+  useEffect(() => {
+    if (shouldRefetch) {
+      refetch();
+      setShouldRefetch(false);
+    }
+  }, [shouldRefetch, refetch, setShouldRefetch]);
 
   return (
-    <main>
+    <main className="flex h-full flex-col">
       <TopNavigation type="back" title="배송지 설정" leftClick={goBack} />
       <div className="pl-2 pr-2">
         <Toast />
-        {/* <Alert label="기본 배송지가 변경되었습니다." status="success" /> */}
       </div>
-      <section className="mb-4 flex flex-col px-5">
+      <section className="mb-4 flex flex-grow flex-col overflow-y-auto px-5">
         {data && data.length !== 0 && (
           <DeliveryAddressList addressList={data} addressRefetch={addressRefetch} />
         )}

@@ -11,12 +11,13 @@ import Toast from '@/components/share/Toast';
 import { useEffect } from 'react';
 import { useAddressStore } from '@/store/address-store';
 import Loading from '@/components/share/Loading';
+import { useToastStore } from '@/store/toast-store';
 
 export default function AddressSetting() {
   const router = useRouter();
 
   const { shouldRefetch, setShouldRefetch } = useAddressStore();
-
+  const addToast = useToastStore((state) => state.addToast);
   const goBack = () => {
     history.back();
   };
@@ -40,6 +41,12 @@ export default function AddressSetting() {
       setShouldRefetch(false);
     }
   }, [shouldRefetch, refetch, setShouldRefetch]);
+
+  useEffect(() => {
+    if (data && data.length === 0) {
+      addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error', duration: 2000 });
+    }
+  }, [data]);
 
   if (isLoading) {
     return <Loading text="데이터를 불러오고 있는 중입니다." />;

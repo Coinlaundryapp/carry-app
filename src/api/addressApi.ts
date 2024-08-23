@@ -96,14 +96,11 @@ export async function deleteAddress(accessToken: string, addressId: string | str
 }
 
 export async function patchDefaultAddress(accessToken: string, addressId: string | string[]) {
-  const res = await fetchExtended(`/api/v1/users/me/shipping-addresses/${addressId}`, {
+  const res = await fetchExtended(`/api/v1/users/me/shipping-addresses/${addressId}/default`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
-    },
-    body: {
-      isDefault: true,
     },
   });
 

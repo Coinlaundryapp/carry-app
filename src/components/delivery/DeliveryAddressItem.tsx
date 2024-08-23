@@ -70,6 +70,7 @@ export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddress
     const { addressId } = item;
     router.push(`/address/edit/${addressId}`);
   };
+
   const handleDefaultClick = () => {
     openModal({
       title: '기본 배송지를 변경하시겠어요?',
@@ -78,7 +79,7 @@ export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddress
       type: 'confirm',
       onConfirm: () => {
         const { addressId } = item;
-        if (accessToken) {
+        if (accessToken && addressId) {
           patchDefaultAddressMutate.mutate({ accessToken, addressId });
         }
       },

@@ -20,7 +20,6 @@ export default function Modal() {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleConfirm = () => {
-    console.log('handleConfirm is called');
     if (onConfirm) {
       onConfirm();
     }

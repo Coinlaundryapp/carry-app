@@ -106,7 +106,6 @@ export async function patchDefaultAddress(accessToken: string, addressId: string
       isDefault: true,
     },
   });
-  console.log('data', res);
 
   const data = res;
   return data;

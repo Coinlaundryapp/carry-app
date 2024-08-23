@@ -15,7 +15,7 @@ import Loading from '@/components/share/Loading';
 
 export default function AddressSetting() {
   const router = useRouter();
-  const addToast = useToastStore((state) => state.addToast);
+
   const { shouldRefetch, setShouldRefetch } = useAddressStore();
 
   const goBack = () => {
@@ -52,16 +52,18 @@ export default function AddressSetting() {
       <div className="pl-2 pr-2">
         <Toast />
       </div>
-      <section className="mb-4 flex flex-grow flex-col overflow-y-auto px-5">
-        {data && data.length !== 0 && <DeliveryAddressList addressList={data} />}
-        <button
-          onClick={goToAddAddress}
-          className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"
-        >
-          <AddPlusIcon className="h-6 w-6 flex-shrink-0" />
-          배송지 추가
-        </button>
-      </section>
+      {data && data.length !== 0 && (
+        <section className="mb-4 flex flex-grow flex-col overflow-y-auto px-5">
+          <DeliveryAddressList addressList={data} />
+          <button
+            onClick={goToAddAddress}
+            className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"
+          >
+            <AddPlusIcon className="h-6 w-6 flex-shrink-0" />
+            배송지 추가
+          </button>
+        </section>
+      )}
     </main>
   );
 }

@@ -12,6 +12,7 @@ import { getAddress, putAddress } from '@/api/addressApi';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useToastStore } from '@/store/toast-store';
+import Loading from '@/components/share/Loading';
 
 const EditFormPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -150,6 +151,10 @@ const EditFormPage = () => {
     setIsValid(validateForm(validationInput));
     setAllStepsValid(validateAllSteps(validationInput));
   }, [step, formData, address, selectedValue, selectedRequest]);
+
+  if (isLoading) {
+    return <Loading text="데이터를 불러오고 있는 중입니다." />;
+  }
 
   return (
     <div className="flex h-full w-full flex-col overflow-scroll pb-16">

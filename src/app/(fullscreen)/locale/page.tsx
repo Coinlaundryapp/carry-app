@@ -8,6 +8,7 @@ import { useState } from 'react';
 import LocaleImg from '@assets/images/locale-image.png';
 import { ACTIVATED_CITY } from '@/constants/activate-region';
 import { useModalStore } from '@/store/modal-store';
+import { useGeoLocation } from '@/hooks/useGeoLocation';
 
 const LocalePage = () => {
   const router = useRouter();
@@ -24,6 +25,18 @@ const LocalePage = () => {
       confirmText: '허용',
       closeText: '아니요',
     });
+  };
+
+  const allowHandler = () => {
+    // useGeoLocation();
+
+    //TODO: 위치따라 다른 페이지로
+    // 서비스 가능지역 일때
+    router.push('/locale/allow');
+
+    // 인천시 or 서울시 일때
+
+    // 서비스 가능지역을 아예 벗어낫을때
   };
 
   return (
@@ -49,22 +62,10 @@ const LocalePage = () => {
             </p>
           }
         />
-        <Button
-          state="fillPrimary"
-          size="large"
-          // 위치 허용 O
-          onClick={() => {
-            router.push('locale/allow');
-          }}
-        >
+        <Button state="fillPrimary" size="large" onClick={allowHandler}>
           허용하기
         </Button>
-        <Button
-          state="primary"
-          size="large"
-          // 위치 허용 X
-          onClick={cannotUseService}
-        >
+        <Button state="primary" size="large" onClick={cannotUseService}>
           나중에 하기
         </Button>
       </div>

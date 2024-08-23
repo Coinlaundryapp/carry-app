@@ -8,9 +8,23 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import SeoulImg from '@assets/images/seoul-image.svg';
 import IncheonImg from '@assets/images/incheon-image.svg';
+import { useModalStore } from '@/store/modal-store';
 
 const SelectLocalePage = () => {
   const router = useRouter();
+
+  const openModal = useModalStore((state) => state.openModal);
+
+  const cannotUseService = () => {
+    openModal({
+      type: 'confirm',
+      image: 'sad',
+      title: '서비스를 이용할 수 없어요',
+      description: '다시 선택해주세요',
+      confirmText: '허용',
+      closeText: '아니요',
+    });
+  };
 
   return (
     <div className="flex flex-1 flex-col items-center justify-between pb-[30px] pt-[73px]">
@@ -55,7 +69,7 @@ const SelectLocalePage = () => {
           }
         />
       </div>
-      <Button state="primary" size="large" onClick={() => {}}>
+      <Button state="primary" size="large" onClick={cannotUseService}>
         다음에 이용하기
       </Button>
     </div>

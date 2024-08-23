@@ -35,7 +35,7 @@ const AllowLocationPage = () => {
         </p>
       </div>
       <div className="h-[280px] w-[340px]">
-        <SeoulMap activeLocale={activeLocale} canSelect={false} />
+        <SeoulMap activeLocale={activeLocale} canSelect={false} activatedArea={['은평구']} />
       </div>
       <div className="flex flex-col gap-4">
         <Button state="fillPrimary" size="large" onClick={() => {}}>

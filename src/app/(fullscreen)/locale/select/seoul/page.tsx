@@ -3,13 +3,25 @@
 import Button from '@/components/share/Button/Button';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import SeoulMap from '@/components/ui/SeoulMap';
-import { ACTIVATED_AREA } from '@/constants/activate-region';
+import { ACTIVATED_SEOUL } from '@/constants/activate-region';
+import { useGeoLocation } from '@/hooks/useGeoLocation';
+import { useToastStore } from '@/store/toast-store';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const SelectSeoulpage = () => {
   const router = useRouter();
+  const [isActiveArea, setIsActiveArea] = useState<boolean | null>(null);
   const [selectArea, setSelectArea] = useState<string | null>(null);
+
+  const openToast = useToastStore((state) => state.addToast);
+
+  const cannotSelect = () => {
+    openToast({
+      message: '해당 지역은 서비스 불가 지역입니다.',
+      type: 'done',
+    });
+  };
 
   return (
     <div className="flex flex-1 flex-col items-center justify-between pb-[30px]">
@@ -20,33 +32,82 @@ const SelectSeoulpage = () => {
             router.back();
           }}
         />
-        <div className="flex w-full flex-col gap-[12px] px-[24px] py-[20px]">
-          <p className="font-semibold font-heading-1">
-            현재 서비스 중인 지역은
-            <br />
-            <span className="text-primary-normal">
-              {ACTIVATED_AREA.map((area) => area).join(', ')}
-            </span>
-            입니다.
-          </p>
-          <p>원하는 지역을 선택해주세요.</p>
+        <div className="flex h-[110px] w-full flex-col gap-[12px] px-[24px] py-[20px]">
+          {/* 기본값 */}
+          {isActiveArea === null && (
+            <>
+              <p className="font-semibold font-heading-1">
+                서비스를 이용하실 지역을 <br />
+                선택해주세요.
+              </p>
+              <p className="font-noraml-medium text-label-alternative">
+                이 외의 지역은 오픈 신청을 도와드릴게요.
+              </p>
+            </>
+          )}
+          {/* 서비스 불가능 지역 */}
+          {isActiveArea === false && (
+            <>
+              <p className="font-semibold font-heading-1">서비스 가능 지역을 선택해주세요.</p>
+              <p className="font-noraml-medium text-label-alternative">
+                이 외의 지역은 오픈 신청을 도와드릴게요.
+              </p>
+            </>
+          )}
+          {/* 서비스 가능 지역 */}
+          {isActiveArea === true && (
+            <p className="font-semibold font-heading-1">
+              서비스를 이용하실 위치가 <br />
+              <span className="text-primary-normal">{selectArea}</span>가 맞나요?
+            </p>
+          )}
         </div>
       </div>
       <SeoulMap
         canSelect={true}
         getValue={(v) => {
-          setSelectArea(v);
+          if (ACTIVATED_SEOUL.includes(v)) {
+            setSelectArea(v);
+            setIsActiveArea(true);
+          } else {
+            cannotSelect();
+            setSelectArea(v);
+            setIsActiveArea(false);
+          }
         }}
+        activatedArea={ACTIVATED_SEOUL}
       />
       <div className="flex-end flex h-[120px] flex-col justify-end gap-4">
-        {selectArea && (
-          <Button state="fillPrimary" size="large" onClick={() => {}}>
-            확인
-          </Button>
+        {/* 서비스 불가능 지역 */}
+        {isActiveArea === false && (
+          <div className="flex gap-[20px]">
+            <Button state="primary" size="small" onClick={() => {}}>
+              나가기
+            </Button>
+            <Button
+              state="fillPrimary"
+              size="small"
+              onClick={() => {
+                router.push(`/locale/notification?locale=${selectArea}`);
+              }}
+            >
+              오픈 알림신청
+            </Button>
+          </div>
         )}
-        <Button state="primary" size="large" onClick={() => {}}>
-          다음에 이용하기
-        </Button>
+        {/* 서비스 가능 지역 */}
+        {isActiveArea === true && (
+          <>
+            {selectArea && (
+              <Button state="fillPrimary" size="large" onClick={() => {}}>
+                맞아요
+              </Button>
+            )}
+            <Button state="primary" size="large" onClick={() => {}}>
+              다음에 이용하기
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

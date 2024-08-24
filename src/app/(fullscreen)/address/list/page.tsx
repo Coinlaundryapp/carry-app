@@ -28,7 +28,7 @@ export default function AddressSetting() {
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
 
-  const { data, refetch } = useQuery({
+  const { data, refetch, isSuccess } = useQuery({
     queryKey: ['addresses', accessToken],
     queryFn: () => getAddresses(accessToken),
     enabled: !!accessToken,
@@ -41,12 +41,19 @@ export default function AddressSetting() {
     }
   }, [shouldRefetch, refetch, setShouldRefetch]);
 
-  useEffect(() => {
-    if (data && data.length === 0) {
-      console.log('data', data);
-      addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error' });
-    }
-  }, [data, refetch]);
+  if (isSuccess && data.length === 0) {
+    addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error' });
+  }
+
+  const renderButton = () => (
+    <button
+      onClick={goToAddAddress}
+      className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"
+    >
+      <AddPlusIcon className="h-6 w-6 flex-shrink-0" />
+      배송지 추가
+    </button>
+  );
 
   return (
     <main className="flex h-full flex-col">
@@ -57,24 +64,10 @@ export default function AddressSetting() {
       {data && data.length !== 0 ? (
         <section className="mb-4 flex flex-grow flex-col overflow-y-auto px-5">
           <DeliveryAddressList addressList={data} />
-          <button
-            onClick={goToAddAddress}
-            className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"
-          >
-            <AddPlusIcon className="h-6 w-6 flex-shrink-0" />
-            배송지 추가
-          </button>
+          {renderButton()}
         </section>
       ) : (
-        <div className="mb-4 flex flex-grow flex-col overflow-y-auto px-6">
-          <button
-            onClick={goToAddAddress}
-            className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"
-          >
-            <AddPlusIcon className="h-6 w-6 flex-shrink-0" />
-            배송지 추가
-          </button>
-        </div>
+        <div className="mb-4 flex flex-grow flex-col overflow-y-auto px-6">{renderButton()}</div>
       )}
     </main>
   );

@@ -11,6 +11,7 @@ import { useSession } from 'next-auth/react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useToastStore } from '@/store/toast-store';
+import { formatPhoneNumber } from '@/utils/formaPhoneNumber';
 
 const AddressAddPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -46,22 +47,23 @@ const AddressAddPage = () => {
   });
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 남기기
+    const formattedPhone = formatPhoneNumber(e.target.value);
+    // let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 남기기
 
-    if (value.length > 3 && value.length <= 7) {
-      value = value.replace(/(\d{3})(\d+)/, '$1-$2');
-    } else if (value.length > 7) {
-      value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
-    }
+    // if (value.length > 3 && value.length <= 7) {
+    //   value = value.replace(/(\d{3})(\d+)/, '$1-$2');
+    // } else if (value.length > 7) {
+    //   value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+    // }
 
-    setFormData({ ...formData, phone: value });
+    setFormData({ ...formData, phone: formattedPhone });
   };
 
   const handleChange = (value: string) => {
     setSelectedValue((pre) => ({ ...pre, value }));
   };
 
-  const handleMainAdressChange = (value: string) => {
+  const handleMainAddressChange = (value: string) => {
     setAddress((pre) => ({ ...pre, main: value }));
   };
 
@@ -120,7 +122,7 @@ const AddressAddPage = () => {
     <div className="flex h-full w-full flex-col overflow-scroll pb-16">
       {addressModalOpen ? (
         <div className="relative z-50 max-h-full w-full max-w-full overflow-hidden bg-white">
-          <SearchForm onAddressChange={handleMainAdressChange} />
+          <SearchForm onAddressChange={handleMainAddressChange} />
         </div>
       ) : (
         <>

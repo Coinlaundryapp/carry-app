@@ -11,15 +11,18 @@ type TProps = {
 
 function AddressRequest({ selectedRequest, handleChangeRequest, setSelectedRequest }: TProps) {
   return (
-    <div className="mb-6">
-      <label className="font_headline_1 mb-3 font-semibold">배송 요청사항</label>
-      <Dropdown
-        data={REQUEST_OPTIONS}
-        value={selectedRequest.value}
-        indicator="radio"
-        placeholder="문 앞에 놓아 주세요."
-        onChange={handleChangeRequest}
-      />
+    <div className="mb-6 w-full">
+      <label className="font_headline_1 font-semibold">배송 요청사항</label>
+      <div className="mt-3">
+        <Dropdown
+          data={REQUEST_OPTIONS}
+          value={selectedRequest.value}
+          indicator="radio"
+          placeholder="문 앞에 놓아 주세요."
+          onChange={handleChangeRequest}
+        />
+      </div>
+
       {selectedRequest.value === '4' && (
         <Input
           className="mb-4 mt-3"

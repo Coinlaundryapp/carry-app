@@ -15,7 +15,7 @@ type TProps = {
 const AddressForm = ({ address, setAddress }: TProps) => {
   const { setAddressModalOpen } = useAddressStore();
   return (
-    <div className="mb-6">
+    <div className="mb-6 w-full">
       <Input
         onClick={() => setAddressModalOpen(true)}
         type="text"

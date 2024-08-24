@@ -124,7 +124,7 @@ const AddressAddPage = () => {
         </div>
       ) : (
         <>
-          <div className="p-4">
+          <div className="flex flex-col items-center justify-center p-6">
             <RenderStepContent
               step={step}
               formData={formData}

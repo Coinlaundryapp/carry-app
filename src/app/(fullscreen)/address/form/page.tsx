@@ -29,7 +29,7 @@ const AddressAddPage = () => {
     phone: '',
   });
   const addToast = useToastStore((state) => state.addToast);
-
+  const triggerRefetch = useAddressStore((state) => state.triggerRefetch);
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
 
@@ -39,6 +39,7 @@ const AddressAddPage = () => {
     mutationFn: ({ accessToken, newAddress }: { accessToken: string; newAddress: any }) =>
       postAddress(accessToken, newAddress),
     onSuccess: (data) => {
+      triggerRefetch();
       addToast({ message: '새 배송지가 추가되었습니다.', type: 'success', duration: 2000 });
       router.push('/address/list');
     },

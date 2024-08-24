@@ -29,7 +29,7 @@ export default function AddressSetting() {
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['addresses', accessToken],
     queryFn: () => getAddresses(accessToken),
     enabled: !!accessToken,
@@ -48,17 +48,13 @@ export default function AddressSetting() {
     }
   }, [data]);
 
-  if (isLoading) {
-    return <Loading text="데이터를 불러오고 있는 중입니다." />;
-  }
-
   return (
     <main className="flex h-full flex-col">
       <TopNavigation type="back" title="배송지 설정" leftClick={goBack} />
-      <div className="pl-2 pr-2">
+      <div>
         <Toast />
       </div>
-      {data && data.length !== 0 && (
+      {data && data.length !== 0 ? (
         <section className="mb-4 flex flex-grow flex-col overflow-y-auto px-5">
           <DeliveryAddressList addressList={data} />
           <button
@@ -69,6 +65,16 @@ export default function AddressSetting() {
             배송지 추가
           </button>
         </section>
+      ) : (
+        <div className="mb-4 flex flex-grow flex-col overflow-y-auto px-6">
+          <button
+            onClick={goToAddAddress}
+            className="mt-4 flex w-full items-center justify-center gap-1 rounded-md border border-primary-normal py-3.5 font-semibold text-primary-normal font-body-1-normal active:border-label-assistive active:text-label-assistive"
+          >
+            <AddPlusIcon className="h-6 w-6 flex-shrink-0" />
+            배송지 추가
+          </button>
+        </div>
       )}
     </main>
   );

@@ -11,8 +11,8 @@ type TProps = {
 
 function AddressRequest({ selectedRequest, handleChangeRequest, setSelectedRequest }: TProps) {
   return (
-    <div className="mb-4">
-      <label className="font_headline_1 mb-4 font-bold">배송 요청사항</label>
+    <div className="mb-6">
+      <label className="font_headline_1 mb-3 font-semibold">배송 요청사항</label>
       <Dropdown
         data={REQUEST_OPTIONS}
         value={selectedRequest.value}

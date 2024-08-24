@@ -45,6 +45,7 @@ export async function getAddress(accessToken: string | undefined, addressId: str
       Authorization: `Bearer ${accessToken}`,
     },
   });
+  console.log('res', res.body);
 
   const data = res.body;
   return data;

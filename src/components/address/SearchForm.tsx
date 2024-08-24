@@ -138,7 +138,7 @@ function SearchForm({ onAddressChange }: TPros) {
               className="flex cursor-pointer flex-col gap-2 p-4"
             >
               <div className="border-b border-cool-neutral-99 pb-4">
-                <p>{address.addressName}</p>
+                <p className="font_label_1_norm mb-1">{address.addressName}</p>
                 <p className="flex items-center justify-start gap-2 text-sm text-gray-500">
                   <span className="font_caption_2 rounded-sm border border-cool-neutral-80 p-0.5 text-cool-neutral-80">
                     지번

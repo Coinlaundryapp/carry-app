@@ -57,7 +57,7 @@ const EditFormPage = () => {
       addressId: string | string[];
     }) => putAddress(accessToken, addressId, editAddress),
     onSuccess: () => {
-      addToast({ message: '배송지가 수정되었습니다..', type: 'success', duration: 2000 });
+      addToast({ message: '배송지가 수정되었습니다.', type: 'success', duration: 2000 });
       triggerRefetch();
       router.push('/address/list');
     },

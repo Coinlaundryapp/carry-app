@@ -74,7 +74,7 @@ export function Input({
 }: InputProps) {
   const canValueClear = props.value && status === 'default' && onClear;
   return (
-    <div className={cn('group w-full space-y-2', className)}>
+    <div className={cn('group w-full space-y-3', className)}>
       {title && (
         <label
           className={cn(

@@ -45,11 +45,11 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
         return (
           <Input
             key={1}
-            className="mb-4"
+            className="mb-6"
             status="primary"
             type="text"
             title="배송지 이름"
-            fontStyle="font_headline_1 font-bold"
+            fontStyle="font_headline_1 font-semibold  "
             placeholder="예) 우리집 회사"
             value={formData.addressLabel}
             onChange={(e) => setFormData({ ...formData, addressLabel: e.target.value })}
@@ -59,11 +59,11 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
         return (
           <Input
             key={2}
-            className="mb-4"
+            className="mb-6"
             status="primary"
             type="text"
             title="받는 분"
-            fontStyle="font_headline_1 font-bold"
+            fontStyle="font_headline_1 font-semibold "
             placeholder="받는 분 성함을 입력해주세요."
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -93,11 +93,11 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
         return (
           <Input
             key={6}
-            className="mb-4"
+            className="mb-6"
             status="primary"
             type="text"
             title="전화번호"
-            fontStyle="font_headline_1 font-bold"
+            fontStyle="font_headline_1 font-semibold "
             placeholder="전화번호를 입력해주세요."
             value={formData.phone}
             onChange={(e) => onPhoneChange(e)}

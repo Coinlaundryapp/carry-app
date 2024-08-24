@@ -108,9 +108,9 @@ function SearchForm({ onAddressChange }: TPros) {
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      <SearchIcon className="absolute left-6 top-9 -translate-y-1/2 transform" />
+      <SearchIcon className="absolute left-8 top-10 -translate-y-1/2 transform" />
       <button
-        className="absolute right-6 top-9 z-50 -translate-y-1/2 transform"
+        className="absolute right-8 top-10 z-50 -translate-y-1/2 transform"
         onClick={handleCancelClick}
       >
         <CancelIcon />
@@ -123,7 +123,7 @@ function SearchForm({ onAddressChange }: TPros) {
         placeholder="건물, 지번 또는 도로명 검색"
         status="primary"
         iconstate="pl-4"
-        className="relative p-4"
+        className="relative px-6 py-5"
       />
       <div className="h-2 w-full bg-cool-neutral-99" />
 
@@ -135,7 +135,7 @@ function SearchForm({ onAddressChange }: TPros) {
             <div
               onClick={() => handleClick(address)}
               key={index}
-              className="flex cursor-pointer flex-col gap-2 p-4"
+              className="flex cursor-pointer flex-col gap-2 px-5 py-4"
             >
               <div className="border-b border-cool-neutral-99 pb-4">
                 <p className="font_label_1_norm mb-1">{address.addressName}</p>

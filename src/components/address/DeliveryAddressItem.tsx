@@ -34,7 +34,7 @@ export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddress
     }) => deleteAddress(accessToken, addressId),
     onSuccess: () => {
       triggerRefetch();
-      addToast({ message: '배송지가 삭제되었습니다.', type: 'success', duration: 2000 });
+      addToast({ message: '배송지가 삭제되었습니다.', type: 'success' });
     },
   });
 
@@ -48,7 +48,7 @@ export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddress
     }) => patchDefaultAddress(accessToken, addressId),
     onSuccess: () => {
       triggerRefetch();
-      addToast({ message: '기본 배송지가 변경되었습니다.', type: 'success', duration: 2000 });
+      addToast({ message: '기본 배송지가 변경되었습니다.', type: 'success' });
     },
   });
 

@@ -38,9 +38,9 @@ const AddressAddPage = () => {
   const { mutate } = useMutation({
     mutationFn: ({ accessToken, newAddress }: { accessToken: string; newAddress: any }) =>
       postAddress(accessToken, newAddress),
-    onSuccess: (data) => {
+    onSuccess: () => {
       triggerRefetch();
-      addToast({ message: '새 배송지가 추가되었습니다.', type: 'success', duration: 2000 });
+      addToast({ message: '새 배송지가 추가되었습니다.', type: 'success' });
       router.push('/address/list');
     },
   });

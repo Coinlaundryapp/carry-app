@@ -10,7 +10,6 @@ import { useSession } from 'next-auth/react';
 import Toast from '@/components/share/Toast';
 import { useEffect } from 'react';
 import { useAddressStore } from '@/store/address-store';
-import Loading from '@/components/share/Loading';
 import { useToastStore } from '@/store/toast-store';
 
 export default function AddressSetting() {
@@ -44,7 +43,7 @@ export default function AddressSetting() {
 
   useEffect(() => {
     if (data && data.length === 0) {
-      addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error', duration: 2000 });
+      addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error' });
     }
   }, [data]);
 

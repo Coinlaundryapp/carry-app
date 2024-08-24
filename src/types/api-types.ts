@@ -3,16 +3,6 @@ export interface ApiResponse<T> {
   status: number;
   message: string;
 }
-
-export interface ApiBodyResponse<T> {
-  body: T;
-  headers: any;
-  ok: boolean;
-  redirected: boolean;
-  status: number;
-  statusText: string;
-  type: string;
-}
 export interface AuthResponse {
   accessToken: string;
   refreshToken: string;

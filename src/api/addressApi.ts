@@ -1,11 +1,6 @@
 import { GetAddressesResType } from '@/types/address-type';
 import { fetchExtended } from './api-client';
-import {
-  ApiResponse,
-  TGetAddressSearchListRes,
-  TAddressRes,
-  ApiBodyResponse,
-} from '@/types/api-types';
+import { ApiResponse, TGetAddressSearchListRes, TAddressRes } from '@/types/api-types';
 
 export async function getAddresses(accessToken: string | undefined) {
   const res = await fetchExtended<ApiResponse<GetAddressesResType>>(

@@ -31,7 +31,7 @@ const inputTitleVariants = cva('font-label-1-normal text-label-strong', {
 });
 
 const inputBoxVariants = cva(
-  'flex w-full px-4 py-2 gap-3 rounded-md items-center text-label-alternative',
+  'flex w-full px-4 py-2 gap-3 rounded-md items-center text-label-alternative h-[46px]',
   {
     variants: {
       status: {

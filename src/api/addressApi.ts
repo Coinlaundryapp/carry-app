@@ -33,16 +33,18 @@ export async function getAddressSearchList(keyword: string, page: number) {
 }
 
 export async function getAddress(accessToken: string | undefined, addressId: string | string[]) {
-  const res = await fetchExtended<TAddressRes>(`/api/v1/users/me/shipping-addresses/${addressId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+  const res = await fetchExtended<ApiResponse<TAddressRes>>(
+    `/api/v1/users/me/shipping-addresses/${addressId}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
     },
-  });
-  console.log('res', res.body);
+  );
 
-  const data = res.body;
+  const data = res.body.data;
   return data;
 }
 

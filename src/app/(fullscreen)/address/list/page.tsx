@@ -43,9 +43,10 @@ export default function AddressSetting() {
 
   useEffect(() => {
     if (data && data.length === 0) {
+      console.log('data', data);
       addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error' });
     }
-  }, [data]);
+  }, [data, refetch]);
 
   return (
     <main className="flex h-full flex-col">

@@ -48,13 +48,6 @@ const AddressAddPage = () => {
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedPhone = formatPhoneNumber(e.target.value);
-    // let value = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 남기기
-
-    // if (value.length > 3 && value.length <= 7) {
-    //   value = value.replace(/(\d{3})(\d+)/, '$1-$2');
-    // } else if (value.length > 7) {
-    //   value = value.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
-    // }
 
     setFormData({ ...formData, phone: formattedPhone });
   };

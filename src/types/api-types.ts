@@ -12,3 +12,8 @@ export interface User {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface ErrorResponse {
+  status: number;
+  message: string;
+}

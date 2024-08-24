@@ -1,17 +1,23 @@
 import { ACTIVATED_SEOUL } from '@/constants/activate-region';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface SeoulMapProps {
   activeLocale?: string;
   canSelect: boolean;
   getValue?: (value: string) => void;
-  activatedArea: string[];
 }
 
-const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMapProps) => {
+const activatedArea = ACTIVATED_SEOUL;
+
+const SeoulMap = ({ activeLocale, canSelect, getValue }: SeoulMapProps) => {
   const mapRef = useRef<SVGSVGElement | null>(null);
 
-  const [activeId, setActiveId] = useState<string | null>(activeLocale || null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setActiveId(activeLocale ?? null);
+  }, [activeLocale]);
+
   let clickedPath = useRef<SVGPathElement>();
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -66,12 +72,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '광진구'
             ? '#13C2C2'
-            : activatedArea.includes('광진구')
+            : canSelect && activatedArea.includes('광진구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '광진구' ? '#008781' : activatedArea.includes('광진구') ? '#72D4D5' : ''
+          activeId === '광진구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('광진구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -81,12 +91,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '노원구'
             ? '#13C2C2'
-            : activatedArea.includes('노원구')
+            : canSelect && activatedArea.includes('노원구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '노원구' ? '#008781' : activatedArea.includes('노원구') ? '#72D4D5' : ''
+          activeId === '노원구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('노원구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -96,12 +110,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '강북구'
             ? '#13C2C2'
-            : activatedArea.includes('강북구')
+            : canSelect && activatedArea.includes('강북구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '강북구' ? '#008781' : activatedArea.includes('강북구') ? '#72D4D5' : ''
+          activeId === '강북구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('강북구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -111,12 +129,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '중랑구'
             ? '#13C2C2'
-            : activatedArea.includes('중랑구')
+            : canSelect && activatedArea.includes('중랑구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '중랑구' ? '#008781' : activatedArea.includes('중랑구') ? '#72D4D5' : ''
+          activeId === '중랑구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('중랑구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -126,12 +148,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '도봉구'
             ? '#13C2C2'
-            : activatedArea.includes('도봉구')
+            : canSelect && activatedArea.includes('도봉구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '도봉구' ? '#008781' : activatedArea.includes('도봉구') ? '#72D4D5' : ''
+          activeId === '도봉구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('도봉구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -141,12 +167,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '동대문구'
             ? '#13C2C2'
-            : activatedArea.includes('동대문구')
+            : canSelect && activatedArea.includes('동대문구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '동대문구' ? '#008781' : activatedArea.includes('동대문구') ? '#72D4D5' : ''
+          activeId === '동대문구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('동대문구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -154,9 +184,19 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         id="중구"
         d="M179.27 156.95L196.27 160.07L203.48 148.6L208.64 146L210.18 140.78L208.12 135.05L199.88 136.61L188.54 135.05L180.82 137.13L171.03 135.05L161.76 137.13L158.67 147.04L163.3 152.25L170.51 151.73L179.27 156.95Z"
         fill={
-          activeId === '중구' ? '#13C2C2' : activatedArea.includes('중구') ? '#DFF4F5' : '#F7F7F8'
+          activeId === '중구'
+            ? '#13C2C2'
+            : canSelect && activatedArea.includes('중구')
+              ? '#DFF4F5'
+              : '#F7F7F8'
         }
-        stroke={activeId === '중구' ? '#008781' : activatedArea.includes('중구') ? '#72D4D5' : ''}
+        stroke={
+          activeId === '중구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('중구')
+              ? '#72D4D5'
+              : ''
+        }
         strokeWidth="0.5"
       />
       <path
@@ -165,12 +205,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '성북구'
             ? '#13C2C2'
-            : activatedArea.includes('성북구')
+            : canSelect && activatedArea.includes('성북구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '성북구' ? '#008781' : activatedArea.includes('성북구') ? '#72D4D5' : ''
+          activeId === '성북구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('성북구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -180,12 +224,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '서대문구'
             ? '#13C2C2'
-            : activatedArea.includes('서대문구')
+            : canSelect && activatedArea.includes('서대문구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '서대문구' ? '#008781' : activatedArea.includes('서대문구') ? '#72D4D5' : ''
+          activeId === '서대문구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('서대문구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -195,12 +243,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '용산구'
             ? '#13C2C2'
-            : activatedArea.includes('용산구')
+            : canSelect && activatedArea.includes('용산구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '용산구' ? '#008781' : activatedArea.includes('용산구') ? '#72D4D5' : ''
+          activeId === '용산구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('용산구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -210,12 +262,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '성동구'
             ? '#13C2C2'
-            : activatedArea.includes('성동구')
+            : canSelect && activatedArea.includes('성동구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '성동구' ? '#008781' : activatedArea.includes('성동구') ? '#72D4D5' : ''
+          activeId === '성동구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('성동구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -225,12 +281,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '영등포구'
             ? '#13C2C2'
-            : activatedArea.includes('영등포구')
+            : canSelect && activatedArea.includes('영등포구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '영등포구' ? '#008781' : activatedArea.includes('영등포구') ? '#72D4D5' : ''
+          activeId === '영등포구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('영등포구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -240,12 +300,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '동작구'
             ? '#13C2C2'
-            : activatedArea.includes('동작구')
+            : canSelect && activatedArea.includes('동작구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '동작구' ? '#008781' : activatedArea.includes('동작구') ? '#72D4D5' : ''
+          activeId === '동작구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('동작구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -255,12 +319,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '관악구'
             ? '#13C2C2'
-            : activatedArea.includes('관악구')
+            : canSelect && activatedArea.includes('관악구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '관악구' ? '#008781' : activatedArea.includes('관악구') ? '#72D4D5' : ''
+          activeId === '관악구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('관악구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -270,12 +338,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '강남구'
             ? '#13C2C2'
-            : activatedArea.includes('강남구')
+            : canSelect && activatedArea.includes('강남구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '강남구' ? '#008781' : activatedArea.includes('강남구') ? '#72D4D5' : ''
+          activeId === '강남구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('강남구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -285,12 +357,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '송파구'
             ? '#13C2C2'
-            : activatedArea.includes('송파구')
+            : canSelect && activatedArea.includes('송파구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '송파구' ? '#008781' : activatedArea.includes('송파구') ? '#72D4D5' : ''
+          activeId === '송파구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('송파구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -300,12 +376,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '강동구'
             ? '#13C2C2'
-            : activatedArea.includes('강동구')
+            : canSelect && activatedArea.includes('강동구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '강동구' ? '#008781' : activatedArea.includes('강동구') ? '#72D4D5' : ''
+          activeId === '강동구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('강동구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -315,12 +395,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '금천구'
             ? '#13C2C2'
-            : activatedArea.includes('금천구')
+            : canSelect && activatedArea.includes('금천구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '금천구' ? '#008781' : activatedArea.includes('금천구') ? '#72D4D5' : ''
+          activeId === '금천구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('금천구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -330,12 +414,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '강서구'
             ? '#13C2C2'
-            : activatedArea.includes('강서구')
+            : canSelect && activatedArea.includes('강서구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '강서구' ? '#008781' : activatedArea.includes('강서구') ? '#72D4D5' : ''
+          activeId === '강서구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('강서구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -345,12 +433,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '마포구'
             ? '#13C2C2'
-            : activatedArea.includes('마포구')
+            : canSelect && activatedArea.includes('마포구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '마포구' ? '#008781' : activatedArea.includes('마포구') ? '#72D4D5' : ''
+          activeId === '마포구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('마포구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -360,12 +452,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '종로구'
             ? '#13C2C2'
-            : activatedArea.includes('종로구')
+            : canSelect && activatedArea.includes('종로구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '종로구' ? '#008781' : activatedArea.includes('종로구') ? '#72D4D5' : ''
+          activeId === '종로구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('종로구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -375,12 +471,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '양천구'
             ? '#13C2C2'
-            : activatedArea.includes('양천구')
+            : canSelect && activatedArea.includes('양천구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '양천구' ? '#008781' : activatedArea.includes('양천구') ? '#72D4D5' : ''
+          activeId === '양천구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('양천구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -390,12 +490,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '구로구'
             ? '#13C2C2'
-            : activatedArea.includes('구로구')
+            : canSelect && activatedArea.includes('구로구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '구로구' ? '#008781' : activatedArea.includes('구로구') ? '#72D4D5' : ''
+          activeId === '구로구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('구로구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -405,12 +509,16 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '서초구'
             ? '#13C2C2'
-            : activatedArea.includes('서초구')
+            : canSelect && activatedArea.includes('서초구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '서초구' ? '#008781' : activatedArea.includes('서초구') ? '#72D4D5' : ''
+          activeId === '서초구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('서초구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -420,25 +528,23 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '은평구'
             ? '#13C2C2'
-            : activatedArea.includes('은평구')
+            : canSelect && activatedArea.includes('은평구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '은평구' ? '#008781' : activatedArea.includes('은평구') ? '#72D4D5' : ''
+          activeId === '은평구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('은평구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
       <path
         id="강동구"
         d="M302.981 147.245V149.608H304.335V150.586H302.981V152.938H301.789V147.245H302.981ZM295.29 152.122C297.487 151.521 298.797 150.333 299.001 148.878H295.73V147.911H300.296C300.301 150.462 298.636 152.278 295.763 153.089L295.29 152.122ZM296.601 155.001C296.59 153.803 297.89 153.057 299.845 153.057C301.816 153.057 303.089 153.803 303.089 155.001C303.089 156.209 301.816 156.951 299.845 156.945C297.89 156.951 296.59 156.209 296.601 155.001ZM297.782 155.001C297.777 155.635 298.561 156.011 299.845 156.011C301.123 156.011 301.913 155.635 301.918 155.001C301.913 154.362 301.123 153.991 299.845 153.991C298.561 153.991 297.777 154.362 297.782 155.001ZM313.691 151.896V152.853H304.829V151.896H308.675V150.973H305.914V147.686H312.617V148.62H307.106V150.027H312.671V150.973H309.846V151.896H313.691ZM305.86 155.184C305.86 154.045 307.133 153.406 309.244 153.411C311.339 153.406 312.601 154.045 312.606 155.184C312.601 156.312 311.339 156.951 309.244 156.956C307.133 156.951 305.86 156.312 305.86 155.184ZM307.074 155.184C307.069 155.748 307.832 156.038 309.244 156.032C310.635 156.038 311.403 155.748 311.414 155.184C311.403 154.625 310.635 154.324 309.244 154.324C307.832 154.324 307.069 154.625 307.074 155.184ZM322.103 147.836V148.706C322.097 149.614 322.097 150.607 321.845 151.982H323.188V152.949H319.331V156.967H318.128V152.949H314.336V151.982H320.631C320.899 150.661 320.91 149.667 320.91 148.803H315.378V147.836H322.103Z"
-        fill={
-          activeId === '강동구'
-            ? '#FFFFFF'
-            : activatedArea.includes('강동구')
-              ? '#5A5C63'
-              : '#AEB0B6'
-        }
+        fill={activeId === '강동구' ? '#FFFFFF' : activeLocale === '강동구' ? '#5A5C63' : '#AEB0B6'}
       />
       <path
         id="관악구"
@@ -446,7 +552,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '관악구'
             ? '#FFFFFF'
-            : activatedArea.includes('관악구')
+            : canSelect && activatedArea.includes('관악구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -457,7 +563,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '금천구'
             ? '#FFFFFF'
-            : activatedArea.includes('금천구')
+            : canSelect && activatedArea.includes('금천구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -468,7 +574,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '구로구'
             ? '#FFFFFF'
-            : activatedArea.includes('구로구')
+            : canSelect && activatedArea.includes('구로구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -479,7 +585,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '양천구'
             ? '#FFFFFF'
-            : activatedArea.includes('양천구')
+            : canSelect && activatedArea.includes('양천구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -490,7 +596,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '강서구'
             ? '#FFFFFF'
-            : activatedArea.includes('강서구')
+            : canSelect && activatedArea.includes('강서구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -501,7 +607,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '영등포구'
             ? '#FFFFFF'
-            : activatedArea.includes('영등포구')
+            : canSelect && activatedArea.includes('영등포구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -512,7 +618,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '동작구'
             ? '#FFFFFF'
-            : activatedArea.includes('동작구')
+            : canSelect && activatedArea.includes('동작구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -520,13 +626,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
       <path
         id="서초구"
         d="M191.91 225.576C191.905 227.381 192.77 229.153 194.316 229.83L193.597 230.786C192.501 230.249 191.728 229.218 191.314 227.945C190.89 229.288 190.095 230.405 188.978 230.969L188.226 230.002C189.81 229.261 190.691 227.392 190.696 225.576V224.029H191.91V225.576ZM193.242 227.349V226.382H195.283V223.245H196.465V232.967H195.283V227.349H193.242ZM206.702 230.829V231.807H197.829V230.829H201.664V228.82H202.846V230.829H206.702ZM198.194 228.219C200.3 227.945 201.562 226.828 201.648 225.619H198.613V224.652H201.664V223.396H202.846V224.652H205.907V225.619H202.873C202.953 226.828 204.215 227.945 206.315 228.219L205.875 229.153C204.199 228.917 202.899 228.17 202.255 227.112C201.616 228.17 200.327 228.917 198.646 229.153L198.194 228.219ZM215.103 223.836V224.706C215.097 225.614 215.097 226.607 214.845 227.982H216.188V228.949H212.331V232.967H211.128V228.949H207.336V227.982H213.631C213.899 226.661 213.91 225.667 213.91 224.803H208.378V223.836H215.103Z"
-        fill={
-          activeId === '서초구'
-            ? '#FFFFFF'
-            : activatedArea.includes('서초구')
-              ? '#5A5C63'
-              : '#AEB0B6'
-        }
+        fill={activeId === '서초구' ? '#FFFFFF' : activeLocale === '서초구' ? '#5A5C63' : '#AEB0B6'}
       />
       <path
         id="강남구"
@@ -534,7 +634,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '강남구'
             ? '#FFFFFF'
-            : activatedArea.includes('강남구')
+            : canSelect && activatedArea.includes('강남구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -545,7 +645,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '송파구'
             ? '#FFFFFF'
-            : activatedArea.includes('송파구')
+            : canSelect && activatedArea.includes('송파구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -556,7 +656,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '광진구'
             ? '#FFFFFF'
-            : activatedArea.includes('광진구')
+            : canSelect && activatedArea.includes('광진구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -567,7 +667,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '성동구'
             ? '#FFFFFF'
-            : activatedArea.includes('성동구')
+            : canSelect && activatedArea.includes('성동구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -578,7 +678,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '용산구'
             ? '#FFFFFF'
-            : activatedArea.includes('용산구')
+            : canSelect && activatedArea.includes('용산구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -587,7 +687,11 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         id="중구"
         d="M187.174 146.703V147.67H183.328V148.486C185.063 148.599 186.094 149.201 186.1 150.205C186.094 151.322 184.827 151.945 182.737 151.945C180.616 151.945 179.354 151.322 179.354 150.205C179.354 149.201 180.385 148.594 182.146 148.481V147.67H178.322V146.703H187.174ZM178.752 145.317C180.535 145.151 181.701 144.426 181.899 143.631H179.128V142.675H186.379V143.631H183.581C183.774 144.431 184.929 145.151 186.755 145.317L186.336 146.263C184.569 146.08 183.264 145.376 182.737 144.394C182.211 145.376 180.922 146.08 179.16 146.263L178.752 145.317ZM180.567 150.205C180.562 150.742 181.325 151.038 182.737 151.032C184.128 151.038 184.896 150.742 184.907 150.205C184.896 149.668 184.128 149.383 182.737 149.378C181.325 149.383 180.562 149.668 180.567 150.205ZM195.596 142.836V143.706C195.59 144.614 195.59 145.607 195.338 146.982H196.681V147.949H192.824V151.967H191.621V147.949H187.829V146.982H194.124C194.393 145.661 194.403 144.667 194.403 143.803H188.871V142.836H195.596Z"
         fill={
-          activeId === '중구' ? '#FFFFFF' : activatedArea.includes('중구') ? '#5A5C63' : '#AEB0B6'
+          activeId === '중구'
+            ? '#FFFFFF'
+            : canSelect && activatedArea.includes('중구')
+              ? '#5A5C63'
+              : '#AEB0B6'
         }
       />
       <path
@@ -596,7 +700,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '종로구'
             ? '#FFFFFF'
-            : activatedArea.includes('종로구')
+            : canSelect && activatedArea.includes('종로구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -607,7 +711,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '성북구'
             ? '#FFFFFF'
-            : activatedArea.includes('성북구')
+            : canSelect && activatedArea.includes('성북구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -618,7 +722,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '동대문구'
             ? '#FFFFFF'
-            : activatedArea.includes('동대문구')
+            : canSelect && activatedArea.includes('동대문구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -629,7 +733,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '중랑구'
             ? '#FFFFFF'
-            : activatedArea.includes('중랑구')
+            : canSelect && activatedArea.includes('중랑구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -640,7 +744,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '노원구'
             ? '#FFFFFF'
-            : activatedArea.includes('노원구')
+            : canSelect && activatedArea.includes('노원구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -651,7 +755,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '도봉구'
             ? '#FFFFFF'
-            : activatedArea.includes('도봉구')
+            : canSelect && activatedArea.includes('도봉구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -662,7 +766,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '강북구'
             ? '#FFFFFF'
-            : activatedArea.includes('강북구')
+            : canSelect && activatedArea.includes('강북구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -670,13 +774,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
       <path
         id="은평구"
         d="M124.174 87.2617V88.2178H115.322V87.2617H124.174ZM116.235 84.5225C116.235 83.2925 117.616 82.5513 119.737 82.5566C121.854 82.5513 123.234 83.2925 123.239 84.5225C123.234 85.7578 121.854 86.5098 119.737 86.5098C117.616 86.5098 116.235 85.7578 116.235 84.5225ZM116.418 91.7627V88.9375H117.61V90.7959H123.175V91.7627H116.418ZM117.481 84.5225C117.471 85.1831 118.325 85.5376 119.737 85.5322C121.155 85.5376 122.004 85.1831 122.004 84.5225C122.004 83.8833 121.155 83.5127 119.737 83.5127C118.325 83.5127 117.471 83.8833 117.481 84.5225ZM130.254 82.9219V83.8887H129.395V86.644C129.749 86.6172 130.104 86.585 130.437 86.542V85.6719H131.769V84.834H130.437V83.8779H131.769V82.2451H132.961V88.1963H131.769V86.6279H130.463L130.512 87.4229C128.659 87.729 126.516 87.7612 124.969 87.7666L124.84 86.7783C125.178 86.7783 125.549 86.7783 125.936 86.7729V83.8887H125.087V82.9219H130.254ZM126.376 90.1621C126.365 89.0181 127.617 88.3682 129.674 88.3682C131.747 88.3682 132.988 89.0181 132.993 90.1621C132.988 91.2793 131.747 91.9453 129.674 91.9453C127.617 91.9453 126.365 91.2793 126.376 90.1621ZM127.096 86.7568C127.472 86.7461 127.858 86.73 128.245 86.7139V83.8887H127.096V86.7568ZM127.558 90.1621C127.552 90.7261 128.315 91.0215 129.674 91.0215C131.038 91.0215 131.801 90.7261 131.801 90.1621C131.801 89.5874 131.038 89.2812 129.674 89.2812C128.315 89.2812 127.552 89.5874 127.558 90.1621ZM142.103 82.8359V83.7061C142.097 84.6138 142.097 85.6074 141.845 86.9824H143.188V87.9492H139.331V91.9668H138.128V87.9492H134.336V86.9824H140.631C140.899 85.6611 140.91 84.6675 140.91 83.8027H135.378V82.8359H142.103Z"
-        fill={
-          activeId === '은평구'
-            ? '#FFFFFF'
-            : activatedArea.includes('은평구')
-              ? '#5A5C63'
-              : '#AEB0B6'
-        }
+        fill={activeId === '은평구' ? '#FFFFFF' : activeLocale === '은평구' ? '#5A5C63' : '#AEB0B6'}
       />
       <path
         id="서대문구"
@@ -684,7 +782,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '서대문구'
             ? '#FFFFFF'
-            : activatedArea.includes('서대문구')
+            : canSelect && activatedArea.includes('서대문구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -695,7 +793,7 @@ const SeoulMap = ({ activeLocale, canSelect, getValue, activatedArea }: SeoulMap
         fill={
           activeId === '마포구'
             ? '#FFFFFF'
-            : activatedArea.includes('마포구')
+            : canSelect && activatedArea.includes('마포구')
               ? '#5A5C63'
               : '#AEB0B6'
         }

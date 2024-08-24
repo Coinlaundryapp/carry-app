@@ -1,17 +1,23 @@
 import { ACTIVATED_INCHEON } from '@/constants/activate-region';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface IncheonMapProps {
   activeLocale?: string;
   canSelect: boolean;
   getValue?: (value: string) => void;
-  activatedArea: string[];
 }
 
-const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: IncheonMapProps) => {
+const activatedArea = ACTIVATED_INCHEON;
+
+const IncheonMap = ({ activeLocale, canSelect, getValue }: IncheonMapProps) => {
   const mapRef = useRef<SVGSVGElement | null>(null);
 
-  const [activeId, setActiveId] = useState<string | null>(activeLocale || null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setActiveId(activeLocale ?? null);
+  }, [activeLocale]);
+
   let clickedPath = useRef<SVGPathElement>();
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -64,36 +70,76 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         id="중구"
         d="M63.2212 236.116L63.2709 236.022L63.2372 235.921L62.3212 233.173L69.5644 231.242L69.8368 231.169L69.7321 230.907L67.7321 225.907L67.7131 225.86L67.6768 225.823L67.1768 225.323L67.1662 225.313L67.1545 225.303L60.1617 219.809L48.6686 209.315L48.597 209.25H48.5H44.1338L41.208 204.861L41.0801 204.669L40.8786 204.781L36.6482 207.132L34.7389 200.926L34.5871 200.433L34.2941 200.858L18.7941 223.358L18.7545 223.416L18.7504 223.485L16.2504 265.985L16.2421 266.127L16.3599 266.207L33.3599 277.707L33.4304 277.755L33.5153 277.75L58.0153 276.25L58.25 276.235V276V245.562L63.2212 236.116Z"
         fill={
-          activeId === '중구' ? '#13C2C2' : activatedArea.includes('중구') ? '#DFF4F5' : '#F7F7F8'
+          activeId === '중구'
+            ? '#13C2C2'
+            : canSelect && activatedArea.includes('중구')
+              ? '#DFF4F5'
+              : '#F7F7F8'
         }
-        stroke={activeId === '중구' ? '#008781' : activatedArea.includes('중구') ? '#72D4D5' : ''}
+        stroke={
+          activeId === '중구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('중구')
+              ? '#72D4D5'
+              : ''
+        }
         strokeWidth="0.5"
       />
       <path
         id="서구"
         d="M111.373 220.215L111.54 220.314L111.677 220.177L118.177 213.677L118.221 213.632L118.239 213.572L121.186 203.75H127H127.382L127.229 203.4L109.793 163.547L118.186 154.167L118.306 154.033L118.218 153.877L109.811 139.042L118.104 130.75H132.5H132.627L132.702 130.648L143.702 115.648L143.868 115.421L143.623 115.282L129.031 107.014L132.612 105.224L132.814 105.122L132.734 104.911L128.75 94.454V88.5V88.3168L128.575 88.2616L109.75 82.3168V75.3112L143.446 82.7441L143.672 82.7939L143.739 82.5728L147.216 71.1487L156.153 64.1973L156.366 64.0324L156.186 63.8328L147.211 53.8605L143.727 46.3943L143.634 46.1951L143.424 46.2618L133.063 49.5586L138.213 41.1304L138.331 40.937L138.151 40.8005L113.666 22.3124L101.18 9.32672L101.142 9.28677L101.09 9.2668L79.0901 0.7668L78.8682 0.681056L78.7715 0.898465L72.8163 14.2977L63.9209 17.2628L63.8183 17.297L63.773 17.3952L48.8925 49.6364L39.6335 43.7886L39.5121 43.712L39.3848 43.7781L0.884753 63.7781L0.69375 63.8774L0.763485 64.081L13.2635 100.581L13.2878 100.652L13.3473 100.698L30.7371 114.113L28.7521 133.468L28.7513 133.474L26.7521 148.968L26.7518 148.968L26.7509 148.979L25.7509 160.979L25.7488 161.004L25.7516 161.028L28.7516 187.528L28.7788 187.768L29.0195 187.749L54.5195 185.749L54.75 185.731V185.5V176.25H65.2255L63.7511 191.977L63.7363 192.135L63.8731 192.215L86.3731 205.475L111.373 220.215Z"
         fill={
-          activeId === '서구' ? '#13C2C2' : activatedArea.includes('서구') ? '#DFF4F5' : '#F7F7F8'
+          activeId === '서구'
+            ? '#13C2C2'
+            : canSelect && activatedArea.includes('서구')
+              ? '#DFF4F5'
+              : '#F7F7F8'
         }
-        stroke={activeId === '서구' ? '#008781' : activatedArea.includes('서구') ? '#72D4D5' : ''}
+        stroke={
+          activeId === '서구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('서구')
+              ? '#72D4D5'
+              : ''
+        }
         strokeWidth="0.5"
       />
       <path
         id="동구"
         d="M75.3287 217.022L86.6786 205.435L86.9021 205.207L86.6269 205.045L64.1269 191.785L64.0322 191.729L63.927 191.761L34.427 200.761L34.1874 200.834L34.2611 201.074L36.2611 207.574L36.3518 207.868L36.6214 207.719L40.9199 205.331L43.792 209.639L43.8662 209.75H44H48.403L59.8314 220.185L59.8383 220.191L59.8455 220.197L66.8455 225.697L66.96 225.786L67.0947 225.731L78.0947 221.231L78.3941 221.109L78.2 220.85L75.3287 217.022Z"
         fill={
-          activeId === '동구' ? '#13C2C2' : activatedArea.includes('동구') ? '#DFF4F5' : '#F7F7F8'
+          activeId === '동구'
+            ? '#13C2C2'
+            : canSelect && activatedArea.includes('동구')
+              ? '#DFF4F5'
+              : '#F7F7F8'
         }
-        stroke={activeId === '동구' ? '#008781' : activatedArea.includes('동구') ? '#72D4D5' : ''}
+        stroke={
+          activeId === '동구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('동구')
+              ? '#72D4D5'
+              : ''
+        }
         strokeWidth="0.5"
       />
       <path
         id="남구"
         d="M77.6058 220.891L66.9053 225.269L66.5574 225.411L66.8232 225.677L67.2869 226.141L69.1632 230.831L61.9356 232.758L61.6788 232.827L61.7628 233.079L62.7291 235.978L57.7788 245.384L57.75 245.438V245.5V276V276.217L57.9646 276.248L68.4646 277.748L68.6312 277.771L68.7159 277.626L72.1559 271.729L84.9726 269.757L101.911 276.234L101.937 276.244L101.965 276.248L112.465 277.748L112.621 277.77L112.708 277.639L115.67 273.195L130.109 266.225L130.25 266.157V266V260.5V260.346L130.112 260.276L123.266 256.853L125.249 237.025L125.258 236.936L125.208 236.861L121.208 230.861L121.152 230.777L121.052 230.756L114.203 229.288L111.742 219.936L111.716 219.837L111.627 219.785L86.627 205.045L86.4584 204.945L86.3214 205.085L74.8214 216.825L74.6713 216.978L74.8 217.15L77.6058 220.891Z"
         fill={
-          activeId === '남구' ? '#13C2C2' : activatedArea.includes('남구') ? '#DFF4F5' : '#F7F7F8'
+          activeId === '남구'
+            ? '#13C2C2'
+            : canSelect && activatedArea.includes('남구')
+              ? '#DFF4F5'
+              : '#F7F7F8'
         }
-        stroke={activeId === '남구' ? '#008781' : activatedArea.includes('남구') ? '#72D4D5' : ''}
+        stroke={
+          activeId === '남구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('남구')
+              ? '#72D4D5'
+              : ''
+        }
         strokeWidth="0.5"
       />
       <path
@@ -102,12 +148,16 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         fill={
           activeId === '부평구'
             ? '#13C2C2'
-            : activatedArea.includes('부평구')
+            : canSelect && activatedArea.includes('부평구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '부평구' ? '#008781' : activatedArea.includes('부평구') ? '#72D4D5' : ''
+          activeId === '부평구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('부평구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -117,12 +167,16 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         fill={
           activeId === '남동구'
             ? '#13C2C2'
-            : activatedArea.includes('남동구')
+            : canSelect && activatedArea.includes('남동구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '남동구' ? '#008781' : activatedArea.includes('남동구') ? '#72D4D5' : ''
+          activeId === '남동구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('남동구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -132,12 +186,16 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         fill={
           activeId === '연수구'
             ? '#13C2C2'
-            : activatedArea.includes('연수구')
+            : canSelect && activatedArea.includes('연수구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '연수구' ? '#008781' : activatedArea.includes('연수구') ? '#72D4D5' : ''
+          activeId === '연수구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('연수구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -147,12 +205,16 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         fill={
           activeId === '계양구'
             ? '#13C2C2'
-            : activatedArea.includes('계양구')
+            : canSelect && activatedArea.includes('계양구')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
-          activeId === '계양구' ? '#008781' : activatedArea.includes('계양구') ? '#72D4D5' : ''
+          activeId === '계양구'
+            ? '#008781'
+            : canSelect && activatedArea.includes('계양구')
+              ? '#72D4D5'
+              : ''
         }
         strokeWidth="0.5"
       />
@@ -160,21 +222,33 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         id="중구"
         d="M38.1738 241.703V242.67H34.3281V243.486C36.063 243.599 37.0942 244.201 37.0996 245.205C37.0942 246.322 35.8267 246.945 33.7373 246.945C31.6157 246.945 30.3535 246.322 30.3535 245.205C30.3535 244.201 31.3848 243.594 33.1465 243.481V242.67H29.3223V241.703H38.1738ZM29.752 240.317C31.5352 240.151 32.7007 239.426 32.8994 238.631H30.1279V237.675H37.3789V238.631H34.5806C34.7739 239.431 35.9287 240.151 37.7549 240.317L37.3359 241.263C35.5688 241.08 34.2637 240.376 33.7373 239.394C33.2109 240.376 31.9219 241.08 30.1602 241.263L29.752 240.317ZM31.5674 245.205C31.562 245.742 32.3247 246.038 33.7373 246.032C35.1284 246.038 35.8965 245.742 35.9072 245.205C35.8965 244.668 35.1284 244.383 33.7373 244.378C32.3247 244.383 31.562 244.668 31.5674 245.205ZM46.5957 237.836V238.706C46.5903 239.614 46.5903 240.607 46.3379 241.982H47.6807V242.949H43.8242V246.967H42.6211V242.949H38.8291V241.982H45.124C45.3926 240.661 45.4033 239.667 45.4033 238.803H39.8711V237.836H46.5957Z"
         fill={
-          activeId === '중구' ? '#FFFFFF' : activatedArea.includes('중구') ? '#5A5C63' : '#AEB0B6'
+          activeId === '중구'
+            ? '#FFFFFF'
+            : canSelect && activatedArea.includes('중구')
+              ? '#5A5C63'
+              : '#AEB0B6'
         }
       />
       <path
         id="동구"
         d="M62.1846 206.896V207.853H53.3223V206.896H57.168V205.973H54.4072V202.686H61.1104V203.62H55.5996V205.027H61.1641V205.973H58.3389V206.896H62.1846ZM54.3535 210.184C54.3535 209.045 55.6265 208.406 57.7373 208.411C59.832 208.406 61.0942 209.045 61.0996 210.184C61.0942 211.312 59.832 211.951 57.7373 211.956C55.6265 211.951 54.3535 211.312 54.3535 210.184ZM55.5674 210.184C55.562 210.748 56.3247 211.038 57.7373 211.032C59.1284 211.038 59.8965 210.748 59.9072 210.184C59.8965 209.625 59.1284 209.324 57.7373 209.324C56.3247 209.324 55.562 209.625 55.5674 210.184ZM70.5957 202.836V203.706C70.5903 204.614 70.5903 205.607 70.3379 206.982H71.6807V207.949H67.8242V211.967H66.6211V207.949H62.8291V206.982H69.124C69.3926 205.661 69.4033 204.667 69.4033 203.803H63.8711V202.836H70.5957Z"
         fill={
-          activeId === '동구' ? '#FFFFFF' : activatedArea.includes('동구') ? '#5A5C63' : '#AEB0B6'
+          activeId === '동구'
+            ? '#FFFFFF'
+            : canSelect && activatedArea.includes('동구')
+              ? '#5A5C63'
+              : '#AEB0B6'
         }
       />
       <path
         id="남구"
         d="M90.9814 241.256V243.361H92.3457V244.35H90.9814V246.724H89.7891V241.256H90.9814ZM83.7412 246.133V241.729H84.9443V245.15C86.1851 245.134 87.501 245.021 88.9189 244.747L89.0586 245.725C87.4473 246.047 85.9541 246.133 84.5469 246.133H83.7412ZM84.6973 250.827V247.196H90.9814V250.827H84.6973ZM85.8682 249.882H89.8105V248.131H85.8682V249.882ZM100.596 241.836V242.706C100.59 243.614 100.59 244.607 100.338 245.982H101.681V246.949H97.8242V250.967H96.6211V246.949H92.8291V245.982H99.124C99.3926 244.661 99.4033 243.667 99.4033 242.803H93.8711V241.836H100.596Z"
         fill={
-          activeId === '남구' ? '#FFFFFF' : activatedArea.includes('남구') ? '#5A5C63' : '#AEB0B6'
+          activeId === '남구'
+            ? '#FFFFFF'
+            : canSelect && activatedArea.includes('남구')
+              ? '#5A5C63'
+              : '#AEB0B6'
         }
       />
       <path
@@ -183,7 +257,7 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         fill={
           activeId === '연수구'
             ? '#FFFFFF'
-            : activatedArea.includes('연수구')
+            : canSelect && activatedArea.includes('연수구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -192,7 +266,11 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         id="서구"
         d="M66.9102 101.576C66.9048 103.381 67.7695 105.153 69.3164 105.83L68.5967 106.786C67.501 106.249 66.7275 105.218 66.314 103.945C65.8896 105.288 65.0947 106.405 63.9775 106.969L63.2256 106.002C64.8101 105.261 65.6909 103.392 65.6963 101.576V100.029H66.9102V101.576ZM68.2422 103.349V102.382H70.2832V99.2451H71.4648V108.967H70.2832V103.349H68.2422ZM80.5957 99.8359V100.706C80.5903 101.614 80.5903 102.607 80.3379 103.982H81.6807V104.949H77.8242V108.967H76.6211V104.949H72.8291V103.982H79.124C79.3926 102.661 79.4033 101.667 79.4033 100.803H73.8711V99.8359H80.5957Z"
         fill={
-          activeId === '서구' ? '#FFFFFF' : activatedArea.includes('서구') ? '#5A5C63' : '#AEB0B6'
+          activeId === '서구'
+            ? '#FFFFFF'
+            : canSelect && activatedArea.includes('서구')
+              ? '#5A5C63'
+              : '#AEB0B6'
         }
       />
       <path
@@ -201,7 +279,7 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         fill={
           activeId === '남동구'
             ? '#FFFFFF'
-            : activatedArea.includes('남동구')
+            : canSelect && activatedArea.includes('남동구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -212,7 +290,7 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         fill={
           activeId === '부평구'
             ? '#FFFFFF'
-            : activatedArea.includes('부평구')
+            : canSelect && activatedArea.includes('부평구')
               ? '#5A5C63'
               : '#AEB0B6'
         }
@@ -223,7 +301,7 @@ const IncheonMap = ({ activeLocale, canSelect, getValue, activatedArea }: Incheo
         fill={
           activeId === '계양구'
             ? '#FFFFFF'
-            : activatedArea.includes('계양구')
+            : canSelect && activatedArea.includes('계양구')
               ? '#5A5C63'
               : '#AEB0B6'
         }

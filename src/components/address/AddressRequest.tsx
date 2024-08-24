@@ -1,7 +1,7 @@
 import React from 'react';
 import Dropdown from '../share/Dropdown/Dropdown';
 import { Input } from '../share/Input';
-import { REQUES_OPTIONS } from '@/constants/request-options';
+import { REQUEST_OPTIONS } from '@/constants/request-options';
 
 type TProps = {
   selectedRequest: any;
@@ -14,7 +14,7 @@ function AddressRequest({ selectedRequest, handleChangeRequest, setSelectedReque
     <div className="mb-4">
       <label className="font_headline_1 mb-4 font-bold">배송 요청사항</label>
       <Dropdown
-        data={REQUES_OPTIONS}
+        data={REQUEST_OPTIONS}
         value={selectedRequest.value}
         indicator="radio"
         placeholder="문 앞에 놓아 주세요."

@@ -19,10 +19,11 @@ const SelectLocalePage = () => {
     openModal({
       type: 'confirm',
       image: 'sad',
-      title: '서비스를 이용할 수 없어요',
-      description: '다시 선택해주세요',
-      confirmText: '허용',
-      closeText: '아니요',
+      title: '서비스를 이용할 수 없어요!',
+      description: '다시 선택해주세요.',
+      confirmText: '다시 선택',
+      closeText: '나가기',
+      onClose: () => router.push('/'),
     });
   };
 
@@ -69,9 +70,11 @@ const SelectLocalePage = () => {
           }
         />
       </div>
-      <Button state="primary" size="large" onClick={cannotUseService}>
-        다음에 이용하기
-      </Button>
+      <div className="w-full px-[24px]">
+        <Button state="primary" size="full" onClick={cannotUseService}>
+          다음에 이용하기
+        </Button>
+      </div>
     </div>
   );
 };

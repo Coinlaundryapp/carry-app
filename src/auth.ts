@@ -1,5 +1,20 @@
-import NextAuth from 'next-auth';
+import NextAuth, { DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { isJwtExpired } from '@/lib/jwt';
+import { login, refreshAccessToken } from '@/api/token';
+
+declare module 'next-auth' {
+  interface User {
+    accessToken: string;
+    refreshToken: string;
+  }
+  interface Session {
+    user?: {
+      accessToken?: string;
+      refreshToken?: string;
+    } & DefaultSession['user'];
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -8,21 +23,54 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         code: {},
       },
       authorize: async (credentials) => {
-        let user = null;
-
-        const code = credentials.code;
-
-        //TODO: 백엔드 서버로 code를 보내어 토큰 발급받기
-
-        user = {
-          name: 'Test User',
+        let user = {
+          accessToken: '',
+          refreshToken: '',
         };
-        console.log(user);
-        if (!user) {
-          throw new Error('User not found.');
+        const authorizationCode = credentials.code as string;
+
+        const res = await login({ authorizationCode });
+        if (res) {
+          user = {
+            accessToken: res.accessToken,
+            refreshToken: res.refreshToken,
+          };
         }
         return user;
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user, account }) {
+      if (account && user) {
+        return {
+          accessToken: user.accessToken,
+          refreshToken: user.refreshToken,
+        };
+      }
+
+      if (token && isJwtExpired(token.accessToken as string)) {
+        const res = await refreshAccessToken({ refreshToken: token.refreshToken as string });
+        return {
+          ...token,
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+        };
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      const updatedUser = {
+        ...session.user,
+        accessToken: token.accessToken as string,
+        refreshToken: token.refreshToken as string,
+      };
+      const updatedSession = {
+        ...session,
+        user: updatedUser,
+      };
+      return updatedSession;
+    },
+  },
 });

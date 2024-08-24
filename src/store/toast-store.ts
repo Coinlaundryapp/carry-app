@@ -3,7 +3,7 @@ import { create } from 'zustand';
 type Toast = {
   id: string;
   message: string;
-  type: 'success' | 'done';
+  type: 'success' | 'done' | 'error';
   duration?: number;
 };
 
@@ -15,7 +15,7 @@ type ToastStore = {
 
 export const useToastStore = create<ToastStore>((set) => ({
   toasts: [],
-  addToast: ({ message, type = 'success', duration = 3000 }) =>
+  addToast: ({ message, type = 'success', duration = 2000 }) =>
     set((state) => ({
       toasts: [
         ...state.toasts,

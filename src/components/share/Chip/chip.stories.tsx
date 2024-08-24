@@ -9,9 +9,6 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {
-    isActive: { control: 'boolean' },
-  },
   args: { onClick: fn() },
 } satisfies Meta<typeof Chip>;
 
@@ -20,7 +17,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    isActive: true,
     text: 'Chip',
   },
 };

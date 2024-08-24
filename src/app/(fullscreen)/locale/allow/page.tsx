@@ -1,30 +1,27 @@
 'use client';
 
 import Button from '@/components/share/Button/Button';
-import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import SeoulMap from '@/components/ui/SeoulMap';
 import { useModalStore } from '@/store/modal-store';
+import IncheonMap from '@/components/ui/IncheonMap';
 
 const AllowLocationPage = () => {
   const rotuer = useRouter();
+  const searchParams = useSearchParams();
+  const city = searchParams.get('city');
+  const district = searchParams.get('district');
+  const [activeLocale, setAcitveLocale] = useState('');
 
-  const [activeLocale, setAcitveLocale] = useState('은평구');
-
-  const openModal = useModalStore((state) => state.openModal);
-
-  const cannotUseService = () => {
-    openModal({
-      type: 'confirm',
-      image: 'sad',
-      title: '서비스 불가 지역이에요!',
-      description: '서비스 지역에서 이용해주세요',
-      confirmText: '확인',
-      closeText: '나가기',
-    });
-  };
-
-  //TODO: 서비스 불가 지역일때 모달 오픈 되도록 추가
+  useEffect(() => {
+    if (district === 'EUNPYEONG_GU') {
+      setAcitveLocale('은평구');
+    }
+    if (district === 'KEYANG_GU') {
+      setAcitveLocale('계양구');
+    }
+  }, []);
 
   return (
     <div className="flex flex-1 flex-col items-center justify-between pb-[30px] pt-[73px]">
@@ -34,16 +31,17 @@ const AllowLocationPage = () => {
           <span className="text-primary-normal">{activeLocale}</span>가 맞나요?
         </p>
       </div>
-      <div className="h-[280px] w-[340px]">
-        <SeoulMap activeLocale={activeLocale} canSelect={false} activatedArea={['은평구']} />
+      <div className="h-auto w-auto">
+        {city === 'SEOUL_SI' && <SeoulMap activeLocale={activeLocale} canSelect={false} />}
+        {city === 'INCHEON_SI' && <IncheonMap activeLocale={activeLocale} canSelect={false} />}
       </div>
-      <div className="flex flex-col gap-4">
-        <Button state="fillPrimary" size="large" onClick={() => {}}>
+      <div className="flex w-full flex-col gap-4 px-[24px]">
+        <Button state="fillPrimary" size="full" onClick={() => {}}>
           맞아요
         </Button>
         <Button
           state="primary"
-          size="large"
+          size="full"
           onClick={() => {
             rotuer.push('/locale/select');
           }}

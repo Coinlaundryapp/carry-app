@@ -4,39 +4,55 @@ import Button from '@/components/share/Button/Button';
 import MessageCard from '@/components/ui/MessageCard';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import LocaleImg from '@assets/images/locale-image.png';
 import { ACTIVATED_CITY } from '@/constants/activate-region';
 import { useModalStore } from '@/store/modal-store';
 import { useGeoLocation } from '@/hooks/useGeoLocation';
+import { fetchExtended } from '@/api/api-client';
+import { ApiResponse, ServiceAvailabilityResponse } from '@/types/api-types';
 
 const LocalePage = () => {
   const router = useRouter();
-  const [isServiceActive, setIsServiceActive] = useState<boolean>(true);
 
   const openModal = useModalStore((state) => state.openModal);
 
-  const cannotUseService = () => {
+  const cannotUseHandler = () => {
     openModal({
-      type: 'confirm',
+      type: 'basic',
       image: 'sad',
-      title: '서비스를 이용할 수 없어요',
-      description: '위치를 허용해주시면 서비스를 이용할 수 있어요',
-      confirmText: '허용',
-      closeText: '아니요',
+      title: '서비스 불가 지역이에요!',
+      description: '서비스 지역에서 이용해주세요.',
+      closeText: '나가기',
+      onClose: () => {
+        window.close();
+      },
     });
   };
 
-  const allowHandler = () => {
-    // useGeoLocation();
+  const { getLocation } = useGeoLocation();
 
-    //TODO: 위치따라 다른 페이지로
-    // 서비스 가능지역 일때
-    router.push('/locale/allow');
+  const allowHandler = async () => {
+    const location = await getLocation();
 
-    // 인천시 or 서울시 일때
-
-    // 서비스 가능지역을 아예 벗어낫을때
+    const res = await fetchExtended<ApiResponse<ServiceAvailabilityResponse>>(
+      `/api/v1/service-availability?latitude=${location?.latitude}&longitude=${location?.longitude}`,
+      {
+        method: 'get',
+      },
+    );
+    const locale = res.body.data;
+    // 서비스 가능지역
+    if (locale.serviceAvailabilityLevel === 'AVAILABLE') {
+      router.push(`/locale/allow?city=${locale.region.city}&district=${locale.region.district}`);
+    }
+    // 서비스 가능지역 근처
+    if (locale.serviceAvailabilityLevel === 'POTENTIALLY_AVAILABLE') {
+      router.push('/locale/select');
+    }
+    // 서비스 가능지역 X
+    if (locale.serviceAvailabilityLevel === 'UNAVAILABLE') {
+      cannotUseHandler();
+    }
   };
 
   return (
@@ -50,7 +66,7 @@ const LocalePage = () => {
       <div className="flex h-[180px] w-[350px] items-center justify-center">
         <Image src={LocaleImg} alt="..." width={224} height={180} />
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex w-full flex-col gap-4 px-[24px] items-center ">
         <MessageCard
           message={
             <p className="font-label-2">
@@ -62,10 +78,16 @@ const LocalePage = () => {
             </p>
           }
         />
-        <Button state="fillPrimary" size="large" onClick={allowHandler}>
+        <Button state="fillPrimary" size="full" onClick={allowHandler}>
           허용하기
         </Button>
-        <Button state="primary" size="large" onClick={cannotUseService}>
+        <Button
+          state="primary"
+          size="full"
+          onClick={() => {
+            window.close();
+          }}
+        >
           나중에 하기
         </Button>
       </div>

@@ -59,7 +59,7 @@ const OpenNotificationPage = () => {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-between pb-[30px] pt-[73px]">
+    <div className="flex h-full flex-1 flex-col items-center justify-between pb-[30px] pt-[73px]">
       <div className="flex flex-col items-center gap-3">
         <p className="whitespace-pre text-center font-bold font-title-1">
           {district}가 오픈되면 알려드릴게요

@@ -12,19 +12,28 @@ const AllowLocationPage = () => {
   const searchParams = useSearchParams();
   const city = searchParams.get('city');
   const district = searchParams.get('district');
-  const [activeLocale, setAcitveLocale] = useState('');
+  // const [activeLocale, setAcitveLocale] = useState('');
 
-  useEffect(() => {
-    if (district === 'EUNPYEONG_GU') {
-      setAcitveLocale('은평구');
-    }
-    if (district === 'KEYANG_GU') {
-      setAcitveLocale('계양구');
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (district === 'EUNPYEONG_GU') {
+  //     setAcitveLocale('은평구');
+  //   }
+  //   if (district === 'KEYANG_GU') {
+  //     setAcitveLocale('계양구');
+  //   }
+  // }, []);
+
+  let activeLocale = '';
+
+  if (district === 'EUNPYEONG_GU') {
+    activeLocale = '은평구';
+  }
+  if (district === 'KEYANG_GU') {
+    activeLocale = '계양구';
+  }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-between pb-[30px] pt-[73px]">
+    <div className="flex h-full flex-1 flex-col items-center justify-between pb-[30px] pt-[73px]">
       <div className="w-full px-[24px] py-[20px]">
         <p className="font-semibold font-heading-1">
           서비스를 이용하실 위치가 <br />

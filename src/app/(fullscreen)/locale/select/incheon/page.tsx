@@ -39,7 +39,7 @@ const SelectIncheonPage = () => {
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-between pb-[30px]">
+    <div className="flex h-full w-full flex-col items-center justify-between pb-[30px]">
       <div className="flex w-full flex-col gap-[20px]">
         <TopNavigation
           type="back"

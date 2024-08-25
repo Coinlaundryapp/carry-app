@@ -28,7 +28,7 @@ const SelectLocalePage = () => {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-between pb-[30px] pt-[73px]">
+    <div className="flex h-full flex-1 flex-col items-center justify-between pb-[30px] pt-[73px]">
       <div className="w-full gap-[12px] px-[24px] py-[20px]">
         <p className="font-semibold font-heading-1">
           서비스를 이용하실 도시가 <br />

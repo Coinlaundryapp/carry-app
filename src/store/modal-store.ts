@@ -8,6 +8,7 @@ type ModalState = {
   description?: string;
   confirmText?: string;
   image?: 'check' | 'sad' | '';
+  onClose?: () => void;
   onConfirm?: () => void;
 };
 type ModalActions = {
@@ -18,6 +19,7 @@ type ModalActions = {
     description?: string;
     confirmText?: string;
     image?: 'check' | 'sad' | '';
+    onClose?: () => void;
     onConfirm?: () => void;
   }) => void;
   closeModal: () => void;
@@ -32,6 +34,8 @@ export const useModalStore = create<ModalStore>((set) => ({
   description: '',
   confirmText: '',
   image: '',
+  onClose: () => {},
+  onConfirm: () => {},
   openModal: (modal) => set({ ...modal, isOpen: true }),
   closeModal: () =>
     set({

@@ -95,7 +95,6 @@ export default function HomePage() {
               />
             ))}
           </div>
-
           <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-[18px]">
             <LocationIcon />
             <p className="font-semibold text-label-normal font-label-1-normal">

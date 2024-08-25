@@ -35,3 +35,9 @@ export interface NotificationBody {
   notificationType: NotificationType;
   contact: string;
 }
+
+export interface ErrorResponse {
+  status: number;
+  message: string;
+
+}

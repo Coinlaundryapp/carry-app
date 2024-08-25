@@ -25,7 +25,7 @@ export default async function Login({
           원하는 시간에 <span className="text-primary-normal">맡기고</span>
         </p>
         <p className="mb-2 font-bold text-label-strong font-title-1">
-          원하는 시간에 <span className="text-primary-normal">맡기고</span>
+          원하는 시간에 <span className="text-primary-normal">받아요</span>
         </p>
         <p className="font-medium text-label-alternative font-body-1-normal">
           코인세탁소에서 더이상 기다릴 필요 없이

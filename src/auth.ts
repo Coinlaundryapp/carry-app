@@ -23,20 +23,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         code: {},
       },
       authorize: async (credentials) => {
-        let user = {
-          accessToken: '',
-          refreshToken: '',
-        };
         const authorizationCode = credentials.code as string;
-
-        const res = await login({ authorizationCode });
-        if (res) {
-          user = {
-            accessToken: res.accessToken,
-            refreshToken: res.refreshToken,
-          };
+        if (!authorizationCode) {
+          throw new Error('Invalid authorization code');
         }
-        return user;
+        try {
+          const res = await login({ authorizationCode });
+          if (res) {
+            return {
+              accessToken: res.accessToken,
+              refreshToken: res.refreshToken,
+            };
+          }
+          throw new Error('Authentication failed');
+        } catch (error) {
+          // @ts-ignore
+          error.cause = { err: error.message };
+          throw error;
+        }
       },
     }),
   ],

@@ -14,8 +14,20 @@ const buttonVariants = cva('w-full h-[52px] text-center rounded-lg', {
   },
 });
 export default function Modal() {
-  const { isOpen, title, description, confirmText, closeText, type, image, onConfirm, closeModal } =
-    useModalStore();
+
+
+  const {
+    isOpen,
+    title,
+    description,
+    confirmText,
+    closeText,
+    type,
+    image,
+    onClose,
+    onConfirm,
+    closeModal,
+  } = useModalStore();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -24,6 +36,10 @@ export default function Modal() {
       onConfirm();
     }
 
+    closeModal();
+  };
+  const handleClose = () => {
+    onClose && onClose();
     closeModal();
   };
 
@@ -42,6 +58,7 @@ export default function Modal() {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [isOpen, closeModal]);
+
   if (!isOpen) return null;
 
   return (
@@ -68,7 +85,7 @@ export default function Modal() {
           )}
         </div>
         <div className="flex w-full gap-5 px-5">
-          <button onClick={closeModal} className={buttonVariants({ type })}>
+          <button onClick={handleClose} className={buttonVariants({ type })}>
             {closeText}
           </button>
           {type === 'confirm' && (

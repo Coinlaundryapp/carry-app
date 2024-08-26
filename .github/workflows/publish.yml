@@ -27,6 +27,12 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_HUB_REPO }}:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
+            NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}
+            NEXT_PUBLIC_KAKAO_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
+            NEXT_PUBLIC_KAKAO_REST_API_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
+            AUTH_SECRET=${{ secrets.AUTH_SECRET }}
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3

@@ -2,8 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { KakaoIcon } from '@assets/icons';
 
-const KAKAO_REST_API_KEY = process.env.KAKAO_REST_API_KEY as string;
-const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL as string;
+const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY as string;
+const KAKAO_REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL as string;
 const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
 export default async function Login({
   params,

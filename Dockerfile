@@ -20,7 +20,18 @@ COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# 빌드에 필요한 환경 변수를 위한 ARG 추가
+ARG NEXT_PUBLIC_BACKEND_URL
+ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_KAKAO_REDIRECT_URL
+ARG NEXT_PUBLIC_KAKAO_REST_API_KEY
+ARG AUTH_SECRET
+
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+ENV NEXT_PUBLIC_KAKAO_REDIRECT_URL=$NEXT_PUBLIC_KAKAO_REDIRECT_URL
+ENV NEXT_PUBLIC_KAKAO_REST_API_KEY=$NEXT_PUBLIC_KAKAO_REST_API_KEY
+ENV AUTH_SECRET=$AUTH_SECRET
  
 RUN corepack enable pnpm && pnpm build
  

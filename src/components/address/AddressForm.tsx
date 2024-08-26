@@ -15,12 +15,12 @@ type TProps = {
 const AddressForm = ({ address, setAddress }: TProps) => {
   const { setAddressModalOpen } = useAddressStore();
   return (
-    <div className="mb-4">
+    <div className="mb-6 w-full">
       <Input
         onClick={() => setAddressModalOpen(true)}
         type="text"
         title="배송 받으실 주소"
-        fontStyle=" font_headline_1 font-bold mb-2"
+        fontStyle=" font_headline_1 font-semibold "
         value={address.main}
         placeholder="건물, 지번 또는 도로명 검색"
         status="primary"

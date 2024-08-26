@@ -14,6 +14,8 @@ const buttonVariants = cva('w-full h-[52px] text-center rounded-lg', {
   },
 });
 export default function Modal() {
+
+
   const {
     isOpen,
     title,
@@ -26,9 +28,14 @@ export default function Modal() {
     onConfirm,
     closeModal,
   } = useModalStore();
+
   const modalRef = useRef<HTMLDivElement>(null);
+
   const handleConfirm = () => {
-    onConfirm && onConfirm();
+    if (onConfirm) {
+      onConfirm();
+    }
+
     closeModal();
   };
   const handleClose = () => {

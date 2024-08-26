@@ -9,10 +9,9 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   const router = useRouter();
- 
 
   const handleBackClick = () => {
-   router.push('/');
+    router.push('/address/list');
   };
 
   return (

@@ -3,7 +3,7 @@ name: Build and Deploy with Docker
 on:
   push:
     branches:
-      - dev
+      - feature/deploy
 
 jobs:
   build-and-deploy:

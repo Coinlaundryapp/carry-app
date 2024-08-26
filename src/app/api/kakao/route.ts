@@ -14,6 +14,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(BASE_URL + redirectUrl);
   } catch (error) {
     // @ts-ignore
-    return NextResponse.redirect(BASE_URL + `/auth/error?error=${error.cause.err}`);
+    return NextResponse.redirect(BASE_URL + `/error?error=${error.cause.err}`);
   }
 }

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { fn } from '@storybook/test';
-import { pretendard } from '@/app/layout';
 import clsx from 'clsx';
 import Dropdown, { DropdownProps } from './Dropdown';
+import { pretendard } from '@/font/myLocalFont';
 
 const meta = {
   title: 'Components/Dropdown',

@@ -7,11 +7,15 @@ type TProps = {
 
 function Loading({ text }: TProps) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3">
+    <div className="flex h-full flex-col items-center justify-center gap-3 bg-white">
       <FramIcon />
       <CarIcon />
-      <h2 className=".font_label_2 font-bold">잠시만 기다려 주세요!</h2>
-      <div>{text ? text : '다음 페이지로 이동중입니다.'}</div>
+      <div>
+        <h2 className="font-semibold font-headline-1">잠시만 기다려 주세요!</h2>
+        <p className="font-medium text-label-alternative font-body-1-reading">
+          {text ? text : '해당 페이지로 이동하고 있어요'}
+        </p>
+      </div>
     </div>
   );
 }

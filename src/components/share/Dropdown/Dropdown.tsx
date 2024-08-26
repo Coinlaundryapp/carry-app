@@ -27,7 +27,7 @@ export default function Dropdown({
   indicator = 'check',
   onChange,
 }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="relative">
       <button

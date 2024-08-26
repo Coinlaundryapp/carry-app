@@ -1,15 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import localFont from 'next/font/local';
 import clsx from 'clsx';
 
 import AuthProvider from '@/providers/AuthProvides';
 import ReactQueryProviders from '@/hooks/useReactQuery';
-
-export const pretendard = localFont({
-  src: '../../public/fonts/PretendardVariable.woff2',
-  display: 'swap',
-});
+import { pretendard } from '@/font/myLocalFont';
 
 export const metadata: Metadata = {
   title: 'Create Next App',

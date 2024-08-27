@@ -40,13 +40,12 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          AUTH_URL: ${{ secrets.AUTH_URL }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          envs: DOCKER_IMAGE,AUTH_SECRET,AUTH_URL
+          envs: DOCKER_IMAGE,AUTH_SECRET
           script: |
             docker pull ${{ env.DOCKER_IMAGE }}
             docker stop coin-laundry-app || true
@@ -54,7 +53,6 @@ jobs:
             docker run -d --name coin-laundry-app \
               -p 3000:3000 \
               -e AUTH_SECRET="${AUTH_SECRET}" \
-              -e AUTH_URL="${AUTH_URL}" \
               -e NEXT_PUBLIC_BACKEND_URL="${{ secrets.NEXT_PUBLIC_BACKEND_URL }}" \
               -e NEXT_PUBLIC_BASE_URL="${{ secrets.NEXT_PUBLIC_BASE_URL }}" \
               -e NEXT_PUBLIC_KAKAO_REDIRECT_URL="${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}" \

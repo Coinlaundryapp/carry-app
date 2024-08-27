@@ -32,7 +32,6 @@ jobs:
           tags: ${{ env.DOCKER_IMAGE }}
           build-args: |
             NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
-            NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}
             NEXT_PUBLIC_KAKAO_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
             NEXT_PUBLIC_KAKAO_REST_API_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
 
@@ -54,7 +53,6 @@ jobs:
               -p 3000:3000 \
               -e AUTH_SECRET="${AUTH_SECRET}" \
               -e NEXT_PUBLIC_BACKEND_URL="${{ secrets.NEXT_PUBLIC_BACKEND_URL }}" \
-              -e NEXT_PUBLIC_BASE_URL="${{ secrets.NEXT_PUBLIC_BASE_URL }}" \
               -e NEXT_PUBLIC_KAKAO_REDIRECT_URL="${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}" \
               -e NEXT_PUBLIC_KAKAO_REST_API_KEY="${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}" \
               ${{ env.DOCKER_IMAGE }}

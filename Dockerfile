@@ -15,19 +15,17 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# 빌드에 필요한 환경 변수를 위한 ARG 추가
+# Build-time arguments
 ARG NEXT_PUBLIC_BACKEND_URL
 ARG NEXT_PUBLIC_BASE_URL
 ARG NEXT_PUBLIC_KAKAO_REDIRECT_URL
 ARG NEXT_PUBLIC_KAKAO_REST_API_KEY
-ARG AUTH_SECRET
 
-ENV AUTH_TRUST_HOST=true
+# Build-time environment variables
 ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
 ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 ENV NEXT_PUBLIC_KAKAO_REDIRECT_URL=$NEXT_PUBLIC_KAKAO_REDIRECT_URL
 ENV NEXT_PUBLIC_KAKAO_REST_API_KEY=$NEXT_PUBLIC_KAKAO_REST_API_KEY
-ENV AUTH_SECRET=$AUTH_SECRET
 
 RUN corepack enable pnpm && pnpm build
 
@@ -35,31 +33,22 @@ RUN corepack enable pnpm && pnpm build
 FROM base AS runner
 WORKDIR /app
 
+ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# 런타임 환경 변수 설정
+# Runtime environment variables
 ENV AUTH_TRUST_HOST=true
 ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
 ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 ENV NEXT_PUBLIC_KAKAO_REDIRECT_URL=$NEXT_PUBLIC_KAKAO_REDIRECT_URL
 ENV NEXT_PUBLIC_KAKAO_REST_API_KEY=$NEXT_PUBLIC_KAKAO_REST_API_KEY
-
-# AUTH_SECRET을 ARG로 받아 ENV로 설정
-ARG AUTH_SECRET
-ENV AUTH_SECRET=$AUTH_SECRET
 
 USER nextjs
 

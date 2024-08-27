@@ -5,6 +5,9 @@ on:
     branches:
       - feature/deploy
 
+env:
+  DOCKER_IMAGE: ${{ secrets.DOCKER_HUB_REPO }}:${{ github.sha }}
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -26,7 +29,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_HUB_REPO }}:${{ github.sha }}
+          tags: ${{ env.DOCKER_IMAGE }}
           build-args: |
             NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
             NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}
@@ -35,17 +38,26 @@ jobs:
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          AUTH_URL: ${{ secrets.AUTH_URL }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
+          envs: DOCKER_IMAGE,AUTH_SECRET,AUTH_URL
           script: |
-            docker pull ${{ secrets.DOCKER_HUB_REPO }}:${{ github.sha }}
+            docker pull ${{ env.DOCKER_IMAGE }}
             docker stop coin-laundry-app || true
             docker rm coin-laundry-app || true
             docker run -d --name coin-laundry-app \
               -p 3000:3000 \
-              -e AUTH_SECRET="${{ secrets.AUTH_SECRET }}" \
-              ${{ secrets.DOCKER_HUB_REPO }}:${{ github.sha }}
+              -e AUTH_SECRET="${AUTH_SECRET}" \
+              -e AUTH_URL="${AUTH_URL}" \
+              -e NEXT_PUBLIC_BACKEND_URL="${{ secrets.NEXT_PUBLIC_BACKEND_URL }}" \
+              -e NEXT_PUBLIC_BASE_URL="${{ secrets.NEXT_PUBLIC_BASE_URL }}" \
+              -e NEXT_PUBLIC_KAKAO_REDIRECT_URL="${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}" \
+              -e NEXT_PUBLIC_KAKAO_REST_API_KEY="${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}" \
+              ${{ env.DOCKER_IMAGE }}
             docker system prune -af

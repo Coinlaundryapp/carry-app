@@ -1,5 +1,7 @@
+import Loading from '@/components/share/Loading';
 import { Modal } from '@/components/share/Modal';
 import Toast from '@/components/share/Toast';
+import { Suspense } from 'react';
 
 export default function Layout({
   children,
@@ -8,7 +10,9 @@ export default function Layout({
 }>) {
   return (
     <div className="relative mx-auto flex h-dvh max-w-[600px] flex-col justify-between overflow-hidden bg-white">
-      <div className="h-full w-full overflow-scroll">{children}</div>
+      <div className="h-full w-full overflow-scroll">
+        <Suspense fallback={<Loading />}>{children}</Suspense>
+      </div>
       <Toast />
       <Modal />
     </div>

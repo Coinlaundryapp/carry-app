@@ -8,7 +8,7 @@ type TProps = {
 };
 
 export default function DeliveryAddressList({ addressList }: TProps) {
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState('1');
 
   const handleRadioChange = (value: string) => {
     setValue(value);

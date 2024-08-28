@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { KakaoIcon } from '@assets/icons';
+import { headers } from 'next/headers';
 
-const KAKAO_REST_API_KEY = process.env.KAKAO_REST_API_KEY as string;
-const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL as string;
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
+const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY as string;
+const KAKAO_REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL as string;
 export default async function Login({
   params,
 }: {
@@ -14,9 +14,13 @@ export default async function Login({
 }) {
   const url = new URL(KAKAO_REDIRECT_URL);
   const redirect = params.redirect;
+  const headersList = headers();
+  const host = headersList.get('host') || '';
+  const protocol = headersList.get('x-forwarded-proto') || 'http';
+  const BASE_URL = `${protocol}://${host}`;
   url.searchParams.append('client_id', KAKAO_REST_API_KEY);
   url.searchParams.append('response_type', 'code');
-  url.searchParams.append('redirect_uri', NEXT_PUBLIC_BASE_URL + '/api/kakao');
+  url.searchParams.append('redirect_uri', BASE_URL + '/api/kakao');
   url.searchParams.append('state', redirect);
   return (
     <main className="flex flex-col items-center gap-10 px-4 pt-[84px] text-center">

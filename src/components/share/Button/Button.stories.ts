@@ -16,7 +16,6 @@ const meta: Meta<typeof Button> = {
       control: 'radio',
       options: ['small', 'medium', 'large'],
     },
-    text: { control: 'text' },
   },
 };
 
@@ -25,7 +24,7 @@ type Story = StoryObj<typeof meta>;
 
 export const LargePrimary: Story = {
   args: {
-    text: 'Large Primary',
+    children: 'Large Primary',
     state: 'primary',
     size: 'large',
   },
@@ -33,14 +32,14 @@ export const LargePrimary: Story = {
 
 export const LargeSecondary: Story = {
   args: {
-    text: 'Large Secondary',
+    children: 'Large Secondary',
     state: 'secondary',
     size: 'large',
   },
 };
 export const LargeFillPrimary: Story = {
   args: {
-    text: 'Large Primary',
+    children: 'Large Primary',
     state: 'fillPrimary',
     size: 'large',
   },
@@ -48,7 +47,7 @@ export const LargeFillPrimary: Story = {
 
 export const LargeFillSecondary: Story = {
   args: {
-    text: 'Large Secondary',
+    children: 'Large Secondary',
     state: 'fillSecondary',
     size: 'large',
   },
@@ -56,7 +55,7 @@ export const LargeFillSecondary: Story = {
 
 export const Default: Story = {
   args: {
-    text: 'Large Secondary',
+    children: 'Large Secondary',
     state: 'default',
     size: 'large',
   },
@@ -64,7 +63,7 @@ export const Default: Story = {
 
 export const MedumPrimary: Story = {
   args: {
-    text: 'Medium Primary',
+    children: 'Medium Primary',
     state: 'primary',
     size: 'medium',
   },
@@ -72,7 +71,7 @@ export const MedumPrimary: Story = {
 
 export const MediumSecondary: Story = {
   args: {
-    text: 'Medium Secondary',
+    children: 'Medium Secondary',
     state: 'secondary',
     size: 'medium',
   },
@@ -80,7 +79,7 @@ export const MediumSecondary: Story = {
 
 export const MediumFillPrimary: Story = {
   args: {
-    text: 'MediumFillPrimary',
+    children: 'MediumFillPrimary',
     state: 'fillPrimary',
     size: 'medium',
   },
@@ -88,7 +87,7 @@ export const MediumFillPrimary: Story = {
 
 export const MediumFillSecondary: Story = {
   args: {
-    text: 'Medium Fill Secondary',
+    children: 'Medium Fill Secondary',
     state: 'fillSecondary',
     size: 'medium',
   },
@@ -96,7 +95,7 @@ export const MediumFillSecondary: Story = {
 
 export const MediumDefaultSecondary: Story = {
   args: {
-    text: 'Medium Default Secondary',
+    children: 'Medium Default Secondary',
     state: 'default',
     size: 'medium',
   },
@@ -104,7 +103,7 @@ export const MediumDefaultSecondary: Story = {
 
 export const SmallDefault: Story = {
   args: {
-    text: 'Small Default',
+    children: 'Small Default',
     state: 'default',
     size: 'small',
   },
@@ -112,7 +111,7 @@ export const SmallDefault: Story = {
 
 export const SmallFillSecondary: Story = {
   args: {
-    text: 'SmallFSecondary',
+    children: 'SmallFSecondary',
     state: 'fillSecondary',
     size: 'small',
   },
@@ -120,7 +119,7 @@ export const SmallFillSecondary: Story = {
 
 export const SmallFillPrimary: Story = {
   args: {
-    text: 'FillPrimary',
+    children: 'FillPrimary',
     state: 'fillPrimary',
     size: 'small',
   },
@@ -128,7 +127,7 @@ export const SmallFillPrimary: Story = {
 
 export const SmallSecondary: Story = {
   args: {
-    text: 'Secondary',
+    children: 'Secondary',
     state: 'secondary',
     size: 'small',
   },
@@ -136,7 +135,7 @@ export const SmallSecondary: Story = {
 
 export const SmallPrimary: Story = {
   args: {
-    text: 'Primary',
+    children: 'Primary',
     state: 'primary',
     size: 'small',
   },

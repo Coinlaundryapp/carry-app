@@ -3,7 +3,7 @@ name: Build and Deploy with Docker
 on:
   push:
     branches:
-      - feature/deploy
+      - dev
 
 env:
   DOCKER_IMAGE: ${{ secrets.DOCKER_HUB_REPO }}:${{ github.sha }}

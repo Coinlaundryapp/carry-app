@@ -22,14 +22,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       credentials: {
         code: {},
+        redirectUri: {},
       },
       authorize: async (credentials) => {
         const authorizationCode = credentials.code as string;
+        const redirectUri = credentials.redirectUri as string;
+
         if (!authorizationCode) {
           throw new Error('Invalid authorization code');
         }
         try {
-          const res = await login({ authorizationCode });
+          const res = await login({ authorizationCode, redirectUri });
           if (res) {
             return {
               accessToken: res.accessToken,

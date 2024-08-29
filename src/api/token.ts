@@ -1,8 +1,15 @@
 import { fetchExtended } from '@/api/api-client';
 import { ApiResponse, AuthResponse } from '@/types/api-types';
 
-export async function login({ authorizationCode }: { authorizationCode: string }) {
+export async function login({
+  authorizationCode,
+  redirectUri,
+}: {
+  authorizationCode: string;
+  redirectUri: string;
+}) {
   try {
+    console.log('authorizationCode', authorizationCode, 'redirectUri', redirectUri);
     const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/login', {
       method: 'POST',
       headers: {
@@ -10,6 +17,7 @@ export async function login({ authorizationCode }: { authorizationCode: string }
       },
       body: {
         authorizationCode,
+        redirectUri,
       },
     });
     const data = res.body.data;

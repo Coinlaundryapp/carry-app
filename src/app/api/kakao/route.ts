@@ -16,6 +16,7 @@ export async function GET(request: Request) {
   try {
     await signIn('credentials', {
       code: code as string,
+      redirectUri: origin + '/api/kakao',
       redirect: false,
     });
     return NextResponse.redirect(origin + redirectUrl);

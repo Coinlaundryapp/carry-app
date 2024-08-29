@@ -1,7 +1,10 @@
-name: Build and Deploy with Docker
+name: CI/CD Pipeline
 
 on:
   push:
+    branches:
+      - dev
+  pull_request:
     branches:
       - dev
 
@@ -9,7 +12,7 @@ env:
   DOCKER_IMAGE: ${{ secrets.DOCKER_HUB_REPO }}:${{ github.sha }}
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -24,10 +27,30 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
+          push: false
+          load: true
+          tags: ${{ env.DOCKER_IMAGE }}
+          build-args: |
+            NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
+            NEXT_PUBLIC_KAKAO_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
+            NEXT_PUBLIC_KAKAO_REST_API_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
+
+      - name: Test Docker image
+        run: |
+          docker run --rm ${{ env.DOCKER_IMAGE }} npm test
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push Docker image
+        uses: docker/build-push-action@v4
+        with:
           push: true
           tags: ${{ env.DOCKER_IMAGE }}
           build-args: |

@@ -49,11 +49,15 @@ import AddressSearchNoLIst from './address-search-nolist.svg';
 import CancelIcon from './Vector.svg';
 import CarIcon from './icon_car.svg';
 import FramIcon from './Frame 26088186.svg';
+import MapMarkerIcon from './map_marker.svg';
+import SelectedMapMarkerIcon from './selected_map_marker.svg';
 
 export {
   ArrowDownIcon,
+  SelectedMapMarkerIcon,
   FramIcon,
   CarIcon,
+  MapMarkerIcon,
   AddressSearchNoLIst,
   ArrowLeftIcon,
   CancelIcon,

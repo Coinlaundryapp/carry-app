@@ -1,15 +1,16 @@
 'use client';
 
 import { useGeoLocation } from '@/hooks/useGeoLocation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { markerIconHtml, selectedMarkerIconHtml } from './marker';
 
 const DUMMY_LOCATION = [
-  { lat: 37.442706, lng: 127.135862 },
-  { lat: 37.45, lng: 127.14 },
-  { lat: 37.44, lng: 127.13 },
-  { lat: 37.445, lng: 127.133 },
-  { lat: 37.438, lng: 127.138 },
-  { lat: 37.4475, lng: 127.1375 },
+  { id: 1, lat: 37.442706, lng: 127.135862 },
+  { id: 2, lat: 37.45, lng: 127.14 },
+  { id: 3, lat: 37.44, lng: 127.13 },
+  { id: 4, lat: 37.445, lng: 127.133 },
+  { id: 5, lat: 37.438, lng: 127.138 },
+  { id: 6, lat: 37.4475, lng: 127.1375 },
 ];
 
 export default function MapPage() {
@@ -17,13 +18,14 @@ export default function MapPage() {
   const mapRef = useRef<naver.maps.Map | null>(null);
   const userPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
+  const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null); // 선택된 마커 ID 상태
 
   const initMap = async () => {
     const location = await getLocation();
 
     if (location) {
       const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);
-      userPositionRef.current = userPosition; // 사용자 위치를 ref에 저장
+      userPositionRef.current = userPosition;
 
       const offsetCenter = new naver.maps.LatLng(location.latitude - 0.04, location.longitude);
       offsetCenterRef.current = offsetCenter;
@@ -32,9 +34,9 @@ export default function MapPage() {
         zoom: 12,
       });
 
-      mapRef.current = map; // 지도 객체를 ref에 저장
+      mapRef.current = map;
 
-      const circle = new naver.maps.Circle({
+      new naver.maps.Circle({
         map: map,
         center: userPosition,
         radius: 3000,
@@ -46,13 +48,21 @@ export default function MapPage() {
       });
 
       DUMMY_LOCATION.forEach((loc) => {
-        new naver.maps.Marker({
+        const marker = new naver.maps.Marker({
           position: new naver.maps.LatLng(loc.lat, loc.lng),
           map: map,
+          icon: {
+            content: selectedMarkerId === loc.id ? selectedMarkerIconHtml : markerIconHtml,
+            size: new naver.maps.Size(32, 32),
+            anchor: new naver.maps.Point(16, 16),
+          },
+        });
+
+        naver.maps.Event.addListener(marker, 'click', () => {
+          setSelectedMarkerId(loc.id);
         });
       });
 
-      // 사용자의 위치에 마커를 추가합니다.
       new naver.maps.Marker({
         position: userPosition,
         map: map,
@@ -64,13 +74,13 @@ export default function MapPage() {
 
   const handleReturnToLocation = () => {
     if (mapRef.current && offsetCenterRef.current) {
-      mapRef.current.setCenter(offsetCenterRef.current); // 사용자의 위치로 지도의 중심 이동
+      mapRef.current.setCenter(offsetCenterRef.current);
     }
   };
 
   useEffect(() => {
     initMap();
-  }, []);
+  }, [selectedMarkerId]); // 선택된 마커 ID가 변경될 때마다 지도를 업데이트
 
   return (
     <div className="relative w-full">

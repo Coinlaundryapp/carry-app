@@ -10,12 +10,13 @@ const TagVariants = cva('rounded-lg px-2 py-1 font-label-2 font-semibold', {
       blue: 'bg-neutral-99 text-[#1677FF]',
       gray: 'bg-fill-normal text-label-alternative',
       red: 'bg-fill-normal text-[#FF4D4F]',
+      black: 'bg-label-normal text-static-white',
     },
   },
 });
 interface TagProps {
   label: string;
-  color: 'primary' | 'green' | 'cyan' | 'blue' | 'gray' | 'red';
+  color: 'primary' | 'green' | 'cyan' | 'blue' | 'gray' | 'red' | 'black';
   className?: string;
 }
 export default function Tag({ label, color, className }: TagProps) {

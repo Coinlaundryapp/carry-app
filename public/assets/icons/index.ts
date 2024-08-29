@@ -49,6 +49,14 @@ import AddressSearchNoLIst from './address-search-nolist.svg';
 import CancelIcon from './Vector.svg';
 import CarIcon from './icon_car.svg';
 import FramIcon from './Frame 26088186.svg';
+import WarnWaterWashIcon from './warn_waterwash.svg';
+import WarnHot from './warn_hot.svg';
+import MinusIcon from './minus.svg';
+import PlusIcon from './plus.svg';
+import WaterIcon from './water.svg';
+import CoolWaterIcon from './cool-water.svg';
+import HotWaterIcon from './hot-water.svg';
+import DryIcon from './dry.svg';
 
 export {
   ArrowDownIcon,
@@ -102,4 +110,12 @@ export {
   AddPlusIcon,
   ChevronDown,
   CautionIcon,
+  WarnWaterWashIcon,
+  WarnHot,
+  MinusIcon,
+  PlusIcon,
+  WaterIcon,
+  HotWaterIcon,
+  DryIcon,
+  CoolWaterIcon,
 };

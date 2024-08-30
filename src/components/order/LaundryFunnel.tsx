@@ -9,6 +9,7 @@ import { TopNavigation } from '@/components/share/TopNavigation';
 import { OptionsSelection } from '@/components/order/OptionsSelection';
 import ProgressBar from '@/components/share/ProgressBar';
 import { ShoeCountSelection } from '@/components/order/ShoeCountSelection';
+import InfoDrawer from '@/components/order/InfoDrawer';
 
 type FunnelStep =
   | 'laundryOptions'
@@ -160,6 +161,7 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
       <div className="mt-2.5 h-full px-5">
         <RenderStep />
       </div>
+      {laundryType !== 'shoes' && <InfoDrawer />}
     </div>
   );
 }

@@ -57,6 +57,7 @@ import WaterIcon from './water.svg';
 import CoolWaterIcon from './cool-water.svg';
 import HotWaterIcon from './hot-water.svg';
 import DryIcon from './dry.svg';
+import IndicatorIcon from './indicator.svg';
 
 export {
   ArrowDownIcon,
@@ -118,4 +119,5 @@ export {
   HotWaterIcon,
   DryIcon,
   CoolWaterIcon,
+  IndicatorIcon,
 };

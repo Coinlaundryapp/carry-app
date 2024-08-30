@@ -3,6 +3,7 @@
 import { useGeoLocation } from '@/hooks/useGeoLocation';
 import { useEffect, useRef, useState } from 'react';
 import { markerIconHtml, selectedMarkerIconHtml, homeMarkerIconHtml } from './marker';
+import { MapBackIcon, UserCurrentMarkerIcon } from '@assets/icons';
 
 const DUMMY_LOCATION = [
   { id: 1, lat: 37.442706, lng: 127.135862 },
@@ -78,24 +79,28 @@ export default function MapPage() {
     }
   };
 
-  const handleReturnToLocation = () => {
+  const handleReturnToUserLocation = () => {
     if (mapRef.current && offsetCenterRef.current) {
       mapRef.current.setCenter(offsetCenterRef.current);
     }
   };
+  const handleReturnToAddressLocation = () => {};
 
   useEffect(() => {
     initMap();
-  }, [selectedMarkerId]); // 선택된 마커 ID가 변경될 때마다 지도를 업데이트
+  }, [selectedMarkerId]);
 
   return (
     <div className="relative w-full">
       <div id="map" className="h-[100vh] w-full"></div>
+      <button onClick={handleReturnToUserLocation} className="absolute left-4 top-4">
+        <UserCurrentMarkerIcon />
+      </button>
       <button
-        onClick={handleReturnToLocation}
-        className="absolute left-4 top-4 rounded bg-blue-500 px-4 py-2 text-white"
+        onClick={handleReturnToAddressLocation}
+        className="font_label_1_normal absolute right-4 top-4 flex items-center gap-2 rounded-xl bg-white p-2"
       >
-        내 위치로 이동
+        <MapBackIcon /> 배송지로 이동하기
       </button>
     </div>
   );

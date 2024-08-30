@@ -55,10 +55,6 @@ import HomeMarkerIcon from './home_marker.svg';
 import UserCurrentMarkerIcon from './userCurrentMarker.svg';
 import MapBackIcon from './map_back.svg';
 
-import HomeMarkerIcon from './home_marker.svg';
-import UserCurrentMarkerIcon from './userCurrentMarker.svg';
-import MapBackIcon from './map_back.svg';
-
 export {
   ArrowDownIcon,
   SelectedMapMarkerIcon,

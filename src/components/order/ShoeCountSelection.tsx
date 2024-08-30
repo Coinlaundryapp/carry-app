@@ -8,7 +8,7 @@ import ProgressBar from '@/components/share/ProgressBar';
 import Separator from '@/components/share/Separator/Separator';
 import { MinusIcon, PlusIcon, WarnHot, WarnWaterWashIcon } from '@assets/icons';
 
-export function ShoeCountSelection({ onSelect }: { onSelect: (count: number) => void }) {
+export function ShoeCountSelection({ onSelect }: Readonly<{ onSelect: (count: number) => void }>) {
   const [count, setCount] = useState(1);
   const handleIncreaseClick = () => {
     if (count < 6) {

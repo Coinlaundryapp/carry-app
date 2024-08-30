@@ -7,13 +7,13 @@ export default function OptionSelection({
   description,
   imageUrl,
   onSelect,
-}: {
+}: Readonly<{
   type: 'softener' | 'folding';
   title: string;
   description: React.ReactNode;
   imageUrl: string;
   onSelect: (value: boolean) => void;
-}) {
+}>) {
   return (
     <div className="flex flex-col items-center justify-between overflow-scroll">
       <div className="w-full gap-2.5 pl-2">

@@ -2,7 +2,7 @@
 
 import { useGeoLocation } from '@/hooks/useGeoLocation';
 import { useEffect, useRef, useState } from 'react';
-import { markerIconHtml, selectedMarkerIconHtml } from './marker';
+import { markerIconHtml, selectedMarkerIconHtml, homeMarkerIconHtml } from './marker';
 
 const DUMMY_LOCATION = [
   { id: 1, lat: 37.442706, lng: 127.135862 },
@@ -17,6 +17,7 @@ export default function MapPage() {
   const { getLocation } = useGeoLocation();
   const mapRef = useRef<naver.maps.Map | null>(null);
   const userPositionRef = useRef<naver.maps.LatLng | null>(null);
+  const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
   const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null); // 선택된 마커 ID 상태
 
@@ -66,6 +67,11 @@ export default function MapPage() {
       new naver.maps.Marker({
         position: userPosition,
         map: map,
+        icon: {
+          content: homeMarkerIconHtml,
+          size: new naver.maps.Size(32, 32),
+          anchor: new naver.maps.Point(16, 16),
+        },
       });
     } else {
       console.error('위치를 가져올 수 없습니다.');

@@ -11,7 +11,7 @@ type TProps = {
   borderColor?: string;
   size?: 'small' | 'medium' | 'large' | 'full';
   state: 'primary' | 'secondary' | 'fillPrimary' | 'fillSecondary' | 'default' | 'disabled';
-  onClick: () => void;
+  onClick?: () => void;
   disabled?: boolean;
 };
 

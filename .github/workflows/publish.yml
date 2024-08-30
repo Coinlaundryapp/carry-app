@@ -35,7 +35,6 @@ jobs:
             NEXT_PUBLIC_KAKAO_REST_API_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
             NEXT_PUBLIC_NAVER_ID=${{ secrets.NEXT_PUBLIC_NAVER_ID }}
 
-
   push-build-deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
@@ -62,6 +61,7 @@ jobs:
             NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
             NEXT_PUBLIC_KAKAO_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
             NEXT_PUBLIC_KAKAO_REST_API_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
+            NEXT_PUBLIC_NAVER_ID=${{ secrets.NEXT_PUBLIC_NAVER_ID }}
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -83,5 +83,6 @@ jobs:
               -e NEXT_PUBLIC_BACKEND_URL="${{ secrets.NEXT_PUBLIC_BACKEND_URL }}" \
               -e NEXT_PUBLIC_KAKAO_REDIRECT_URL="${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}" \
               -e NEXT_PUBLIC_KAKAO_REST_API_KEY="${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}" \
+              -e NEXT_PUBLIC_NAVER_ID="${{ secrets.NEXT_PUBLIC_NAVER_ID }}" \
               ${{ env.DOCKER_IMAGE }}
             docker system prune -af

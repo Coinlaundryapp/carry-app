@@ -35,6 +35,7 @@ jobs:
             NEXT_PUBLIC_KAKAO_REST_API_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
             NEXT_PUBLIC_NAVER_ID=${{ secrets.NEXT_PUBLIC_NAVER_ID }}
 
+
   push-build-deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest

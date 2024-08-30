@@ -98,7 +98,7 @@ export default function MapPage() {
       </button>
       <button
         onClick={handleReturnToAddressLocation}
-        className="font_label_1_normal absolute right-4 top-4 flex items-center gap-2 rounded-xl bg-white p-2"
+        className="font_label_1_normal absolute right-6 top-4 flex items-center gap-2 rounded-xl bg-white p-2"
       >
         <MapBackIcon /> 배송지로 이동하기
       </button>

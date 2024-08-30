@@ -33,6 +33,7 @@ jobs:
             NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
             NEXT_PUBLIC_KAKAO_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
             NEXT_PUBLIC_KAKAO_REST_API_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
+            NEXT_PUBLIC_NAVER_ID=${{ secrets.NEXT_PUBLIC_NAVER_ID }}
 
   push-build-deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'

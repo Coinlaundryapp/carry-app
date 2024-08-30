@@ -51,6 +51,7 @@ import CarIcon from './icon_car.svg';
 import FramIcon from './Frame 26088186.svg';
 import MapMarkerIcon from './map_marker.svg';
 import SelectedMapMarkerIcon from './selected_map_marker.svg';
+import HomeMarkerIcon from "./home_marker.svg"
 
 import HomeMarkerIcon from './home_marker.svg';
 import UserCurrentMarkerIcon from './userCurrentMarker.svg';

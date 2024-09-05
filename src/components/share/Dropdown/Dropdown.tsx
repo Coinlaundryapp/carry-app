@@ -10,6 +10,8 @@ export interface DropdownProps {
   value: string;
   placeholder: string;
   indicator: 'check' | 'radio';
+  className?: string;
+  type?: 'default' | 'time';
   onChange: (value: string) => void;
 }
 
@@ -25,6 +27,8 @@ export default function Dropdown({
   value,
   placeholder,
   indicator = 'check',
+  type = 'default',
+  className,
   onChange,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,9 +40,15 @@ export default function Dropdown({
         className={cn(
           'flex h-12 w-full items-center justify-between gap-3 rounded-md border border-line-normal bg-white px-4 py-3 focus:outline-none [&[data-state=open]>svg]:rotate-180',
           value === '' && 'text-label-assistive',
+          className,
         )}
       >
-        <p className={cn('truncate font-medium font-semibold font-label-1-normal')}>
+        <p
+          className={cn('truncate font-medium text-label-neutral font-label-1-normal', {
+            'font-label-1-normal': type === 'time',
+            'text-label-assistive': value === '',
+          })}
+        >
           {value === '' ? placeholder : data.find((item) => item.value === value)?.label}
         </p>
         <ArrowDownIcon
@@ -49,7 +59,14 @@ export default function Dropdown({
         />
       </button>
       {isOpen && (
-        <div className="absolute top-[60px] z-50 h-48 w-full overflow-y-auto rounded-[10px] border bg-white font-semibold text-label-neutral shadow-emphasize font-body-2-reading data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+        <div
+          className={cn(
+            'data-[side=top]:slide-in-from-bottom-2" absolute top-[60px] z-50 h-48 w-full overflow-y-auto rounded-[10px] border bg-white font-medium text-label-neutral shadow-emphasize font-body-2-reading data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2',
+            {
+              'font-label-1-normal': type === 'time',
+            },
+          )}
+        >
           {data.map((item) => (
             <button
               key={item.value}

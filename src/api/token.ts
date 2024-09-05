@@ -9,7 +9,6 @@ export async function login({
   redirectUri: string;
 }) {
   try {
-    console.log('authorizationCode', authorizationCode, 'redirectUri', redirectUri);
     const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/login', {
       method: 'POST',
       headers: {

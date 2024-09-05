@@ -1,15 +1,16 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import clsx from 'clsx';
-import { LaundryType } from '@/types/laundry-type';
 import OptionSelection from '@/components/order/OptionSelection';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import { OptionsSelection } from '@/components/order/OptionsSelection';
 import ProgressBar from '@/components/share/ProgressBar';
 import { ShoeCountSelection } from '@/components/order/ShoeCountSelection';
 import InfoDrawer from '@/components/order/InfoDrawer';
+import { LaundryType, SelectedOptions } from '@/types/laundry-type';
 
 type FunnelStep =
   | 'laundryOptions'
@@ -19,15 +20,6 @@ type FunnelStep =
   | 'folding'
   | 'softener'
   | 'confirm';
-
-type SelectedOptions = {
-  service?: 'wash-and-dry' | 'wash-only' | 'dry-only';
-  wash?: 'standard-wash' | 'hot-water-wash';
-  dry?: 'low-temp-dry' | 'high-temp-dry';
-  shoePairs?: number;
-  folding?: boolean;
-  softener?: boolean;
-};
 
 type OptionSteps = {
   [key in LaundryType]: FunnelStep[];
@@ -45,11 +37,13 @@ interface LaundryFunnelProps {
 }
 
 export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelProps>) {
+  const session = useSession();
   const router = useRouter();
   const steps: readonly FunnelStep[] = optionSteps[laundryType];
   const [currentStep, setCurrentStep] = useState<FunnelStep>(steps[0]);
-  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({});
-
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({
+    laundryType,
+  });
   const nextStep = (options: SelectedOptions) => {
     let increment = 1;
     if (currentStep === 'laundryOptions' && options.service === 'dry-only') {
@@ -61,8 +55,18 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
     const currentIndex = steps.indexOf(currentStep);
     if (currentIndex < steps.length - 1) {
       setCurrentStep(steps[currentIndex + increment]);
+      return;
+    }
+    const urlParams = new URLSearchParams();
+    Object.entries(options).forEach(([key, value]) => {
+      if (value) {
+        urlParams.append(key, value.toString());
+      }
+    });
+    if (session.data?.user) {
+      router.push(`/order?${urlParams.toString()}`);
     } else {
-      alert(`선택하신 옵션으로 주문을 진행합니다.${JSON.stringify(options)}`);
+      router.push(`/login/order?${urlParams.toString()}`);
     }
   };
 

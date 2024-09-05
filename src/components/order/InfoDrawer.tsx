@@ -1,7 +1,7 @@
+import { useState } from 'react';
+import Image from 'next/image';
 import Button from '@/components/share/Button';
 import { Drawer, DrawerClose, DrawerContent } from '@/components/share/ui/drawer';
-import Image from 'next/image';
-import { useState } from 'react';
 
 export default function InfoDrawer() {
   const [open, setOpen] = useState(true);

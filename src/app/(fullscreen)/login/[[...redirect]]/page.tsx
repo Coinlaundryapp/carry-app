@@ -5,12 +5,13 @@ import { headers } from 'next/headers';
 
 const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY as string;
 const KAKAO_REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL as string;
+
 export default async function Login({
   params,
+  searchParams,
 }: {
-  params: {
-    redirect: string;
-  };
+  params: { redirect: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const url = new URL(KAKAO_REDIRECT_URL);
   const redirect = params.redirect;
@@ -18,10 +19,18 @@ export default async function Login({
   const host = headersList.get('host') || '';
   const protocol = headersList.get('x-forwarded-proto') || 'http';
   const BASE_URL = `${protocol}://${host}`;
+
+  // state 파라미터 생성
+  const state = {
+    redirect,
+    query: searchParams,
+  };
+
   url.searchParams.append('client_id', KAKAO_REST_API_KEY);
   url.searchParams.append('response_type', 'code');
   url.searchParams.append('redirect_uri', BASE_URL + '/api/kakao');
-  url.searchParams.append('state', redirect);
+  url.searchParams.append('state', encodeURIComponent(JSON.stringify(state)));
+
   return (
     <main className="flex flex-col items-center gap-10 px-4 pt-[84px] text-center">
       <div>

@@ -58,6 +58,11 @@ import CoolWaterIcon from './cool-water.svg';
 import HotWaterIcon from './hot-water.svg';
 import DryIcon from './dry.svg';
 import IndicatorIcon from './indicator.svg';
+import EllipseIcon from './ellipse.svg';
+import ChevronRightIcon from './chevron-right.svg';
+import QuestionMarkIcon from './question-mark.svg';
+import ExitIcon from './exit.svg';
+import SelectIcon from './select.svg';
 
 export {
   ArrowDownIcon,
@@ -120,4 +125,9 @@ export {
   DryIcon,
   CoolWaterIcon,
   IndicatorIcon,
+  EllipseIcon,
+  ChevronRightIcon,
+  QuestionMarkIcon,
+  ExitIcon,
+  SelectIcon,
 };

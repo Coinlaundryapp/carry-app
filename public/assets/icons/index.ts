@@ -65,6 +65,11 @@ import UserCurrentMarkerIcon from './userCurrentMarker.svg';
 import MapBackIcon from './map_back.svg';
 import RateStaIcon from './RateStar.svg';
 import NoCoinList from './noCoinList.svg';
+import EllipseIcon from './ellipse.svg';
+import ChevronRightIcon from './chevron-right.svg';
+import QuestionMarkIcon from './question-mark.svg';
+import ExitIcon from './exit.svg';
+import SelectIcon from './select.svg';
 
 export {
   ArrowDownIcon,
@@ -134,4 +139,9 @@ export {
   DryIcon,
   CoolWaterIcon,
   IndicatorIcon,
+  EllipseIcon,
+  ChevronRightIcon,
+  QuestionMarkIcon,
+  ExitIcon,
+  SelectIcon,
 };

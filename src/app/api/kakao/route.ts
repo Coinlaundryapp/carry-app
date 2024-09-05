@@ -11,7 +11,25 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
   const state = searchParams.get('state');
-  const redirectUrl = state === 'undefined' ? '/login-done' : `/login-done/${state}`;
+
+  let redirectUrl = '/login-done';
+  if (state && state !== 'undefined') {
+    try {
+      const stateObj = JSON.parse(decodeURIComponent(state));
+      const { redirect, query } = stateObj;
+
+      if (redirect) {
+        redirectUrl = `/login-done/${encodeURIComponent(redirect)}`;
+
+        if (query && Object.keys(query).length > 0) {
+          const queryString = new URLSearchParams(query as Record<string, string>).toString();
+          redirectUrl += `?${queryString}`;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to parse state:', error);
+    }
+  }
 
   try {
     await signIn('credentials', {
@@ -21,7 +39,9 @@ export async function GET(request: Request) {
     });
     return NextResponse.redirect(origin + redirectUrl);
   } catch (error) {
+    console.error('Sign in error:', error);
     // @ts-ignore
-    return NextResponse.redirect(origin + `/error?error=${error.cause.err}`);
+    const errorMessage = error.cause?.err || 'Unknown error';
+    return NextResponse.redirect(origin + `/error?error=${encodeURIComponent(errorMessage)}`);
   }
 }

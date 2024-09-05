@@ -24,8 +24,8 @@ export default function DeliveryCostInfoDrawer({ distance }: Readonly<{ distance
               <ExitIcon />
             </DrawerClose>
           </div>
-          <Separator variant="horizontal" className="mt-3" />
-          <div>
+          <div className="mt-3 flex flex-col gap-2.5">
+            <Separator variant="horizontal" />
             <div className="flex justify-between font-semibold text-label-neutral font-caption-1">
               <p>거리별</p>
               <p>배송비</p>
@@ -47,7 +47,7 @@ export default function DeliveryCostInfoDrawer({ distance }: Readonly<{ distance
                 <p>{item.cost}</p>
               </div>
             ))}
-            <ul className="mt-2.5 list-inside list-disc font-medium text-label-alternative font-caption-1">
+            <ul className="list-inside list-disc font-medium text-label-alternative font-caption-1">
               <li>1Km 초과할 경우 100m당 200원씩 추가 부가됩니다.</li>
             </ul>
           </div>

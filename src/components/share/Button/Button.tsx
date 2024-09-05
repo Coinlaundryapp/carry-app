@@ -9,19 +9,20 @@ type TProps = {
   className?: string;
   color?: string;
   borderColor?: string;
-  size?: 'small' | 'medium' | 'large' | 'full';
+  size?: 'small' | 'medium' | 'large' | 'full' | 'hug';
   state: 'primary' | 'secondary' | 'fillPrimary' | 'fillSecondary' | 'default' | 'disabled';
   onClick?: () => void;
   disabled?: boolean;
 };
 
-const buttonVariants = cva('font_body_1_normal h-[52px] rounded-md border font-semibold', {
+const buttonVariants = cva('rounded-md border font-semibold', {
   variants: {
     size: {
-      small: 'w-[140px] py-1 px-2',
-      medium: 'w-[310px] py-2 px-4',
-      large: 'w-[342px] py-3 px-6',
-      full: 'flex w-full items-center justify-center',
+      small: 'w-[140px] py-1 px-2 h-[52px] font_body_1_normal ',
+      medium: 'w-[310px] py-2 px-4 h-[52px] font_body_1_normal ',
+      large: 'w-[342px] py-3 px-6 h-[52px] font_body_1_normal ',
+      hug: 'py-1 px-2 font-label-1-normal',
+      full: 'flex w-full items-center justify-center h-[52px] font_body_1_normal ',
     },
     state: {
       primary: 'border-primary-normal text-primary-normal',

@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import DeliveryCostInfoDrawer from '@/components/order/DeliveryCostInfoDrawer';
+
 import Button from '@/components/share/Button';
 import Dropdown from '@/components/share/Dropdown/Dropdown';
 import { Radio } from '@/components/share/Radio';
 import Separator from '@/components/share/Separator/Separator';
 import { TopNavigation } from '@/components/share/TopNavigation';
+import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
 
 type PaymentMethod = 'kakao' | 'naver' | 'card';
 
@@ -113,7 +114,7 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
         <div className="mt-3 flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
           <div className="flex items-center gap-1">
             <p>배송비</p>
-            <DeliveryCostInfoDrawer distance={1000} />
+            <DeliveryCostInfoDialog distance={1000} />
           </div>
           <p>4,000원</p>
         </div>

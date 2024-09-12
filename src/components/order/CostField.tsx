@@ -9,7 +9,7 @@ export default function CostField() {
         <div className="flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
           <div className="flex items-center gap-1">
             <p>배송비</p>
-            <DeliveryCostInfoDialog />
+            <DeliveryCostInfoDialog distance={1000} />
           </div>
           <p>4,000원</p>
         </div>

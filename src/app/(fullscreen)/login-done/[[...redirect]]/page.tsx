@@ -2,7 +2,7 @@
 
 import Button from '@/components/share/Button';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function LoginDonePage({
   params,

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import clsx from 'clsx';
+import useSelectedOptionsStore from '@/store/order-store';
 import OptionSelection from '@/components/order/OptionSelection';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import { OptionsSelection } from '@/components/order/OptionsSelection';
@@ -40,10 +41,11 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
   const session = useSession();
   const router = useRouter();
   const steps: readonly FunnelStep[] = optionSteps[laundryType];
-  const [currentStep, setCurrentStep] = useState<FunnelStep>(steps[0]);
-  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({
-    laundryType,
-  });
+  const { washOptions, setWashOptions, resetOptions } = useSelectedOptionsStore();
+  const [currentStep, setCurrentStep] = useState<FunnelStep>(
+    washOptions.service ? steps[steps.length - 1] : steps[0],
+  );
+  const [showDrawer] = useState(laundryType !== 'shoes' && currentStep == steps[0]);
   const nextStep = (options: SelectedOptions) => {
     let increment = 1;
     if (currentStep === 'laundryOptions' && options.service === 'dry-only') {
@@ -57,16 +59,12 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
       setCurrentStep(steps[currentIndex + increment]);
       return;
     }
-    const urlParams = new URLSearchParams();
-    Object.entries(options).forEach(([key, value]) => {
-      if (value) {
-        urlParams.append(key, value.toString());
-      }
-    });
+    setWashOptions(options);
+
     if (session.data?.user) {
-      router.push(`/order?${urlParams.toString()}`);
+      router.push(`/order`);
     } else {
-      router.push(`/login/order?${urlParams.toString()}`);
+      router.push(`/login/order`);
     }
   };
 
@@ -75,13 +73,14 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
     if (currentIndex > 0) {
       setCurrentStep(steps[currentIndex - 1]);
     } else {
-      router.back();
+      resetOptions();
+      router.replace(`/`);
     }
   };
 
   const handleOptionSelect = (option: keyof SelectedOptions, value: string | boolean | number) => {
-    const newOptions = { ...selectedOptions, [option]: value };
-    setSelectedOptions(newOptions);
+    const newOptions = { [option]: value };
+    setWashOptions(newOptions);
     nextStep(newOptions);
   };
   const RenderStep = () => {
@@ -151,7 +150,9 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
     }
   };
   const percentage = ((steps.indexOf(currentStep) + 1) / steps.length) * 100;
-
+  useEffect(() => {
+    setWashOptions({ laundryType });
+  }, [laundryType, setWashOptions]);
   return (
     <div
       className={clsx('flex h-dvh flex-col bg-background-normal-alternative pb-6', {
@@ -165,7 +166,7 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
       <div className="mt-2.5 h-full px-5">
         <RenderStep />
       </div>
-      {laundryType !== 'shoes' && <InfoDrawer />}
+      {showDrawer && <InfoDrawer />}
     </div>
   );
 }

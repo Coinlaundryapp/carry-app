@@ -7,8 +7,7 @@ const returnFetchThrowingErrorByStatusCode: ReturnFetch = (args) =>
     interceptors: {
       response: async (response) => {
         if (response.status >= 400) {
-          const msg = JSON.parse(await response.text()).message;
-          throw new Error(msg);
+          throw new Error(response.status.toString());
         }
         return response;
       },

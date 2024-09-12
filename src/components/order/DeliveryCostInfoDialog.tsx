@@ -1,8 +1,7 @@
-import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@/components/share/ui/drawer';
 import Separator from '@/components/share/Separator/Separator';
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/share/ui/dialog';
 import { ExitIcon, QuestionMarkIcon, SelectIcon } from '@assets/icons';
 import { cn } from '@/lib/utils';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/share/ui/dialog';
 
 const DISTANCE_COST_MAP = [
   { label: '100m 이내', cost: '4,000원', maxDistance: 1000 },
@@ -10,7 +9,7 @@ const DISTANCE_COST_MAP = [
   { label: '300m 이내', cost: '4,600원', maxDistance: 1300 },
 ];
 
-export default function DeliveryCostInfoDrawer({ distance }: Readonly<{ distance: number }>) {
+export default function DeliveryCostInfoDialog({ distance }: Readonly<{ distance: number }>) {
   const cost = DISTANCE_COST_MAP.find((item) => distance <= item.maxDistance)?.cost;
   return (
     <Dialog>
@@ -21,9 +20,9 @@ export default function DeliveryCostInfoDrawer({ distance }: Readonly<{ distance
         <div className="px-6 py-5">
           <div className="flex items-center justify-between">
             <p className="font-semibold text-label-normal font-headline-1">배송비 안내</p>
-            <DrawerClose>
+            <DialogClose>
               <ExitIcon />
-            </DrawerClose>
+            </DialogClose>
           </div>
           <div className="mt-3 flex flex-col gap-2.5">
             <Separator variant="horizontal" />

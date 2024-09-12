@@ -1,4 +1,4 @@
-import DeliveryCostInfoDrawer from '@/components/order/DeliveryCostInfoDrawer';
+import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
 import Separator from '@/components/share/Separator/Separator';
 
 export default function CostField() {
@@ -9,7 +9,7 @@ export default function CostField() {
         <div className="flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
           <div className="flex items-center gap-1">
             <p>배송비</p>
-            <DeliveryCostInfoDrawer distance={1000} />
+            <DeliveryCostInfoDialog />
           </div>
           <p>4,000원</p>
         </div>

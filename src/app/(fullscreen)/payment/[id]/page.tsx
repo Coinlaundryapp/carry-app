@@ -170,7 +170,7 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
           )}
         </div>
       </section>
-      <div className="mt-[258px] px-5 pb-[30px]">
+      <div className="mt-[52px] px-5 pb-[30px]">
         <Button state="fillPrimary" size="full">
           결제하기
         </Button>

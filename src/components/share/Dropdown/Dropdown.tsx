@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/share/ui/select';
-import { RadioOffIcon, RadioOnIcon } from '@assets/icons';
+import { ArrowDownIcon, RadioOffIcon, RadioOnIcon } from '@assets/icons';
 import { cn } from '@/lib/utils';
 
 export interface DropdownProps {
@@ -33,9 +33,12 @@ export default function Dropdown({
 }: Readonly<DropdownProps>) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className={cn(value === '' && 'text-label-assistive', className)}>
+      <SelectTrigger
+        className={cn(value === '' && 'text-label-assistive', className)}
+        value={value}
+      >
         <p
-          className={cn('truncate font-medium text-label-neutral font-label-1-normal', {
+          className={cn('truncate font-medium text-label-neutral font-body-2-reading', {
             'font-label-1-normal': type === 'time',
             'text-label-assistive': value === '',
           })}
@@ -48,7 +51,7 @@ export default function Dropdown({
           <SelectItem
             key={item.value}
             value={item.value}
-            className={cn(item.value === value && 'text-primary-normal')}
+            className={cn(item.value === value && 'bg-cyan-50 text-primary-normal')}
           >
             {indicator === 'radio' && <RadioIndicator checked={item.value === value} />}
             {item.label}

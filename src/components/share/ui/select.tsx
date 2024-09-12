@@ -15,7 +15,7 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, value, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -28,7 +28,8 @@ const SelectTrigger = React.forwardRef<
     <SelectPrimitive.Icon asChild>
       <ArrowDownIcon
         className={cn(
-          'h-[14px] w-[14px] flex-shrink-0 fill-label-assistive transition-transform duration-200',
+          'h-[14px] w-[14px] flex-shrink-0 fill-label-normal transition-transform duration-200',
+          value === '' && 'fill-label-assistive',
         )}
       />
     </SelectPrimitive.Icon>

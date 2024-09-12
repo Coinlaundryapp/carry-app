@@ -32,7 +32,7 @@ export default async function Login({
   url.searchParams.append('state', encodeURIComponent(JSON.stringify(state)));
 
   return (
-    <main className="flex flex-col items-center gap-10 px-4 pt-[84px] text-center">
+    <main className="flex flex-col items-center gap-10 px-4 pt-[74px] text-center">
       <div>
         <p className="font-bold text-label-strong font-title-1">
           원하는 시간에 <span className="text-primary-normal">맡기고</span>

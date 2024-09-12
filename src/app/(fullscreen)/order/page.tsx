@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ParsedUrlQuery } from 'querystring';
 import AddressField from '@/components/order/AddressField';
 import CostField from '@/components/order/CostField';
 import LaundryField from '@/components/order/LaundryField';
@@ -11,26 +10,15 @@ import TimeField from '@/components/order/TimeField';
 import Button from '@/components/share/Button';
 import Separator from '@/components/share/Separator/Separator';
 import { TopNavigation } from '@/components/share/TopNavigation';
-import { SelectedOptions } from '@/types/laundry-type';
+import useOrderOptionsStore from '@/store/order-store';
 
-function parseParams(query: ParsedUrlQuery): SelectedOptions {
-  return {
-    laundryType: query.laundryType as SelectedOptions['laundryType'],
-    service: query.service as SelectedOptions['service'],
-    wash: query.wash as SelectedOptions['wash'],
-    dry: query.dry as SelectedOptions['dry'],
-    shoePairs: query.shoePairs ? parseInt(query.shoePairs as string, 10) : undefined,
-    folding: query.folding === 'true',
-    softener: query.softener === 'true',
-  };
-}
-
-export default function OrderPage({ searchParams }: Readonly<{ searchParams: ParsedUrlQuery }>) {
+export default function OrderPage() {
   const router = useRouter();
-  const options = parseParams(searchParams);
+  const { washOptions } = useOrderOptionsStore();
   const handleBackClick = () => {
-    router.replace(`/order/${options.laundryType}`);
+    router.replace(`/order/${washOptions.laundryType}`);
   };
+
   return (
     <main>
       <TopNavigation type="back" leftClick={handleBackClick} title="수거 신청" />

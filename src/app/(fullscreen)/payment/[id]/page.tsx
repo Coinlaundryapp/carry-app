@@ -87,6 +87,9 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
     card: '',
     installment: '',
   });
+  const isDisabled =
+    paymentState.paymentMethod === 'card' &&
+    (paymentState.card === '' || paymentState.installment === '');
 
   // TODO: 뒤로가기 동작 정의
   const handleBackClick = () => {};
@@ -286,7 +289,12 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
         </div>
       </section>
       <div className="mt-[52px] px-5 pb-[30px]">
-        <Button state="fillPrimary" size="full" onClick={() => requestPayment(paymentState)}>
+        <Button
+          state={isDisabled ? 'disabled' : 'fillPrimary'}
+          size="full"
+          onClick={() => requestPayment(paymentState)}
+          disabled={isDisabled}
+        >
           결제하기
         </Button>
       </div>

@@ -120,7 +120,9 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
           orderId: 'NefN2Hu0HsStnHO2prILj',
           orderName: '토스 티셔츠 외 2건',
           successUrl: window.location.origin + window.location.pathname + '/success',
-          failUrl: window.location.origin + '/error', // 결제 요청이 실패하면 리다이렉트되는 URL
+          failUrl:
+            window.location.origin +
+            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
           customerEmail: 'customer123@gmail.com',
           customerName: '김토스',
           customerMobilePhone: '01012345678',
@@ -143,7 +145,9 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
           orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
           orderName: '토스 티셔츠 외 2건',
           successUrl: window.location.origin + window.location.pathname + '/success',
-          failUrl: window.location.origin + window.location.pathname,
+          failUrl:
+            window.location.origin +
+            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
           customerEmail: 'customer123@gmail.com',
           customerName: '김토스',
           customerMobilePhone: '01012341234',
@@ -165,8 +169,9 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
           orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
           orderName: '토스 티셔츠 외 2건',
           successUrl: window.location.origin + window.location.pathname + '/success',
-          //현재 위치로
-          failUrl: window.location.origin + window.location.pathname,
+          failUrl:
+            window.location.origin +
+            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
           customerEmail: 'customer123@gmail.com',
           customerName: '김토스',
           customerMobilePhone: '01012341234',

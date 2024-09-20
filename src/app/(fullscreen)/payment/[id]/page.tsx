@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { loadTossPayments, TossPaymentsPayment } from '@tosspayments/tosspayments-sdk';
 import Button from '@/components/share/Button';
 import Dropdown from '@/components/share/Dropdown/Dropdown';
 import { Radio } from '@/components/share/Radio';
@@ -9,45 +9,62 @@ import Separator from '@/components/share/Separator/Separator';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
 
-type PaymentMethod = 'kakao' | 'naver' | 'card';
+type PaymentMethod = 'KAKAOPAY' | 'NAVERPAY' | 'card';
 
 const paymentMethods = [
   {
     label: '카카오페이',
-    value: 'kakao',
+    value: 'KAKAOPAY',
   },
   {
     label: '네이버페이',
-    value: 'naver',
+    value: 'NAVERPAY',
   },
   {
     label: '일반 결제(카드사 앱 결제)',
     value: 'card',
   },
 ];
-const data = [
-  {
-    value: 'kb',
-    label: 'KB국민은행',
-  },
+const institutions = [
+  { label: '기업 BC', value: 'IBK_BC' },
+  { label: '광주은행', value: 'GWANGJUBANK' },
+  { label: '롯데카드', value: 'LOTTE' },
+  { label: 'KDB산업은행', value: 'KDBBANK' },
+  { label: 'BC카드', value: 'BC' },
+  { label: '삼성카드', value: 'SAMSUNG' },
+  { label: '새마을금고', value: 'SAEMAUL' },
+  { label: '신한카드', value: 'SHINHAN' },
+  { label: '신협', value: 'SHINHYEOP' },
+  { label: '씨티카드', value: 'CITI' },
+  { label: '우리카드', value: 'WOORI' },
+  { label: '우체국예금보험', value: 'POST' },
+  { label: '저축은행중앙회', value: 'SAVINGBANK' },
+  { label: '전북은행', value: 'JEONBUKBANK' },
+  { label: '제주은행', value: 'JEJUBANK' },
+  { label: '카카오뱅크', value: 'KAKAOBANK' },
+  { label: '케이뱅크', value: 'KBANK' },
+  { label: '토스뱅크', value: 'TOSSBANK' },
+  { label: '하나카드', value: 'HANA' },
+  { label: '현대카드', value: 'HYUNDAI' },
+  { label: 'KB국민카드', value: 'KOOKMIN' },
+  { label: 'NH농협카드', value: 'NONGHYEOP' },
+  { label: 'Sh수협은행', value: 'SUHYEOP' },
+  { label: '페이코', value: 'PCP' },
+  { label: 'KB증권', value: 'KBS' },
 ];
-const data2 = [
-  {
-    value: '0',
-    label: '일시불',
-  },
-  {
-    value: '1',
-    label: '1개월',
-  },
-  {
-    value: '2',
-    label: '2개월',
-  },
-  {
-    value: '3',
-    label: '3개월',
-  },
+const installmentData = [
+  { value: '0', label: '일시불' },
+  { value: '2', label: '2개월' },
+  { value: '3', label: '3개월' },
+  { value: '4', label: '4개월' },
+  { value: '5', label: '5개월' },
+  { value: '6', label: '6개월' },
+  { value: '7', label: '7개월' },
+  { value: '8', label: '8개월' },
+  { value: '9', label: '9개월' },
+  { value: '10', label: '10개월' },
+  { value: '11', label: '11개월' },
+  { value: '12', label: '12개월' },
 ];
 
 type PaymentState = {
@@ -55,10 +72,18 @@ type PaymentState = {
   card: string;
   installment: string;
 };
+const amount = {
+  currency: 'KRW',
+  value: 50000,
+};
+
+const clientKey = 'test_ck_LkKEypNArW1B7K0Em51A3lmeaxYG';
+const customerKey = 'dr09G1bpeUIgkygKX5L4H';
 
 export default function PaymentPage({ params }: Readonly<{ params: { id: string } }>) {
+  const [payment, setPayment] = useState<TossPaymentsPayment | null>(null);
   const [paymentState, setPaymentState] = useState<PaymentState>({
-    paymentMethod: 'kakao',
+    paymentMethod: 'KAKAOPAY',
     card: '',
     installment: '',
   });
@@ -78,11 +103,101 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
     setPaymentState((prev) => ({ ...prev, installment: value }));
   };
 
-  const paymentMethods = [
-    { value: 'kakao', label: '카카오페이' },
-    { value: 'naver', label: '네이버페이' },
-    { value: 'card', label: '카드결제' },
-  ];
+  async function requestPayment(paymentState: PaymentState) {
+    if (!payment) {
+      return;
+    }
+    // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
+    // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
+    switch (paymentState.paymentMethod) {
+      case 'card':
+        await payment.requestPayment({
+          method: 'CARD', // 카드 및 간편결제
+          amount,
+          orderId: 'NefN2Hu0HsStnHO2prILj',
+          orderName: '토스 티셔츠 외 2건',
+          successUrl: window.location.origin + window.location.pathname + '/success',
+          failUrl: window.location.origin + '/error', // 결제 요청이 실패하면 리다이렉트되는 URL
+          customerEmail: 'customer123@gmail.com',
+          customerName: '김토스',
+          customerMobilePhone: '01012345678',
+          card: {
+            useEscrow: false,
+            flowMode: 'DIRECT', // 자체창 여는 옵션
+            cardCompany: paymentState.card,
+            useCardPoint: false,
+            useAppCardOnly: false,
+          },
+        });
+        break;
+      case 'KAKAOPAY':
+        await payment.requestPayment({
+          method: 'CARD', // 카드 및 간편결제
+          amount: {
+            currency: 'KRW',
+            value: 50000,
+          },
+          orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
+          orderName: '토스 티셔츠 외 2건',
+          successUrl: window.location.origin + window.location.pathname + '/success',
+          failUrl: window.location.origin + window.location.pathname,
+          customerEmail: 'customer123@gmail.com',
+          customerName: '김토스',
+          customerMobilePhone: '01012341234',
+          // 카드 결제에 필요한 정보
+          card: {
+            useEscrow: false,
+            flowMode: 'DIRECT', // 자체창 여는 옵션
+            easyPay: 'KAKAOPAY', // 간편결제 자체창
+          },
+        });
+        break;
+      case 'NAVERPAY':
+        await payment.requestPayment({
+          method: 'CARD', // 카드 및 간편결제
+          amount: {
+            currency: 'KRW',
+            value: 50000,
+          },
+          orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
+          orderName: '토스 티셔츠 외 2건',
+          successUrl: window.location.origin + window.location.pathname + '/success',
+          //현재 위치로
+          failUrl: window.location.origin + window.location.pathname,
+          customerEmail: 'customer123@gmail.com',
+          customerName: '김토스',
+          customerMobilePhone: '01012341234',
+          // 카드 결제에 필요한 정보
+          card: {
+            flowMode: 'DIRECT', // 자체창 여는 옵션
+            easyPay: 'NAVERPAY', // 간편결제 자체창
+            useCardPoint: false,
+            useAppCardOnly: false,
+          },
+        });
+    }
+  }
+  useEffect(() => {
+    async function fetchPayment() {
+      try {
+        const tossPayments = await loadTossPayments(clientKey);
+
+        // 회원 결제
+        // @docs https://docs.tosspayments.com/sdk/v2/js#tosspaymentspayment
+        const payment = tossPayments.payment({
+          customerKey,
+        });
+        // 비회원 결제
+        // const payment = tossPayments.payment({ customerKey: ANONYMOUS });
+
+        setPayment(payment);
+      } catch (error) {
+        console.error('Error fetching payment:', error);
+      }
+    }
+
+    fetchPayment();
+  }, [clientKey, customerKey]);
 
   return (
     <main>
@@ -151,7 +266,7 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
           {paymentState.paymentMethod === 'card' && (
             <div>
               <Dropdown
-                data={data}
+                data={institutions}
                 value={paymentState.card}
                 onChange={handleCardChange}
                 placeholder="카드 선택"
@@ -159,7 +274,7 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
                 className="mt-3"
               />
               <Dropdown
-                data={data2}
+                data={installmentData}
                 value={paymentState.installment}
                 onChange={handleInstallmentChange}
                 placeholder="할부 선택"
@@ -171,7 +286,7 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
         </div>
       </section>
       <div className="mt-[52px] px-5 pb-[30px]">
-        <Button state="fillPrimary" size="full">
+        <Button state="fillPrimary" size="full" onClick={() => requestPayment(paymentState)}>
           결제하기
         </Button>
       </div>

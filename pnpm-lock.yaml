@@ -29,6 +29,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.51.23
         version: 5.51.23(react@18.3.1)
+      '@tosspayments/tosspayments-sdk':
+        specifier: ^2.3.1
+        version: 2.3.1
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -1975,6 +1978,9 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
+
+  '@tosspayments/tosspayments-sdk@2.3.1':
+    resolution: {integrity: sha512-g7UFcyQn9I76/2fSgST1x3g92TwTx6e51g1w4RAeUKvXcevDqrrqW/1Zxh8HnJ0ohx54z9ss+BfGd1cIBveofA==}
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -7757,6 +7763,8 @@ snapshots:
   '@testing-library/user-event@14.5.2(@testing-library/dom@10.1.0)':
     dependencies:
       '@testing-library/dom': 10.1.0
+
+  '@tosspayments/tosspayments-sdk@2.3.1': {}
 
   '@trysound/sax@0.2.0': {}
 

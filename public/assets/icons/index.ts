@@ -70,6 +70,12 @@ import ChevronRightIcon from './chevron-right.svg';
 import QuestionMarkIcon from './question-mark.svg';
 import ExitIcon from './exit.svg';
 import SelectIcon from './select.svg';
+import MapMarkerIcon from './map_marker.svg';
+import SelectedMapMarkerIcon from './selected_map_marker.svg';
+import HomeMarkerIcon from './home_marker.svg';
+import UserCurrentMarkerIcon from './userCurrentMarker.svg';
+import MapBackIcon from './map_back.svg';
+import RateStaIcon from './RateStar.svg';
 
 export {
   ArrowDownIcon,

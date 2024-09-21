@@ -4,12 +4,19 @@ import { CloseIcon, ArrowLeftIcon, SearchTopIcon } from '@assets/icons';
 interface TopNavigationProps {
   type: 'back' | 'close';
   title?: string;
+  className?: string;
   leftClick: () => void;
   rightClick?: () => void;
 }
-export default function TopNavigation({ type, title, leftClick, rightClick }: TopNavigationProps) {
+export default function TopNavigation({
+  type,
+  title,
+  className,
+  leftClick,
+  rightClick,
+}: TopNavigationProps) {
   return (
-    <nav className="flex h-[52px] w-full items-center justify-between px-3">
+    <nav className={cn('flex h-[52px] w-full items-center justify-between px-3', className)}>
       <button
         onClick={leftClick}
         className={cn('p-1.5', {

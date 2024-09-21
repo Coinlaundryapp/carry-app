@@ -11,11 +11,11 @@ type TProps = {
   borderColor?: string;
   size?: 'small' | 'medium' | 'large' | 'full';
   state: 'primary' | 'secondary' | 'fillPrimary' | 'fillSecondary' | 'default' | 'disabled';
-  onClick: () => void;
+  onClick?: () => void;
   disabled?: boolean;
 };
 
-const buttonVariants = cva('font_body_1_normal h-[52px] rounded-md border', {
+const buttonVariants = cva('font_body_1_normal h-[52px] rounded-md border font-semibold', {
   variants: {
     size: {
       small: 'w-[140px] py-1 px-2',

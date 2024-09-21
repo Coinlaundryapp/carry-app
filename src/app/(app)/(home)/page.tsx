@@ -26,25 +26,25 @@ const CARD_DATA = [
   {
     title: '일반 세탁',
     description: '의류, 속옷, 양말 등',
-    href: '#',
+    href: '/order/general',
     icon: <ShirtIcon className="h-[52px] w-[52px]" />,
   },
   {
     title: '이불 세탁',
     description: '극세사 겨울 이불 까지!',
-    href: '#',
+    href: '/order/bedding',
     icon: <ShirtBeddingIcon className="h-[52px] w-[52px]" />,
   },
   {
-    title: '신발 세탁',
+    title: '일반 + 이불 세탁',
     description: '의류, 속옷, 양말, 이불 구분없이 한 번에',
-    href: '#',
+    href: '/order/mixed',
     icon: <ShirtBeddingIcon className="h-[52px] w-[52px]" />,
   },
   {
     title: '신발 세탁',
-    description: '운동화',
-    href: '#',
+    description: '운동화 6켤레까지!',
+    href: '/order/shoes',
     icon: <SneakersIcon className="h-[52px] w-[52px]" />,
   },
 ];

@@ -103,8 +103,8 @@ export default function MapPage() {
           open={open}
           onOpenChange={setOpen}
           scrollLockTimeout={3000}
-          // shouldShowOverlay={false}
-          // closable={false}
+          shouldShowOverlay={false}
+          closable={false}
         >
           <DrawerContent showIndicator={false} className="max-h-[52vh]">
             <button onClick={handleReturnToUserLocation} className="absolute left-4 top-[-56px]">

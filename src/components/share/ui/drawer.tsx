@@ -6,11 +6,29 @@ import { Drawer as DrawerPrimitive } from 'vaul';
 import { cn } from '@/lib/utils';
 import { IndicatorIcon } from '@assets/icons';
 
+type DrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root> & {
+  shouldScaleBackground?: boolean;
+  shouldShowOverlay?: boolean;
+  closable?: boolean;
+};
+
 const Drawer = ({
   shouldScaleBackground = true,
+  shouldShowOverlay = true, // 기본값은 오버레이를 표시함
+  closable = true, // 기본값은 닫을 수 있게 함
+  onOpenChange,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+}: DrawerProps) => (
+  <DrawerPrimitive.Root
+    shouldScaleBackground={shouldScaleBackground}
+    onOpenChange={(open) => {
+      // closable이 true일 때만 닫기 동작 허용
+      if (closable || open) {
+        onOpenChange?.(open);
+      }
+    }}
+    {...props}
+  />
 );
 Drawer.displayName = 'Drawer';
 
@@ -35,18 +53,21 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 interface DrawerContentProps
   extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
   showIndicator?: boolean;
+  shouldShowOverlay?: boolean;
 }
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   DrawerContentProps
->(({ className, children, showIndicator = false, ...props }, ref) => (
+>(({ className, children, showIndicator = false, shouldShowOverlay, ...props }, ref) => (
   <DrawerPortal>
-    <DrawerOverlay />
+    {/* 오버레이를 표시할지 여부를 결정 */}
+    {shouldShowOverlay && <DrawerOverlay />}
+
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 mx-auto mt-24 flex h-auto max-w-[600px] flex-col rounded-xl bg-background focus:outline-none',
+        'fixed inset-x-0 bottom-0 z-50 mx-auto mt-24 flex h-auto max-w-[600px] flex-col rounded-t-xl bg-background focus:outline-none',
         className,
       )}
       {...props}

@@ -99,7 +99,7 @@ export default function MapPage() {
       }
 
       data &&
-        data.forEach((loc) => {
+        data.forEach((loc: any) => {
           const markerPosition = new naver.maps.LatLng(loc.latitude, loc.longitude); // 마커 위치 생성
 
           const marker = new naver.maps.Marker({
@@ -115,7 +115,7 @@ export default function MapPage() {
           naver.maps.Event.addListener(marker, 'click', (e) => {
             setSelectedMarkerId(loc.id);
             setOpen(true);
-            const selectedMarker = data.find((item) => item.id === loc.id);
+            const selectedMarker = data.find((item: any) => item.id === loc.id);
             setSelectedItem(selectedMarker);
             console.log('선택된 마커 위치:', markerPosition.toString());
           });
@@ -203,7 +203,6 @@ export default function MapPage() {
           <div className="mx-auto flex items-center justify-center py-1">
             <IndicatorIcon />
           </div>
-
           <div className="mt-1 text-center">
             <button
               onClick={handleReturnToUserLocation}

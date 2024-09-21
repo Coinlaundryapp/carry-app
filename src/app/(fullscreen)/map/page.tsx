@@ -4,6 +4,8 @@ import { useGeoLocation } from '@/hooks/useGeoLocation';
 import { useEffect, useRef, useState } from 'react';
 import { markerIconHtml, selectedMarkerIconHtml, homeMarkerIconHtml } from './marker';
 import { MapBackIcon, UserCurrentMarkerIcon } from '@assets/icons';
+import CoinlaundryDefault from '@/components/map/CoinlaundryDefault';
+import { Drawer, DrawerContent } from '@/components/share/ui/drawer';
 
 const DUMMY_LOCATION = [
   { id: 1, lat: 37.442706, lng: 127.135862 },
@@ -21,6 +23,7 @@ export default function MapPage() {
   const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
   const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null); // 선택된 마커 ID 상태
+  const [open, setOpen] = useState(true);
 
   const initMap = async () => {
     const location = await getLocation();
@@ -91,17 +94,35 @@ export default function MapPage() {
   }, [selectedMarkerId]);
 
   return (
-    <div className="relative w-full">
+    <div className="w-full">
       <div id="map" className="h-[100vh] w-full"></div>
-      <button onClick={handleReturnToUserLocation} className="absolute left-4 top-4">
-        <UserCurrentMarkerIcon />
-      </button>
-      <button
-        onClick={handleReturnToAddressLocation}
-        className="font_label_1_normal absolute right-6 top-4 flex items-center gap-2 rounded-xl bg-white p-2"
-      >
-        <MapBackIcon /> 배송지로 이동하기
-      </button>
+
+      {/* <div className="absolute bottom-0 left-0 z-50 w-full bg-red-400"> */}
+      <div className="relative">
+        <Drawer
+          open={open}
+          onOpenChange={setOpen}
+          scrollLockTimeout={3000}
+          // shouldShowOverlay={false}
+          // closable={false}
+        >
+          <DrawerContent showIndicator={false} className="max-h-[52vh]">
+            <button onClick={handleReturnToUserLocation} className="absolute left-4 top-[-56px]">
+              <UserCurrentMarkerIcon />
+            </button>
+            <button
+              onClick={handleReturnToAddressLocation}
+              className="font_label_1_normal absolute left-1/2 top-[-53px] flex -translate-x-1/2 transform items-center gap-2 rounded-xl bg-white p-2"
+            >
+              <MapBackIcon /> 배송지로 이동하기
+            </button>
+
+            <CoinlaundryDefault open={open} type="all" />
+          </DrawerContent>
+        </Drawer>
+      </div>
+
+      {/* </div> */}
     </div>
   );
 }

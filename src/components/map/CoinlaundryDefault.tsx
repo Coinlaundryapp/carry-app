@@ -76,9 +76,8 @@ function CoinlaundryDefault({ open, type = 'all' }: Props) {
                   if (!kindStatus) return null;
 
                   return (
-                    <div>
+                    <div key={kindId}>
                       <Tag
-                        key={kindId}
                         className="font_caption_1"
                         label={kindStatus.text}
                         color={kindStatus.color}

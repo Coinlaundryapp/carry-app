@@ -3,7 +3,7 @@ import DummyImage from './Rectangle 1946.svg';
 import DummysmallImage from './rectanglesmall.svg';
 
 import Tag from '../share/Tag/Tag';
-import classNames from 'classnames';
+import clax from 'clsx';
 import { KINDS_STATUS } from '@/constants/map';
 type Props = {
   open: boolean;
@@ -98,10 +98,10 @@ function CoinlaundryDefault({ open, type = 'all' }: Props) {
             </div>
 
             <div
-              className={classNames('mb-4 flex justify-between', {
-                'items-center': type === 'all',
-                'flex-col items-start gap-5': type !== 'all',
-              })}
+              className={clax(
+                'mb-4 flex justify-between',
+                type === 'all' ? 'items-center' : 'flex-col items-start gap-5',
+              )}
             >
               <div>
                 <div className="mb-1 flex items-center gap-2">

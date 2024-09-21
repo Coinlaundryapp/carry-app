@@ -49,11 +49,6 @@ import AddressSearchNoLIst from './address-search-nolist.svg';
 import CancelIcon from './Vector.svg';
 import CarIcon from './icon_car.svg';
 import FramIcon from './Frame 26088186.svg';
-import MapMarkerIcon from './map_marker.svg';
-import SelectedMapMarkerIcon from './selected_map_marker.svg';
-import HomeMarkerIcon from './home_marker.svg';
-import UserCurrentMarkerIcon from './userCurrentMarker.svg';
-import MapBackIcon from './map_back.svg';
 import WarnWaterWashIcon from './warn_waterwash.svg';
 import WarnHot from './warn_hot.svg';
 import MinusIcon from './minus.svg';
@@ -63,6 +58,12 @@ import CoolWaterIcon from './cool-water.svg';
 import HotWaterIcon from './hot-water.svg';
 import DryIcon from './dry.svg';
 import IndicatorIcon from './indicator.svg';
+import MapMarkerIcon from './map_marker.svg';
+import SelectedMapMarkerIcon from './selected_map_marker.svg';
+import HomeMarkerIcon from './home_marker.svg';
+import UserCurrentMarkerIcon from './userCurrentMarker.svg';
+import MapBackIcon from './map_back.svg';
+import RateStaIcon from './RateStar.svg';
 
 export {
   ArrowDownIcon,
@@ -70,6 +71,7 @@ export {
   UserCurrentMarkerIcon,
   MapBackIcon,
   FramIcon,
+  RateStaIcon,
   HomeMarkerIcon,
   CarIcon,
   MapMarkerIcon,

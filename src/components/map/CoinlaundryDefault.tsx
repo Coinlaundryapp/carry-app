@@ -63,7 +63,7 @@ function CoinlaundryDefault({ open, type = 'all' }: Props) {
     <div className="overflow-y-auto">
       {DUMMY_DATA.map((item) => {
         return (
-          <div className="mb-4.5 mx-6 mt-5 border-b border-line-normal">
+          <div key={item.id} className="mb-4.5 mx-6 mt-5 border-b border-line-normal">
             <div className="flex justify-between">
               <div className="mb-2 flex items-center justify-start gap-2">
                 <h3 className="font_headline_2">{item.title}</h3>

@@ -5,57 +5,12 @@ import DummysmallImage from './rectanglesmall.svg';
 import Tag from '../share/Tag/Tag';
 import clax from 'clsx';
 import { KINDS_STATUS } from '@/constants/map';
+import { DUMMY_DATA } from './dummydata';
 type Props = {
   open: boolean;
   type: 'all' | 'one';
 };
 
-const DUMMY_DATA = [
-  {
-    id: '1',
-    kind: ['0', '1', '2'],
-    title: '소금이 세탁소',
-    len: '1.1',
-    address: '서울시 동작구 잠실동',
-    star: 4.7,
-    review: 24,
-    delivery: 6000,
-    type: '0',
-  },
-  {
-    id: '2',
-    title: '가나다라 세탁소',
-    kind: ['0', '1', '2'],
-    len: '1.1',
-    address: '서울시 동작구 잠실동',
-    star: 4.7,
-    review: 24,
-    delivery: 6000,
-    type: '0',
-  },
-  {
-    id: '3',
-    title: '소금이 세탁소',
-    kind: ['0'],
-    len: '1.1',
-    address: '서울시 동작구 잠실동',
-    star: 4.7,
-    review: 24,
-    delivery: 6000,
-    type: '0',
-  },
-  {
-    id: '4',
-    title: '소금이 세탁소',
-    len: '1.1',
-    kind: ['1', '2'],
-    address: '서울시 동작구 잠실동',
-    star: 4.7,
-    review: 24,
-    delivery: 6000,
-    type: '0',
-  },
-];
 const dummyImages = new Array(3).fill('./Rectangle 1946.svg');
 
 function CoinlaundryDefault({ open, type = 'all' }: Props) {

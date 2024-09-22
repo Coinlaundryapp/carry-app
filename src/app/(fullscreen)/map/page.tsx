@@ -32,11 +32,13 @@ export default function MapPage() {
       const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);
       userPositionRef.current = userPosition;
 
-      const offsetCenter = new naver.maps.LatLng(location.latitude - 0.04, location.longitude);
+      const offsetCenter = new naver.maps.LatLng(location.latitude - 0.05, location.longitude);
       offsetCenterRef.current = offsetCenter;
       const map = new naver.maps.Map('map', {
         center: offsetCenter,
         zoom: 12,
+        maxZoom: 17,
+        minZoom: 11,
       });
 
       mapRef.current = map;
@@ -82,6 +84,8 @@ export default function MapPage() {
     }
   };
 
+  console.log('setSelectedMarkerId', selectedMarkerId);
+
   const handleReturnToUserLocation = () => {
     if (mapRef.current && offsetCenterRef.current) {
       mapRef.current.setCenter(offsetCenterRef.current);
@@ -90,8 +94,8 @@ export default function MapPage() {
   const handleReturnToAddressLocation = () => {};
 
   useEffect(() => {
-    initMap();
-  }, [selectedMarkerId]);
+    initMap(); // 지도는 처음 로드될 때만 초기화
+  }, [selectedMarkerId]); // 빈 배열을 전달하여 처음에만 실행
 
   return (
     <div className="w-full">
@@ -99,14 +103,8 @@ export default function MapPage() {
 
       {/* <div className="absolute bottom-0 left-0 z-50 w-full bg-red-400"> */}
       <div className="relative">
-        <Drawer
-          open={open}
-          onOpenChange={setOpen}
-          scrollLockTimeout={3000}
-          shouldShowOverlay={false}
-          closable={false}
-        >
-          <DrawerContent showIndicator={false} className="max-h-[52vh]">
+        <Drawer open={open} onOpenChange={setOpen} scrollLockTimeout={3000} closable={false}>
+          <DrawerContent showIndicator={true} shouldShowOverlay={false} className="max-h-[52vh]">
             <button onClick={handleReturnToUserLocation} className="absolute left-4 top-[-56px]">
               <UserCurrentMarkerIcon />
             </button>

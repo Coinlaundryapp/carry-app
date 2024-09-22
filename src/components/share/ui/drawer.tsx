@@ -59,7 +59,7 @@ interface DrawerContentProps
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   DrawerContentProps
->(({ className, children, showIndicator = false, shouldShowOverlay, ...props }, ref) => (
+>(({ className, children, showIndicator = false, shouldShowOverlay = true, ...props }, ref) => (
   <DrawerPortal>
     {/* 오버레이를 표시할지 여부를 결정 */}
     {shouldShowOverlay && <DrawerOverlay />}

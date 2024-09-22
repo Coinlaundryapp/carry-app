@@ -19,7 +19,6 @@ interface RenderStepContentProps {
   renderSteps: number[];
   renderAllAtOnce?: boolean; // 모든 단계를 한 번에 렌더링할지 여부
   onChangeRequestText: (text: string) => void;
-  setSelectedRequest: any;
   onPhoneChange: (e: any) => void;
 }
 
@@ -35,8 +34,8 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
   selectedRequest,
   handleChangeRequest,
   renderSteps,
-  setSelectedRequest,
   onPhoneChange,
+  onChangeRequestText,
   renderAllAtOnce = false,
 }) => {
   const renderComponents = (currentStep: number) => {
@@ -85,8 +84,8 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
           <AddressRequest
             key={5}
             handleChangeRequest={handleChangeRequest}
-            setSelectedRequest={setSelectedRequest}
             selectedRequest={selectedRequest}
+            onChangeRequestText={onChangeRequestText}
           />
         );
       case 6:

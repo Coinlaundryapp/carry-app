@@ -2,14 +2,15 @@ import React from 'react';
 import Dropdown from '../share/Dropdown/Dropdown';
 import { Input } from '../share/Input';
 import { REQUEST_OPTIONS } from '@/constants/request-options';
+import { TSelectedRequest } from '@/app/(fullscreen)/address/edit/[addressId]/page';
 
 type TProps = {
-  selectedRequest: any;
-  handleChangeRequest: any;
-  setSelectedRequest: any;
+  selectedRequest: TSelectedRequest;
+  handleChangeRequest: (value: string) => void;
+  onChangeRequestText: (text: string) => void;
 };
 
-function AddressRequest({ selectedRequest, handleChangeRequest, setSelectedRequest }: TProps) {
+function AddressRequest({ onChangeRequestText, selectedRequest, handleChangeRequest }: TProps) {
   return (
     <div className="mb-6 w-full">
       <label className="font_headline_1 font-semibold">배송 요청사항</label>
@@ -30,9 +31,7 @@ function AddressRequest({ selectedRequest, handleChangeRequest, setSelectedReque
           type="text"
           placeholder="내용을 자세히 입력해주세요."
           value={selectedRequest.requestText}
-          onChange={(e) =>
-            setSelectedRequest({ ...selectedRequest, requestText: e.currentTarget.value })
-          }
+          onChange={(e) => onChangeRequestText(e.currentTarget.value)}
         />
       )}
     </div>

@@ -14,8 +14,6 @@ const buttonVariants = cva('w-full h-[52px] text-center rounded-lg', {
   },
 });
 export default function Modal() {
-
-
   const {
     isOpen,
     title,
@@ -74,7 +72,7 @@ export default function Modal() {
         )}
         {image === 'check' && (
           <div className="absolute -top-[45px] flex w-full justify-center">
-            <ModalOkIcon />
+            <ModalOkIcon className="h-[108px] w-[108px]" />
           </div>
         )}
 

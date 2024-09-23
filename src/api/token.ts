@@ -9,7 +9,6 @@ export async function login({
   redirectUri: string;
 }) {
   try {
-    console.log('authorizationCode', authorizationCode, 'redirectUri', redirectUri);
     const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/login', {
       method: 'POST',
       headers: {
@@ -27,7 +26,7 @@ export async function login({
     };
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === '전화번호가 없으면 서비스를 이용할 수 없습니다.') {
+      if (error.message === '422') {
         throw Error('login_error');
       }
     }

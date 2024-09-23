@@ -30,8 +30,6 @@ const OpenNotificationPage = () => {
     contact: '',
   });
 
-  console.log(body);
-
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBody((prev) => ({
       ...prev,

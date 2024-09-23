@@ -25,7 +25,7 @@ export default function OptionSelection({
         <Button onClick={() => onSelect(true)} state="fillPrimary" size="full" className="mb-3">
           {type === 'folding' ? '네' : '네 추가할래요'}
         </Button>
-        <Button onClick={() => onSelect(true)} state="secondary" size="full">
+        <Button onClick={() => onSelect(false)} state="secondary" size="full">
           {type === 'folding' ? '아니요' : '아니요 괜찮아요'}
         </Button>
       </div>

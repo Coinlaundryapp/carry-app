@@ -6,17 +6,19 @@ import { useRouter } from 'next/navigation';
 
 export default function LoginDonePage({
   params,
+  searchParams,
 }: {
-  params: {
-    redirect?: string;
-  };
+  params: { redirect: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const router = useRouter();
-  const { redirect } = params;
-  const redirectUrl = redirect ? '/' + redirect : '/';
+  const redirectUrl = params.redirect ? `/${params.redirect}` : '/';
+  const queryString = new URLSearchParams(searchParams as Record<string, string>).toString();
+  const finalRedirectUrl = queryString ? `${redirectUrl}?${queryString}` : redirectUrl;
   const handleRedirect = () => {
-    router.replace(redirectUrl);
+    router.push(finalRedirectUrl);
   };
+
   return (
     <main className="flex h-dvh flex-col items-center justify-center px-6">
       <h2 className="mb-2 font-bold text-label-normal font-title-1">완료되었습니다!</h2>

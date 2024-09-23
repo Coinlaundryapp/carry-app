@@ -10,7 +10,7 @@ function Loading({ text }: TProps) {
     <div className="mx-auto flex h-dvh max-w-[600px] flex-col items-center justify-center gap-3 bg-white">
       <FramIcon />
       <CarIcon />
-      <div>
+      <div className="flex flex-col items-center justify-center">
         <h2 className="font-semibold font-headline-1">잠시만 기다려 주세요!</h2>
         <p className="font-medium text-label-alternative font-body-1-reading">
           {text ? text : '해당 페이지로 이동하고 있어요'}

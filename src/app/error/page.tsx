@@ -9,10 +9,16 @@ export default function AuthError() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get('error') as AuthErrorType;
+  const redirectUrl = searchParams.get('redirectUrl');
   const errorMessage = error && AUTH_ERROR[error] ? AUTH_ERROR[error] : AUTH_ERROR.server_error;
   const handleRedirect = () => {
+    if (redirectUrl) {
+      router.replace(redirectUrl);
+      return;
+    }
     router.back();
   };
+  console.log(redirectUrl);
 
   return (
     <main className="mx-auto flex h-dvh max-w-[600px] flex-col items-center justify-between bg-background">
@@ -29,7 +35,7 @@ export default function AuthError() {
       </div>
       <div className="mb-[30px] w-full px-6">
         <Button size="full" state="fillPrimary" onClick={handleRedirect}>
-          <p className="font-semibold font-body-1-normal">확인</p>
+          <p className="font-semibold font-body-1-normal">{errorMessage.buttonText}</p>
         </Button>
       </div>
     </main>

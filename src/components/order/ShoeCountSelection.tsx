@@ -27,11 +27,8 @@ export function ShoeCountSelection({ onSelect }: Readonly<{ onSelect: (count: nu
         <h2 className="mb-2.5 font-semibold text-label-strong font-heading-2">
           몇 켤레 세탁을 원하시나요?
         </h2>
-        <p className="font-semibold text-base-blue-6 font-body-1-normal">
-          표준 세탁기(18kg)가 선택되었습니다.
-        </p>
       </div>
-      <div className="mb-8 bg-background-normal-alternative py-6">
+      <div className="mb-8 rounded-md bg-background-normal-alternative py-6">
         <div className="flex flex-col items-center px-[15px]">
           <h3 className="font-body-1-norma mb-5 font-semibold text-label-strong">
             <span className="text-base-blue-6">신발 세탁기</span> 한 대 기준 적정량

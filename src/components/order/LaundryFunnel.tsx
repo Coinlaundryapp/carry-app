@@ -155,7 +155,7 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
   }, [laundryType, setWashOptions]);
   return (
     <div
-      className={clsx('flex h-svh flex-col overflow-auto bg-background-normal-alternative pb-6', {
+      className={clsx('flex h-dvh flex-col bg-background-normal-alternative pb-6', {
         'bg-background-normal-normal': currentStep === 'shoePairs',
       })}
     >

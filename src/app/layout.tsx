@@ -3,11 +3,9 @@ import './globals.css';
 import clsx from 'clsx';
 
 import AuthProvider from '@/providers/AuthProvides';
-
+import ReactQueryProviders from '@/hooks/useReactQuery';
 import { pretendard } from '@/font/myLocalFont';
 import Script from 'next/script';
-import ReactQueryProviders from '@/providers/ReactQueryProviders';
-import UIOverlayProvider from '@/providers/UIOverlayProvider';
 
 export const metadata: Metadata = {
   title: 'Carry',
@@ -21,18 +19,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={clsx(pretendard.className, 'bg-black')}>
+      <body className={clsx(pretendard.className, 'overflow-hidden bg-black')}>
         <Script
           type="text/javascript"
           src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_ID}`}
           strategy="beforeInteractive"
         />
         <ReactQueryProviders>
-          <AuthProvider>
-            <div className="relative mx-auto h-svh max-w-[480px] bg-white">
-              <UIOverlayProvider>{children}</UIOverlayProvider>
-            </div>
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </ReactQueryProviders>
       </body>
     </html>

@@ -5,30 +5,24 @@ type Toast = {
   message: string;
   type: 'success' | 'done' | 'error';
   duration?: number;
-};
+} | null;
 
 type ToastStore = {
-  toasts: Toast[];
-  addToast: (toast: Omit<Toast, 'id'>) => void;
-  removeToast: (id: string) => void;
+  toast: Toast;
+  addToast: (toast: Omit<NonNullable<Toast>, 'id'>) => void;
+  removeToast: () => void;
 };
 
 export const useToastStore = create<ToastStore>((set) => ({
-  toasts: [],
+  toast: null,
   addToast: ({ message, type = 'success', duration = 2000 }) =>
-    set((state) => ({
-      toasts: [
-        ...state.toasts,
-        {
-          message,
-          type,
-          duration,
-          id: Date.now().toString(),
-        },
-      ],
+    set(() => ({
+      toast: {
+        message,
+        type,
+        duration,
+        id: Date.now().toString(),
+      },
     })),
-  removeToast: (id) =>
-    set((state) => ({
-      toasts: state.toasts.filter((toast) => toast.id !== id),
-    })),
+  removeToast: () => set({ toast: null }),
 }));

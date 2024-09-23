@@ -38,7 +38,7 @@ export default function Layout({
   if (!render) return null;
 
   return (
-    <div className="relative mx-auto flex h-dvh max-w-[600px] flex-col justify-between overflow-hidden bg-white">
+    <div className="relative mx-auto flex h-dvh max-w-[480px] flex-col justify-between overflow-hidden bg-white">
       <div className="h-full w-full overflow-scroll pb-8" ref={ref}>
         <Suspense fallback={<Loading />}>{children}</Suspense>
       </div>

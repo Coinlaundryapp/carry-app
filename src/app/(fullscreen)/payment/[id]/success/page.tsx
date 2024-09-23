@@ -4,7 +4,7 @@ import { ModalOkIcon } from '@assets/icons';
 
 export default function SuccessPage() {
   return (
-    <main className="flex h-dvh flex-col items-center justify-between gap-[108px] px-6">
+    <main className="flex h-svh flex-col items-center justify-between gap-[108px] px-6">
       <div className="mt-[103px] flex flex-col items-center justify-center">
         <ModalOkIcon className={'h-20 w-20'} />
         <h2 className="mb-2 mt-4 font-bold text-label-normal font-title-1">결제 완료!</h2>

@@ -196,6 +196,9 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply bg-black;
+  }
   body {
     @apply bg-background text-foreground;
   }
@@ -273,5 +276,9 @@
   }
   .shadow-top {
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .page {
+    height: calc(100% - 94px);
+    padding-bottom: 120px;
   }
 }

@@ -44,7 +44,7 @@ export function BottomNavigation() {
 
   const navigationBarList: NavigationBarType[] = [
     { title: '홈', path: '/', icon: 'Home' },
-    { title: '팀, 알뜰 세탁', path: '/team', icon: 'Cloth' },
+    // { title: '팀, 알뜰 세탁', path: '/team', icon: 'Cloth' },
     { title: '내 세탁 현황', path: '/status', icon: 'Box' },
     { title: '마이페이지', path: '/my', icon: 'My' },
   ];
@@ -54,7 +54,7 @@ export function BottomNavigation() {
       style={{
         boxShadow: '0px -2px 6px 0px #878A931A',
       }}
-      className="w-full rounded-tl-xl rounded-tr-xl px-[24px] pb-[34px] pt-[10px]"
+      className="fixed bottom-0 z-50 w-full max-w-[480px] rounded-tl-xl rounded-tr-xl bg-white px-[40px] pb-[34px] pt-[10px]"
     >
       <ul className="flex w-full justify-between gap-[14px]">
         {navigationBarList.map((item) => {

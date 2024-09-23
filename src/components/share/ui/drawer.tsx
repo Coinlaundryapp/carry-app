@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils';
 import { IndicatorIcon } from '@assets/icons';
 
 const Drawer = ({
-  shouldScaleBackground = true,
+  shouldScaleBackground = false,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} noBodyStyles {...props} />
 );
 Drawer.displayName = 'Drawer';
 

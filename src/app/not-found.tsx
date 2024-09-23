@@ -6,7 +6,7 @@ import Button from '@/components/share/Button';
 
 export default function NotFoundPage() {
   return (
-    <main className="mx-auto flex h-dvh max-w-[480px] flex-col items-center justify-between bg-background">
+    <main className="mx-auto flex h-svh max-w-[480px] flex-col items-center justify-between bg-background">
       <div className="flex h-full flex-col items-center justify-center">
         <div className="mb-6">
           <DeliveryManSadIcon />

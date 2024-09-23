@@ -20,7 +20,7 @@ export default function LoginDonePage({
   };
 
   return (
-    <main className="flex h-dvh flex-col items-center justify-center px-6">
+    <main className="flex h-svh flex-col items-center justify-center px-6">
       <h2 className="mb-2 font-bold text-label-normal font-title-1">완료되었습니다!</h2>
       <p className="mb-[30px] font-medium text-label-alternative font-body-1-normal">
         당신의 소중한 세탁 시간을 아껴드릴게요!

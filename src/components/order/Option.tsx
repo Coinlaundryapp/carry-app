@@ -7,13 +7,13 @@ export default function Option({
 }: Readonly<{
   name: string;
   description?: string;
-  price: string;
+  price?: string;
   icon: React.ReactNode;
   onClick: () => void;
 }>) {
   return (
     <button
-      className="flex w-full items-center justify-between rounded-lg bg-background-normal-normal p-6"
+      className="flex h-[112px] w-full items-center justify-between rounded-lg bg-background-normal-normal p-6"
       onClick={onClick}
     >
       <div>
@@ -26,7 +26,7 @@ export default function Option({
       </div>
       <div className="flex flex-col items-end gap-2">
         {icon}
-        <span className="font-semibold text-[#EB2F96] font-body-1-normal">{price}</span>
+        {price && <span className="font-semibold text-[#EB2F96] font-body-1-normal">{price}</span>}
       </div>
     </button>
   );

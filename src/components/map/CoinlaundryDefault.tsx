@@ -1,9 +1,10 @@
+'use client';
 import { RateStaIcon } from '@assets/icons';
-import DummysmallImage from './rectanglesmall.svg';
 import { NoCoinList } from '@assets/icons';
 import Tag from '../share/Tag/Tag';
 import clax from 'clsx';
 import { KINDS_STATUS } from '@/constants/map';
+import Image from 'next/image';
 
 type Props = {
   data: any;
@@ -25,6 +26,7 @@ function CoinlaundryDefault({ data, type = 'map' }: Props) {
     >
       {data &&
         data.map((item: any) => {
+          // console.log('hihihih', item.mediaResources[0].mediaUrl);
           return (
             <div key={item.id} className="mb-4.5 mx-5 mt-4 border-b border-line-normal">
               <div className="flex justify-between">
@@ -81,8 +83,8 @@ function CoinlaundryDefault({ data, type = 'map' }: Props) {
                     <div className="font_label_1_normal">배송비 {item.delivery}원</div>
                   </div>
                 </div>
-
-                <DummysmallImage />
+                <img src="https://github.com/user-attachments/assets/2a9ed189-74a7-48aa-a9a3-39aaf8f270a5" />
+                {/* <img alt="" src={item.mediaResources[0]?.mediaUrl} /> */}
               </div>
             </div>
           );

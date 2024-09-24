@@ -121,8 +121,6 @@ export default function MapPage() {
           });
         });
 
-      let offsetCenter;
-
       if (offsetLocation) {
         new naver.maps.Marker({
           position: offsetLocation,

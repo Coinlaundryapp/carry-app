@@ -1,14 +1,12 @@
 import { RateStaIcon } from '@assets/icons';
 import DummyImage from './Rectangle 1946.svg';
-
 import Tag from '../share/Tag/Tag';
-
 import { KINDS_STATUS } from '@/constants/map';
 
 type Props = {
   data: any;
 
-  type: 'map' | 'order';
+  type?: 'map' | 'order';
 };
 
 const dummyImages = new Array(3).fill('./Rectangle 1946.svg');

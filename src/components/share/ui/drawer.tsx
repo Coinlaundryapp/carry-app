@@ -14,21 +14,9 @@ type DrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root> & {
 
 const Drawer = ({
   shouldScaleBackground = true,
-  shouldShowOverlay = true, // 기본값은 오버레이를 표시함
-  closable = true, // 기본값은 닫을 수 있게 함
-  onOpenChange,
   ...props
-}: DrawerProps) => (
-  <DrawerPrimitive.Root
-    shouldScaleBackground={shouldScaleBackground}
-    onOpenChange={(open) => {
-      // closable이 true일 때만 닫기 동작 허용
-      if (closable || open) {
-        onOpenChange?.(open);
-      }
-    }}
-    {...props}
-  />
+}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
+  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
 );
 Drawer.displayName = 'Drawer';
 
@@ -68,7 +56,6 @@ const DrawerContent = React.forwardRef<
       ref={ref}
       className={cn(
         'fixed inset-x-0 bottom-0 z-50 mx-auto mt-24 flex h-auto max-w-[480px] flex-col rounded-xl bg-background focus:outline-none',
-
         className,
       )}
       {...props}

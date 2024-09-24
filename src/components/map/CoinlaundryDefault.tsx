@@ -1,95 +1,92 @@
 import { RateStaIcon } from '@assets/icons';
-import DummyImage from './Rectangle 1946.svg';
 import DummysmallImage from './rectanglesmall.svg';
-
+import { NoCoinList } from '@assets/icons';
 import Tag from '../share/Tag/Tag';
 import clax from 'clsx';
 import { KINDS_STATUS } from '@/constants/map';
-import { DUMMY_DATA } from './dummydata';
+
 type Props = {
-  open: boolean;
-  type: 'all' | 'one';
+  data: any;
+
+  type?: 'map' | 'order';
 };
 
-const dummyImages = new Array(3).fill('./Rectangle 1946.svg');
-
-function CoinlaundryDefault({ open, type = 'all' }: Props) {
+function CoinlaundryDefault({ data, type = 'map' }: Props) {
+  if (data && data.length === 0) {
+    return (
+      <div className={`flex h-[46vh] items-center justify-center`}>
+        <NoCoinList />
+      </div>
+    );
+  }
   return (
-    <div className="overflow-y-auto">
-      {DUMMY_DATA.map((item) => {
-        return (
-          <div key={item.id} className="mb-4.5 mx-6 mt-5 border-b border-line-normal">
-            <div className="flex justify-between">
-              <div className="mb-2 flex items-center justify-start gap-2">
-                <h3 className="font_headline_2">{item.title}</h3>
-                <div className="font_caption_1 text-label-alternative">{item.len}km</div>
-              </div>
-              <div className="flex gap-1">
-                {item.kind.map((kindId) => {
-                  const kindStatus = KINDS_STATUS.find((status) => status.id === kindId);
+    <div
+      className={`overflow-y-auto ${data && data.length > 2 ? 'h-[53vh] max-h-[53vh] overflow-y-auto' : 'max-h-auto'}`}
+    >
+      {data &&
+        data.map((item: any) => {
+          return (
+            <div key={item.id} className="mb-4.5 mx-5 mt-4 border-b border-line-normal">
+              <div className="flex justify-between">
+                <div className="mb-2 flex items-center justify-start gap-2">
+                  <h3 className="font_headline_2">{item.name}</h3>
+                  <div className="font_caption_1 text-label-alternative">
+                    {Math.round(item.distance)}km
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  {item.options.map((option: string) => {
+                    const optionsStatus = KINDS_STATUS.find((status) => status.id === option);
 
-                  if (!kindStatus) return null;
+                    if (!optionsStatus) return null;
 
-                  return (
-                    <div key={kindId}>
-                      <Tag
-                        className="font_caption_1"
-                        label={kindStatus.text}
-                        color={kindStatus.color}
-                      />
-                    </div>
-                  );
-                })}
+                    return (
+                      <div key={option}>
+                        <Tag
+                          className="font_caption_1"
+                          label={optionsStatus.text}
+                          color={optionsStatus.color}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-            {/* <div className="font_label_1_normal mb-1 text-label-alternative">{item.address}</div> */}
-            <div className="mb-1 flex items-center gap-1">
-              <div className="flex items-center gap-1">
-                <RateStaIcon />
-                <span className="font_label_2 text-label-neutral">{item.star}</span>
-              </div>
-              <span className="font_label_2 text-label-neutral"> • 리뷰{item.review}개</span>
-            </div>
 
-            <div
-              className={clax(
-                'mb-4 flex justify-between',
-                type === 'all' ? 'items-center' : 'flex-col items-start gap-5',
-              )}
-            >
-              <div>
-                <div className="mb-1 flex items-center gap-2">
-                  <span className="font_caption_1 text-primary-normal">
-                    {item.type === '0' ? '단독 세탁' : '세탁'}
+              <div className="mb-1 flex items-center gap-1">
+                <div className="flex items-center gap-1">
+                  <RateStaIcon />
+                  <span className="font_label_2 text-label-neutral">
+                    {item.reviewAverageRating}
                   </span>
-                  <div className="font_label_1_normal">배송비 {item.delivery}원</div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="font_caption_1 text-base-blue-6">팀 세탁시</span>
-                  <div className="font_label_1_normal">배송비 {item.delivery}원</div>
-                </div>
+                <span className="font_label_2 text-label-neutral"> • 리뷰{item.reviewCount}개</span>
               </div>
 
-              {type == 'all' ? (
-                <DummysmallImage />
-              ) : (
-                <div className="flex w-full justify-between">
-                  {dummyImages.map((src, index) => (
-                    <div
-                      key={index}
-                      className="flex-shrink-0 cursor-pointer"
-                      style={{ width: 'calc(33.33% - 8px)' }}
-                    >
-                      {/* <img src={DummyImage} alt="Dummy" className="object-cover w-full h-full" /> */}
-                      <DummyImage className="h-full w-full object-cover" />
-                    </div>
-                  ))}
+              <div
+                className={clax(
+                  'mb-4 flex justify-between',
+                  type === 'map' ? 'items-center' : 'flex-col items-start gap-5',
+                )}
+              >
+                <div>
+                  <div className="mb-1 flex items-center gap-2">
+                    <span className="font_caption_1 text-primary-normal">
+                      {item.type === '0' ? '단독 세탁' : '세탁'}
+                    </span>
+                    <div className="font_label_1_normal">배송비 {item.delivery}원</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font_caption_1 text-base-blue-6">팀 세탁시</span>
+                    <div className="font_label_1_normal">배송비 {item.delivery}원</div>
+                  </div>
                 </div>
-              )}
+
+                <DummysmallImage />
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
     </div>
   );
 }

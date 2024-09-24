@@ -24,3 +24,36 @@ export const homeMarkerIconHtml = `<svg width="32" height="32" viewBox="0 0 32 3
 <path d="M16 8C14.4093 8.00189 12.8842 8.66475 11.7594 9.84315C10.6345 11.0216 10.0018 12.6193 10 14.2858C10 19.6644 15.4545 23.7266 15.687 23.8966C15.7788 23.9639 15.888 24 16 24C16.112 24 16.2212 23.9639 16.313 23.8966C16.5455 23.7266 22 19.6644 22 14.2858C21.9982 12.6193 21.3655 11.0216 20.2406 9.84315C19.1158 8.66475 17.5907 8.00189 16 8ZM16 12C16.4315 12 16.8534 12.1341 17.2122 12.3853C17.571 12.6364 17.8506 12.9934 18.0157 13.4111C18.1809 13.8287 18.2241 14.2883 18.1399 14.7317C18.0557 15.1751 17.8479 15.5824 17.5428 15.902C17.2376 16.2217 16.8489 16.4394 16.4257 16.5276C16.0024 16.6158 15.5637 16.5705 15.1651 16.3975C14.7664 16.2245 14.4256 15.9316 14.1859 15.5557C13.9461 15.1798 13.8182 14.7379 13.8182 14.2858C13.8182 13.6796 14.0481 13.0982 14.4572 12.6695C14.8664 12.2409 15.4213 12 16 12Z" fill="white"/>
 </svg>
 `;
+
+export const userMarkerIconHtml = `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="18" cy="18" r="18" fill="black" fill-opacity="0.1"/>
+<g filter="url(#filter0_ddd_10364_48291)">
+<circle cx="18" cy="18" r="9" fill="white"/>
+</g>
+<circle cx="18" cy="18" r="6" fill="#13C2C2"/>
+<defs>
+<filter id="filter0_ddd_10364_48291" x="7" y="8" width="22" height="22" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="0.5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_10364_48291"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="0.5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow_10364_48291" result="effect2_dropShadow_10364_48291"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="1"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"/>
+<feBlend mode="normal" in2="effect2_dropShadow_10364_48291" result="effect3_dropShadow_10364_48291"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect3_dropShadow_10364_48291" result="shape"/>
+</filter>
+</defs>
+</svg>
+`;

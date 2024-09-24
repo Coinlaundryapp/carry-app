@@ -64,9 +64,11 @@ import HomeMarkerIcon from './home_marker.svg';
 import UserCurrentMarkerIcon from './userCurrentMarker.svg';
 import MapBackIcon from './map_back.svg';
 import RateStaIcon from './RateStar.svg';
+import NoCoinList from './noCoinList.svg';
 
 export {
   ArrowDownIcon,
+  NoCoinList,
   SelectedMapMarkerIcon,
   UserCurrentMarkerIcon,
   MapBackIcon,

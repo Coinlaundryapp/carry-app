@@ -1,20 +1,19 @@
 'use client';
-
 import { useGeoLocation } from '@/hooks/useGeoLocation';
 import { useEffect, useRef, useState } from 'react';
-import { markerIconHtml, selectedMarkerIconHtml, homeMarkerIconHtml } from './marker';
-import { MapBackIcon, UserCurrentMarkerIcon } from '@assets/icons';
+import {
+  markerIconHtml,
+  selectedMarkerIconHtml,
+  homeMarkerIconHtml,
+  userMarkerIconHtml,
+} from './marker';
+import { IndicatorIcon, MapBackIcon, UserCurrentMarkerIcon } from '@assets/icons';
 import CoinlaundryDefault from '@/components/map/CoinlaundryDefault';
-import { Drawer, DrawerContent } from '@/components/share/ui/drawer';
-
-const DUMMY_LOCATION = [
-  { id: 1, lat: 37.442706, lng: 127.135862 },
-  { id: 2, lat: 37.45, lng: 127.14 },
-  { id: 3, lat: 37.44, lng: 127.13 },
-  { id: 4, lat: 37.445, lng: 127.133 },
-  { id: 5, lat: 37.438, lng: 127.138 },
-  { id: 6, lat: 37.4475, lng: 127.1375 },
-];
+import { useQuery } from '@tanstack/react-query';
+import { getLaundromats } from '@/api/mapApi';
+import { useSession } from 'next-auth/react';
+import Loading from '@/app/loading';
+import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
 
 export default function MapPage() {
   const { getLocation } = useGeoLocation();
@@ -23,7 +22,26 @@ export default function MapPage() {
   const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
   const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null); // 선택된 마커 ID 상태
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
+  const [isCurresntUser, setIsCurrentUser] = useState(false);
+  const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>({
+    lat: '37.6055942215336',
+    lng: '126.920904663729',
+  });
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const session = useSession();
+  const accessToken = session.data?.user?.accessToken;
+  console.log('좌ㅠㅛ', currentCenter);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['laundromats', currentCenter],
+    queryFn: () => getLaundromats(accessToken, currentCenter),
+    enabled: !!accessToken && !!currentCenter,
+  });
+
+  console.log('data', data);
 
   const initMap = async () => {
     const location = await getLocation();
@@ -32,95 +50,182 @@ export default function MapPage() {
       const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);
       userPositionRef.current = userPosition;
 
-      const offsetCenter = new naver.maps.LatLng(location.latitude - 0.05, location.longitude);
-      offsetCenterRef.current = offsetCenter;
+      const savedLocationString = localStorage.getItem('임시설정구역');
+
+      let offsetLocation;
+      if (savedLocationString) {
+        const savedLocation = JSON.parse(savedLocationString);
+        offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
+
+        offsetCenterRef.current = offsetLocation;
+      } else {
+        console.log('임시설정구역 데이터가 없습니다.');
+      }
+
+      // 배송지 또는 임시구역 장소
       const map = new naver.maps.Map('map', {
-        center: offsetCenter,
-        zoom: 12,
+        center: currentCenter,
+        zoom: zoomLevel, // 초기 줌 레벨 설정
         maxZoom: 17,
         minZoom: 11,
       });
 
       mapRef.current = map;
 
-      new naver.maps.Circle({
-        map: map,
-        center: userPosition,
-        radius: 3000,
-        strokeColor: '#00B4B2',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#ADE4E5',
-        fillOpacity: 0.5,
+      // 줌 레벨 변경을 추적하여 상태에 저장
+      naver.maps.Event.addListener(map, 'zoom_changed', () => {
+        setZoomLevel(map.getZoom());
+        // console.log('map.zoom', map.getZoom());
       });
 
-      DUMMY_LOCATION.forEach((loc) => {
-        const marker = new naver.maps.Marker({
-          position: new naver.maps.LatLng(loc.lat, loc.lng),
+      // **지도 중심 변경을 추적하여 상태에 저장**
+      naver.maps.Event.addListener(map, 'center_changed', () => {
+        const newCenter = map.getCenter();
+
+        setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
+      });
+
+      if (offsetLocation) {
+        new naver.maps.Circle({
+          map: map,
+          center: isCurresntUser ? userPosition : offsetLocation,
+          radius: 3000,
+          strokeColor: '#00B4B2',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#ADE4E5',
+          fillOpacity: 0.5,
+        });
+      }
+
+      data &&
+        data.forEach((loc) => {
+          const markerPosition = new naver.maps.LatLng(loc.latitude, loc.longitude); // 마커 위치 생성
+
+          const marker = new naver.maps.Marker({
+            position: markerPosition,
+            map: map,
+            icon: {
+              content: selectedMarkerId === loc.id ? selectedMarkerIconHtml : markerIconHtml,
+              size: new naver.maps.Size(32, 32),
+              anchor: new naver.maps.Point(16, 16),
+            },
+          });
+
+          naver.maps.Event.addListener(marker, 'click', (e) => {
+            setSelectedMarkerId(loc.id);
+            setOpen(true);
+            const selectedMarker = data.find((item) => item.id === loc.id);
+            setSelectedItem(selectedMarker);
+            console.log('선택된 마커 위치:', markerPosition.toString());
+          });
+        });
+
+      let offsetCenter;
+
+      if (offsetLocation) {
+        new naver.maps.Marker({
+          position: offsetLocation,
           map: map,
           icon: {
-            content: selectedMarkerId === loc.id ? selectedMarkerIconHtml : markerIconHtml,
+            content: homeMarkerIconHtml,
             size: new naver.maps.Size(32, 32),
             anchor: new naver.maps.Point(16, 16),
           },
+          zIndex: 50,
         });
-
-        naver.maps.Event.addListener(marker, 'click', () => {
-          setSelectedMarkerId(loc.id);
-        });
-      });
+      }
 
       new naver.maps.Marker({
         position: userPosition,
         map: map,
         icon: {
-          content: homeMarkerIconHtml,
+          content: userMarkerIconHtml,
           size: new naver.maps.Size(32, 32),
           anchor: new naver.maps.Point(16, 16),
         },
+        zIndex: 50,
       });
     } else {
       console.error('위치를 가져올 수 없습니다.');
     }
   };
 
-  console.log('setSelectedMarkerId', selectedMarkerId);
-
   const handleReturnToUserLocation = () => {
-    if (mapRef.current && offsetCenterRef.current) {
-      mapRef.current.setCenter(offsetCenterRef.current);
+    if (mapRef.current && userPositionRef.current) {
+      setCurrentCenter({
+        lat: userPositionRef.current.lat(),
+        lng: userPositionRef.current.lng(),
+      });
+
+      mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
     }
+    setIsCurrentUser(true);
   };
-  const handleReturnToAddressLocation = () => {};
+
+  const handleReturnToAddressLocation = () => {
+    if (mapRef.current && offsetCenterRef.current) {
+      setCurrentCenter({
+        lat: offsetCenterRef.current.lat(),
+        lng: offsetCenterRef.current.lng(),
+      });
+
+      mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
+    }
+    setIsCurrentUser(false);
+  };
 
   useEffect(() => {
+    const temporaryLocation = {
+      lat: 37.6055942215336,
+      lng: 126.920904663729,
+    };
+
+    // JSON 형태로 좌표를 로컬스토리지에 저장
+    localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
+
     initMap(); // 지도는 처음 로드될 때만 초기화
-  }, [selectedMarkerId]); // 빈 배열을 전달하여 처음에만 실행
+  }, [selectedMarkerId, zoomLevel, data, currentCenter]); // 줌 레벨 상태 추적
+
+  if (isLoading && !!data) {
+    return <Loading />;
+  }
 
   return (
     <div className="w-full">
-      <div id="map" className="h-[100vh] w-full"></div>
+      <div id="map" className="h-[57vh] w-full"></div>
+      <div
+        className={`fixed inset-x-0 bottom-0 mx-auto max-w-[600px] rounded-t-3xl bg-white transition-transform duration-500 ease-in-out ${
+          true ? 'translate-y-0' : 'translate-y-full'
+        } `}
+      >
+        <div className="h-full overflow-y-auto">
+          <div className="mx-auto flex items-center justify-center py-1">
+            <IndicatorIcon />
+          </div>
 
-      {/* <div className="absolute bottom-0 left-0 z-50 w-full bg-red-400"> */}
-      <div className="relative">
-        <Drawer open={open} onOpenChange={setOpen} scrollLockTimeout={3000} closable={false}>
-          <DrawerContent showIndicator={true} shouldShowOverlay={false} className="max-h-[52vh]">
-            <button onClick={handleReturnToUserLocation} className="absolute left-4 top-[-56px]">
+          <div className="mt-1 text-center">
+            <button
+              onClick={handleReturnToUserLocation}
+              className="z-70 absolute bottom-[100%] left-4"
+            >
               <UserCurrentMarkerIcon />
             </button>
             <button
               onClick={handleReturnToAddressLocation}
-              className="font_label_1_normal absolute left-1/2 top-[-53px] flex -translate-x-1/2 transform items-center gap-2 rounded-xl bg-white p-2"
+              className="font_label_1_normal absolute left-1/2 top-[-50px] flex -translate-x-1/2 transform items-center gap-2 rounded-xl bg-white p-2"
             >
               <MapBackIcon /> 배송지로 이동하기
             </button>
 
-            <CoinlaundryDefault open={open} type="all" />
-          </DrawerContent>
-        </Drawer>
+            {open ? (
+              <CoinlaundrySelectedItem data={selectedItem} />
+            ) : (
+              <CoinlaundryDefault data={data} />
+            )}
+          </div>
+        </div>
       </div>
-
-      {/* </div> */}
     </div>
   );
 }

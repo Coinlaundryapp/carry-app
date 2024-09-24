@@ -7,7 +7,7 @@ type TProps = {
 
 function Loading({ text }: TProps) {
   return (
-    <div className="mx-auto flex h-dvh max-w-[600px] flex-col items-center justify-center gap-3 bg-white">
+    <div className="mx-auto flex h-dvh max-w-[480px] flex-col items-center justify-center gap-3 bg-white">
       <FramIcon />
       <CarIcon />
       <div className="flex flex-col items-center justify-center">

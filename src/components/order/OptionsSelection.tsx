@@ -7,7 +7,6 @@ type OptionType = 'laundryOptions' | 'washOptions' | 'dryOptions';
 const serviceOptions = [
   {
     name: '세탁 + 건조',
-    price: '8,500원~',
     icon: (
       <div className="flex gap-1">
         <WaterIcon />
@@ -18,13 +17,11 @@ const serviceOptions = [
   },
   {
     name: '건조만',
-    price: '4,000원~',
     icon: <DryIcon />,
     value: 'dry-only',
   },
   {
     name: '세탁만',
-    price: '5,000원~',
     icon: <WaterIcon />,
     value: 'wash-only',
   },

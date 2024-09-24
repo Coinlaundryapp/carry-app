@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils';
 import { IndicatorIcon } from '@assets/icons';
 
 const Drawer = ({
-  shouldScaleBackground = true,
+  shouldScaleBackground = false,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} noBodyStyles {...props} />
 );
 Drawer.displayName = 'Drawer';
 
@@ -46,7 +46,7 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 mx-auto mt-24 flex h-auto max-w-[600px] flex-col rounded-xl bg-background focus:outline-none',
+        'fixed inset-x-0 bottom-0 z-50 mx-auto mt-24 flex h-auto max-w-[480px] flex-col rounded-xl bg-background focus:outline-none',
         className,
       )}
       {...props}

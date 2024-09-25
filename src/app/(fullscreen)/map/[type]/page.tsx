@@ -7,14 +7,21 @@ import {
   homeMarkerIconHtml,
   userMarkerIconHtml,
 } from './marker';
-import { IndicatorIcon, MapBackIcon, UserCurrentMarkerIcon } from '@assets/icons';
+import {
+  GuidWashIcon,
+  GuideDrayerIcon,
+  GuideSneakerIcon,
+  IndicatorIcon,
+  MapBackIcon,
+  UserCurrentMarkerIcon,
+} from '@assets/icons';
 import CoinlaundryDefault from '@/components/map/CoinlaundryDefault';
 import { useQuery } from '@tanstack/react-query';
 import { getLaundromats } from '@/api/mapApi';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/loading';
 import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function MapPage() {
   const { getLocation } = useGeoLocation();
@@ -73,7 +80,6 @@ export default function MapPage() {
         offsetCenterRef.current = offsetLocation;
       } else {
         router.back();
-        // console.log('임시설정구역 데이터가 없습니다.');
       }
 
       // 배송지 또는 임시구역 장소
@@ -133,7 +139,6 @@ export default function MapPage() {
             setOpen(true);
             const selectedMarker = data.find((item: any) => item.id === loc.id);
             setSelectedItem(selectedMarker);
-            // console.log('선택된 마커 위치:', markerPosition.toString());
           });
         });
 
@@ -200,7 +205,7 @@ export default function MapPage() {
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
     initMap(); // 지도는 처음 로드될 때만 초기화
-  }, [selectedMarkerId, isCurresntUser, currentCenter, data]); // 줌 레벨 상태 추적
+  }, [selectedMarkerId, isCurresntUser, currentCenter, data]);
 
   if (!currentCenter) {
   }
@@ -220,6 +225,21 @@ export default function MapPage() {
         <div className="h-full overflow-y-auto">
           <div className="mx-auto flex items-center justify-center py-1">
             <IndicatorIcon />
+          </div>
+          <div className="mr-5 flex justify-end gap-2">
+            <div className="flex items-center gap-0.5">
+              <GuidWashIcon />
+              <span className="font_caption_1">세탁기</span>
+            </div>
+
+            <div className="flex items-center gap-0.5">
+              <GuideDrayerIcon />
+              <span className="font_caption_1">세탁기</span>
+            </div>
+            <div className="flex items-center gap-0.5">
+              <GuideSneakerIcon />
+              <span className="font_caption_1">세탁기</span>
+            </div>
           </div>
           <div className="mt-1 text-center">
             <button

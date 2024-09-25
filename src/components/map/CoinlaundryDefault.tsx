@@ -24,10 +24,12 @@ function CoinlaundryDefault({ data }: Props) {
       {data &&
         data.map((item: any) => {
           return (
-            <div key={item.id} className="mb-4.5 mx-5 mt-4 border-b border-line-normal">
+            <div key={item.id} className="mb-4.5 mx-5 mt-2 border-b border-line-normal">
               <div className="flex justify-between">
                 <div className="mb-2 flex items-center justify-start gap-2">
-                  <h3 className="font_headline_2">{item.name}</h3>
+                  <h3 className="font_headline_2">
+                    {item.name.length > 8 ? `${item.name.slice(0, 10)}...` : item.name}
+                  </h3>
                   <div className="font_caption_1 text-label-alternative">
                     {Math.round(item.distance)}km
                   </div>
@@ -40,18 +42,14 @@ function CoinlaundryDefault({ data }: Props) {
 
                     return (
                       <div key={option}>
-                        <Tag
-                          className="font_caption_1"
-                          label={optionsStatus.text}
-                          color={optionsStatus.color}
-                        />
+                        <optionsStatus.component />
                       </div>
                     );
                   })}
                 </div>
               </div>
 
-              <div className="mb-1 flex items-center gap-1">
+              <div className="flex items-center gap-1">
                 <div className="flex items-center gap-1">
                   <RateStaIcon />
                   <span className="font_label_2 text-label-neutral">

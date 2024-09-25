@@ -15,14 +15,17 @@ function CoinlaundrySelectedItem({ data }: Props) {
 
   return (
     <div className="overflow-y-auto">
-      <div key={data.id} className="mx-5 mt-4">
+      <div key={data.id} className="mx-5 mt-2">
         <div className="flex justify-between">
           <div className="mb-2 flex items-center justify-start gap-2">
-            <h3 className="font_headline_2">{data.name}</h3>
+            <h3 className="font_headline_2 text-start">{data.name}</h3>
             <div className="font_caption_1 text-label-alternative">
               {Math.round(data.distance)}km
             </div>
           </div>
+        </div>
+        <div className="mb-1 flex items-center justify-between">
+          <div className="font_label_1_reading text-label-alternative">{data.address}</div>
           <div className="flex gap-1">
             {data.options.map((option: string) => {
               const optionstatus = KINDS_STATUS.find((status) => status.id === option);
@@ -31,11 +34,7 @@ function CoinlaundrySelectedItem({ data }: Props) {
 
               return (
                 <div key={option}>
-                  <Tag
-                    className="font_caption_1"
-                    label={optionstatus.text}
-                    color={optionstatus.color}
-                  />
+                  <optionstatus.component />
                 </div>
               );
             })}

@@ -71,11 +71,22 @@ import UserCurrentMarkerIcon from './userCurrentMarker.svg';
 import MapBackIcon from './map_back.svg';
 import RateStaIcon from './RateStar.svg';
 import SelectedCurrentUser from './SelectedCurrentUser.svg';
-
+import WashIcon from './wash.svg';
+import DrayerIcon from './drayer.svg';
+import SneakerIcon from './sneaker.svg';
+import GuidWashIcon from './guide-wash.svg';
+import GuideDrayerIcon from './guide-drayer.svg';
+import GuideSneakerIcon from './guide-sneaker.svg';
 export {
   ArrowDownIcon,
+  GuidWashIcon,
+  GuideDrayerIcon,
+  GuideSneakerIcon,
   SelectedCurrentUser,
   NoCoinList,
+  WashIcon,
+  SneakerIcon,
+  DrayerIcon,
   SelectedMapMarkerIcon,
   UserCurrentMarkerIcon,
   MapBackIcon,

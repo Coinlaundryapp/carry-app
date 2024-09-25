@@ -69,6 +69,19 @@ export default function MapPage() {
     return offsetLocation;
   };
 
+  const isMarkerCoveredByBottomSheet = (markerPosition: naver.maps.LatLng, map: naver.maps.Map) => {
+    // 지도 projection 객체로 화면 픽셀 좌표로 변환
+    const projection = map.getProjection();
+    const markerPoint = projection.fromCoordToOffset(markerPosition);
+
+    // 바텀시트의 y축 위치 및 높이 정의 (예시로 50vh 높이 가정)
+    const bottomSheetHeight = window.innerHeight * 0.5; // 바텀시트가 50vh일 경우
+    const bottomSheetTop = window.innerHeight - bottomSheetHeight;
+
+    // 마커가 바텀시트 영역 아래에 있으면 true 반환
+    return markerPoint.y > bottomSheetTop;
+  };
+
   useEffect(() => {
     const offsetLocation = getLocationFromLocalStorage();
   }, []);
@@ -164,7 +177,7 @@ export default function MapPage() {
         });
 
       if (offsetLocation) {
-        new naver.maps.Marker({
+        const offsetMarker = new naver.maps.Marker({
           position: offsetLocation,
           map: map,
           icon: {
@@ -192,14 +205,18 @@ export default function MapPage() {
   };
 
   const checkOffsetMarkerVisibility = (map: naver.maps.Map) => {
-    const bounds = map.getBounds();
+    if (userPositionRef.current) {
+      const bounds = map.getBounds();
+      const isVisibleUser = bounds.hasPoint(userPositionRef.current);
 
-    // if (userPositionRef.current) {
-    //   const isVisibleUser = bounds.hasPoint(userPositionRef.current);
-    //   setIsUserMarkerVisible(isVisibleUser);
-    // }
+      setIsUserMarkerVisible(isVisibleUser);
+    }
+
     if (offsetCenterRef.current) {
+      const bounds = map.getBounds();
       const isVisible = bounds.hasPoint(offsetCenterRef.current); // offset 마커가 현재 보이는지 체크
+      const isCoveredByBottomSheet = isMarkerCoveredByBottomSheet(offsetCenterRef.current, map); // 바텀시트에 의해 가려졌는지 체크
+
       setIsOffsetMarkerVisible(isVisible); // 가시성 상태 업데이트
     }
   };
@@ -214,6 +231,7 @@ export default function MapPage() {
       mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
     }
     setIsUserMarkerVisible(true);
+    setIsOffsetMarkerVisible(false);
   };
 
   const handleReturnToAddressLocation = () => {
@@ -226,6 +244,7 @@ export default function MapPage() {
       mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
     }
     setIsUserMarkerVisible(false);
+    setIsOffsetMarkerVisible(true);
   };
 
   useEffect(() => {
@@ -239,7 +258,7 @@ export default function MapPage() {
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
     initMap(); // 지도는 처음 로드될 때만 초기화
-  }, [selectedMarkerId, isUserMarkerVisible, currentCenter, data]);
+  }, [selectedMarkerId, currentCenter, data]);
 
   const handleSelectedAddress = (addressId: string) => {
     setSelectedMarkerId(addressId);
@@ -254,7 +273,7 @@ export default function MapPage() {
     }
     if (selectedMarkerId) {
       setSelectedMarkerId('');
-      const offsetLocation = getLocationFromLocalStorage(); // 함수 호출
+      getLocationFromLocalStorage(); // 함수 호출
       setOpen(false);
       setZoomLevel(12);
     }

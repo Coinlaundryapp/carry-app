@@ -13,7 +13,6 @@ type Props = {
 const dummyImages = new Array(3).fill('./Rectangle 1946.svg');
 
 function CoinlaundrySelectedItem({ data, type = 'map' }: Props) {
-  console.log('데이터', data);
   return (
     <div className="overflow-y-auto">
       <div key={data.id} className="mx-5 mt-4">

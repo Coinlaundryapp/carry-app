@@ -2,17 +2,14 @@
 import { RateStaIcon } from '@assets/icons';
 import { NoCoinList } from '@assets/icons';
 import Tag from '../share/Tag/Tag';
-import clax from 'clsx';
 import { KINDS_STATUS } from '@/constants/map';
 import Image from 'next/image';
 
 type Props = {
   data: any;
-
-  type?: 'map' | 'order';
 };
 
-function CoinlaundryDefault({ data, type = 'map' }: Props) {
+function CoinlaundryDefault({ data }: Props) {
   if (data && data.length === 0) {
     return (
       <div className={`flex h-[46vh] items-center justify-center`}>
@@ -26,7 +23,6 @@ function CoinlaundryDefault({ data, type = 'map' }: Props) {
     >
       {data &&
         data.map((item: any) => {
-          // console.log('hihihih', item.mediaResources[0].mediaUrl);
           return (
             <div key={item.id} className="mb-4.5 mx-5 mt-4 border-b border-line-normal">
               <div className="flex justify-between">
@@ -65,12 +61,7 @@ function CoinlaundryDefault({ data, type = 'map' }: Props) {
                 <span className="font_label_2 text-label-neutral"> • 리뷰{item.reviewCount}개</span>
               </div>
 
-              <div
-                className={clax(
-                  'mb-4 flex justify-between',
-                  type === 'map' ? 'items-center' : 'flex-col items-start gap-5',
-                )}
-              >
+              <div className="mb-4 flex items-center justify-between">
                 <div>
                   <div className="mb-1 flex items-center gap-2">
                     <span className="font_caption_1 text-primary-normal">

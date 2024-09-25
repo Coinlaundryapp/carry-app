@@ -1,5 +1,4 @@
 import { RateStaIcon } from '@assets/icons';
-import DummyImage from './Rectangle 1946.svg';
 import Image from 'next/image';
 import Tag from '../share/Tag/Tag';
 import { KINDS_STATUS } from '@/constants/map';

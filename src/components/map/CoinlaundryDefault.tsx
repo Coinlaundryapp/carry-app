@@ -83,8 +83,21 @@ function CoinlaundryDefault({ data, type = 'map' }: Props) {
                     <div className="font_label_1_normal">배송비 {item.delivery}원</div>
                   </div>
                 </div>
-                <img src="https://github.com/user-attachments/assets/2a9ed189-74a7-48aa-a9a3-39aaf8f270a5" />
-                {/* <img alt="" src={item.mediaResources[0]?.mediaUrl} /> */}
+
+                {item.mediaResources.length !== 0 && (
+                  <div className="relative">
+                    <Image
+                      className="rounded-sm"
+                      alt={'Image description'}
+                      src={item.mediaResources[0]?.mediaUrl}
+                      width={60}
+                      height={60}
+                    />
+                    <div className="absolute bottom-1 right-1 flex h-4 w-2 items-center justify-center rounded-sm bg-[#171719] bg-opacity-50 p-2">
+                      <span className="text-sm text-white">{item.mediaResources.length}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           );

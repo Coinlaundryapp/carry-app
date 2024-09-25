@@ -43,6 +43,22 @@ export default function MapPage() {
 
   console.log('data', data);
 
+  useEffect(() => {
+    const savedLocationString = localStorage.getItem('임시설정구역');
+    const deliveryLocationString = localStorage.getItem('배송지');
+    let offsetLocation;
+
+    if (deliveryLocationString) {
+      const deliveryLocation = JSON.parse(deliveryLocationString);
+      offsetLocation = new naver.maps.LatLng(deliveryLocation.lat, deliveryLocation.lng);
+      setCurrentCenter({ lat: deliveryLocation.lat, lng: deliveryLocation.lng });
+    } else if (savedLocationString) {
+      const savedLocation = JSON.parse(savedLocationString);
+      offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
+      setCurrentCenter({ lat: savedLocation.lat, lng: savedLocation.lng });
+    }
+  }, []);
+
   const initMap = async () => {
     const location = await getLocation();
 
@@ -69,6 +85,7 @@ export default function MapPage() {
         maxZoom: 17,
         minZoom: 11,
       });
+      map.panBy({ x: 0, y: 200 });
 
       mapRef.current = map;
 
@@ -185,13 +202,16 @@ export default function MapPage() {
     initMap(); // 지도는 처음 로드될 때만 초기화
   }, [selectedMarkerId, zoomLevel, data, currentCenter]); // 줌 레벨 상태 추적
 
+  if (!currentCenter) {
+  }
+
   if (isLoading && !!data) {
     return <Loading />;
   }
 
   return (
     <div className="w-full">
-      <div id="map" className="h-[57vh] w-full"></div>
+      <div id="map" className="h-[100vh] w-full"></div>
       <div
         className={`fixed inset-x-0 bottom-0 mx-auto max-w-[600px] rounded-t-3xl bg-white transition-transform duration-500 ease-in-out ${
           true ? 'translate-y-0' : 'translate-y-full'

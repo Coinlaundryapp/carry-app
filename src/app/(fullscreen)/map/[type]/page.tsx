@@ -8,6 +8,7 @@ import {
   userMarkerIconHtml,
 } from './marker';
 import {
+  ArrowLeftIcon,
   GuidWashIcon,
   GuideDrayerIcon,
   GuideSneakerIcon,
@@ -29,7 +30,7 @@ export default function MapPage() {
   const userPositionRef = useRef<naver.maps.LatLng | null>(null);
   const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
-  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null); // 선택된 마커 ID 상태
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string>(''); // 선택된 마커 ID 상태
   const [open, setOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
   const [isCurresntUser, setIsCurrentUser] = useState(false);
@@ -51,8 +52,8 @@ export default function MapPage() {
   useEffect(() => {
     const savedLocationString = localStorage.getItem('임시설정구역');
     const deliveryLocationString = localStorage.getItem('배송지');
-    let offsetLocation;
 
+    let offsetLocation;
     if (deliveryLocationString) {
       const deliveryLocation = JSON.parse(deliveryLocationString);
       offsetLocation = new naver.maps.LatLng(deliveryLocation.lat, deliveryLocation.lng);
@@ -231,13 +232,40 @@ export default function MapPage() {
     setOpen(false);
   };
 
+  const handleBackClick = () => {
+    if (selectedMarkerId) {
+      const savedLocationString = localStorage.getItem('임시설정구역');
+      const deliveryLocationString = localStorage.getItem('배송지');
+      setSelectedMarkerId('');
+
+      let offsetLocation;
+      if (deliveryLocationString) {
+        const deliveryLocation = JSON.parse(deliveryLocationString);
+        offsetLocation = new naver.maps.LatLng(deliveryLocation.lat, deliveryLocation.lng);
+        setCurrentCenter({ lat: deliveryLocation.lat, lng: deliveryLocation.lng });
+      } else if (savedLocationString) {
+        const savedLocation = JSON.parse(savedLocationString);
+        offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
+        setCurrentCenter({ lat: savedLocation.lat, lng: savedLocation.lng });
+      }
+      setOpen(false);
+      setZoomLevel(12);
+    } else {
+      router.back();
+    }
+  };
+
   if ((isLoading && !!data) || !currentCenter) {
     return <Loading />;
   }
 
   return (
     <div className="w-full">
-      <div id="map" className="h-[100vh] w-full"></div>
+      <div id="map" className="relative h-[100vh] w-full">
+        <div className="absolute left-4 top-4 z-40" onClick={handleBackClick}>
+          <ArrowLeftIcon />
+        </div>
+      </div>
       <div
         className={`fixed inset-x-0 bottom-0 mx-auto max-w-[480px] rounded-t-3xl bg-white transition-transform duration-500 ease-in-out ${
           true ? 'translate-y-0' : 'translate-y-full'

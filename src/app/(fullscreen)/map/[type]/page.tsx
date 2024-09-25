@@ -14,6 +14,7 @@ import { getLaundromats } from '@/api/mapApi';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/loading';
 import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function MapPage() {
   const { getLocation } = useGeoLocation();
@@ -30,6 +31,8 @@ export default function MapPage() {
 
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
+
+  const router = useRouter();
 
   const { data, isLoading } = useQuery({
     queryKey: ['laundromats', currentCenter],
@@ -69,7 +72,8 @@ export default function MapPage() {
 
         offsetCenterRef.current = offsetLocation;
       } else {
-        console.log('임시설정구역 데이터가 없습니다.');
+        router.back();
+        // console.log('임시설정구역 데이터가 없습니다.');
       }
 
       // 배송지 또는 임시구역 장소
@@ -129,7 +133,7 @@ export default function MapPage() {
             setOpen(true);
             const selectedMarker = data.find((item: any) => item.id === loc.id);
             setSelectedItem(selectedMarker);
-            console.log('선택된 마커 위치:', markerPosition.toString());
+            // console.log('선택된 마커 위치:', markerPosition.toString());
           });
         });
 

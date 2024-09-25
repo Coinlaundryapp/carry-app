@@ -2,7 +2,7 @@ import { RateStaIcon } from '@assets/icons';
 import Image from 'next/image';
 import Tag from '../share/Tag/Tag';
 import { KINDS_STATUS } from '@/constants/map';
-import MyImageComponent from '../share/ImageComponent';
+import { useParams } from 'next/navigation';
 
 type Props = {
   data: any;
@@ -10,9 +10,9 @@ type Props = {
   type?: 'map' | 'order';
 };
 
-const dummyImages = new Array(3).fill('./Rectangle 1946.svg');
+function CoinlaundrySelectedItem({ data }: Props) {
+  const { type } = useParams();
 
-function CoinlaundrySelectedItem({ data, type = 'map' }: Props) {
   return (
     <div className="overflow-y-auto">
       <div key={data.id} className="mx-5 mt-4">
@@ -64,26 +64,29 @@ function CoinlaundrySelectedItem({ data, type = 'map' }: Props) {
             </div>
           </div>
 
-          <div className="b flex w-full justify-between">
-            {dummyImages.map((src, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 cursor-pointer"
-                style={{ width: 'calc(33.33% - 8px)' }}
-              >
-                {data.length !== 0 && (
-                  // <MyImageComponent imageUrl={data.mediaResources[0]?.mediaUrl} />
+          <div className="flex w-full justify-between">
+            {data.mediaResources.length !== 0 &&
+              data.mediaResources.map(({ mediaUrl }: { mediaUrl: string }) => (
+                <div
+                  key={mediaUrl}
+                  className="flex-shrink-0 cursor-pointer"
+                  style={{ width: 'calc(33.33% - 8px)' }}
+                >
                   <Image
                     className="rounded-sm"
                     alt={'Image description'}
-                    src={data.mediaResources[0]?.mediaUrl}
+                    src={mediaUrl}
                     width={112}
                     height={96}
                   />
-                )}
-              </div>
-            ))}
+                </div>
+              ))}
           </div>
+          {type === 'order' && (
+            <button className="font-font_body_1_normal mb-5 h-[52px] w-full rounded-md bg-primary-normal text-white">
+              선택
+            </button>
+          )}
         </div>
       </div>
     </div>

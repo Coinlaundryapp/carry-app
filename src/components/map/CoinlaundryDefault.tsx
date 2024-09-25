@@ -1,7 +1,6 @@
 'use client';
 import { RateStaIcon } from '@assets/icons';
 import { NoCoinList } from '@assets/icons';
-import Tag from '../share/Tag/Tag';
 import { KINDS_STATUS } from '@/constants/map';
 import Image from 'next/image';
 

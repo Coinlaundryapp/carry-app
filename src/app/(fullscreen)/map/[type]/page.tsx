@@ -22,7 +22,7 @@ import { getLaundromats } from '@/api/mapApi';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/loading';
 import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function MapPage() {
   const { getLocation } = useGeoLocation();
@@ -40,7 +40,7 @@ export default function MapPage() {
 
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
-
+  const { type } = useParams();
   const router = useRouter();
 
   const { data, isLoading } = useQuery({
@@ -67,6 +67,11 @@ export default function MapPage() {
 
   const initMap = async () => {
     const location = await getLocation();
+
+    if (type === 'order' && data) {
+      setSelectedMarkerId(data[0].id);
+      setSelectedItem(data[0]);
+    }
 
     if (location) {
       const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);
@@ -109,8 +114,8 @@ export default function MapPage() {
       // });
 
       naver.maps.Event.addListener(map, 'dragend', () => {
-        const newCenter = map.getCenter();
-        // setCurrentCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+        // const newCenter = map.getCenter();
+        // // setCurrentCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
         checkOffsetMarkerVisibility(map); // 드래그 후 오프셋 마커의 가시성 체크
       });
 
@@ -139,7 +144,7 @@ export default function MapPage() {
               size: new naver.maps.Size(32, 32),
               anchor: new naver.maps.Point(16, 16),
             },
-            zIndex: 40,
+            zIndex: selectedMarkerId === loc.id ? 60 : 0,
           });
 
           naver.maps.Event.addListener(marker, 'click', (e) => {
@@ -233,6 +238,9 @@ export default function MapPage() {
   };
 
   const handleBackClick = () => {
+    if (type === 'order') {
+      return router.back();
+    }
     if (selectedMarkerId) {
       const savedLocationString = localStorage.getItem('임시설정구역');
       const deliveryLocationString = localStorage.getItem('배송지');

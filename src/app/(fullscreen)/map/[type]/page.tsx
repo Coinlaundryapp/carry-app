@@ -15,6 +15,7 @@ import {
   IndicatorIcon,
   MapBackIcon,
   UserCurrentMarkerIcon,
+  SelectedCurrentUser,
 } from '@assets/icons';
 import CoinlaundryDefault from '@/components/map/CoinlaundryDefault';
 import { useQuery } from '@tanstack/react-query';
@@ -33,10 +34,10 @@ export default function MapPage() {
   const [selectedMarkerId, setSelectedMarkerId] = useState<string>(''); // 선택된 마커 ID 상태
   const [open, setOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
-  const [isCurresntUser, setIsCurrentUser] = useState(false);
   const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
+  const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
 
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
@@ -49,7 +50,8 @@ export default function MapPage() {
     enabled: !!accessToken && !!currentCenter,
   });
 
-  useEffect(() => {
+  // 배송지 또는 임시 설정 구역을 가져오는 함수
+  const getLocationFromLocalStorage = () => {
     const savedLocationString = localStorage.getItem('임시설정구역');
     const deliveryLocationString = localStorage.getItem('배송지');
 
@@ -63,6 +65,12 @@ export default function MapPage() {
       offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
       setCurrentCenter({ lat: savedLocation.lat, lng: savedLocation.lng });
     }
+
+    return offsetLocation;
+  };
+
+  useEffect(() => {
+    const offsetLocation = getLocationFromLocalStorage();
   }, []);
 
   const initMap = async () => {
@@ -122,7 +130,7 @@ export default function MapPage() {
       if (offsetLocation) {
         new naver.maps.Circle({
           map: map,
-          center: isCurresntUser ? userPosition : offsetLocation,
+          center: isUserMarkerVisible ? userPosition : offsetLocation,
           radius: 3000,
           strokeColor: '#00B4B2',
           strokeOpacity: 0.8,
@@ -184,10 +192,14 @@ export default function MapPage() {
   };
 
   const checkOffsetMarkerVisibility = (map: naver.maps.Map) => {
-    if (offsetCenterRef.current) {
-      const bounds = map.getBounds(); // 현재 지도에서 보이는 영역의 좌표
-      const isVisible = bounds.hasPoint(offsetCenterRef.current); // offset 마커가 현재 보이는지 체크
+    const bounds = map.getBounds();
 
+    // if (userPositionRef.current) {
+    //   const isVisibleUser = bounds.hasPoint(userPositionRef.current);
+    //   setIsUserMarkerVisible(isVisibleUser);
+    // }
+    if (offsetCenterRef.current) {
+      const isVisible = bounds.hasPoint(offsetCenterRef.current); // offset 마커가 현재 보이는지 체크
       setIsOffsetMarkerVisible(isVisible); // 가시성 상태 업데이트
     }
   };
@@ -201,12 +213,11 @@ export default function MapPage() {
 
       mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
     }
-    setIsCurrentUser(true);
+    setIsUserMarkerVisible(true);
   };
 
   const handleReturnToAddressLocation = () => {
     if (mapRef.current && offsetCenterRef.current) {
-      console.log('머냐', offsetCenterRef.current);
       setCurrentCenter({
         lat: offsetCenterRef.current.lat(),
         lng: offsetCenterRef.current.lng(),
@@ -214,7 +225,7 @@ export default function MapPage() {
 
       mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
     }
-    setIsCurrentUser(false);
+    setIsUserMarkerVisible(false);
   };
 
   useEffect(() => {
@@ -228,7 +239,7 @@ export default function MapPage() {
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
     initMap(); // 지도는 처음 로드될 때만 초기화
-  }, [selectedMarkerId, isCurresntUser, currentCenter, data]);
+  }, [selectedMarkerId, isUserMarkerVisible, currentCenter, data]);
 
   const handleSelectedAddress = (addressId: string) => {
     setSelectedMarkerId(addressId);
@@ -238,28 +249,14 @@ export default function MapPage() {
   };
 
   const handleBackClick = () => {
-    if (type === 'order') {
+    if (type === 'order' || !selectedMarkerId) {
       return router.back();
     }
     if (selectedMarkerId) {
-      const savedLocationString = localStorage.getItem('임시설정구역');
-      const deliveryLocationString = localStorage.getItem('배송지');
       setSelectedMarkerId('');
-
-      let offsetLocation;
-      if (deliveryLocationString) {
-        const deliveryLocation = JSON.parse(deliveryLocationString);
-        offsetLocation = new naver.maps.LatLng(deliveryLocation.lat, deliveryLocation.lng);
-        setCurrentCenter({ lat: deliveryLocation.lat, lng: deliveryLocation.lng });
-      } else if (savedLocationString) {
-        const savedLocation = JSON.parse(savedLocationString);
-        offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
-        setCurrentCenter({ lat: savedLocation.lat, lng: savedLocation.lng });
-      }
+      const offsetLocation = getLocationFromLocalStorage(); // 함수 호출
       setOpen(false);
       setZoomLevel(12);
-    } else {
-      router.back();
     }
   };
 
@@ -303,7 +300,7 @@ export default function MapPage() {
               onClick={handleReturnToUserLocation}
               className="z-70 absolute bottom-[100%] left-4"
             >
-              <UserCurrentMarkerIcon />
+              {isUserMarkerVisible ? <SelectedCurrentUser /> : <UserCurrentMarkerIcon />}
             </button>
             {!isOffsetMarkerVisible && (
               <button

@@ -35,6 +35,7 @@ export default function MapPage() {
   const [isCurresntUser, setIsCurrentUser] = useState(false);
   const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>(null);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
 
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
@@ -97,7 +98,6 @@ export default function MapPage() {
       // 줌 레벨 변경을 추적하여 상태에 저장
       naver.maps.Event.addListener(map, 'zoom_changed', () => {
         setZoomLevel(map.getZoom());
-        // console.log('map.zoom', map.getZoom());
       });
 
       // **지도 중심 변경을 추적하여 상태에 저장**
@@ -106,6 +106,12 @@ export default function MapPage() {
 
       //   setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
       // });
+
+      naver.maps.Event.addListener(map, 'dragend', () => {
+        const newCenter = map.getCenter();
+        // setCurrentCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
+        checkOffsetMarkerVisibility(map); // 드래그 후 오프셋 마커의 가시성 체크
+      });
 
       if (offsetLocation) {
         new naver.maps.Circle({
@@ -171,6 +177,15 @@ export default function MapPage() {
     }
   };
 
+  const checkOffsetMarkerVisibility = (map: naver.maps.Map) => {
+    if (offsetCenterRef.current) {
+      const bounds = map.getBounds(); // 현재 지도에서 보이는 영역의 좌표
+      const isVisible = bounds.hasPoint(offsetCenterRef.current); // offset 마커가 현재 보이는지 체크
+
+      setIsOffsetMarkerVisible(isVisible); // 가시성 상태 업데이트
+    }
+  };
+
   const handleReturnToUserLocation = () => {
     if (mapRef.current && userPositionRef.current) {
       setCurrentCenter({
@@ -185,6 +200,7 @@ export default function MapPage() {
 
   const handleReturnToAddressLocation = () => {
     if (mapRef.current && offsetCenterRef.current) {
+      console.log('머냐', offsetCenterRef.current);
       setCurrentCenter({
         lat: offsetCenterRef.current.lat(),
         lng: offsetCenterRef.current.lng(),
@@ -193,7 +209,6 @@ export default function MapPage() {
       mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
     }
     setIsCurrentUser(false);
-    setOpen(false);
   };
 
   useEffect(() => {
@@ -213,13 +228,10 @@ export default function MapPage() {
     setSelectedMarkerId(addressId);
     const selectedMarker = data.find((item: any) => item.id === addressId);
     setSelectedItem(selectedMarker);
-    setOpen(true);
+    setOpen(false);
   };
 
-  if (!currentCenter) {
-  }
-
-  if (isLoading && !!data) {
+  if ((isLoading && !!data) || !currentCenter) {
     return <Loading />;
   }
 
@@ -257,12 +269,14 @@ export default function MapPage() {
             >
               <UserCurrentMarkerIcon />
             </button>
-            <button
-              onClick={handleReturnToAddressLocation}
-              className="font_label_1_normal absolute left-1/2 top-[-50px] flex -translate-x-1/2 transform items-center gap-2 rounded-xl bg-white p-2"
-            >
-              <MapBackIcon /> 배송지로 이동하기
-            </button>
+            {!isOffsetMarkerVisible && (
+              <button
+                onClick={handleReturnToAddressLocation}
+                className="font_label_1_normal absolute left-1/2 top-[-50px] flex -translate-x-1/2 transform items-center gap-2 rounded-xl bg-white p-2"
+              >
+                <MapBackIcon /> 배송지로 이동하기
+              </button>
+            )}
 
             {open ? (
               <CoinlaundrySelectedItem data={selectedItem} />

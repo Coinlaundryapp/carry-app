@@ -2,6 +2,8 @@ import { RateStaIcon } from '@assets/icons';
 import Image from 'next/image';
 import { KINDS_STATUS } from '@/constants/map';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
+import Test from './test.svg';
 
 type Props = {
   data: any;
@@ -11,9 +13,17 @@ type Props = {
 
 function CoinlaundrySelectedItem({ data }: Props) {
   const { type } = useParams();
+  const [expanded, setExpanded] = useState(false); // 클릭 시 height를 관리하는 상태
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded); // 클릭 시 height 토글
+  };
 
   return (
-    <div className="overflow-y-auto">
+    <div
+      className={`transition-all duration-300 ${expanded ? 'h-[50vh] overflow-y-auto' : 'h-auto'}`}
+      onClick={handleExpandClick}
+    >
       <div key={data.id} className="mx-5 mt-2">
         <div className="flex justify-between">
           <div className="mb-2 flex items-center justify-start gap-2">
@@ -80,6 +90,7 @@ function CoinlaundrySelectedItem({ data }: Props) {
                 </div>
               ))}
           </div>
+          {/* {expanded && <Test />} */}
           {type === 'order' && (
             <button className="font-font_body_1_normal mb-5 h-[52px] w-full rounded-md bg-primary-normal text-white">
               선택

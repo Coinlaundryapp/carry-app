@@ -1,6 +1,5 @@
 import { RateStaIcon } from '@assets/icons';
 import Image from 'next/image';
-import Tag from '../share/Tag/Tag';
 import { KINDS_STATUS } from '@/constants/map';
 import { useParams } from 'next/navigation';
 

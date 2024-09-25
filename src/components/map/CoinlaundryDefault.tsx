@@ -7,9 +7,10 @@ import Image from 'next/image';
 
 type Props = {
   data: any;
+  onSelectedAddress: (addressId: string) => void;
 };
 
-function CoinlaundryDefault({ data }: Props) {
+function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
   if (data && data.length === 0) {
     return (
       <div className={`flex h-[46vh] items-center justify-center`}>
@@ -24,7 +25,11 @@ function CoinlaundryDefault({ data }: Props) {
       {data &&
         data.map((item: any) => {
           return (
-            <div key={item.id} className="mb-4.5 mx-5 mt-2 border-b border-line-normal">
+            <div
+              onClick={() => onSelectedAddress(item.id)}
+              key={item.id}
+              className="mb-4.5 mx-5 mt-2 border-b border-line-normal"
+            >
               <div className="flex justify-between">
                 <div className="mb-2 flex items-center justify-start gap-2">
                   <h3 className="font_headline_2">

@@ -29,7 +29,7 @@ export default function MapPage() {
   const userPositionRef = useRef<naver.maps.LatLng | null>(null);
   const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
-  const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null); // 선택된 마커 ID 상태
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null); // 선택된 마커 ID 상태
   const [open, setOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
   const [isCurresntUser, setIsCurrentUser] = useState(false);
@@ -132,6 +132,7 @@ export default function MapPage() {
               size: new naver.maps.Size(32, 32),
               anchor: new naver.maps.Point(16, 16),
             },
+            zIndex: 40,
           });
 
           naver.maps.Event.addListener(marker, 'click', (e) => {
@@ -192,6 +193,7 @@ export default function MapPage() {
       mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
     }
     setIsCurrentUser(false);
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -206,6 +208,13 @@ export default function MapPage() {
 
     initMap(); // 지도는 처음 로드될 때만 초기화
   }, [selectedMarkerId, isCurresntUser, currentCenter, data]);
+
+  const handleSelectedAddress = (addressId: string) => {
+    setSelectedMarkerId(addressId);
+    const selectedMarker = data.find((item: any) => item.id === addressId);
+    setSelectedItem(selectedMarker);
+    setOpen(true);
+  };
 
   if (!currentCenter) {
   }
@@ -258,7 +267,7 @@ export default function MapPage() {
             {open ? (
               <CoinlaundrySelectedItem data={selectedItem} />
             ) : (
-              <CoinlaundryDefault data={data} />
+              <CoinlaundryDefault onSelectedAddress={handleSelectedAddress} data={data} />
             )}
           </div>
         </div>

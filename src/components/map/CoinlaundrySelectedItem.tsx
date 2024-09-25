@@ -4,6 +4,7 @@ import { KINDS_STATUS } from '@/constants/map';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import Test from './test.svg';
+import { useLaundromatStore } from '@/store/order-store';
 
 type Props = {
   data: any;
@@ -13,10 +14,16 @@ type Props = {
 
 function CoinlaundrySelectedItem({ data }: Props) {
   const { type } = useParams();
-  const [expanded, setExpanded] = useState(false); // 클릭 시 height를 관리하는 상태
+  const [expanded, setExpanded] = useState(false);
+
+  const { setSelectedLaundromat } = useLaundromatStore();
 
   const handleExpandClick = () => {
-    setExpanded(!expanded); // 클릭 시 height 토글
+    setExpanded(!expanded);
+  };
+
+  const handleSelectClick = () => {
+    setSelectedLaundromat(data); // 선택된 데이터를 zustand에 저장
   };
 
   return (
@@ -92,7 +99,10 @@ function CoinlaundrySelectedItem({ data }: Props) {
           </div>
           {/* {expanded && <Test />} */}
           {type === 'order' && (
-            <button className="font-font_body_1_normal mb-5 h-[52px] w-full rounded-md bg-primary-normal text-white">
+            <button
+              onClick={handleSelectClick}
+              className="font-font_body_1_normal mb-5 h-[52px] w-full rounded-md bg-primary-normal text-white"
+            >
               선택
             </button>
           )}

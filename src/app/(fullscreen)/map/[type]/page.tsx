@@ -92,6 +92,7 @@ export default function MapPage() {
     if (type === 'order' && data) {
       setSelectedMarkerId(data[0].id);
       setSelectedItem(data[0]);
+      setOpen(true);
     }
 
     if (location) {

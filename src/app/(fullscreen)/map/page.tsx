@@ -213,7 +213,7 @@ export default function MapPage() {
     <div className="w-full">
       <div id="map" className="h-[100vh] w-full"></div>
       <div
-        className={`fixed inset-x-0 bottom-0 mx-auto max-w-[600px] rounded-t-3xl bg-white transition-transform duration-500 ease-in-out ${
+        className={`fixed inset-x-0 bottom-0 mx-auto max-w-[480px] rounded-t-3xl bg-white transition-transform duration-500 ease-in-out ${
           true ? 'translate-y-0' : 'translate-y-full'
         } `}
       >

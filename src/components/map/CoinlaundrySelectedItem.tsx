@@ -1,7 +1,9 @@
 import { RateStaIcon } from '@assets/icons';
 import DummyImage from './Rectangle 1946.svg';
+import Image from 'next/image';
 import Tag from '../share/Tag/Tag';
 import { KINDS_STATUS } from '@/constants/map';
+import MyImageComponent from '../share/ImageComponent';
 
 type Props = {
   data: any;
@@ -71,8 +73,16 @@ function CoinlaundrySelectedItem({ data, type = 'map' }: Props) {
                 className="flex-shrink-0 cursor-pointer"
                 style={{ width: 'calc(33.33% - 8px)' }}
               >
-                {/* <img src={DummyImage} alt="Dummy" className="object-cover w-full h-full" /> */}
-                <DummyImage className="h-full w-full object-cover" />
+                {data.length !== 0 && (
+                  // <MyImageComponent imageUrl={data.mediaResources[0]?.mediaUrl} />
+                  <Image
+                    className="rounded-sm"
+                    alt={'Image description'}
+                    src={data.mediaResources[0]?.mediaUrl}
+                    width={112}
+                    height={96}
+                  />
+                )}
               </div>
             ))}
           </div>

@@ -25,23 +25,17 @@ export default function MapPage() {
   const [open, setOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
   const [isCurresntUser, setIsCurrentUser] = useState(false);
-  const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>({
-    lat: '37.6055942215336',
-    lng: '126.920904663729',
-  });
+  const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
-  console.log('좌ㅠㅛ', currentCenter);
 
   const { data, isLoading } = useQuery({
     queryKey: ['laundromats', currentCenter],
     queryFn: () => getLaundromats(accessToken, currentCenter),
     enabled: !!accessToken && !!currentCenter,
   });
-
-  console.log('data', data);
 
   useEffect(() => {
     const savedLocationString = localStorage.getItem('임시설정구역');
@@ -85,6 +79,7 @@ export default function MapPage() {
         maxZoom: 17,
         minZoom: 11,
       });
+
       map.panBy({ x: 0, y: 200 });
 
       mapRef.current = map;
@@ -96,11 +91,11 @@ export default function MapPage() {
       });
 
       // **지도 중심 변경을 추적하여 상태에 저장**
-      naver.maps.Event.addListener(map, 'center_changed', () => {
-        const newCenter = map.getCenter();
+      // naver.maps.Event.addListener(map, 'center_changed', () => {
+      //   const newCenter = map.getCenter();
 
-        setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
-      });
+      //   setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
+      // });
 
       if (offsetLocation) {
         new naver.maps.Circle({
@@ -191,6 +186,7 @@ export default function MapPage() {
   };
 
   useEffect(() => {
+    // 테스트용으로 해놓음 아직 임시저장 구역이 api가 안되어있음
     const temporaryLocation = {
       lat: 37.6055942215336,
       lng: 126.920904663729,
@@ -200,7 +196,7 @@ export default function MapPage() {
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
     initMap(); // 지도는 처음 로드될 때만 초기화
-  }, [selectedMarkerId, zoomLevel, data, currentCenter]); // 줌 레벨 상태 추적
+  }, [selectedMarkerId, isCurresntUser, currentCenter, data]); // 줌 레벨 상태 추적
 
   if (!currentCenter) {
   }

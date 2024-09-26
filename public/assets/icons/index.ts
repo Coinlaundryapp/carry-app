@@ -79,6 +79,7 @@ import GuideDrayerIcon from './guide-drayer.svg';
 import GuideSneakerIcon from './guide-sneaker.svg';
 import RightIcon from './right-icon.svg';
 
+
 export {
   ArrowDownIcon,
   GuidWashIcon,

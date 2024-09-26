@@ -8,10 +8,12 @@ interface OrderOptionsState {
   resetOptions: () => void;
 }
 
+
 type LaundromatState = {
   selectedLaundromat: any | null;
   setSelectedLaundromat: (data: any) => void;
 };
+
 
 const useOrderOptionsStore = create<OrderOptionsState>()(
   persist(
@@ -30,9 +32,11 @@ const useOrderOptionsStore = create<OrderOptionsState>()(
   ),
 );
 
+
 export const useLaundromatStore = create<LaundromatState>((set) => ({
   selectedLaundromat: null,
   setSelectedLaundromat: (data) => set({ selectedLaundromat: data }),
 }));
+
 
 export default useOrderOptionsStore;

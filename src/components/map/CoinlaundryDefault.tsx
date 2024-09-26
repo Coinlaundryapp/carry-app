@@ -17,6 +17,8 @@ function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
       </div>
     );
   }
+
+  const handleImageClick = () => {};
   return (
     <div
       className={`overflow-y-auto ${data && data.length > 2 ? 'h-[50vh] max-h-[50vh]' : 'max-h-auto'}`}
@@ -78,7 +80,7 @@ function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
                 </div>
 
                 {item.mediaResources.length !== 0 && (
-                  <div className="relative">
+                  <div className="relative cursor-pointer" onClick={handleImageClick}>
                     <Image
                       className="rounded-sm"
                       alt={'Image description'}

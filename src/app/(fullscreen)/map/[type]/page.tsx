@@ -53,7 +53,9 @@ export default function MapPage() {
     enabled: !!accessToken && !!currentCenter,
   });
 
-  // 배송지 또는 임시 설정 구역을 가져오는 함수
+  /**
+   * 배송지 또는 임시 설정 구역을 가져오는 함수
+   */
   const getLocationFromLocalStorage = () => {
     const savedLocationString = localStorage.getItem('임시설정구역');
     const deliveryLocationString = localStorage.getItem('배송지');
@@ -217,7 +219,7 @@ export default function MapPage() {
         lng: userPositionRef.current.lng(),
       });
 
-      mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
+      mapRef.current.setZoom(zoomLevel);
     }
     setIsUserMarkerVisible(true);
     setIsOffsetMarkerVisible(false);
@@ -230,7 +232,7 @@ export default function MapPage() {
         lng: offsetCenterRef.current.lng(),
       });
 
-      mapRef.current.setZoom(zoomLevel); // 현재 줌 레벨을 유지하면서 위치 변경
+      mapRef.current.setZoom(zoomLevel);
     }
     setIsUserMarkerVisible(false);
     setIsOffsetMarkerVisible(true);

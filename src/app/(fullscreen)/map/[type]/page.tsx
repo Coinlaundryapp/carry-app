@@ -35,7 +35,7 @@ export default function MapPage() {
   const [open, setOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
   const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
   const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
 
@@ -284,7 +284,9 @@ export default function MapPage() {
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    setStartY(e.touches[0].clientY);
+    if (selectedItem && selectedItem.reviewCount !== 0) {
+      setStartY(e.touches[0].clientY);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -318,12 +320,12 @@ export default function MapPage() {
           true ? 'translate-y-0' : 'translate-y-full'
         } `}
       >
-        <div
-          className="h-full overflow-y-auto"
-          onTouchStart={handleTouchStart} // Listen for touch start
-          onTouchMove={handleTouchMove}
-        >
-          <div className="mx-auto flex items-center justify-center py-1">
+        <div className="h-full overflow-y-auto">
+          <div
+            className="mx-auto flex items-center justify-center py-1"
+            onTouchStart={open ? handleTouchStart : undefined} // open이 true일 때만 handleTouchStart
+            onTouchMove={open ? handleTouchMove : undefined}
+          >
             <IndicatorIcon />
           </div>
           <div className="mr-5 flex justify-end gap-2">

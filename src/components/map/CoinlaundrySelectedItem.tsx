@@ -3,7 +3,7 @@ import { RateStaIcon, RightIcon } from '@assets/icons';
 import Image from 'next/image';
 import { KINDS_STATUS } from '@/constants/map';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLaundromatStore } from '@/store/order-store';
 import Review from './Review';
 
@@ -41,11 +41,24 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
     setSelectedLaundromat(data);
   };
 
+  const contentRef = useRef<HTMLDivElement>(null); // Ref for the content to measure its height
+
+  const dynamicHeight = expanded
+    ? data.reviewCount < 1
+      ? 'h-[60vh]'
+      : 'h-[78vh]'
+    : data.mediaResources.length === 0
+      ? 'h-[21vh]'
+      : 'h-[40vh]';
+
   return (
     <div
-      className={`transition-height duration-500 ease-in-out ${
-        expanded ? 'h-[80vh]' : 'max-h-[40vh]'
-      } `}
+      ref={contentRef}
+      className={`transition-max-height duration-500 ease-in-out ${dynamicHeight}`}
+      // style={{ maxHeight }}
+      // className={`transition-height duration-500 ease-in-out ${
+      //   expanded ? {dynamicHeight} : 'h-[40vh]'
+      // } `}
     >
       <div key={data.id} className="mx-5 mt-2">
         <div className="flex justify-between">

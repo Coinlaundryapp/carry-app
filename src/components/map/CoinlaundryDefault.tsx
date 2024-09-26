@@ -19,7 +19,7 @@ function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
   }
   return (
     <div
-      className={`overflow-y-auto ${data && data.length > 2 ? 'h-[50vh] max-h-[50vh] overflow-y-auto' : 'max-h-auto'}`}
+      className={`overflow-y-auto ${data && data.length > 2 ? 'h-[50vh] max-h-[50vh]' : 'max-h-auto'}`}
     >
       {data &&
         data.map((item: any) => {

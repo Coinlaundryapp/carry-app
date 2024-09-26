@@ -57,7 +57,7 @@ function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
                 <div className="flex items-center gap-1">
                   <RateStaIcon />
                   <span className="font_label_2 text-label-neutral">
-                    {item.reviewAverageRating}
+                    {item.reviewAverageRating.toFixed(1)}
                   </span>
                 </div>
                 <span className="font_label_2 text-label-neutral"> • 리뷰{item.reviewCount}개</span>

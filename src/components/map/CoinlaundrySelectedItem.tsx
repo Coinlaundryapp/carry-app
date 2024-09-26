@@ -5,16 +5,34 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import Test from './test.svg';
 import { useLaundromatStore } from '@/store/order-store';
+import Review from './Review';
 
 type Props = {
   data: any;
-
-  type?: 'map' | 'order';
 };
+
+const dummydata = [
+  {
+    id: '1',
+    userId: '023451',
+    content: '마포구 세탁소123 팀 세탁',
+    start: 3,
+    day: '2024.05.01',
+    text: '이 어플을 알게 된 후 삶의 질이 올라갔어요! 주변에 세탁소가 없어서 드라이도 못했는데 이 어플 덕분에 문앞에서 바로 빨래를 받을 수 있어서 너무 좋았어요. 때에 찌든 옷을 맡겼는데 때가 싹 빠져서 너무 흐뭇했어요! 옷도 하나 서비스로 해주셨는데 감동이었습니다.',
+  },
+  {
+    id: '2',
+    userId: 'skdet',
+    content: '마포구 세탁소123 팀 세탁',
+    start: 5,
+    day: '2024.05.01',
+    text: '이 어플을 알게 된 후 삶의 질이 올라갔어요! 주변에 세탁소가 없어서 드라이도 못했는데 이 어플 덕분에 문앞에서 바로 빨래를 받을 수 있어서 너무 좋았어요. 때에 찌든 옷을 맡겼는데 때가 싹 빠져서 너무 흐뭇했어요! 옷도 하나 서비스로 해주셨는데 감동이었습니다.',
+  },
+];
 
 function CoinlaundrySelectedItem({ data }: Props) {
   const { type } = useParams();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   const { setSelectedLaundromat } = useLaundromatStore();
 
@@ -23,7 +41,7 @@ function CoinlaundrySelectedItem({ data }: Props) {
   };
 
   const handleSelectClick = () => {
-    setSelectedLaundromat(data); // 선택된 데이터를 zustand에 저장
+    setSelectedLaundromat(data);
   };
 
   return (
@@ -45,7 +63,7 @@ function CoinlaundrySelectedItem({ data }: Props) {
           <div className="flex gap-1">
             {data.options.map((option: string) => {
               const optionstatus = KINDS_STATUS.find((status) => status.id === option);
-
+              //
               if (!optionstatus) return null;
 
               return (
@@ -60,7 +78,9 @@ function CoinlaundrySelectedItem({ data }: Props) {
         <div className="mb-1 flex items-center gap-1">
           <div className="flex items-center gap-1">
             <RateStaIcon />
-            <span className="font_label_2 text-label-neutral">{data.reviewAverageRating}</span>
+            <span className="font_label_2 text-label-neutral">
+              {data.reviewAverageRating.toFixed(1)}
+            </span>
           </div>
           <span className="font_label_2 text-label-neutral"> • 리뷰{data.reviewCount}개</span>
         </div>
@@ -97,7 +117,13 @@ function CoinlaundrySelectedItem({ data }: Props) {
                 </div>
               ))}
           </div>
-          {/* {expanded && <Test />} */}
+          {expanded && (
+            <div className="flex flex-col gap-2">
+              {dummydata.map((review) => {
+                return <Review data={review} />;
+              })}
+            </div>
+          )}
           {type === 'order' && (
             <button
               onClick={handleSelectClick}

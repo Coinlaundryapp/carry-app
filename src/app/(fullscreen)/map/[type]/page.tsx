@@ -73,20 +73,17 @@ export default function MapPage() {
   };
 
   const isMarkerCoveredByBottomSheet = (markerPosition: naver.maps.LatLng, map: naver.maps.Map) => {
-    // 지도 projection 객체로 화면 픽셀 좌표로 변환
-    const projection = map.getProjection();
-    const markerPoint = projection.fromCoordToOffset(markerPosition);
+    const projection = map.getProjection(); // 지도 projection
+    const markerPoint = projection.fromCoordToOffset(markerPosition); // 위도/경도를 화면 좌표로 변환
 
-    // 바텀시트의 y축 위치 및 높이 정의 (예시로 50vh 높이 가정)
-    const bottomSheetHeight = window.innerHeight * 0.5; // 바텀시트가 50vh일 경우
-    const bottomSheetTop = window.innerHeight - bottomSheetHeight;
+    const bottomSheetHeight = window.innerHeight * 0.5; // 바텀시트 높이 (50vh)
+    const bottomSheetTop = window.innerHeight - bottomSheetHeight; // 바텀시트 상단 위치
 
-    // 마커가 바텀시트 영역 아래에 있으면 true 반환
-    return markerPoint.y > bottomSheetTop;
+    return markerPoint.y > bottomSheetTop; // 마커가 바텀시트에 가려졌는지 확인
   };
 
   useEffect(() => {
-    const offsetLocation = getLocationFromLocalStorage();
+    getLocationFromLocalStorage();
   }, []);
 
   const initMap = async () => {
@@ -122,7 +119,7 @@ export default function MapPage() {
         minZoom: 11,
       });
 
-      map.panBy({ x: 0, y: 200 });
+      // map.panBy({ x: 0, y: 200 });
 
       mapRef.current = map;
 
@@ -220,7 +217,7 @@ export default function MapPage() {
       const bounds = map.getBounds();
       const isVisible = bounds.hasPoint(offsetCenterRef.current); // offset 마커가 현재 보이는지 체크
       const isCoveredByBottomSheet = isMarkerCoveredByBottomSheet(offsetCenterRef.current, map); // 바텀시트에 의해 가려졌는지 체크
-
+      console.log('hi', isCoveredByBottomSheet);
       setIsOffsetMarkerVisible(isVisible); // 가시성 상태 업데이트
     }
   };
@@ -310,7 +307,7 @@ export default function MapPage() {
 
   return (
     <div className="w-full">
-      <div id="map" className="relative h-[100vh] w-full">
+      <div id="map" className="relative h-[55vh] w-full">
         <div className="absolute left-4 top-4 z-40" onClick={handleBackClick}>
           <ArrowLeftIcon />
         </div>
@@ -323,7 +320,7 @@ export default function MapPage() {
         <div className="h-full overflow-y-auto">
           <div
             className="mx-auto flex items-center justify-center py-1"
-            onTouchStart={open ? handleTouchStart : undefined} // open이 true일 때만 handleTouchStart
+            onTouchStart={open ? handleTouchStart : undefined}
             onTouchMove={open ? handleTouchMove : undefined}
           >
             <IndicatorIcon />

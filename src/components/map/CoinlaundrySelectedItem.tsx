@@ -43,13 +43,7 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
 
   const contentRef = useRef<HTMLDivElement>(null); // Ref for the content to measure its height
 
-  const dynamicHeight = expanded
-    ? data.reviewCount < 1
-      ? 'h-[60vh]'
-      : 'h-[78vh]'
-    : data.mediaResources.length === 0
-      ? 'h-[21vh]'
-      : 'h-[40vh]';
+  const dynamicHeight = expanded ? (data.reviewCount < 1 ? 'h-[60vh]' : 'h-[78vh]') : 'h-[40vh]';
 
   return (
     <div

@@ -72,16 +72,6 @@ export default function MapPage() {
     return offsetLocation;
   };
 
-  const isMarkerCoveredByBottomSheet = (markerPosition: naver.maps.LatLng, map: naver.maps.Map) => {
-    const projection = map.getProjection(); // 지도 projection
-    const markerPoint = projection.fromCoordToOffset(markerPosition); // 위도/경도를 화면 좌표로 변환
-
-    const bottomSheetHeight = window.innerHeight * 0.5; // 바텀시트 높이 (50vh)
-    const bottomSheetTop = window.innerHeight - bottomSheetHeight; // 바텀시트 상단 위치
-
-    return markerPoint.y > bottomSheetTop; // 마커가 바텀시트에 가려졌는지 확인
-  };
-
   useEffect(() => {
     getLocationFromLocalStorage();
   }, []);
@@ -215,10 +205,8 @@ export default function MapPage() {
 
     if (offsetCenterRef.current) {
       const bounds = map.getBounds();
-      const isVisible = bounds.hasPoint(offsetCenterRef.current); // offset 마커가 현재 보이는지 체크
-      const isCoveredByBottomSheet = isMarkerCoveredByBottomSheet(offsetCenterRef.current, map); // 바텀시트에 의해 가려졌는지 체크
-      console.log('hi', isCoveredByBottomSheet);
-      setIsOffsetMarkerVisible(isVisible); // 가시성 상태 업데이트
+      const isVisible = bounds.hasPoint(offsetCenterRef.current);
+      setIsOffsetMarkerVisible(isVisible);
     }
   };
 

@@ -108,7 +108,6 @@ export default function MapPage() {
         center: currentCenter,
         zoom: zoomLevel, // 초기 줌 레벨 설정
         padding: { top: 10, bottom: 10, left: 10, right: 10 },
-
         maxZoom: 17,
         minZoom: 11,
         mapDataControl: false,

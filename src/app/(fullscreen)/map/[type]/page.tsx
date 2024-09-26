@@ -131,11 +131,11 @@ export default function MapPage() {
       });
 
       // **지도 중심 변경을 추적하여 상태에 저장**
-      naver.maps.Event.addListener(map, 'center_changed', () => {
-        const newCenter = map.getCenter();
+      // naver.maps.Event.addListener(map, 'center_changed', () => {
+      //   const newCenter = map.getCenter();
 
-        setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
-      });
+      //   setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
+      // });
 
       naver.maps.Event.addListener(map, 'dragend', () => {
         // const newCenter = map.getCenter();

@@ -3,7 +3,7 @@ import { RateStaIcon, RightIcon } from '@assets/icons';
 import Image from 'next/image';
 import { KINDS_STATUS } from '@/constants/map';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useLaundromatStore } from '@/store/order-store';
 import Review from './Review';
 
@@ -39,6 +39,7 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
 
   const handleSelectClick = () => {
     setSelectedLaundromat(data);
+    console.log('data', data);
   };
 
   const contentRef = useRef<HTMLDivElement>(null); // Ref for the content to measure its height

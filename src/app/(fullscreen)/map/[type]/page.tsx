@@ -39,6 +39,9 @@ export default function MapPage() {
   const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
   const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
 
+  const [startY, setStartY] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
   const { type } = useParams();
@@ -280,6 +283,25 @@ export default function MapPage() {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const touchY = e.touches[0].clientY;
+
+    if (startY - touchY > 40) {
+      setExpanded(true);
+    }
+
+    if (touchY - startY > 40) {
+      setExpanded(false);
+    }
+  };
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
   if ((isLoading && !!data) || !currentCenter) {
     return <Loading />;
   }
@@ -296,7 +318,11 @@ export default function MapPage() {
           true ? 'translate-y-0' : 'translate-y-full'
         } `}
       >
-        <div className="h-full overflow-y-auto">
+        <div
+          className="h-full overflow-y-auto"
+          onTouchStart={handleTouchStart} // Listen for touch start
+          onTouchMove={handleTouchMove}
+        >
           <div className="mx-auto flex items-center justify-center py-1">
             <IndicatorIcon />
           </div>
@@ -332,7 +358,11 @@ export default function MapPage() {
             )}
 
             {open ? (
-              <CoinlaundrySelectedItem data={selectedItem} />
+              <CoinlaundrySelectedItem
+                data={selectedItem}
+                expanded={expanded}
+                onClickExpended={handleExpandClick}
+              />
             ) : (
               <CoinlaundryDefault onSelectedAddress={handleSelectedAddress} data={data} />
             )}

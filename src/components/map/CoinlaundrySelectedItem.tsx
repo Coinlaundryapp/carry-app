@@ -1,14 +1,16 @@
+'use client';
 import { RateStaIcon, RightIcon } from '@assets/icons';
 import Image from 'next/image';
 import { KINDS_STATUS } from '@/constants/map';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import Test from './test.svg';
 import { useLaundromatStore } from '@/store/order-store';
 import Review from './Review';
 
 type Props = {
   data: any;
+  expanded: boolean;
+  onClickExpended: () => void;
 };
 
 const dummydata = [
@@ -30,15 +32,10 @@ const dummydata = [
   },
 ];
 
-function CoinlaundrySelectedItem({ data }: Props) {
+function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
   const { type } = useParams();
-  const [expanded, setExpanded] = useState(false);
 
   const { setSelectedLaundromat } = useLaundromatStore();
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   const handleSelectClick = () => {
     setSelectedLaundromat(data);
@@ -46,7 +43,9 @@ function CoinlaundrySelectedItem({ data }: Props) {
 
   return (
     <div
-      className={`transition-all duration-300 ${expanded ? 'h-[80vh] overflow-y-auto' : 'h-auto'}`}
+      className={`transition-height duration-500 ease-in-out ${
+        expanded ? 'h-[80vh]' : 'max-h-[40vh]'
+      } `}
     >
       <div key={data.id} className="mx-5 mt-2">
         <div className="flex justify-between">
@@ -82,7 +81,7 @@ function CoinlaundrySelectedItem({ data }: Props) {
             </span>
           </div>
           <span className="font_label_2 text-label-neutral"> • 리뷰{data.reviewCount}개</span>
-          {data.reviewCount !== 0 && <RightIcon onClick={handleExpandClick} />}
+          {data.reviewCount !== 0 && <RightIcon onClick={onClickExpended} />}
         </div>
 
         <div className="mb-4 flex flex-col items-start justify-between gap-5">
@@ -120,7 +119,7 @@ function CoinlaundrySelectedItem({ data }: Props) {
           {expanded && (
             <div className="flex flex-col gap-2">
               {dummydata.map((review) => {
-                return <Review data={review} />;
+                return <Review key={review.id} data={review} />;
               })}
             </div>
           )}

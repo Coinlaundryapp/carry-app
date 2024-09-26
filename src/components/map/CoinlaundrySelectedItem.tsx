@@ -91,11 +91,11 @@ function CoinlaundrySelectedItem({ data }: Props) {
               <span className="font_caption_1 text-primary-normal">
                 {data.type === '0' ? '단독 세탁' : '세탁'}
               </span>
-              <div className="font_label_1_normal">배송비 6000원</div>
+              <div className="font_label_1_normal">배송비 {data.individualDeliveryFee}원</div>
             </div>
             <div className="flex items-center gap-2">
               <span className="font_caption_1 text-base-blue-6">팀 세탁시</span>
-              <div className="font_label_1_normal">배송비 6000원</div>
+              <div className="font_label_1_normal">배송비 {data.groupDeliveryFee}원</div>
             </div>
           </div>
 

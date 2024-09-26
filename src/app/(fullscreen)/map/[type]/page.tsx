@@ -265,7 +265,7 @@ export default function MapPage() {
     setSelectedMarkerId(addressId);
     const selectedMarker = data.find((item: any) => item.id === addressId);
     setSelectedItem(selectedMarker);
-    setOpen(false);
+    setOpen(true);
   };
 
   const handleBackClick = () => {
@@ -301,16 +301,16 @@ export default function MapPage() {
             <IndicatorIcon />
           </div>
           <div className="mr-5 flex justify-end gap-2">
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1.5">
               <GuidWashIcon />
               <span className="font_caption_1">세탁기</span>
             </div>
 
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1.5">
               <GuideDrayerIcon />
               <span className="font_caption_1">세탁기</span>
             </div>
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1.5">
               <GuideSneakerIcon />
               <span className="font_caption_1">세탁기</span>
             </div>

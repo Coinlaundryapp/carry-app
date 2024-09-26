@@ -1,4 +1,4 @@
-import { RateStaIcon } from '@assets/icons';
+import { RateStaIcon, RightIcon } from '@assets/icons';
 import Image from 'next/image';
 import { KINDS_STATUS } from '@/constants/map';
 import { useParams } from 'next/navigation';
@@ -32,7 +32,7 @@ const dummydata = [
 
 function CoinlaundrySelectedItem({ data }: Props) {
   const { type } = useParams();
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const { setSelectedLaundromat } = useLaundromatStore();
 
@@ -46,8 +46,7 @@ function CoinlaundrySelectedItem({ data }: Props) {
 
   return (
     <div
-      className={`transition-all duration-300 ${expanded ? 'h-[50vh] overflow-y-auto' : 'h-auto'}`}
-      onClick={handleExpandClick}
+      className={`transition-all duration-300 ${expanded ? 'h-[80vh] overflow-y-auto' : 'h-auto'}`}
     >
       <div key={data.id} className="mx-5 mt-2">
         <div className="flex justify-between">
@@ -83,6 +82,7 @@ function CoinlaundrySelectedItem({ data }: Props) {
             </span>
           </div>
           <span className="font_label_2 text-label-neutral"> • 리뷰{data.reviewCount}개</span>
+          {data.reviewCount !== 0 && <RightIcon onClick={handleExpandClick} />}
         </div>
 
         <div className="mb-4 flex flex-col items-start justify-between gap-5">

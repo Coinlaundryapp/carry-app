@@ -76,16 +76,15 @@ export default function MapPage() {
 
   useEffect(() => {
     getLocationFromLocalStorage();
-  }, []);
-
-  const initMap = async () => {
-    const location = await getLocation();
-
     if (type === 'order' && data) {
       setSelectedMarkerId(data[0].id);
       setSelectedItem(data[0]);
       setOpen(true);
     }
+  }, []);
+
+  const initMap = async () => {
+    const location = await getLocation();
 
     if (location) {
       const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);

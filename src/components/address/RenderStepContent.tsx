@@ -5,9 +5,14 @@ import EntrancePassword from '@/components/address/EntrancePassword';
 import { Input } from '@/components/share/Input';
 import AddressRequest from '@/components/address/AddressRequest';
 
+type TFormData = {
+  addressLabel: string;
+  name: string;
+  phone: string;
+};
 interface RenderStepContentProps {
   step: number;
-  formData: any;
+  formData: TFormData;
   setFormData: (data: any) => void;
   address: any;
   setAddress: (data: any) => void;

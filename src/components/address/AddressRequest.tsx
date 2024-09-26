@@ -7,7 +7,6 @@ import { TSelectedRequest } from '@/app/(fullscreen)/address/edit/[addressId]/pa
 type TProps = {
   selectedRequest: TSelectedRequest;
   handleChangeRequest: (value: string) => void;
-
   onChangeRequestText: (text: string) => void;
 };
 

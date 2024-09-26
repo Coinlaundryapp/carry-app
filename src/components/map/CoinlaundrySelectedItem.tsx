@@ -42,7 +42,7 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
     console.log('data', data);
   };
 
-  const contentRef = useRef<HTMLDivElement>(null); // Ref for the content to measure its height
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const dynamicHeight = expanded ? (data.reviewCount < 1 ? 'h-[60vh]' : 'h-[78vh]') : 'h-[40vh]';
 
@@ -50,10 +50,6 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
     <div
       ref={contentRef}
       className={`transition-max-height duration-500 ease-in-out ${dynamicHeight}`}
-      // style={{ maxHeight }}
-      // className={`transition-height duration-500 ease-in-out ${
-      //   expanded ? {dynamicHeight} : 'h-[40vh]'
-      // } `}
     >
       <div key={data.id} className="mx-5 mt-2">
         <div className="flex justify-between">

@@ -107,8 +107,20 @@ export default function MapPage() {
       const map = new naver.maps.Map('map', {
         center: currentCenter,
         zoom: zoomLevel, // 초기 줌 레벨 설정
+        padding: { top: 10, bottom: 10, left: 10, right: 10 },
+
         maxZoom: 17,
         minZoom: 11,
+        mapDataControl: false,
+        scaleControl: false,
+        scaleControlOptions: {
+          position: naver.maps.Position.TOP_RIGHT,
+        },
+        mapDataControlOptions: {
+          position: naver.maps.Position.TOP_RIGHT,
+        },
+
+        logoControlOptions: { position: naver.maps.Position.RIGHT_CENTER },
       });
 
       // map.panBy({ x: 0, y: 200 });
@@ -121,11 +133,11 @@ export default function MapPage() {
       });
 
       // **지도 중심 변경을 추적하여 상태에 저장**
-      // naver.maps.Event.addListener(map, 'center_changed', () => {
-      //   const newCenter = map.getCenter();
+      naver.maps.Event.addListener(map, 'center_changed', () => {
+        const newCenter = map.getCenter();
 
-      //   setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
-      // });
+        setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
+      });
 
       naver.maps.Event.addListener(map, 'dragend', () => {
         // const newCenter = map.getCenter();
@@ -170,7 +182,7 @@ export default function MapPage() {
         });
 
       if (offsetLocation) {
-        const offsetMarker = new naver.maps.Marker({
+        new naver.maps.Marker({
           position: offsetLocation,
           map: map,
           icon: {
@@ -248,7 +260,9 @@ export default function MapPage() {
     // JSON 형태로 좌표를 로컬스토리지에 저장
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
-    initMap(); // 지도는 처음 로드될 때만 초기화
+    if (data) {
+      initMap(); // 지도는 처음 로드될 때만 초기화
+    }
   }, [selectedMarkerId, currentCenter, data]);
 
   const handleSelectedAddress = (addressId: string) => {
@@ -290,14 +304,13 @@ export default function MapPage() {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
   if ((isLoading && !!data) || !currentCenter) {
     return <Loading />;
   }
 
   return (
     <div className="w-full">
-      <div id="map" className="relative h-[55vh] w-full">
+      <div id="map" className="relative h-[54vh] w-full">
         <div className="absolute left-4 top-4 z-40" onClick={handleBackClick}>
           <ArrowLeftIcon />
         </div>

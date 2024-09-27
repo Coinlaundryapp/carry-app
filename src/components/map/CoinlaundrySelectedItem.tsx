@@ -39,7 +39,6 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
 
   const handleSelectClick = () => {
     setSelectedLaundromat(data);
-    console.log('data', data);
   };
 
   const contentRef = useRef<HTMLDivElement>(null);
@@ -49,7 +48,7 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
   return (
     <div
       ref={contentRef}
-      className={`transition-max-height duration-500 ease-in-out ${dynamicHeight}`}
+      className={`transition-max-height overflow-y-auto duration-500 ease-in-out ${dynamicHeight}`}
     >
       <div key={data.id} className="mx-5 mt-2">
         <div className="flex justify-between">

@@ -20,10 +20,10 @@ import {
 import CoinlaundryDefault from '@/components/map/CoinlaundryDefault';
 import { useQuery } from '@tanstack/react-query';
 import { getLaundromats } from '@/api/mapApi';
-import { useSession } from 'next-auth/react';
 import Loading from '@/app/loading';
 import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
 import { useParams, useRouter } from 'next/navigation';
+import { TLaundromats } from '@/types/map-type';
 
 export default function MapPage() {
   const { getLocation } = useGeoLocation();
@@ -31,7 +31,7 @@ export default function MapPage() {
   const userPositionRef = useRef<naver.maps.LatLng | null>(null);
   const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
-  const [selectedMarkerId, setSelectedMarkerId] = useState<string>(''); // 선택된 마커 ID 상태
+  const [selectedMarkerId, setSelectedMarkerId] = useState<number>(0); // 선택된 마커 ID 상태
   const [open, setOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
   const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>(null);
@@ -43,15 +43,13 @@ export default function MapPage() {
   const [startY, setStartY] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
-  const session = useSession();
-  const accessToken = session.data?.user?.accessToken;
   const { type } = useParams();
   const router = useRouter();
 
   const { data, isLoading } = useQuery({
     queryKey: ['laundromats', currentCenter],
-    queryFn: () => getLaundromats(accessToken, currentCenter),
-    enabled: !!accessToken && !!currentCenter,
+    queryFn: () => getLaundromats(currentCenter),
+    enabled: !!currentCenter,
   });
 
   /**
@@ -146,10 +144,10 @@ export default function MapPage() {
         checkOffsetMarkerVisibility(map); // 드래그 후 오프셋 마커의 가시성 체크
       });
 
-      if (offsetLocation) {
+      if (userPositionRef.current && offsetCenterRef.current) {
         new naver.maps.Circle({
           map: map,
-          center: isUserMarkerVisible ? userPosition : offsetLocation,
+          center: isUserMarkerVisible ? userPositionRef.current : offsetCenterRef.current,
           radius: 3000,
           strokeColor: '#00B4B2',
           strokeOpacity: 0.8,
@@ -175,6 +173,7 @@ export default function MapPage() {
           });
 
           naver.maps.Event.addListener(marker, 'click', (e) => {
+            mapRef.current && mapRef.current.panTo(markerPosition);
             setSelectedMarkerId(loc.id);
             setOpen(true);
             const selectedMarker = data.find((item: any) => item.id === loc.id);
@@ -227,9 +226,21 @@ export default function MapPage() {
 
   const handleReturnToUserLocation = () => {
     if (mapRef.current && userPositionRef.current) {
-      setCurrentCenter({
-        lat: userPositionRef.current.lat(),
-        lng: userPositionRef.current.lng(),
+      mapRef.current.panTo(userPositionRef.current);
+      // setCurrentCenter({
+      //   lat: userPositionRef.current.lat(),
+      //   lng: userPositionRef.current.lng(),
+      // });
+
+      new naver.maps.Circle({
+        map: mapRef.current,
+        center: userPositionRef.current,
+        radius: 3000,
+        strokeColor: '#00B4B2',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#ADE4E5',
+        fillOpacity: 0.5,
       });
 
       mapRef.current.setZoom(zoomLevel);
@@ -240,12 +251,24 @@ export default function MapPage() {
 
   const handleReturnToAddressLocation = () => {
     if (mapRef.current && offsetCenterRef.current) {
-      setCurrentCenter({
-        lat: offsetCenterRef.current.lat(),
-        lng: offsetCenterRef.current.lng(),
-      });
+      mapRef.current.panTo(offsetCenterRef.current);
+      // setCurrentCenter({
+      //   lat: offsetCenterRef.current.lat(),
+      //   lng: offsetCenterRef.current.lng(),
+      // });
 
       mapRef.current.setZoom(zoomLevel);
+
+      new naver.maps.Circle({
+        map: mapRef.current,
+        center: offsetCenterRef.current,
+        radius: 3000,
+        strokeColor: '#00B4B2',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#ADE4E5',
+        fillOpacity: 0.5,
+      });
     }
     setIsUserMarkerVisible(false);
     setIsOffsetMarkerVisible(true);
@@ -257,18 +280,20 @@ export default function MapPage() {
       lat: 37.6055942215336,
       lng: 126.920904663729,
     };
-    console.log('data', data);
+
     // JSON 형태로 좌표를 로컬스토리지에 저장
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
     initMap(); // 지도는 처음 로드될 때만 초기화
   }, [selectedMarkerId, currentCenter, data]);
 
-  const handleSelectedAddress = (addressId: string) => {
+  const handleSelectedAddress = (addressId: number) => {
     setSelectedMarkerId(addressId);
-    const selectedMarker = data.find((item: any) => item.id === addressId);
-    setSelectedItem(selectedMarker);
-    setOpen(true);
+    if (data) {
+      const selectedMarker = data.find((item: TLaundromats) => item.id === addressId);
+      setSelectedItem(selectedMarker);
+      setOpen(true);
+    }
   };
 
   const handleBackClick = () => {
@@ -276,7 +301,7 @@ export default function MapPage() {
       return router.back();
     }
     if (selectedMarkerId) {
-      setSelectedMarkerId('');
+      setSelectedMarkerId(0);
       getLocationFromLocalStorage(); // 함수 호출
       setOpen(false);
       setZoomLevel(12);
@@ -354,7 +379,7 @@ export default function MapPage() {
                 onClick={handleReturnToAddressLocation}
                 className="font_label_1_normal absolute left-1/2 top-[-50px] flex -translate-x-1/2 transform items-center gap-2 rounded-xl bg-white p-2"
               >
-                <MapBackIcon /> 배송지로 이동하기
+                <MapBackIcon /> 서비스지역으로 이동하기
               </button>
             )}
 

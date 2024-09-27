@@ -257,7 +257,7 @@ export default function MapPage() {
       lat: 37.6055942215336,
       lng: 126.920904663729,
     };
-    console.log('data', data);
+
     // JSON 형태로 좌표를 로컬스토리지에 저장
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 

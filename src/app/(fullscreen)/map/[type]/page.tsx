@@ -38,6 +38,7 @@ export default function MapPage() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
   const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
+  const [isOrderInit, setIsOrderInit] = useState(false);
 
   const [startY, setStartY] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -76,11 +77,6 @@ export default function MapPage() {
 
   useEffect(() => {
     getLocationFromLocalStorage();
-    if (type === 'order' && data) {
-      setSelectedMarkerId(data[0].id);
-      setSelectedItem(data[0]);
-      setOpen(true);
-    }
   }, []);
 
   const initMap = async () => {
@@ -91,6 +87,13 @@ export default function MapPage() {
       userPositionRef.current = userPosition;
 
       const savedLocationString = localStorage.getItem('임시설정구역');
+
+      if (type === 'order' && data && !isOrderInit) {
+        setSelectedMarkerId(data[0].id);
+        setSelectedItem(data[0]);
+        setOpen(true);
+        setIsOrderInit(true);
+      }
 
       let offsetLocation;
       if (savedLocationString) {
@@ -254,13 +257,11 @@ export default function MapPage() {
       lat: 37.6055942215336,
       lng: 126.920904663729,
     };
-
+    console.log('data', data);
     // JSON 형태로 좌표를 로컬스토리지에 저장
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
-    if (data) {
-      initMap(); // 지도는 처음 로드될 때만 초기화
-    }
+    initMap(); // 지도는 처음 로드될 때만 초기화
   }, [selectedMarkerId, currentCenter, data]);
 
   const handleSelectedAddress = (addressId: string) => {

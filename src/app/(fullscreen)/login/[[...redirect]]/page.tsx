@@ -9,20 +9,20 @@ const KAKAO_REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL as string;
 export default async function Login({
   params,
   searchParams,
-}: {
-  params: { redirect: string };
+}: Readonly<{
+  params: { redirect: string[] };
   searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}>) {
   const url = new URL(KAKAO_REDIRECT_URL);
   const redirect = params.redirect;
   const headersList = headers();
-  const host = headersList.get('host') || '';
-  const protocol = headersList.get('x-forwarded-proto') || 'http';
+  const host = headersList.get('host') ?? '';
+  const protocol = headersList.get('x-forwarded-proto') ?? 'http';
   const BASE_URL = `${protocol}://${host}`;
 
   // state 파라미터 생성
   const state = {
-    redirect,
+    redirect: redirect && redirect.join('/'),
     query: searchParams,
   };
 
@@ -52,7 +52,6 @@ export default async function Login({
       <Link
         href={url.toString()}
         className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#FEE500] p-4 font-bold font-body-1-reading"
-        type="submit"
       >
         <KakaoIcon />
         <p>카카오로 시작하기</p>

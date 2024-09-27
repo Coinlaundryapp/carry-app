@@ -7,16 +7,16 @@ import { useRouter } from 'next/navigation';
 export default function LoginDonePage({
   params,
   searchParams,
-}: {
-  params: { redirect: string };
+}: Readonly<{
+  params: { redirect: string[] };
   searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}>) {
   const router = useRouter();
-  const redirectUrl = params.redirect ? `/${params.redirect}` : '/';
+  const redirectUrl = params.redirect ? `/${params.redirect.join('/')}` : '/';
   const queryString = new URLSearchParams(searchParams as Record<string, string>).toString();
   const finalRedirectUrl = queryString ? `${redirectUrl}?${queryString}` : redirectUrl;
   const handleRedirect = () => {
-    router.push(finalRedirectUrl);
+    router.replace(finalRedirectUrl);
   };
 
   return (

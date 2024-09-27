@@ -46,7 +46,7 @@ export default function Order({
       <TimeField />
       <CostField />
       <PrivacyField />
-      <div className="absolute bottom-0 w-full bg-white p-6 shadow-emphasize">
+      <div className="sticky bottom-0 w-full bg-white p-6 shadow-emphasize">
         <Button state="fillPrimary" size="full">
           수거 신청하기
         </Button>

@@ -6,6 +6,12 @@ import { Drawer as DrawerPrimitive } from 'vaul';
 import { cn } from '@/lib/utils';
 import { IndicatorIcon } from '@assets/icons';
 
+type DrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root> & {
+  shouldScaleBackground?: boolean;
+  shouldShowOverlay?: boolean;
+  closable?: boolean;
+};
+
 const Drawer = ({
   shouldScaleBackground = false,
   ...props
@@ -35,14 +41,17 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 interface DrawerContentProps
   extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
   showIndicator?: boolean;
+  shouldShowOverlay?: boolean;
 }
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   DrawerContentProps
->(({ className, children, showIndicator = false, ...props }, ref) => (
+>(({ className, children, showIndicator = false, shouldShowOverlay = true, ...props }, ref) => (
   <DrawerPortal>
-    <DrawerOverlay />
+    {/* 오버레이를 표시할지 여부를 결정 */}
+    {shouldShowOverlay && <DrawerOverlay />}
+
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(

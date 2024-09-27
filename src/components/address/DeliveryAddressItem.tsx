@@ -3,11 +3,9 @@
 import { useRouter } from 'next/navigation';
 import Chip from '@/components/share/Chip/chip';
 import Tag from '@/components/share/Tag';
-import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { deleteAddress, patchDefaultAddress } from '@/api/addressApi';
-import { Modal } from '../share/Modal';
 import { useModalStore } from '@/store/modal-store';
 import { useToastStore } from '@/store/toast-store';
 import { useAddressStore } from '@/store/address-store';

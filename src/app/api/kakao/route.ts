@@ -17,9 +17,8 @@ export async function GET(request: Request) {
     try {
       const stateObj = JSON.parse(decodeURIComponent(state));
       const { redirect, query } = stateObj;
-
       if (redirect) {
-        redirectUrl = `/login-done/${encodeURIComponent(redirect)}`;
+        redirectUrl = `/login-done/${redirect}`;
 
         if (query && Object.keys(query).length > 0) {
           const queryString = new URLSearchParams(query as Record<string, string>).toString();

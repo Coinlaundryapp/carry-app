@@ -18,7 +18,6 @@ export default function AuthError() {
     }
     router.back();
   };
-  console.log(redirectUrl);
 
   return (
     <main className="mx-auto flex h-dvh max-w-[480px] flex-col items-center justify-between bg-background">

@@ -9,7 +9,7 @@ declare module 'next-auth' {
     refreshToken: string;
   }
   interface Session {
-    user?: {
+    user: {
       accessToken?: string;
       refreshToken?: string;
     } & DefaultSession['user'];

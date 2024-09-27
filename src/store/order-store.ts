@@ -1,22 +1,93 @@
-import { SelectedOptions } from '@/types/laundry-type';
+import { OrderContent, OrderSchedule } from '@/types/laundry-type';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-interface OrderOptionsState {
-  washOptions: SelectedOptions;
-  setWashOptions: (newOptions: Partial<SelectedOptions> | SelectedOptions) => void;
-  resetOptions: () => void;
+export interface OrderState {
+  orderContent: OrderContent;
+  totalAmount: number;
+  step: number;
+  laundryromatId: number | null;
+  addressId: number | null;
+  orderSchedule: OrderSchedule | null;
+  setLaundryromatId: (id: number) => void;
+  setAddressId: (id: number) => void;
+  setOrderSchedule: (schedule: OrderSchedule) => void;
+  setOrderContent: (newOptions: OrderContent | Partial<OrderContent>) => void;
+  addTotalAmount: (amount: number) => void;
+  removeTotalAmount: (amount: number) => void;
+  setStep: (step: number) => void;
+  reset: (
+    orderUnitType: OrderContent['orderUnitType'],
+    orderRequestType: OrderContent['orderRequestType'],
+    laundryItemType: OrderContent['laundryItemType'],
+  ) => void;
 }
 
-const useOrderOptionsStore = create<OrderOptionsState>()(
+const useOrderStore = create<OrderState>()(
   persist(
     (set) => ({
-      washOptions: {},
-      setWashOptions: (newOptions) =>
+      orderContent: {
+        orderUnitType: null,
+        orderRequestType: null,
+        laundryItemType: null,
+        laundrySpecs: [],
+        washOption: null,
+        dryOption: null,
+        additionalOption: [],
+      },
+      step: 0,
+      totalAmount: 0,
+      laundryromatId: null,
+      addressId: null,
+      orderSchedule: null,
+
+      setOrderContent: (newOptions) =>
         set((state) => ({
-          washOptions: { ...state.washOptions, ...newOptions },
+          orderContent: { ...state.orderContent, ...newOptions },
         })),
-      resetOptions: () => set({ washOptions: {} }),
+      addTotalAmount: (amount) =>
+        set((state) => ({
+          totalAmount: state.totalAmount + amount,
+        })),
+      removeTotalAmount: (amount) =>
+        set((state) => ({
+          totalAmount: state.totalAmount - amount,
+        })),
+      setStep: (step) =>
+        set((state) => ({
+          step,
+        })),
+      setLaundryromatId: (id) =>
+        set((state) => ({
+          laundryromatId: id,
+        })),
+      setAddressId: (id) =>
+        set((state) => ({
+          addressId: id,
+        })),
+      setOrderSchedule: (schedule) =>
+        set((state) => ({
+          orderSchedule: schedule,
+        })),
+
+      reset: (
+        orderUnitType: OrderContent['orderUnitType'],
+        orderRequestType: OrderContent['orderRequestType'],
+        laundryItemType: OrderContent['laundryItemType'],
+      ) =>
+        set({
+          orderContent: {
+            orderUnitType,
+            orderRequestType,
+            laundryItemType,
+            laundrySpecs: [],
+            washOption: null,
+            dryOption: null,
+            additionalOption: [],
+          },
+          totalAmount: 0,
+          step: 0,
+        }),
     }),
     {
       name: 'selected-options-storage',
@@ -25,4 +96,4 @@ const useOrderOptionsStore = create<OrderOptionsState>()(
   ),
 );
 
-export default useOrderOptionsStore;
+export default useOrderStore;

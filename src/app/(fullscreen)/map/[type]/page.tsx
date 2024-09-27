@@ -38,6 +38,7 @@ export default function MapPage() {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
   const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
+  const [isOrderInit, setIsOrderInit] = useState(false);
 
   const [startY, setStartY] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -76,11 +77,6 @@ export default function MapPage() {
 
   useEffect(() => {
     getLocationFromLocalStorage();
-    if (type === 'order' && data) {
-      setSelectedMarkerId(data[0].id);
-      setSelectedItem(data[0]);
-      setOpen(true);
-    }
   }, []);
 
   const initMap = async () => {
@@ -91,6 +87,13 @@ export default function MapPage() {
       userPositionRef.current = userPosition;
 
       const savedLocationString = localStorage.getItem('임시설정구역');
+
+      if (type === 'order' && data && !isOrderInit) {
+        setSelectedMarkerId(data[0].id);
+        setSelectedItem(data[0]);
+        setOpen(true);
+        setIsOrderInit(true);
+      }
 
       let offsetLocation;
       if (savedLocationString) {

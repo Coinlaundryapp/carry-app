@@ -20,7 +20,6 @@ import {
 import CoinlaundryDefault from '@/components/map/CoinlaundryDefault';
 import { useQuery } from '@tanstack/react-query';
 import { getLaundromats } from '@/api/mapApi';
-import { useSession } from 'next-auth/react';
 import Loading from '@/app/loading';
 import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
 import { useParams, useRouter } from 'next/navigation';
@@ -145,10 +144,10 @@ export default function MapPage() {
         checkOffsetMarkerVisibility(map); // 드래그 후 오프셋 마커의 가시성 체크
       });
 
-      if (offsetLocation) {
+      if (userPositionRef.current && offsetCenterRef.current) {
         new naver.maps.Circle({
           map: map,
-          center: isUserMarkerVisible ? userPosition : offsetLocation,
+          center: isUserMarkerVisible ? userPositionRef.current : offsetCenterRef.current,
           radius: 3000,
           strokeColor: '#00B4B2',
           strokeOpacity: 0.8,
@@ -226,9 +225,21 @@ export default function MapPage() {
 
   const handleReturnToUserLocation = () => {
     if (mapRef.current && userPositionRef.current) {
-      setCurrentCenter({
-        lat: userPositionRef.current.lat(),
-        lng: userPositionRef.current.lng(),
+      mapRef.current.panTo(userPositionRef.current);
+      // setCurrentCenter({
+      //   lat: userPositionRef.current.lat(),
+      //   lng: userPositionRef.current.lng(),
+      // });
+
+      new naver.maps.Circle({
+        map: mapRef.current,
+        center: userPositionRef.current,
+        radius: 3000,
+        strokeColor: '#00B4B2',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#ADE4E5',
+        fillOpacity: 0.5,
       });
 
       mapRef.current.setZoom(zoomLevel);
@@ -239,12 +250,24 @@ export default function MapPage() {
 
   const handleReturnToAddressLocation = () => {
     if (mapRef.current && offsetCenterRef.current) {
-      setCurrentCenter({
-        lat: offsetCenterRef.current.lat(),
-        lng: offsetCenterRef.current.lng(),
-      });
+      mapRef.current.panTo(offsetCenterRef.current);
+      // setCurrentCenter({
+      //   lat: offsetCenterRef.current.lat(),
+      //   lng: offsetCenterRef.current.lng(),
+      // });
 
       mapRef.current.setZoom(zoomLevel);
+
+      new naver.maps.Circle({
+        map: mapRef.current,
+        center: offsetCenterRef.current,
+        radius: 3000,
+        strokeColor: '#00B4B2',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#ADE4E5',
+        fillOpacity: 0.5,
+      });
     }
     setIsUserMarkerVisible(false);
     setIsOffsetMarkerVisible(true);

@@ -354,7 +354,7 @@ export default function MapPage() {
                 onClick={handleReturnToAddressLocation}
                 className="font_label_1_normal absolute left-1/2 top-[-50px] flex -translate-x-1/2 transform items-center gap-2 rounded-xl bg-white p-2"
               >
-                <MapBackIcon /> 배송지로 이동하기
+                <MapBackIcon /> 서비스지역으로 이동하기
               </button>
             )}
 

@@ -1,3 +1,4 @@
+import { format, parse } from 'date-fns';
 import { fetchExtended } from '@/api/api-client';
 import { ApiResponse } from '@/types/api-types';
 import {
@@ -6,6 +7,8 @@ import {
   LaundryPriceResponse,
   OrderContent,
   OrderRequestType,
+  OrderResponse,
+  OrderSchedule,
   OrderUnitType,
 } from '@/types/laundry-type';
 
@@ -67,30 +70,57 @@ export async function getPrices({
   return data;
 }
 
-export async function postOrder(
-  accessToken: string,
-  orderContent: OrderContent,
-  laundromatId: number,
-  addressId: number,
-  orderSchedule: {
-    desiredPickupDateTime: string;
-    desiredDeliveryDateTime: string;
-  },
-) {
-  const res = await fetchExtended(`/api/v1/orders`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: {
-      orderContent,
-      laundromatId,
-      addressId,
-      orderSchedule,
-    },
-  });
-
-  const data = res;
-  return data;
+export async function postOrder({
+  accessToken,
+  orderContent,
+  laundryromatId,
+  addressId,
+  orderSchedule,
+}: {
+  accessToken: string;
+  orderContent: OrderContent;
+  laundryromatId: number;
+  addressId: number;
+  orderSchedule: OrderSchedule;
+}) {
+  const desiredPickupDateTime = format(
+    orderSchedule.desiredPickupDateTime,
+    'yyyy-MM-dd HH:mm:ss EEE',
+  );
+  const desiredDeliveryDateTime = format(
+    orderSchedule.desiredDeliveryDateTime,
+    'yyyy-MM-dd HH:mm:ss EEE',
+  );
+  try {
+    // const res = await fetchExtended<ApiResponse<OrderResponse>>(`/api/v1/orders`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${accessToken}`,
+    //   },
+    //   body: {
+    //     orderContent,
+    //     laundryromatId,
+    //     addressId,
+    //     orderSchedule: {
+    //       desiredPickupDateTime,
+    //       desiredDeliveryDateTime,
+    //     },
+    //   },
+    // });
+    // return res.body.data;
+    const data = {
+      id: 54, // orderId, 주문 번호
+      status: 'ORDER_COMPLETED', // [Enum] 주문 명세서 상태
+      orderUnitType: 'SOLO',
+      orderRequestType: 'NEW',
+      laundryItemType: 'REGULAR',
+      laundromatName: '하늘이 세탁소',
+      orderedAt: '2024-09-23T14:35:20Z',
+      estimatedAmount: 14000,
+    };
+    return data;
+  } catch (error) {
+    throw new Error('주문을 완료하지 못했습니다.');
+  }
 }

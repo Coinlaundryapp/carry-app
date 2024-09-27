@@ -13,9 +13,7 @@ export default function AddressField({ address }: { address: Address | null }) {
   return (
     <>
       <section className="p-5">
-        <h2 className="font-semibold text-label-strong font-headline-1">
-          배송지 정보 <span className="text-status-destructive">*</span>
-        </h2>
+        <h2 className="font-semibold text-label-strong font-headline-1">배송지 정보</h2>
         {address ? (
           <div className="mt-6 flex flex-col gap-3">
             <div className="flex items-center justify-between">
@@ -55,9 +53,7 @@ export default function AddressField({ address }: { address: Address | null }) {
         <>
           <section className="p-5">
             <div className="flex w-full justify-between">
-              <h2 className="font-semibold text-label-strong font-headline-1">
-                배송 요청사항 <span className="text-status-destructive">*</span>
-              </h2>
+              <h2 className="font-semibold text-label-strong font-headline-1">배송 요청사항</h2>
               <Link href={`/address/requestEdit/${address.id}`}>
                 <ChevronRightIcon />
               </Link>

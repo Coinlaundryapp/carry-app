@@ -1,16 +1,44 @@
 import Separator from '@/components/share/Separator/Separator';
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/share/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/share/ui/dialog';
 import { ExitIcon, QuestionMarkIcon, SelectIcon } from '@assets/icons';
 import { cn } from '@/lib/utils';
+import { BASE_COST, COST_INCREMENT, DISTANCE_INCREMENT } from '@/constants/policy';
 
-const DISTANCE_COST_MAP = [
-  { label: '100m 이내', cost: '4,000원', maxDistance: 1000 },
-  { label: '200m 이내', cost: '4,300원', maxDistance: 1200 },
-  { label: '300m 이내', cost: '4,600원', maxDistance: 1300 },
-];
+interface CostItem {
+  label: string;
+  cost: string;
+  maxDistance: number;
+}
+const generateCostItem = (index: number): CostItem => {
+  const maxDistance = (index + 1) * DISTANCE_INCREMENT;
+  return {
+    label: `${maxDistance}m 이내`,
+    cost: `${BASE_COST + index * COST_INCREMENT}원`,
+    maxDistance,
+  };
+};
 
+const findRelevantRanges = (distance: number): CostItem[] => {
+  const currentIndex = Math.floor(distance / DISTANCE_INCREMENT);
+  const ranges: CostItem[] = [];
+  if (currentIndex > 0) {
+    ranges.push(generateCostItem(currentIndex - 1));
+  }
+  ranges.push(generateCostItem(currentIndex));
+  ranges.push(generateCostItem(currentIndex + 1));
+
+  return ranges;
+};
 export default function DeliveryCostInfoDialog({ distance }: Readonly<{ distance: number }>) {
-  const cost = DISTANCE_COST_MAP.find((item) => distance <= item.maxDistance)?.cost;
+  const relevantRanges = findRelevantRanges(distance);
+  const currentCost = relevantRanges.find((item) => distance <= item.maxDistance)?.cost;
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -19,7 +47,9 @@ export default function DeliveryCostInfoDialog({ distance }: Readonly<{ distance
       <DialogContent>
         <div className="px-6 py-5">
           <div className="flex items-center justify-between">
-            <p className="font-semibold text-label-normal font-headline-1">배송비 안내</p>
+            <DialogTitle asChild>
+              <p className="font-semibold text-label-normal font-headline-1">배송비 안내</p>
+            </DialogTitle>
             <DialogClose>
               <ExitIcon />
             </DialogClose>
@@ -30,26 +60,26 @@ export default function DeliveryCostInfoDialog({ distance }: Readonly<{ distance
               <p>거리별</p>
               <p>배송비</p>
             </div>
-            {DISTANCE_COST_MAP.map((item, index) => (
+            {relevantRanges.map((item) => (
               <div
                 key={item.label}
                 className={cn(
                   'flex justify-between font-semibold text-label-normal font-label-1-reading',
                   {
-                    'text-primary-normal': cost === item.cost,
+                    'text-primary-normal': currentCost === item.cost,
                   },
                 )}
               >
                 <div className="flex items-center gap-1">
                   <p>{item.label}</p>
-                  {cost === item.cost && <SelectIcon />}
+                  {currentCost === item.cost && <SelectIcon />}
                 </div>
                 <p>{item.cost}</p>
               </div>
             ))}
 
             <ul className="space-y-0 font-medium text-label-alternative font-caption-1 [&>li]:relative [&>li]:pl-[8px] [&>li]:before:absolute [&>li]:before:left-0 [&>li]:before:content-['•']">
-              <li>1Km 초과할 경우 100m당 200원씩 추가 부가됩니다.</li>
+              <li>1Km 초과할 경우 100m당 300원씩 추가 부가됩니다.</li>
             </ul>
           </div>
         </div>

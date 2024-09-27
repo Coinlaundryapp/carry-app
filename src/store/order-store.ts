@@ -10,7 +10,7 @@ export interface OrderState {
   step: number;
   laundryromat: TLaundromats | null;
   address: Address | null;
-  orderSchedule: OrderSchedule | null;
+  orderSchedule: OrderSchedule;
   setLaundryromat: (laundryromat: TLaundromats) => void;
   setAddress: (address: Address) => void;
   setOrderSchedule: (schedule: OrderSchedule) => void;
@@ -19,9 +19,9 @@ export interface OrderState {
   removeTotalAmount: (amount: number) => void;
   setStep: (step: number) => void;
   reset: (
-    orderUnitType: OrderContent['orderUnitType'],
-    orderRequestType: OrderContent['orderRequestType'],
-    laundryItemType: OrderContent['laundryItemType'],
+    orderUnitType?: OrderContent['orderUnitType'],
+    orderRequestType?: OrderContent['orderRequestType'],
+    laundryItemType?: OrderContent['laundryItemType'],
   ) => void;
 }
 
@@ -41,7 +41,10 @@ const useOrderStore = create<OrderState>()(
       totalAmount: 0,
       laundryromat: null,
       address: null,
-      orderSchedule: null,
+      orderSchedule: {
+        desiredPickupDateTime: '',
+        desiredDeliveryDateTime: '',
+      },
       setAddress: (address) =>
         set(() => ({
           address,
@@ -72,9 +75,9 @@ const useOrderStore = create<OrderState>()(
           orderSchedule: schedule,
         })),
       reset: (
-        orderUnitType: OrderContent['orderUnitType'],
-        orderRequestType: OrderContent['orderRequestType'],
-        laundryItemType: OrderContent['laundryItemType'],
+        orderUnitType: OrderContent['orderUnitType'] = null,
+        orderRequestType: OrderContent['orderRequestType'] = null,
+        laundryItemType: OrderContent['laundryItemType'] = null,
       ) =>
         set({
           orderContent: {
@@ -88,6 +91,12 @@ const useOrderStore = create<OrderState>()(
           },
           totalAmount: 0,
           step: 0,
+          laundryromat: null,
+          address: null,
+          orderSchedule: {
+            desiredPickupDateTime: '',
+            desiredDeliveryDateTime: '',
+          },
         }),
     }),
     {

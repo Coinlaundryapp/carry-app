@@ -1,7 +1,26 @@
 import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
 import Separator from '@/components/share/Separator/Separator';
+import { BASE_COST, COST_INCREMENT, DISTANCE_INCREMENT } from '@/constants/policy';
+import useOrderStore from '@/store/order-store';
+import { Address } from '@/types/api-types';
+import { TLaundromats } from '@/types/map-type';
+import { formatNumberWithCommas } from '@/utils/format';
 
-export default function CostField() {
+export default function CostField({
+  address,
+  laundryromat,
+}: Readonly<{
+  address: Address | null;
+  laundryromat: TLaundromats | null;
+}>) {
+  const { totalAmount } = useOrderStore();
+  if (!address || !laundryromat) {
+    return null;
+  }
+  const deliveryCost =
+    BASE_COST + Math.floor(laundryromat.distance / DISTANCE_INCREMENT) * COST_INCREMENT;
+  // 예상 결제 금액
+  const predictedCost = deliveryCost + totalAmount;
   return (
     <>
       <section className="p-5">
@@ -10,9 +29,9 @@ export default function CostField() {
           <div className="flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
             <div className="flex items-center gap-1">
               <p>배송비</p>
-              <DeliveryCostInfoDialog distance={1000} />
+              <DeliveryCostInfoDialog distance={laundryromat.distance} />
             </div>
-            <p>4,000원</p>
+            <p>{formatNumberWithCommas(deliveryCost)}원</p>
           </div>
           <div className="mt-2 flex justify-between font-medium text-label-alternative font-label-1-normal">
             <p>ㄴ 할인금액</p>
@@ -21,7 +40,10 @@ export default function CostField() {
           <Separator variant="horizontal" className="my-5" />
           <div className="flex items-center justify-between font-semibold">
             <p className="text-label-strong font-body-2-normal">예상 결제 금액</p>
-            <p className="text-primary-normal font-heading-2">12,000~14,000원</p>
+            <p className="text-primary-normal font-heading-2">
+              {formatNumberWithCommas(predictedCost - 1000)}~
+              {formatNumberWithCommas(predictedCost + 1000)}원
+            </p>
           </div>
         </div>
       </section>

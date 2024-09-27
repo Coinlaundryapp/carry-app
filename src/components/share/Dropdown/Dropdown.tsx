@@ -12,6 +12,7 @@ export interface DropdownProps {
   indicator: 'check' | 'radio';
   className?: string;
   type?: 'default' | 'time';
+  disabled?: boolean;
   onChange: (value: string) => void;
 }
 
@@ -29,10 +30,11 @@ export default function Dropdown({
   indicator = 'check',
   type = 'default',
   className,
+  disabled = false,
   onChange,
 }: Readonly<DropdownProps>) {
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={value} onValueChange={onChange} disabled={disabled}>
       <SelectTrigger
         className={cn(value === '' && 'text-label-assistive', className)}
         value={value}

@@ -5,7 +5,15 @@ export type WashOption = 'STANDARD' | 'HOT_WATER';
 export type DryOption = 'LOW_HEAT' | 'HIGH_HEAT';
 export type AdditionalOption = 'FOLD_LAUNDRY' | 'ADD_SOFTENER';
 export type LaundryTask = 'WASH' | 'DRY' | 'WASH_AND_DRY';
-
+export type OrderDetailStatus =
+  | 'ORDER_COMPLETED'
+  | 'ORDER_CANCELED'
+  | 'PAYMENT_PENDING'
+  | 'PAYMENT_COMPLETED'
+  | 'DELIVERY_COMPLETED'
+  | 'REFUND_PENDING'
+  | 'REFUND_REQUEST_CANCELED'
+  | 'REFUND_COMPLETED';
 export type LaundrySpec = {
   laundrySpec: string;
   value: number;
@@ -56,3 +64,14 @@ export interface LaundryPriceData {
     addSoftener: OptionItem;
   };
 }
+
+export type OrderResponse = {
+  id: number;
+  status: OrderDetailStatus;
+  orderUnitType: OrderUnitType;
+  orderRequestType: OrderRequestType;
+  laundryItemType: LaundryItemType;
+  laundromatName: string;
+  orderedAt: string;
+  estimatedAmount: number;
+};

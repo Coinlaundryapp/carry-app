@@ -42,7 +42,7 @@ const AddressAddPage = () => {
     onSuccess: () => {
       triggerRefetch();
       addToast({ message: '새 배송지가 추가되었습니다.', type: 'success' });
-      router.push('/address/list');
+      router.replace('/address/list');
     },
   });
 

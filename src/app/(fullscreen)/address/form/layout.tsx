@@ -16,7 +16,7 @@ export default function Layout({
     if (addressModalOpen) {
       setAddressModalOpen(false);
     } else {
-      router.push('/address/list');
+      router.back();
     }
   };
 

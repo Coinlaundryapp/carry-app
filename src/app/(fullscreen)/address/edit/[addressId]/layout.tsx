@@ -11,7 +11,7 @@ export default function Layout({
   const router = useRouter();
 
   const handleBackClick = () => {
-    router.push('/address/list');
+    router.back();
   };
 
   return (

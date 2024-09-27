@@ -1,6 +1,6 @@
 import { GetAddressesResType } from '@/types/address-type';
 import { fetchExtended } from './api-client';
-import { ApiResponse, TGetAddressSearchListRes, TAddressRes } from '@/types/api-types';
+import { ApiResponse, TGetAddressSearchListRes, TAddressRes, Address } from '@/types/api-types';
 
 export async function getAddresses(accessToken: string | undefined) {
   const res = await fetchExtended<ApiResponse<GetAddressesResType>>(
@@ -103,5 +103,18 @@ export async function patchDefaultAddress(accessToken: string, addressId: string
   });
 
   const data = res;
+  return data;
+}
+
+export async function getDefaultAddress(accessToken: string | undefined) {
+  const res = await fetchExtended<ApiResponse<Address>>(`/api/v1/users/me`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const data = res.body.data;
   return data;
 }

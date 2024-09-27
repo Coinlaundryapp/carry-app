@@ -8,8 +8,12 @@ import LaundryField from '@/components/order/LaundryField';
 import PrivacyField from '@/components/order/PrivacyField';
 import TimeField from '@/components/order/TimeField';
 import Button from '@/components/share/Button';
-import Separator from '@/components/share/Separator/Separator';
 import useOrderStore from '@/store/order-store';
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getDefaultAddress } from '@/api/addressApi';
+import Loading from '@/components/share/Loading';
+import LoadingPage from '@/app/loading';
 
 export default function Order({
   currentUrl,
@@ -18,28 +22,35 @@ export default function Order({
 }>) {
   const router = useRouter();
   const session = useSession();
-  const { orderContent, totalAmount } = useOrderStore();
+  const accessToken = session.data?.user.accessToken;
+  const { orderContent, totalAmount, address, setAddress } = useOrderStore();
+  const { data: defaultAddress } = useQuery({
+    queryKey: ['defaultAddress'],
+    queryFn: () => getDefaultAddress(accessToken),
+    enabled: !!accessToken,
+  });
   if (session.status === 'unauthenticated') {
     router.push(`/login/${currentUrl}`);
   }
-  console.log(orderContent, totalAmount);
+
+  useEffect(() => {
+    if (defaultAddress && address === null) {
+      setAddress(defaultAddress);
+    }
+  }, [defaultAddress, address, setAddress]);
 
   return (
-    <main className="h-full bg-white">
-      <AddressField />
-      <Separator variant="horizontal8" />
-      <LaundryField />
-      <Separator variant="horizontal8" />
+    <div className="h-full bg-white">
+      <AddressField address={address} />
+      <LaundryField address={address} />
       <TimeField />
-      <Separator variant="horizontal8" />
       <CostField />
-      <Separator variant="horizontal8" />
       <PrivacyField />
-      <div className="bg-white p-6 shadow-emphasize">
+      <div className="absolute bottom-0 w-full bg-white p-6 shadow-emphasize">
         <Button state="fillPrimary" size="full">
           수거 신청하기
         </Button>
       </div>
-    </main>
+    </div>
   );
 }

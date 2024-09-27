@@ -1,3 +1,4 @@
+import { Address } from '@/types/api-types';
 import { OrderContent, OrderSchedule } from '@/types/laundry-type';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
@@ -7,10 +8,10 @@ export interface OrderState {
   totalAmount: number;
   step: number;
   laundryromatId: number | null;
-  addressId: number | null;
+  address: Address | null;
   orderSchedule: OrderSchedule | null;
   setLaundryromatId: (id: number) => void;
-  setAddressId: (id: number) => void;
+  setAddress: (address: Address) => void;
   setOrderSchedule: (schedule: OrderSchedule) => void;
   setOrderContent: (newOptions: OrderContent | Partial<OrderContent>) => void;
   addTotalAmount: (amount: number) => void;
@@ -38,9 +39,12 @@ const useOrderStore = create<OrderState>()(
       step: 0,
       totalAmount: 0,
       laundryromatId: null,
-      addressId: null,
+      address: null,
       orderSchedule: null,
-
+      setAddress: (address) =>
+        set(() => ({
+          address,
+        })),
       setOrderContent: (newOptions) =>
         set((state) => ({
           orderContent: { ...state.orderContent, ...newOptions },
@@ -61,15 +65,11 @@ const useOrderStore = create<OrderState>()(
         set((state) => ({
           laundryromatId: id,
         })),
-      setAddressId: (id) =>
-        set((state) => ({
-          addressId: id,
-        })),
+
       setOrderSchedule: (schedule) =>
         set((state) => ({
           orderSchedule: schedule,
         })),
-
       reset: (
         orderUnitType: OrderContent['orderUnitType'],
         orderRequestType: OrderContent['orderRequestType'],

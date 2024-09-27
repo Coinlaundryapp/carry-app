@@ -95,12 +95,15 @@ export default function HomePage() {
               />
             ))}
           </div>
-          <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-[18px]">
+          <Link
+            href="/map/coin"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-[18px]"
+          >
             <LocationIcon />
             <p className="font-semibold text-label-normal font-label-1-normal">
               내 주위 이용 가능한 코인 세탁소 보기
             </p>
-          </div>
+          </Link>
         </div>
       </section>
       <footer className="flex flex-col gap-5 bg-white px-5 pt-10">

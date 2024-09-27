@@ -5,9 +5,14 @@ import EntrancePassword from '@/components/address/EntrancePassword';
 import { Input } from '@/components/share/Input';
 import AddressRequest from '@/components/address/AddressRequest';
 
+type TFormData = {
+  addressLabel: string;
+  name: string;
+  phone: string;
+};
 interface RenderStepContentProps {
   step: number;
-  formData: any;
+  formData: TFormData;
   setFormData: (data: any) => void;
   address: any;
   setAddress: (data: any) => void;
@@ -19,7 +24,6 @@ interface RenderStepContentProps {
   renderSteps: number[];
   renderAllAtOnce?: boolean; // 모든 단계를 한 번에 렌더링할지 여부
   onChangeRequestText: (text: string) => void;
-  setSelectedRequest: any;
   onPhoneChange: (e: any) => void;
 }
 
@@ -35,8 +39,8 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
   selectedRequest,
   handleChangeRequest,
   renderSteps,
-  setSelectedRequest,
   onPhoneChange,
+  onChangeRequestText,
   renderAllAtOnce = false,
 }) => {
   const renderComponents = (currentStep: number) => {
@@ -85,8 +89,8 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
           <AddressRequest
             key={5}
             handleChangeRequest={handleChangeRequest}
-            setSelectedRequest={setSelectedRequest}
             selectedRequest={selectedRequest}
+            onChangeRequestText={onChangeRequestText}
           />
         );
       case 6:

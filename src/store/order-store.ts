@@ -1,5 +1,6 @@
 import { Address } from '@/types/api-types';
 import { OrderContent, OrderSchedule } from '@/types/laundry-type';
+import { TLaundromats } from '@/types/map-type';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
@@ -7,10 +8,10 @@ export interface OrderState {
   orderContent: OrderContent;
   totalAmount: number;
   step: number;
-  laundryromatId: number | null;
+  laundryromat: TLaundromats | null;
   address: Address | null;
   orderSchedule: OrderSchedule | null;
-  setLaundryromatId: (id: number) => void;
+  setLaundryromat: (laundryromat: TLaundromats) => void;
   setAddress: (address: Address) => void;
   setOrderSchedule: (schedule: OrderSchedule) => void;
   setOrderContent: (newOptions: OrderContent | Partial<OrderContent>) => void;
@@ -38,12 +39,16 @@ const useOrderStore = create<OrderState>()(
       },
       step: 0,
       totalAmount: 0,
-      laundryromatId: null,
+      laundryromat: null,
       address: null,
       orderSchedule: null,
       setAddress: (address) =>
         set(() => ({
           address,
+        })),
+      setLaundryromat: (laundryromat) =>
+        set(() => ({
+          laundryromat,
         })),
       setOrderContent: (newOptions) =>
         set((state) => ({
@@ -60,10 +65,6 @@ const useOrderStore = create<OrderState>()(
       setStep: (step) =>
         set((state) => ({
           step,
-        })),
-      setLaundryromatId: (id) =>
-        set((state) => ({
-          laundryromatId: id,
         })),
 
       setOrderSchedule: (schedule) =>

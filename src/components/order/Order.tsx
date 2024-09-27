@@ -12,8 +12,6 @@ import useOrderStore from '@/store/order-store';
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getDefaultAddress } from '@/api/addressApi';
-import Loading from '@/components/share/Loading';
-import LoadingPage from '@/app/loading';
 
 export default function Order({
   currentUrl,
@@ -23,7 +21,7 @@ export default function Order({
   const router = useRouter();
   const session = useSession();
   const accessToken = session.data?.user.accessToken;
-  const { orderContent, totalAmount, address, setAddress } = useOrderStore();
+  const { orderContent, totalAmount, laundryromat, address, setAddress } = useOrderStore();
   const { data: defaultAddress } = useQuery({
     queryKey: ['defaultAddress'],
     queryFn: () => getDefaultAddress(accessToken),
@@ -42,7 +40,7 @@ export default function Order({
   return (
     <div className="h-full bg-white">
       <AddressField address={address} />
-      <LaundryField address={address} />
+      <LaundryField address={address} laundryromat={laundryromat} />
       <TimeField />
       <CostField />
       <PrivacyField />

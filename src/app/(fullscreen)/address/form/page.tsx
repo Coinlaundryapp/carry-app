@@ -130,7 +130,6 @@ const AddressAddPage = () => {
               handleChange={handleChange}
               handleExtraInfoChange={handleExtraInfoChange}
               selectedRequest={selectedRequest}
-              setSelectedRequest={setSelectedRequest}
               handleChangeRequest={handleChangeRequest}
               onChangeRequestText={handleChangeRequestText}
               onPhoneChange={handlePhoneChange}

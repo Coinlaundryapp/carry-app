@@ -49,11 +49,6 @@ import AddressSearchNoLIst from './address-search-nolist.svg';
 import CancelIcon from './Vector.svg';
 import CarIcon from './icon_car.svg';
 import FramIcon from './Frame 26088186.svg';
-import MapMarkerIcon from './map_marker.svg';
-import SelectedMapMarkerIcon from './selected_map_marker.svg';
-import HomeMarkerIcon from './home_marker.svg';
-import UserCurrentMarkerIcon from './userCurrentMarker.svg';
-import MapBackIcon from './map_back.svg';
 import WarnWaterWashIcon from './warn_waterwash.svg';
 import WarnHot from './warn_hot.svg';
 import MinusIcon from './minus.svg';
@@ -63,18 +58,44 @@ import CoolWaterIcon from './cool-water.svg';
 import HotWaterIcon from './hot-water.svg';
 import DryIcon from './dry.svg';
 import IndicatorIcon from './indicator.svg';
+import NoCoinList from './noCoinList.svg';
 import EllipseIcon from './ellipse.svg';
 import ChevronRightIcon from './chevron-right.svg';
 import QuestionMarkIcon from './question-mark.svg';
 import ExitIcon from './exit.svg';
 import SelectIcon from './select.svg';
+import MapMarkerIcon from './map_marker.svg';
+import SelectedMapMarkerIcon from './selected_map_marker.svg';
+import HomeMarkerIcon from './home_marker.svg';
+import UserCurrentMarkerIcon from './userCurrentMarker.svg';
+import MapBackIcon from './map_back.svg';
+import RateStaIcon from './RateStar.svg';
+import SelectedCurrentUser from './SelectedCurrentUser.svg';
+import WashIcon from './wash.svg';
+import DrayerIcon from './drayer.svg';
+import SneakerIcon from './sneaker.svg';
+import GuidWashIcon from './guide-wash.svg';
+import GuideDrayerIcon from './guide-drayer.svg';
+import GuideSneakerIcon from './guide-sneaker.svg';
+import RightIcon from './right-icon.svg';
+
 
 export {
   ArrowDownIcon,
+  GuidWashIcon,
+  GuideDrayerIcon,
+  RightIcon,
+  GuideSneakerIcon,
+  SelectedCurrentUser,
+  NoCoinList,
+  WashIcon,
+  SneakerIcon,
+  DrayerIcon,
   SelectedMapMarkerIcon,
   UserCurrentMarkerIcon,
   MapBackIcon,
   FramIcon,
+  RateStaIcon,
   HomeMarkerIcon,
   CarIcon,
   MapMarkerIcon,

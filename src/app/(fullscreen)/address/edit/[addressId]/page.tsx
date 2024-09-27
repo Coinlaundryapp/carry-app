@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useToastStore } from '@/store/toast-store';
 import Loading from '@/components/share/Loading';
 
+export type TSelectedRequest = { value: string; requestText: string };
 const EditFormPage = () => {
   const { addressModalOpen } = useAddressStore();
   const triggerRefetch = useAddressStore((state) => state.triggerRefetch);
@@ -177,7 +178,6 @@ const EditFormPage = () => {
               selectedRequest={selectedRequest}
               handleChangeRequest={handleChangeRequest}
               onChangeRequestText={handleChangeRequestText}
-              setSelectedRequest={setSelectedRequest}
               onPhoneChange={handlePhoneChange}
               renderSteps={[1, 2, 3, 4, 5, 6]}
               renderAllAtOnce={true}

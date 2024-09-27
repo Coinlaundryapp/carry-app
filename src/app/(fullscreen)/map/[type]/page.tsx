@@ -173,6 +173,7 @@ export default function MapPage() {
           });
 
           naver.maps.Event.addListener(marker, 'click', (e) => {
+            mapRef.current && mapRef.current.panTo(markerPosition);
             setSelectedMarkerId(loc.id);
             setOpen(true);
             const selectedMarker = data.find((item: any) => item.id === loc.id);

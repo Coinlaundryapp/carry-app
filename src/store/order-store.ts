@@ -1,4 +1,5 @@
 import { SelectedOptions } from '@/types/laundry-type';
+import { TLaundromats } from '@/types/map-type';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
@@ -8,23 +9,8 @@ interface OrderOptionsState {
   resetOptions: () => void;
 }
 
-type TSelectedLaundromat = {
-  address: string;
-  distance: number;
-  groupDeliveryFree: number;
-  id: number;
-  individualDeliveryFee: number;
-  latitude: number;
-  longitude: number;
-  mediaResources: { extension: string; mediaUrl: string };
-  name: string;
-  options: 'WASHING_MACHINE' | 'DRYER' | 'SNEAKERS';
-  reviewAverageRating: number;
-  reviewCount: number;
-};
-
 type LaundromatState = {
-  selectedLaundromat: TSelectedLaundromat | null;
+  selectedLaundromat: TLaundromats | null;
   setSelectedLaundromat: (data: any) => void;
 };
 

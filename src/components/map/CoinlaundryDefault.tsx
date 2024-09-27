@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 type Props = {
   data: any;
-  onSelectedAddress: (addressId: string) => void;
+  onSelectedAddress: (addressId: number) => void;
 };
 
 function CoinlaundryDefault({ data, onSelectedAddress }: Props) {

@@ -24,6 +24,7 @@ import { useSession } from 'next-auth/react';
 import Loading from '@/app/loading';
 import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
 import { useParams, useRouter } from 'next/navigation';
+import { TLaundromats } from '@/types/map-type';
 
 export default function MapPage() {
   const { getLocation } = useGeoLocation();
@@ -31,7 +32,7 @@ export default function MapPage() {
   const userPositionRef = useRef<naver.maps.LatLng | null>(null);
   const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
-  const [selectedMarkerId, setSelectedMarkerId] = useState<string>(''); // 선택된 마커 ID 상태
+  const [selectedMarkerId, setSelectedMarkerId] = useState<number>(0); // 선택된 마커 ID 상태
   const [open, setOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
   const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>(null);
@@ -43,15 +44,13 @@ export default function MapPage() {
   const [startY, setStartY] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
-  const session = useSession();
-  const accessToken = session.data?.user?.accessToken;
   const { type } = useParams();
   const router = useRouter();
 
   const { data, isLoading } = useQuery({
     queryKey: ['laundromats', currentCenter],
-    queryFn: () => getLaundromats(accessToken, currentCenter),
-    enabled: !!accessToken && !!currentCenter,
+    queryFn: () => getLaundromats(currentCenter),
+    enabled: !!currentCenter,
   });
 
   /**
@@ -264,11 +263,13 @@ export default function MapPage() {
     initMap(); // 지도는 처음 로드될 때만 초기화
   }, [selectedMarkerId, currentCenter, data]);
 
-  const handleSelectedAddress = (addressId: string) => {
+  const handleSelectedAddress = (addressId: number) => {
     setSelectedMarkerId(addressId);
-    const selectedMarker = data.find((item: any) => item.id === addressId);
-    setSelectedItem(selectedMarker);
-    setOpen(true);
+    if (data) {
+      const selectedMarker = data.find((item: TLaundromats) => item.id === addressId);
+      setSelectedItem(selectedMarker);
+      setOpen(true);
+    }
   };
 
   const handleBackClick = () => {
@@ -276,7 +277,7 @@ export default function MapPage() {
       return router.back();
     }
     if (selectedMarkerId) {
-      setSelectedMarkerId('');
+      setSelectedMarkerId(0);
       getLocationFromLocalStorage(); // 함수 호출
       setOpen(false);
       setZoomLevel(12);

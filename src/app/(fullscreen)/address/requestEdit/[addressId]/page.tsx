@@ -38,7 +38,7 @@ export default function AddressRequestEditPage({
         <AddressRequest
           key={5}
           handleChangeRequest={handleChangeRequest}
-          setSelectedRequest={setSelectedRequest}
+          onChangeRequestText={handleExtraInfoChange}
           selectedRequest={selectedRequest}
         />
         <EntrancePassword

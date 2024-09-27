@@ -37,7 +37,7 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraIn
           <div key={item.value} className="flex flex-col space-y-3">
             <label className="flex items-center space-x-2">
               <Radio.Button value={item.value} />
-              <span className="font_body_2_normal">{item.label}</span>
+              <span className="font-medium text-label-strong font-body-2-normal">{item.label}</span>
             </label>
             <div className="ml-6">
               {item.value === 'PASSWORD' && value === 'PASSWORD' && (

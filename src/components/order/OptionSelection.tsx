@@ -6,13 +6,15 @@ export default function OptionSelection({
   title,
   description,
   imageUrl,
+  price,
   onSelect,
 }: Readonly<{
   type: 'softener' | 'folding';
   title: string;
   description: React.ReactNode;
   imageUrl: string;
-  onSelect: (value: boolean) => void;
+  price: number | null;
+  onSelect: (value: boolean, price: number | null) => void;
 }>) {
   return (
     <div className="flex flex-col items-center justify-between overflow-scroll">
@@ -22,10 +24,15 @@ export default function OptionSelection({
       </div>
       <Image src={imageUrl} width={234} height={234} alt={`${type}-image`} priority />
       <div className="w-full">
-        <Button onClick={() => onSelect(true)} state="fillPrimary" size="full" className="mb-3">
+        <Button
+          onClick={() => onSelect(true, price)}
+          state="fillPrimary"
+          size="full"
+          className="mb-3"
+        >
           {type === 'folding' ? '네' : '네 추가할래요'}
         </Button>
-        <Button onClick={() => onSelect(false)} state="secondary" size="full">
+        <Button onClick={() => onSelect(false, price)} state="secondary" size="full">
           {type === 'folding' ? '아니요' : '아니요 괜찮아요'}
         </Button>
       </div>

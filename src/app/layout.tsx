@@ -3,9 +3,10 @@ import './globals.css';
 import clsx from 'clsx';
 
 import AuthProvider from '@/providers/AuthProvides';
-import ReactQueryProviders from '@/hooks/useReactQuery';
+
 import { pretendard } from '@/font/myLocalFont';
 import Script from 'next/script';
+import ReactQueryProviders from '@/providers/ReactQueryProviders';
 
 export const metadata: Metadata = {
   title: 'Carry',
@@ -25,9 +26,10 @@ export default function RootLayout({
           src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_ID}`}
           strategy="beforeInteractive"
         />
-        <ReactQueryProviders>
-          <AuthProvider>{children}</AuthProvider>
-        </ReactQueryProviders>
+
+        <AuthProvider>
+          <ReactQueryProviders>{children}</ReactQueryProviders>
+        </AuthProvider>
       </body>
     </html>
   );

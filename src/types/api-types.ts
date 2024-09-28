@@ -13,7 +13,6 @@ export interface User {
   refreshToken: string;
 }
 
-
 export type TGetAddressSearchListRes = {
   content: {
     addressName: string;
@@ -70,6 +69,20 @@ export interface NotificationBody {
 export interface ErrorResponse {
   status: number;
   message: string;
-
 }
 
+export type Address = {
+  id: number;
+  userId: number;
+  isDefaultAddress: boolean;
+  addressLabel: string;
+  recipientName: string;
+  recipientPhone: string;
+  baseAddress: string;
+  detailAddress: string;
+  latitude: number;
+  longitude: number;
+  deliveryNotes: string;
+  entranceType: string;
+  entranceDetail: string;
+};

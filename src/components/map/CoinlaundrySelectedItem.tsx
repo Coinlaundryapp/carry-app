@@ -2,9 +2,10 @@
 import { RateStaIcon, RightIcon } from '@assets/icons';
 import Image from 'next/image';
 import { KINDS_STATUS } from '@/constants/map';
-import { useParams } from 'next/navigation';
+
+import { useParams, useRouter } from 'next/navigation';
 import { useRef } from 'react';
-import { useLaundromatStore } from '@/store/order-store';
+import useOrderStore from '@/store/order-store';
 import Review from './Review';
 
 type Props = {
@@ -33,12 +34,15 @@ const dummydata = [
 ];
 
 function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
+
+  const router = useRouter();
   const { type } = useParams();
 
-  const { setSelectedLaundromat } = useLaundromatStore();
+  const { setLaundryromat } = useOrderStore();
 
   const handleSelectClick = () => {
-    setSelectedLaundromat(data);
+    setLaundryromat(data);
+    router.back();
   };
 
   const contentRef = useRef<HTMLDivElement>(null);

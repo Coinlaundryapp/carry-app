@@ -79,6 +79,8 @@ import GuideDrayerIcon from './guide-drayer.svg';
 import GuideSneakerIcon from './guide-sneaker.svg';
 import RightIcon from './right-icon.svg';
 
+import LaundryBasketIcon from './laundry-basket.svg';
+import LaundryIcon from './laundry.svg';
 
 export {
   ArrowDownIcon,
@@ -161,4 +163,6 @@ export {
   QuestionMarkIcon,
   ExitIcon,
   SelectIcon,
+  LaundryBasketIcon,
+  LaundryIcon,
 };

@@ -2,17 +2,31 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import clsx from 'clsx';
-import useSelectedOptionsStore from '@/store/order-store';
+import Order from '@/components/order/Order';
 import OptionSelection from '@/components/order/OptionSelection';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import { OptionsSelection } from '@/components/order/OptionsSelection';
 import ProgressBar from '@/components/share/ProgressBar';
 import { ShoeCountSelection } from '@/components/order/ShoeCountSelection';
 import InfoDrawer from '@/components/order/InfoDrawer';
-import { LaundryType, SelectedOptions } from '@/types/laundry-type';
+import { useModalStore } from '@/store/modal-store';
+import { DryIcon, HotWaterIcon, WaterIcon } from '@assets/icons';
+import {
+  AdditionalOption,
+  LaundryItemType,
+  LaundryOptions,
+  LaundryPriceData,
+  LaundryTask,
+  OrderContent,
+  OrderRequestType,
+  OrderUnitType,
+} from '@/types/laundry-type';
+import useOrderStore from '@/store/order-store';
 
+type OptionSteps = {
+  [key in LaundryItemType]: FunnelStep[];
+};
 type FunnelStep =
   | 'laundryOptions'
   | 'washOptions'
@@ -20,103 +34,244 @@ type FunnelStep =
   | 'shoePairs'
   | 'folding'
   | 'softener'
-  | 'confirm';
-
-type OptionSteps = {
-  [key in LaundryType]: FunnelStep[];
-};
+  | 'order';
 
 const optionSteps: OptionSteps = {
-  general: ['laundryOptions', 'washOptions', 'dryOptions', 'folding', 'softener'],
-  bedding: ['laundryOptions', 'washOptions', 'dryOptions', 'softener'],
-  mixed: ['laundryOptions', 'washOptions', 'dryOptions', 'folding', 'softener'],
-  shoes: ['shoePairs', 'laundryOptions', 'washOptions', 'dryOptions'],
+  REGULAR: ['laundryOptions', 'washOptions', 'dryOptions', 'folding', 'softener', 'order'],
+  BLANKET: ['laundryOptions', 'washOptions', 'dryOptions', 'softener', 'order'],
+  REGULAR_AND_BLANKET: [
+    'laundryOptions',
+    'washOptions',
+    'dryOptions',
+    'folding',
+    'softener',
+    'order',
+  ],
+  SHOES: ['shoePairs', 'laundryOptions', 'washOptions', 'dryOptions', 'order'],
 };
 
 interface LaundryFunnelProps {
-  laundryType: LaundryType;
+  laundryItemType: LaundryItemType;
+  laundryPriceData: LaundryPriceData;
+  orderUnitType: OrderUnitType;
+  orderRequestType: OrderRequestType;
 }
 
-export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelProps>) {
-  const session = useSession();
+export default function LaundryFunnel({
+  laundryItemType,
+  laundryPriceData,
+  orderUnitType,
+  orderRequestType,
+}: Readonly<LaundryFunnelProps>) {
   const router = useRouter();
-  const steps: readonly FunnelStep[] = optionSteps[laundryType];
-  const { washOptions, setWashOptions, resetOptions } = useSelectedOptionsStore();
-  const [currentStep, setCurrentStep] = useState<FunnelStep>(
-    washOptions.service ? steps[steps.length - 1] : steps[0],
-  );
-  const [showDrawer] = useState(laundryType !== 'shoes' && currentStep == steps[0]);
-  const nextStep = (options: SelectedOptions) => {
-    let increment = 1;
-    if (currentStep === 'laundryOptions' && options.service === 'dry-only') {
-      increment = 2;
-    }
-    if (currentStep === 'washOptions' && options.service === 'wash-only') {
-      increment = 2;
-    }
-    const currentIndex = steps.indexOf(currentStep);
-    if (currentIndex < steps.length - 1) {
-      setCurrentStep(steps[currentIndex + increment]);
-      return;
-    }
-    setWashOptions(options);
+  const serviceOptions: LaundryOptions[] = [
+    {
+      name: '세탁 + 건조',
+      icon: (
+        <div className="flex gap-1">
+          <WaterIcon />
+          <DryIcon />
+        </div>
+      ),
+      value: 'WASH_AND_DRY',
+      selectable: true,
+    },
+    {
+      name: '건조만',
+      icon: <DryIcon />,
+      value: 'DRY',
+      selectable: laundryItemType !== 'SHOES',
+    },
+    {
+      name: '세탁만',
+      icon: <WaterIcon />,
+      value: 'WASH',
+      selectable: laundryItemType !== 'SHOES',
+    },
+  ];
+  const washOptions: LaundryOptions[] = [
+    {
+      name: '표준 코스',
+      description: '냉수',
+      price: laundryPriceData.washOption.standard.price,
+      icon: <WaterIcon />,
+      value: 'STANDARD',
+      selectable: laundryPriceData.washOption.standard.selectable,
+    },
+    {
+      name: '온수 코스',
+      description: '40도',
+      price: laundryPriceData.washOption.hotWater.price,
+      icon: <HotWaterIcon />,
+      value: 'HOT_WATER',
+      selectable: laundryPriceData.washOption.hotWater.selectable,
+    },
+  ];
 
-    if (session.data?.user) {
-      router.push(`/order`);
-    } else {
-      router.push(`/login/order`);
+  const dryOptions: LaundryOptions[] = [
+    {
+      name: '저온 건조',
+      description: '30분',
+      price: laundryPriceData.dryOption.lowHeat.price,
+      icon: <DryIcon />,
+      value: 'LOW_HEAT',
+      selectable: laundryPriceData.dryOption.lowHeat.selectable,
+    },
+    {
+      name: '고온 건조',
+      description: '30분',
+      price: laundryPriceData.dryOption.highHeat.price,
+      icon: <DryIcon />,
+      value: 'HIGH_HEAT',
+      selectable: laundryPriceData.dryOption.highHeat.selectable,
+    },
+  ];
+  const steps: readonly FunnelStep[] = optionSteps[laundryItemType];
+  const [laundryOption, setLaundryOption] = useState<LaundryTask | null>();
+  const { openModal } = useModalStore();
+  const store = useOrderStore();
+  const { step, orderContent, setStep, setOrderContent, addTotalAmount, reset } = store;
+  const percentage = ((step + 1) / (steps.length - 1)) * 100;
+  const nextStep = () => {
+    let increment = 1;
+    if (steps[step] === 'laundryOptions' && laundryOption === 'DRY') {
+      increment = 2;
+    }
+    if (steps[step] === 'washOptions' && laundryOption === 'WASH') {
+      increment = 2;
+    }
+
+    if (step < steps.length - 1) {
+      setStep(step + increment);
     }
   };
-
   const prevStep = () => {
-    const currentIndex = steps.indexOf(currentStep);
-    if (currentIndex > 0) {
-      setCurrentStep(steps[currentIndex - 1]);
+    if (step === steps.length - 1) {
+      openModal({
+        type: 'confirm',
+        title: '앗, 주문을 취소하시겠어요?',
+        description: '신청한 내용이 모두 사라집니다.\n정말 취소하고 나가시겠어요?',
+        closeText: '아니요',
+        confirmText: '주문 취소',
+        onConfirm: () => {
+          setStep(step - 1);
+        },
+      });
+    } else if (step > 0) {
+      setStep(step - 1);
     } else {
-      resetOptions();
+      reset(null, null, null);
       router.replace(`/`);
     }
   };
-
-  const handleOptionSelect = (option: keyof SelectedOptions, value: string | boolean | number) => {
-    const newOptions = { [option]: value };
-    setWashOptions(newOptions);
-    nextStep(newOptions);
+  const handleLaundryOption = (value: LaundryTask) => {
+    setLaundryOption(value);
+    nextStep();
   };
-  const RenderStep = () => {
-    switch (currentStep) {
-      case 'laundryOptions':
-        return (
+
+  const handleOptionSelect = (option: keyof OrderContent, value: LaundryOptions) => {
+    setOrderContent({
+      [option]: value.value,
+    });
+    if (value.price) {
+      addTotalAmount(value.price);
+    }
+    nextStep();
+  };
+
+  const handleShoePairs = (value: number) => {
+    const newOptions = { laundrySpecs: [{ laundrySpec: 'SHOE_PAIRS', value }] };
+    setOrderContent(newOptions);
+    nextStep();
+  };
+
+  const handleAdditionalOption = (
+    option: AdditionalOption,
+    value: boolean,
+    price: number | null,
+  ) => {
+    if (value) {
+      if (!orderContent.additionalOption.includes(option)) {
+        setOrderContent({
+          additionalOption: [...orderContent.additionalOption, option],
+        });
+        if (price) {
+          addTotalAmount(price);
+        }
+      }
+    } else {
+      setOrderContent({
+        additionalOption: orderContent.additionalOption.filter((item) => item !== option),
+      });
+      if (price) {
+        addTotalAmount(-price);
+      }
+    }
+    nextStep();
+  };
+  useEffect(() => {
+    if (
+      laundryItemType !== orderContent.laundryItemType ||
+      orderUnitType !== orderContent.orderUnitType ||
+      orderRequestType !== orderContent.orderRequestType
+    ) {
+      reset(orderUnitType, orderRequestType, laundryItemType);
+    }
+  }, [laundryItemType, orderUnitType, orderRequestType, reset, orderContent]);
+
+  return (
+    <div
+      className={clsx('flex h-dvh flex-col bg-background-normal-alternative pb-6', {
+        'bg-background-normal-normal': steps[step] === 'shoePairs',
+      })}
+    >
+      {steps[step] !== 'order' && (
+        <div className="mb-2.5 px-5 pt-7">
+          <ProgressBar percent={percentage} />
+        </div>
+      )}
+      <TopNavigation
+        leftClick={prevStep}
+        type="back"
+        title={steps[step] === 'order' ? '수거 신청' : ''}
+        className={clsx({
+          'bg-white': steps[step] === 'order',
+        })}
+      />
+      {steps[step] === 'shoePairs' && (
+        <div className="mt-2.5 h-full px-5">
+          <ShoeCountSelection onSelect={handleShoePairs} />
+        </div>
+      )}
+      {steps[step] === 'laundryOptions' && (
+        <div className="mt-2.5 h-full px-5">
           <OptionsSelection
-            laundryType={laundryType}
-            type="laundryOptions"
-            onSelect={(value: string) => handleOptionSelect('service', value)}
+            laundryItemType={laundryItemType}
+            options={serviceOptions}
+            onSelect={(value) => handleLaundryOption(value as LaundryTask)}
           />
-        );
-      case 'washOptions':
-        return (
+        </div>
+      )}
+      {steps[step] === 'washOptions' && (
+        <div className="mt-2.5 h-full px-5">
           <OptionsSelection
-            laundryType={laundryType}
-            type="washOptions"
-            onSelect={(value: string) => handleOptionSelect('wash', value)}
+            laundryItemType={laundryItemType}
+            options={washOptions}
+            onSelect={(value) => handleOptionSelect('washOption', value as LaundryOptions)}
           />
-        );
-      case 'dryOptions':
-        return (
+        </div>
+      )}
+      {steps[step] === 'dryOptions' && (
+        <div className="mt-2.5 h-full px-5">
           <OptionsSelection
-            laundryType={laundryType}
-            type="dryOptions"
-            onSelect={(value: string) => handleOptionSelect('wash', value)}
+            laundryItemType={laundryItemType}
+            options={dryOptions}
+            onSelect={(value) => handleOptionSelect('dryOption', value as LaundryOptions)}
           />
-        );
-      case 'shoePairs':
-        return (
-          <ShoeCountSelection
-            onSelect={(value: number) => handleOptionSelect('shoePairs', value)}
-          />
-        );
-      case 'folding':
-        return (
+        </div>
+      )}
+      {steps[step] === 'folding' && (
+        <div className="mt-2.5 h-full px-5">
           <OptionSelection
             type="folding"
             title="빨래를 개서 드릴까요?"
@@ -127,11 +282,13 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
               </p>
             }
             imageUrl="/assets/images/folding.png"
-            onSelect={(value: boolean) => handleOptionSelect('folding', value)}
+            price={laundryPriceData.additionalOption.foldLaundry.price}
+            onSelect={(value, price) => handleAdditionalOption('FOLD_LAUNDRY', value, price)}
           />
-        );
-      case 'softener':
-        return (
+        </div>
+      )}
+      {steps[step] === 'softener' && (
+        <div className="mt-2.5 h-full px-5">
           <OptionSelection
             type="softener"
             title="섬유유연제를 무료로 추가할 수 있어요"
@@ -141,32 +298,15 @@ export default function LaundryFunnel({ laundryType }: Readonly<LaundryFunnelPro
               </p>
             }
             imageUrl="/assets/images/softener.png"
-            onSelect={(value: boolean) => handleOptionSelect('softener', value)}
+            price={laundryPriceData.additionalOption.addSoftener.price}
+            onSelect={(value, price) => handleAdditionalOption('ADD_SOFTENER', value, price)}
           />
-        );
-
-      default:
-        null;
-    }
-  };
-  const percentage = ((steps.indexOf(currentStep) + 1) / steps.length) * 100;
-  useEffect(() => {
-    setWashOptions({ laundryType });
-  }, [laundryType, setWashOptions]);
-  return (
-    <div
-      className={clsx('flex h-dvh flex-col bg-background-normal-alternative pb-6', {
-        'bg-background-normal-normal': currentStep === 'shoePairs',
-      })}
-    >
-      <div className="mb-2.5 px-5 pt-7">
-        <ProgressBar percent={percentage} />
-      </div>
-      <TopNavigation leftClick={prevStep} type="back" />
-      <div className="mt-2.5 h-full px-5">
-        <RenderStep />
-      </div>
-      {showDrawer && <InfoDrawer />}
+        </div>
+      )}
+      {steps[step] === 'order' && (
+        <Order currentUrl={`order/${orderUnitType}/${orderRequestType}/${laundryItemType}`} />
+      )}
+      <InfoDrawer defaultOpen={steps[step] !== 'shoePairs' && step === 0} />
     </div>
   );
 }

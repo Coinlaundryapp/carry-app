@@ -16,7 +16,12 @@ export default function TopNavigation({
   rightClick,
 }: TopNavigationProps) {
   return (
-    <nav className={cn('flex h-[52px] w-full items-center justify-between px-3', className)}>
+    <nav
+      className={cn(
+        'flex h-[52px] w-full flex-shrink-0 items-center justify-between px-3',
+        className,
+      )}
+    >
       <button
         onClick={leftClick}
         className={cn('p-1.5', {

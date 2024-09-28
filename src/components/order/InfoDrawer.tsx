@@ -1,12 +1,10 @@
-import { useState } from 'react';
 import Image from 'next/image';
 import Button from '@/components/share/Button';
 import { Drawer, DrawerClose, DrawerContent } from '@/components/share/ui/drawer';
 
-export default function InfoDrawer() {
-  const [open, setOpen] = useState(true);
+export default function InfoDrawer({ defaultOpen }: { defaultOpen: boolean }) {
   return (
-    <Drawer open={open} onOpenChange={setOpen} scrollLockTimeout={3000}>
+    <Drawer defaultOpen={defaultOpen}>
       <DrawerContent showIndicator={false}>
         <div className="flex w-full flex-col items-center px-6 pb-5 pt-[30px] font-semibold text-label-strong font-heading-2">
           <p>

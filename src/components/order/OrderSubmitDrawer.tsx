@@ -27,7 +27,7 @@ export default function OrderSubmitDrawer({ canSubmit }: Readonly<{ canSubmit: b
       }),
     onSuccess: (data) => {
       reset();
-      router.replace(`/status?orderId=${data.id}`);
+      router.replace(`/status/${data.id}`);
     },
     onError: (error) => {
       alert(error);

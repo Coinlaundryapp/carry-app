@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
-import { getDefaultAddress } from '@/api/addressApi';
+import { getAddress } from '@/api/addressApi';
 import useOrderStore from '@/store/order-store';
 import AddressField from '@/components/order/AddressField';
 import CostField from '@/components/order/CostField';
@@ -12,6 +12,7 @@ import LaundryField from '@/components/order/LaundryField';
 import PrivacyField from '@/components/order/PrivacyField';
 import TimeField from '@/components/order/TimeField';
 import OrderSubmitDrawer from '@/components/order/OrderSubmitDrawer';
+import { useAddressStore } from '@/store/address-store';
 
 export default function Order({
   currentUrl,
@@ -21,12 +22,12 @@ export default function Order({
   const router = useRouter();
   const session = useSession();
   const accessToken = session.data?.user.accessToken;
-  const { orderContent, laundryromat, address, orderSchedule, setOrderSchedule, setAddress } =
-    useOrderStore();
-  const { data: defaultAddress } = useQuery({
-    queryKey: ['defaultAddress'],
-    queryFn: () => getDefaultAddress(accessToken),
-    enabled: !!accessToken,
+  const { selectedAddressId } = useAddressStore();
+  const { orderContent, laundryromat, orderSchedule, setOrderSchedule } = useOrderStore();
+  const { data: address } = useQuery({
+    queryKey: ['address', selectedAddressId],
+    queryFn: () => getAddress(accessToken, selectedAddressId as number),
+    enabled: !!accessToken && !!selectedAddressId,
   });
   const [allConsentsGiven, setAllConsentsGiven] = useState(false);
   if (session.status === 'unauthenticated') {
@@ -41,12 +42,6 @@ export default function Order({
     !laundryromat ||
     !orderSchedule.desiredDeliveryDateTime ||
     !allConsentsGiven;
-
-  useEffect(() => {
-    if (defaultAddress && address === null) {
-      setAddress(defaultAddress);
-    }
-  }, [defaultAddress, address, setAddress]);
 
   return (
     <div className="h-full bg-white">

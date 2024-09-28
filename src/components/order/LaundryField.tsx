@@ -8,7 +8,7 @@ export default function LaundryField({
   address,
   laundryromat,
 }: {
-  address: Address | null;
+  address: TAddressRes | undefined;
   laundryromat: TLaundromats | null;
 }) {
   if (!address) {

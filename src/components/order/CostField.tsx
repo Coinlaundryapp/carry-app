@@ -2,7 +2,7 @@ import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
 import Separator from '@/components/share/Separator/Separator';
 import { BASE_COST, BASE_DISTANCE, COST_INCREMENT, DISTANCE_INCREMENT } from '@/constants/policy';
 import useOrderStore from '@/store/order-store';
-import { Address } from '@/types/api-types';
+import { TAddressRes } from '@/types/api-types';
 import { TLaundromats } from '@/types/map-type';
 import { formatNumberWithCommas } from '@/utils/format';
 
@@ -10,7 +10,7 @@ export default function CostField({
   address,
   laundryromat,
 }: Readonly<{
-  address: Address | null;
+  address: TAddressRes | undefined;
   laundryromat: TLaundromats | null;
 }>) {
   const { totalAmount } = useOrderStore();

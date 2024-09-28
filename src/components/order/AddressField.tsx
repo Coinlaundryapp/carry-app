@@ -4,9 +4,9 @@ import { ChevronRightIcon, EllipseIcon } from '@assets/icons';
 import Separator from '@/components/share/Separator/Separator';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Address } from '@/types/api-types';
+import { TAddressRes } from '@/types/api-types';
 
-export default function AddressField({ address }: { address: Address | null }) {
+export default function AddressField({ address }: { address: TAddressRes | undefined }) {
   const router = useRouter();
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;

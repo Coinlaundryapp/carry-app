@@ -3,8 +3,8 @@ import { cva } from 'class-variance-authority';
 import React, { createContext, PropsWithChildren, useContext } from 'react';
 
 type Props = {
-  value: string;
-  onChange: (value: string) => void;
+  value: string | number | null;
+  onChange: (value: number | string | null) => void;
   size?: 'small' | 'big';
 };
 

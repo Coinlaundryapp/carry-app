@@ -32,7 +32,10 @@ export async function getAddressSearchList(keyword: string, page: number) {
   return data;
 }
 
-export async function getAddress(accessToken: string | undefined, addressId: string | string[]) {
+export async function getAddress(
+  accessToken: string | undefined,
+  addressId: string | string[] | number,
+) {
   const res = await fetchExtended<ApiResponse<TAddressRes>>(
     `/api/v1/users/me/shipping-addresses/${addressId}`,
     {
@@ -41,6 +44,7 @@ export async function getAddress(accessToken: string | undefined, addressId: str
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
+      cache: 'no-cache',
     },
   );
 

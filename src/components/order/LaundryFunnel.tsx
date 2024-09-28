@@ -180,7 +180,9 @@ export default function LaundryFunnel({
   };
 
   const handleShoePairs = (value: number) => {
-    const newOptions = { laundrySpecs: [{ laundrySpec: 'SHOE_PAIRS', value }] };
+    const newOptions = {
+      laundrySpecs: [...orderContent.laundrySpecs, { laundrySpec: 'SHOE_PAIRS', value }],
+    };
     setOrderContent(newOptions);
     nextStep();
   };
@@ -191,9 +193,9 @@ export default function LaundryFunnel({
     price: number | null,
   ) => {
     if (value) {
-      if (!orderContent.additionalOption.includes(option)) {
+      if (!orderContent.additionalOptions.includes(option)) {
         setOrderContent({
-          additionalOption: [...orderContent.additionalOption, option],
+          additionalOptions: [...orderContent.additionalOptions, option],
         });
         if (price) {
           addTotalAmount(price);
@@ -201,7 +203,7 @@ export default function LaundryFunnel({
       }
     } else {
       setOrderContent({
-        additionalOption: orderContent.additionalOption.filter((item) => item !== option),
+        additionalOptions: orderContent.additionalOptions.filter((item) => item !== option),
       });
       if (price) {
         addTotalAmount(-price);

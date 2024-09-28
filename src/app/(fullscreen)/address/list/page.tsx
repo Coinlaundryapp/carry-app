@@ -1,16 +1,15 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { getAddresses } from '@/api/addressApi';
+import { useAddressStore } from '@/store/address-store';
+import { useToastStore } from '@/store/toast-store';
 import DeliveryAddressList from '@/components/address/DeliveryAddressList';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import { AddPlusIcon } from '@assets/icons';
-import { useQuery } from '@tanstack/react-query';
-import { getAddresses } from '@/api/addressApi';
-import { useSession } from 'next-auth/react';
-import Toast from '@/components/share/Toast';
-import { useEffect } from 'react';
-import { useAddressStore } from '@/store/address-store';
-import { useToastStore } from '@/store/toast-store';
 
 export default function AddressSetting() {
   const router = useRouter();
@@ -58,9 +57,6 @@ export default function AddressSetting() {
   return (
     <main className="flex h-full flex-col">
       <TopNavigation type="back" title="배송지 설정" leftClick={goBack} />
-      <div>
-        <Toast />
-      </div>
       {data && data.length !== 0 ? (
         <section className="mb-4 flex flex-grow flex-col overflow-y-auto px-5">
           <DeliveryAddressList addressList={data} />

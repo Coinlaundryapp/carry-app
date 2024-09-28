@@ -11,7 +11,6 @@ import CostField from '@/components/order/CostField';
 import LaundryField from '@/components/order/LaundryField';
 import PrivacyField from '@/components/order/PrivacyField';
 import TimeField from '@/components/order/TimeField';
-import Button from '@/components/share/Button';
 import OrderSubmitDrawer from '@/components/order/OrderSubmitDrawer';
 
 export default function Order({

@@ -8,6 +8,13 @@ import { Radio } from '@/components/share/Radio';
 import Separator from '@/components/share/Separator/Separator';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
+import Loading from '@/components/share/Loading';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { getPaymentInfo } from '@/api/payment';
+import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { formatNumberWithCommas } from '@/utils/format';
 
 type PaymentMethod = 'KAKAOPAY' | 'NAVERPAY' | 'card';
 
@@ -72,15 +79,23 @@ type PaymentState = {
   card: string;
   installment: string;
 };
-const amount = {
-  currency: 'KRW',
-  value: 50000,
-};
 
 const clientKey = 'test_ck_LkKEypNArW1B7K0Em51A3lmeaxYG';
 const customerKey = 'dr09G1bpeUIgkygKX5L4H';
 
 export default function PaymentPage({ params }: Readonly<{ params: { id: string } }>) {
+  const router = useRouter();
+  const session = useSession();
+  const accessToken = session.data?.user.accessToken;
+  const {
+    data: paymentInfo,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['payment', params.id],
+    queryFn: () => getPaymentInfo({ orderId: Number(params.id), accessToken }),
+  });
+
   const [payment, setPayment] = useState<TossPaymentsPayment | null>(null);
   const [paymentState, setPaymentState] = useState<PaymentState>({
     paymentMethod: 'KAKAOPAY',
@@ -105,86 +120,6 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
   const handleInstallmentChange = (value: string) => {
     setPaymentState((prev) => ({ ...prev, installment: value }));
   };
-
-  async function requestPayment(paymentState: PaymentState) {
-    if (!payment) {
-      return;
-    }
-    // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
-    // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-    switch (paymentState.paymentMethod) {
-      case 'card':
-        await payment.requestPayment({
-          method: 'CARD', // 카드 및 간편결제
-          amount,
-          orderId: 'NefN2Hu0HsStnHO2prILj',
-          orderName: '토스 티셔츠 외 2건',
-          successUrl: window.location.origin + window.location.pathname + '/success',
-          failUrl:
-            window.location.origin +
-            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
-          customerEmail: 'customer123@gmail.com',
-          customerName: '김토스',
-          customerMobilePhone: '01012345678',
-          card: {
-            useEscrow: false,
-            flowMode: 'DIRECT', // 자체창 여는 옵션
-            cardCompany: paymentState.card,
-            useCardPoint: false,
-            useAppCardOnly: false,
-          },
-        });
-        break;
-      case 'KAKAOPAY':
-        await payment.requestPayment({
-          method: 'CARD', // 카드 및 간편결제
-          amount: {
-            currency: 'KRW',
-            value: 50000,
-          },
-          orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
-          orderName: '토스 티셔츠 외 2건',
-          successUrl: window.location.origin + window.location.pathname + '/success',
-          failUrl:
-            window.location.origin +
-            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
-          customerEmail: 'customer123@gmail.com',
-          customerName: '김토스',
-          customerMobilePhone: '01012341234',
-          // 카드 결제에 필요한 정보
-          card: {
-            useEscrow: false,
-            flowMode: 'DIRECT', // 자체창 여는 옵션
-            easyPay: 'KAKAOPAY', // 간편결제 자체창
-          },
-        });
-        break;
-      case 'NAVERPAY':
-        await payment.requestPayment({
-          method: 'CARD', // 카드 및 간편결제
-          amount: {
-            currency: 'KRW',
-            value: 50000,
-          },
-          orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
-          orderName: '토스 티셔츠 외 2건',
-          successUrl: window.location.origin + window.location.pathname + '/success',
-          failUrl:
-            window.location.origin +
-            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
-          customerEmail: 'customer123@gmail.com',
-          customerName: '김토스',
-          customerMobilePhone: '01012341234',
-          // 카드 결제에 필요한 정보
-          card: {
-            flowMode: 'DIRECT', // 자체창 여는 옵션
-            easyPay: 'NAVERPAY', // 간편결제 자체창
-            useCardPoint: false,
-            useAppCardOnly: false,
-          },
-        });
-    }
-  }
   useEffect(() => {
     async function fetchPayment() {
       try {
@@ -206,102 +141,195 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
 
     fetchPayment();
   }, [clientKey, customerKey]);
+  if (isLoading) return <Loading />;
+  if (isError || !paymentInfo) {
+    router.push('/error?error=payment_error');
+    return;
+  }
+  const amount = {
+    currency: 'KRW',
+    value: paymentInfo.confirmedPayment.netAmount,
+  };
+
+  async function requestPayment(paymentState: PaymentState) {
+    if (!payment) {
+      return;
+    }
+    // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
+    // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
+    switch (paymentState.paymentMethod) {
+      case 'card':
+        await payment.requestPayment({
+          method: 'CARD', // 카드 및 간편결제
+          amount,
+          orderId: 'NefN2Hu0HsStnHO2prILj',
+          orderName: '토스 티셔츠 외 2건',
+          successUrl: window.location.origin + '/payment/success',
+          failUrl:
+            window.location.origin +
+            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
+          customerName: '김민수',
+          customerMobilePhone: '01030168706',
+          card: {
+            useEscrow: false,
+            flowMode: 'DIRECT', // 자체창 여는 옵션
+            cardCompany: paymentState.card,
+            useCardPoint: false,
+            useAppCardOnly: false,
+          },
+        });
+        break;
+      case 'KAKAOPAY':
+        await payment.requestPayment({
+          method: 'CARD', // 카드 및 간편결제
+          amount,
+          orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
+          orderName: '토스 티셔츠 외 2건',
+          successUrl: window.location.origin + '/payment/success',
+          failUrl:
+            window.location.origin +
+            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
+          customerEmail: 'customer123@gmail.com',
+          customerName: '김토스',
+          customerMobilePhone: '01012341234',
+          // 카드 결제에 필요한 정보
+          card: {
+            useEscrow: false,
+            flowMode: 'DIRECT', // 자체창 여는 옵션
+            easyPay: 'KAKAOPAY', // 간편결제 자체창
+          },
+        });
+        break;
+      case 'NAVERPAY':
+        await payment.requestPayment({
+          method: 'CARD', // 카드 및 간편결제
+          amount,
+          orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
+          orderName: '토스 티셔츠 외 2건',
+          successUrl: window.location.origin + '/payment/success',
+          failUrl:
+            window.location.origin +
+            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
+          customerEmail: 'customer123@gmail.com',
+          customerName: '김토스',
+          customerMobilePhone: '01012341234',
+          // 카드 결제에 필요한 정보
+          card: {
+            flowMode: 'DIRECT', // 자체창 여는 옵션
+            easyPay: 'NAVERPAY', // 간편결제 자체창
+            useCardPoint: false,
+            useAppCardOnly: false,
+          },
+        });
+    }
+  }
 
   return (
-    <main>
-      <TopNavigation title="결제하기" type="back" leftClick={handleBackClick} />
-      <section className="space-y-4 p-5">
-        <h2 className="font-semibold text-primary-normal font-headline-1">
-          아래에서 결제를 진행해주세요
-        </h2>
-        <div className="flex items-center gap-2 font-label-1-normal">
-          <p className="font-semibold text-label-strong">2024.06.06</p>
-          <p className="font-medium text-label-alternative">주문번호 0921039123</p>
-        </div>
-      </section>
-      <Separator variant="horizontal8" />
-      <section className="p-5">
-        <h3 className="font-semibold text-static-black font-headline-1">결제 정보</h3>
-        <div className="mt-6 flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
-          <p className="font-normal">세탁 금액</p>
-          <p>4,000원</p>
-        </div>
-        <div className="mt-2 flex justify-between font-medium text-label-alternative font-label-1-normal">
-          <p className="font-normal">ㄴ 할인금액</p>
-          <p className="font-semibold">0원</p>
-        </div>
-        <div className="mt-2 flex justify-between font-medium text-label-alternative font-label-1-normal">
-          <p className="font-normal">ㄴ 세탁 대행료 10%</p>
-          <p className="font-semibold">1,050원</p>
-        </div>
-        <div className="mt-3 flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
-          <div className="flex items-center gap-1">
-            <p>배송비</p>
-            <DeliveryCostInfoDialog distance={1000} />
-          </div>
-          <p>4,000원</p>
-        </div>
-        <div className="mt-2 flex justify-between font-medium text-label-alternative font-label-1-normal">
-          <p className="font-normal">ㄴ 할인금액</p>
-          <p className="font-semibold">0원</p>
-        </div>
-        <Separator variant="horizontal" className="my-5" />
-        <div className="flex items-center justify-between font-semibold">
-          <p className="text-label-strong font-headline-1">최종 결제 금액</p>
-          <p className="text-primary-normal font-heading-2">14,550원</p>
-        </div>
-      </section>
-      <Separator variant="horizontal8" />
-      <section className="p-5">
-        <h2 className="font-semibold text-label-strong font-headline-1">
-          결제 수단 <span className="text-status-destructive">*</span>
-        </h2>
-        <div className="mt-6 flex flex-col font-semibold font-body-2-reading">
-          <Radio.Group
-            value={paymentState.paymentMethod}
-            size="big"
-            onChange={(value) => {
-              handlePaymentMethodChange(value as PaymentMethod);
-            }}
-          >
-            {paymentMethods.map((method) => (
-              <div key={method.value} className="flex items-center gap-2.5 py-3">
-                <Radio.Button value={method.value} />
-                <p>{method.label}</p>
-              </div>
-            ))}
-          </Radio.Group>
-          {paymentState.paymentMethod === 'card' && (
-            <div>
-              <Dropdown
-                data={institutions}
-                value={paymentState.card}
-                onChange={handleCardChange}
-                placeholder="카드 선택"
-                indicator="radio"
-                className="mt-3"
-              />
-              <Dropdown
-                data={installmentData}
-                value={paymentState.installment}
-                onChange={handleInstallmentChange}
-                placeholder="할부 선택"
-                indicator="check"
-                className="mt-3"
-              />
+    <main className="h-full w-full">
+      <div className="flex h-full flex-col justify-between">
+        <div>
+          <TopNavigation title="결제하기" type="back" leftClick={handleBackClick} />
+          <section className="space-y-4 p-5">
+            <h2 className="font-semibold text-primary-normal font-headline-1">
+              아래에서 결제를 진행해주세요
+            </h2>
+            <div className="flex items-center gap-2 font-label-1-normal">
+              <p className="font-semibold text-label-strong">
+                {format(new Date(paymentInfo.orderedAt), 'yyyy.MM.dd')}
+              </p>
+              <p className="font-medium text-label-alternative">주문번호 {paymentInfo.id}</p>
             </div>
-          )}
+          </section>
+          <Separator variant="horizontal8" />
+          <section className="p-5">
+            <h3 className="font-semibold text-static-black font-headline-1">결제 정보</h3>
+            <div className="mt-6 flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
+              <p className="font-normal">세탁 금액</p>
+              <p>{formatNumberWithCommas(paymentInfo.confirmedPayment.charges.laundryPrice)}원</p>
+            </div>
+            <div className="mt-2 flex justify-between font-medium text-label-alternative font-label-1-normal">
+              <p className="font-normal">ㄴ 할인금액</p>
+              <p className="font-semibold">0원</p>
+            </div>
+            <div className="mt-2 flex justify-between font-medium text-label-alternative font-label-1-normal">
+              <p className="font-normal">ㄴ 세탁 대행료 10%</p>
+              <p className="font-semibold">
+                {formatNumberWithCommas(paymentInfo.confirmedPayment.charges.serviceFee)}원
+              </p>
+            </div>
+            {/* TODO: 배송지모달 관련 거리 정보 필요 */}
+            <div className="mt-3 flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
+              <div className="flex items-center gap-1">
+                <p>배송비</p>
+                <DeliveryCostInfoDialog distance={1000} />
+              </div>
+              <p>{formatNumberWithCommas(paymentInfo.confirmedPayment.charges.deliveryFee)}원</p>
+            </div>
+            <div className="mt-2 flex justify-between font-medium text-label-alternative font-label-1-normal">
+              <p className="font-normal">ㄴ 할인금액</p>
+              <p className="font-semibold">0원</p>
+            </div>
+            <Separator variant="horizontal" className="my-5" />
+            <div className="flex items-center justify-between font-semibold">
+              <p className="text-label-strong font-headline-1">최종 결제 금액</p>
+              <p className="text-primary-normal font-heading-2">
+                {formatNumberWithCommas(paymentInfo.confirmedPayment.netAmount)}원
+              </p>
+            </div>
+          </section>
+          <Separator variant="horizontal8" />
+          <section className="p-5">
+            <h2 className="font-semibold text-label-strong font-headline-1">
+              결제 수단 <span className="text-status-destructive">*</span>
+            </h2>
+            <div className="mt-6 flex flex-col font-semibold font-body-2-reading">
+              <Radio.Group
+                value={paymentState.paymentMethod}
+                size="big"
+                onChange={(value) => {
+                  handlePaymentMethodChange(value as PaymentMethod);
+                }}
+              >
+                {paymentMethods.map((method) => (
+                  <div key={method.value} className="flex items-center gap-2.5 py-3">
+                    <Radio.Button value={method.value} />
+                    <p>{method.label}</p>
+                  </div>
+                ))}
+              </Radio.Group>
+              {paymentState.paymentMethod === 'card' && (
+                <div>
+                  <Dropdown
+                    data={institutions}
+                    value={paymentState.card}
+                    onChange={handleCardChange}
+                    placeholder="카드 선택"
+                    indicator="radio"
+                    className="mt-3"
+                  />
+                  <Dropdown
+                    data={installmentData}
+                    value={paymentState.installment}
+                    onChange={handleInstallmentChange}
+                    placeholder="할부 선택"
+                    indicator="check"
+                    className="mt-3"
+                  />
+                </div>
+              )}
+            </div>
+          </section>
         </div>
-      </section>
-      <div className="mt-[52px] px-5 pb-[30px]">
-        <Button
-          state={isDisabled ? 'disabled' : 'fillPrimary'}
-          size="full"
-          onClick={() => requestPayment(paymentState)}
-          disabled={isDisabled}
-        >
-          결제하기
-        </Button>
+        <div className="mt-[52px] w-full px-5 pb-[30px]">
+          <Button
+            state={isDisabled ? 'disabled' : 'fillPrimary'}
+            size="full"
+            onClick={() => requestPayment(paymentState)}
+            disabled={isDisabled}
+          >
+            결제하기
+          </Button>
+        </div>
       </div>
     </main>
   );

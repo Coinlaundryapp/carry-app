@@ -1,6 +1,6 @@
 import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
 import Separator from '@/components/share/Separator/Separator';
-import { BASE_COST, COST_INCREMENT, DISTANCE_INCREMENT } from '@/constants/policy';
+import { BASE_COST, BASE_DISTANCE, COST_INCREMENT, DISTANCE_INCREMENT } from '@/constants/policy';
 import useOrderStore from '@/store/order-store';
 import { Address } from '@/types/api-types';
 import { TLaundromats } from '@/types/map-type';
@@ -20,7 +20,10 @@ export default function CostField({
   const deliveryCost =
     BASE_COST + Math.floor(laundryromat.distance / DISTANCE_INCREMENT) * COST_INCREMENT;
   // 예상 결제 금액
-  const predictedCost = deliveryCost + totalAmount;
+  const predictedCost =
+    laundryromat.distance <= BASE_DISTANCE
+      ? BASE_DISTANCE + totalAmount
+      : deliveryCost + totalAmount;
   return (
     <>
       <section className="p-5">

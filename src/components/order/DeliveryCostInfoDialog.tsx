@@ -8,15 +8,24 @@ import {
 } from '@/components/share/ui/dialog';
 import { ExitIcon, QuestionMarkIcon, SelectIcon } from '@assets/icons';
 import { cn } from '@/lib/utils';
-import { BASE_COST, COST_INCREMENT, DISTANCE_INCREMENT } from '@/constants/policy';
+import { BASE_COST, BASE_DISTANCE, COST_INCREMENT, DISTANCE_INCREMENT } from '@/constants/policy';
 
 interface CostItem {
   label: string;
   cost: string;
   maxDistance: number;
 }
+
 const generateCostItem = (index: number): CostItem => {
-  const maxDistance = (index + 1) * DISTANCE_INCREMENT;
+  if (index === 0) {
+    return {
+      label: `${BASE_DISTANCE}m 이내`,
+      cost: `${BASE_COST}원`,
+      maxDistance: BASE_DISTANCE,
+    };
+  }
+
+  const maxDistance = BASE_DISTANCE + index * DISTANCE_INCREMENT;
   return {
     label: `${maxDistance}m 이내`,
     cost: `${BASE_COST + index * COST_INCREMENT}원`,
@@ -25,9 +34,16 @@ const generateCostItem = (index: number): CostItem => {
 };
 
 const findRelevantRanges = (distance: number): CostItem[] => {
-  const currentIndex = Math.floor(distance / DISTANCE_INCREMENT);
+  if (distance <= BASE_DISTANCE) {
+    return [generateCostItem(0), generateCostItem(1), generateCostItem(2)];
+  }
+
+  const currentIndex = Math.floor((distance - BASE_DISTANCE) / DISTANCE_INCREMENT) + 1;
   const ranges: CostItem[] = [];
-  if (currentIndex > 0) {
+
+  ranges.push(generateCostItem(0)); // 항상 기본 범위 포함
+
+  if (currentIndex > 1) {
     ranges.push(generateCostItem(currentIndex - 1));
   }
   ranges.push(generateCostItem(currentIndex));
@@ -38,7 +54,6 @@ const findRelevantRanges = (distance: number): CostItem[] => {
 export default function DeliveryCostInfoDialog({ distance }: Readonly<{ distance: number }>) {
   const relevantRanges = findRelevantRanges(distance);
   const currentCost = relevantRanges.find((item) => distance <= item.maxDistance)?.cost;
-
   return (
     <Dialog>
       <DialogTrigger>

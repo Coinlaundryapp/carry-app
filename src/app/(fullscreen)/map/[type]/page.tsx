@@ -333,6 +333,7 @@ export default function MapPage() {
   }
 
   return (
+
     <div className="h-full w-full">
       <div id="map" className="relative h-[54vh] w-full">
         <div className="absolute left-4 top-4 z-40" onClick={handleBackClick}>

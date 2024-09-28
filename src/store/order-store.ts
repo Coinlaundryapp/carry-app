@@ -1,5 +1,7 @@
+
 import { Address } from '@/types/api-types';
 import { OrderContent, OrderSchedule } from '@/types/laundry-type';
+
 import { TLaundromats } from '@/types/map-type';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
@@ -25,7 +27,9 @@ export interface OrderState {
   ) => void;
 }
 
+
 const useOrderStore = create<OrderState>()(
+
   persist(
     (set) => ({
       orderContent: {
@@ -105,5 +109,6 @@ const useOrderStore = create<OrderState>()(
     },
   ),
 );
+
 
 export default useOrderStore;

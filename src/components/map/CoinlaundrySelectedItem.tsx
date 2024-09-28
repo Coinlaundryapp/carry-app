@@ -2,6 +2,7 @@
 import { RateStaIcon, RightIcon } from '@assets/icons';
 import Image from 'next/image';
 import { KINDS_STATUS } from '@/constants/map';
+
 import { useParams, useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import useOrderStore from '@/store/order-store';
@@ -33,6 +34,7 @@ const dummydata = [
 ];
 
 function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
+
   const router = useRouter();
   const { type } = useParams();
 

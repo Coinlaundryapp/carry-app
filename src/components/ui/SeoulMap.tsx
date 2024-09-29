@@ -1,22 +1,20 @@
-import { ACTIVATED_SEOUL } from '@/constants/activate-region';
 import { useEffect, useRef, useState } from 'react';
 
 interface SeoulMapProps {
-  activeLocale?: string;
+  selectedLocale?: string;
+  activatedArea: string[];
   canSelect: boolean;
-  getValue?: (value: string) => void;
+  getValue?: (district: string, name: string) => void;
 }
 
-const activatedArea = ACTIVATED_SEOUL;
-
-const SeoulMap = ({ activeLocale, canSelect, getValue }: SeoulMapProps) => {
+const SeoulMap = ({ selectedLocale, activatedArea, canSelect, getValue }: SeoulMapProps) => {
   const mapRef = useRef<SVGSVGElement | null>(null);
 
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    setActiveId(activeLocale ?? null);
-  }, [activeLocale]);
+    setActiveId(selectedLocale ?? null);
+  }, [selectedLocale]);
 
   let clickedPath = useRef<SVGPathElement>();
 
@@ -44,12 +42,12 @@ const SeoulMap = ({ activeLocale, canSelect, getValue }: SeoulMapProps) => {
       if (clickedPath) {
         const localeId = clickedPath.current?.getAttribute('id');
         if (getValue && localeId) {
-          if (ACTIVATED_SEOUL.includes(localeId)) {
+          if (localeId === '은평구') {
             setActiveId(localeId);
-            getValue(localeId);
+            getValue('EUNPYEONG_GU_SEOUL', localeId);
           } else {
             setActiveId(null);
-            getValue(localeId);
+            getValue('', '');
           }
         }
       }
@@ -528,14 +526,14 @@ const SeoulMap = ({ activeLocale, canSelect, getValue }: SeoulMapProps) => {
         fill={
           activeId === '은평구'
             ? '#13C2C2'
-            : canSelect && activatedArea.includes('은평구')
+            : canSelect && activatedArea.includes('EUNPYEONG_GU_SEOUL')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
           activeId === '은평구'
             ? '#008781'
-            : canSelect && activatedArea.includes('은평구')
+            : canSelect && activatedArea.includes('EUNPYEONG_GU_SEOUL')
               ? '#72D4D5'
               : ''
         }
@@ -544,7 +542,13 @@ const SeoulMap = ({ activeLocale, canSelect, getValue }: SeoulMapProps) => {
       <path
         id="강동구"
         d="M302.981 147.245V149.608H304.335V150.586H302.981V152.938H301.789V147.245H302.981ZM295.29 152.122C297.487 151.521 298.797 150.333 299.001 148.878H295.73V147.911H300.296C300.301 150.462 298.636 152.278 295.763 153.089L295.29 152.122ZM296.601 155.001C296.59 153.803 297.89 153.057 299.845 153.057C301.816 153.057 303.089 153.803 303.089 155.001C303.089 156.209 301.816 156.951 299.845 156.945C297.89 156.951 296.59 156.209 296.601 155.001ZM297.782 155.001C297.777 155.635 298.561 156.011 299.845 156.011C301.123 156.011 301.913 155.635 301.918 155.001C301.913 154.362 301.123 153.991 299.845 153.991C298.561 153.991 297.777 154.362 297.782 155.001ZM313.691 151.896V152.853H304.829V151.896H308.675V150.973H305.914V147.686H312.617V148.62H307.106V150.027H312.671V150.973H309.846V151.896H313.691ZM305.86 155.184C305.86 154.045 307.133 153.406 309.244 153.411C311.339 153.406 312.601 154.045 312.606 155.184C312.601 156.312 311.339 156.951 309.244 156.956C307.133 156.951 305.86 156.312 305.86 155.184ZM307.074 155.184C307.069 155.748 307.832 156.038 309.244 156.032C310.635 156.038 311.403 155.748 311.414 155.184C311.403 154.625 310.635 154.324 309.244 154.324C307.832 154.324 307.069 154.625 307.074 155.184ZM322.103 147.836V148.706C322.097 149.614 322.097 150.607 321.845 151.982H323.188V152.949H319.331V156.967H318.128V152.949H314.336V151.982H320.631C320.899 150.661 320.91 149.667 320.91 148.803H315.378V147.836H322.103Z"
-        fill={activeId === '강동구' ? '#FFFFFF' : activeLocale === '강동구' ? '#5A5C63' : '#AEB0B6'}
+        fill={
+          activeId === '강동구'
+            ? '#FFFFFF'
+            : canSelect && activatedArea.includes('강동구')
+              ? '#5A5C63'
+              : '#AEB0B6'
+        }
       />
       <path
         id="관악구"
@@ -626,7 +630,13 @@ const SeoulMap = ({ activeLocale, canSelect, getValue }: SeoulMapProps) => {
       <path
         id="서초구"
         d="M191.91 225.576C191.905 227.381 192.77 229.153 194.316 229.83L193.597 230.786C192.501 230.249 191.728 229.218 191.314 227.945C190.89 229.288 190.095 230.405 188.978 230.969L188.226 230.002C189.81 229.261 190.691 227.392 190.696 225.576V224.029H191.91V225.576ZM193.242 227.349V226.382H195.283V223.245H196.465V232.967H195.283V227.349H193.242ZM206.702 230.829V231.807H197.829V230.829H201.664V228.82H202.846V230.829H206.702ZM198.194 228.219C200.3 227.945 201.562 226.828 201.648 225.619H198.613V224.652H201.664V223.396H202.846V224.652H205.907V225.619H202.873C202.953 226.828 204.215 227.945 206.315 228.219L205.875 229.153C204.199 228.917 202.899 228.17 202.255 227.112C201.616 228.17 200.327 228.917 198.646 229.153L198.194 228.219ZM215.103 223.836V224.706C215.097 225.614 215.097 226.607 214.845 227.982H216.188V228.949H212.331V232.967H211.128V228.949H207.336V227.982H213.631C213.899 226.661 213.91 225.667 213.91 224.803H208.378V223.836H215.103Z"
-        fill={activeId === '서초구' ? '#FFFFFF' : activeLocale === '서초구' ? '#5A5C63' : '#AEB0B6'}
+        fill={
+          activeId === '서초구'
+            ? '#FFFFFF'
+            : canSelect && activatedArea.includes('서초구')
+              ? '#5A5C63'
+              : '#AEB0B6'
+        }
       />
       <path
         id="강남구"
@@ -774,7 +784,13 @@ const SeoulMap = ({ activeLocale, canSelect, getValue }: SeoulMapProps) => {
       <path
         id="은평구"
         d="M124.174 87.2617V88.2178H115.322V87.2617H124.174ZM116.235 84.5225C116.235 83.2925 117.616 82.5513 119.737 82.5566C121.854 82.5513 123.234 83.2925 123.239 84.5225C123.234 85.7578 121.854 86.5098 119.737 86.5098C117.616 86.5098 116.235 85.7578 116.235 84.5225ZM116.418 91.7627V88.9375H117.61V90.7959H123.175V91.7627H116.418ZM117.481 84.5225C117.471 85.1831 118.325 85.5376 119.737 85.5322C121.155 85.5376 122.004 85.1831 122.004 84.5225C122.004 83.8833 121.155 83.5127 119.737 83.5127C118.325 83.5127 117.471 83.8833 117.481 84.5225ZM130.254 82.9219V83.8887H129.395V86.644C129.749 86.6172 130.104 86.585 130.437 86.542V85.6719H131.769V84.834H130.437V83.8779H131.769V82.2451H132.961V88.1963H131.769V86.6279H130.463L130.512 87.4229C128.659 87.729 126.516 87.7612 124.969 87.7666L124.84 86.7783C125.178 86.7783 125.549 86.7783 125.936 86.7729V83.8887H125.087V82.9219H130.254ZM126.376 90.1621C126.365 89.0181 127.617 88.3682 129.674 88.3682C131.747 88.3682 132.988 89.0181 132.993 90.1621C132.988 91.2793 131.747 91.9453 129.674 91.9453C127.617 91.9453 126.365 91.2793 126.376 90.1621ZM127.096 86.7568C127.472 86.7461 127.858 86.73 128.245 86.7139V83.8887H127.096V86.7568ZM127.558 90.1621C127.552 90.7261 128.315 91.0215 129.674 91.0215C131.038 91.0215 131.801 90.7261 131.801 90.1621C131.801 89.5874 131.038 89.2812 129.674 89.2812C128.315 89.2812 127.552 89.5874 127.558 90.1621ZM142.103 82.8359V83.7061C142.097 84.6138 142.097 85.6074 141.845 86.9824H143.188V87.9492H139.331V91.9668H138.128V87.9492H134.336V86.9824H140.631C140.899 85.6611 140.91 84.6675 140.91 83.8027H135.378V82.8359H142.103Z"
-        fill={activeId === '은평구' ? '#FFFFFF' : activeLocale === '은평구' ? '#5A5C63' : '#AEB0B6'}
+        fill={
+          activeId === '은평구'
+            ? '#FFFFFF'
+            : canSelect && activatedArea.includes('EUNPYEONG_GU_SEOUL')
+              ? '#5A5C63'
+              : '#AEB0B6'
+        }
       />
       <path
         id="서대문구"

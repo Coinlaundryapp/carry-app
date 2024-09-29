@@ -54,6 +54,13 @@ export interface ServiceAvailabilityResponse {
   };
 }
 
+export interface ServiceAvailabiltyRegionRes {
+  city: 'SEOUL_SI' | 'INCHEON_SI';
+  district: string;
+  latitude: number;
+  longitude: number;
+}
+
 // 서비스 오픈 알림 등록 api
 type NotificationType = 'ALARM_TALK' | 'SMS' | 'EMAIL';
 

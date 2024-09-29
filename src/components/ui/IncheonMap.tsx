@@ -1,22 +1,20 @@
-import { ACTIVATED_INCHEON } from '@/constants/activate-region';
 import { useEffect, useRef, useState } from 'react';
 
 interface IncheonMapProps {
-  activeLocale?: string;
+  selectedLocale?: string;
+  activatedArea: string[];
   canSelect: boolean;
-  getValue?: (value: string) => void;
+  getValue?: (district: string, name: string) => void;
 }
 
-const activatedArea = ACTIVATED_INCHEON;
-
-const IncheonMap = ({ activeLocale, canSelect, getValue }: IncheonMapProps) => {
+const IncheonMap = ({ selectedLocale, activatedArea, canSelect, getValue }: IncheonMapProps) => {
   const mapRef = useRef<SVGSVGElement | null>(null);
 
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    setActiveId(activeLocale ?? null);
-  }, [activeLocale]);
+    setActiveId(selectedLocale ?? null);
+  }, [selectedLocale]);
 
   let clickedPath = useRef<SVGPathElement>();
 
@@ -44,12 +42,12 @@ const IncheonMap = ({ activeLocale, canSelect, getValue }: IncheonMapProps) => {
       if (clickedPath) {
         const localeId = clickedPath.current?.getAttribute('id');
         if (getValue && localeId) {
-          if (ACTIVATED_INCHEON.includes(localeId)) {
+          if (localeId === '계양구') {
             setActiveId(localeId);
-            getValue(localeId);
+            getValue('GYEYANG_GU_INCHEON', localeId);
           } else {
             setActiveId(null);
-            getValue(localeId);
+            getValue('', '');
           }
         }
       }
@@ -205,14 +203,14 @@ const IncheonMap = ({ activeLocale, canSelect, getValue }: IncheonMapProps) => {
         fill={
           activeId === '계양구'
             ? '#13C2C2'
-            : canSelect && activatedArea.includes('계양구')
+            : canSelect && activatedArea.includes('GYEYANG_GU_INCHEON')
               ? '#DFF4F5'
               : '#F7F7F8'
         }
         stroke={
           activeId === '계양구'
             ? '#008781'
-            : canSelect && activatedArea.includes('계양구')
+            : canSelect && activatedArea.includes('GYEYANG_GU_INCHEON')
               ? '#72D4D5'
               : ''
         }
@@ -301,7 +299,7 @@ const IncheonMap = ({ activeLocale, canSelect, getValue }: IncheonMapProps) => {
         fill={
           activeId === '계양구'
             ? '#FFFFFF'
-            : canSelect && activatedArea.includes('계양구')
+            : canSelect && activatedArea.includes('GYEYANG_GU_INCHEON')
               ? '#5A5C63'
               : '#AEB0B6'
         }

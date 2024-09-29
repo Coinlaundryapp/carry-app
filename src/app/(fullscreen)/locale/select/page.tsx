@@ -9,6 +9,8 @@ import Image from 'next/image';
 import SeoulImg from '@assets/images/seoul-image.svg';
 import IncheonImg from '@assets/images/incheon-image.svg';
 import { useModalStore } from '@/store/modal-store';
+import { useQuery } from '@tanstack/react-query';
+import { getServiceAvailabiltyRegion } from '@/api/getServiceAvailabilityRegion';
 
 const SelectLocalePage = () => {
   const router = useRouter();

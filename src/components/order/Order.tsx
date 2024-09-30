@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
@@ -23,11 +23,12 @@ export default function Order({
   const session = useSession();
   const accessToken = session.data?.user.accessToken;
   const { selectedAddressId } = useAddressStore();
-  const { orderContent, laundryromat, orderSchedule, setOrderSchedule } = useOrderStore();
+  const { orderContent, addressId, laundromat, orderSchedule, setAddressId, setOrderSchedule } =
+    useOrderStore();
   const { data: address } = useQuery({
     queryKey: ['address', selectedAddressId],
     queryFn: () => getAddress(accessToken, selectedAddressId as number),
-    enabled: !!accessToken && !!selectedAddressId,
+    enabled: !!accessToken && selectedAddressId !== null,
   });
   const [allConsentsGiven, setAllConsentsGiven] = useState(false);
   if (session.status === 'unauthenticated') {
@@ -38,20 +39,27 @@ export default function Order({
     !orderContent.orderUnitType ||
     !orderContent.orderRequestType ||
     !orderContent.laundryItemType ||
-    !address ||
-    !laundryromat ||
+    !addressId ||
+    !laundromat ||
     !orderSchedule.desiredDeliveryDateTime ||
     !allConsentsGiven;
+  useEffect(() => {
+    if (selectedAddressId && addressId === null) {
+      setAddressId(selectedAddressId);
+    }
+  }, [selectedAddressId, setAddressId]);
 
   return (
-    <div className="h-full bg-white">
-      <AddressField address={address} />
-      <LaundryField address={address} laundryromat={laundryromat} />
-      <TimeField orderSchedule={orderSchedule} setOrderSchedule={setOrderSchedule} />
-      <CostField address={address} laundryromat={laundryromat} />
-      <PrivacyField
-        onAllConsentsGiven={(allConsentsGiven: boolean) => setAllConsentsGiven(allConsentsGiven)}
-      />
+    <div className="flex h-full flex-col justify-between bg-white">
+      <div>
+        <AddressField address={address} />
+        <LaundryField address={address} laundromat={laundromat} />
+        <TimeField orderSchedule={orderSchedule} setOrderSchedule={setOrderSchedule} />
+        <CostField address={address} laundromat={laundromat} />
+        <PrivacyField
+          onAllConsentsGiven={(allConsentsGiven: boolean) => setAllConsentsGiven(allConsentsGiven)}
+        />
+      </div>
       <OrderSubmitDrawer canSubmit={canSubmit} />
     </div>
   );

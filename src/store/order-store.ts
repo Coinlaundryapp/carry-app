@@ -7,9 +7,11 @@ export interface OrderState {
   orderContent: OrderContent;
   totalAmount: number;
   step: number;
-  laundryromat: TLaundromats | null;
+  laundromat: TLaundromats | null;
   orderSchedule: OrderSchedule;
-  setLaundryromat: (laundryromat: TLaundromats) => void;
+  addressId: number | null;
+  setAddressId: (addressId: number) => void;
+  setLaundryromat: (laundromat: TLaundromats) => void;
   setOrderSchedule: (schedule: OrderSchedule) => void;
   setOrderContent: (newOptions: OrderContent | Partial<OrderContent>) => void;
   addTotalAmount: (amount: number) => void;
@@ -36,15 +38,20 @@ const useOrderStore = create<OrderState>()(
       },
       step: 0,
       totalAmount: 0,
-      laundryromat: null,
+      laundromat: null,
+      addressId: null,
       orderSchedule: {
         desiredPickupDateTime: '',
         desiredDeliveryDateTime: '',
       },
-
-      setLaundryromat: (laundryromat) =>
+      setAddressId: (addressId) =>
         set(() => ({
-          laundryromat,
+          addressId,
+        })),
+
+      setLaundryromat: (laundromat) =>
+        set(() => ({
+          laundromat,
         })),
       setOrderContent: (newOptions) =>
         set((state) => ({
@@ -84,7 +91,7 @@ const useOrderStore = create<OrderState>()(
           },
           totalAmount: 0,
           step: 0,
-          laundryromat: null,
+          laundromat: null,
           orderSchedule: {
             desiredPickupDateTime: '',
             desiredDeliveryDateTime: '',

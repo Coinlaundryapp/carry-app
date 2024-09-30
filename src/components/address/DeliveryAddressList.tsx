@@ -19,16 +19,21 @@ export default function DeliveryAddressList({ addressList }: TProps) {
       router.back();
     }
   };
-
   const sortedAddressList = useMemo(() => {
     return [...addressList].sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
   }, [addressList]);
+
   useEffect(() => {
-    if (selectedAddressId === null && sortedAddressList.length > 0) {
-      setSelectedAddressId(
-        sortedAddressList.find((item) => item.isDefault)?.addressId ||
-          sortedAddressList[0].addressId,
-      );
+    if (
+      sortedAddressList.length > 0 &&
+      sortedAddressList.findIndex((item) => item.addressId === selectedAddressId) === -1
+    ) {
+      const defaultAddress = sortedAddressList.find((item) => item.isDefault);
+      if (defaultAddress) {
+        setSelectedAddressId(defaultAddress.addressId);
+      } else {
+        setSelectedAddressId(sortedAddressList[0].addressId);
+      }
     }
   }, [selectedAddressId, setSelectedAddressId, sortedAddressList]);
 

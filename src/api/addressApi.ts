@@ -11,6 +11,7 @@ export async function getAddresses(accessToken: string | undefined) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
+      cache: 'no-cache',
     },
   );
   const data = res.body.data;
@@ -25,6 +26,7 @@ export async function getAddressSearchList(keyword: string, page: number) {
       headers: {
         'Content-Type': 'application/json',
       },
+      cache: 'no-cache',
     },
   );
 
@@ -117,6 +119,7 @@ export async function getDefaultAddress(accessToken: string | undefined) {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${accessToken}`,
     },
+    cache: 'no-cache',
   });
 
   const data = res.body.data;

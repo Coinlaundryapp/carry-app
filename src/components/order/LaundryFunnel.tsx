@@ -223,7 +223,7 @@ export default function LaundryFunnel({
 
   return (
     <div
-      className={clsx('flex h-dvh flex-col bg-background-normal-alternative pb-6', {
+      className={clsx('flex h-dvh flex-col bg-background-normal-alternative', {
         'bg-background-normal-normal': steps[step] === 'shoePairs',
       })}
     >

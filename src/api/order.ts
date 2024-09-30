@@ -42,13 +42,13 @@ export async function getPrices({
 export async function postOrder({
   accessToken,
   orderContent,
-  laundryromatId,
+  laundromatId,
   addressId,
   orderSchedule,
 }: {
   accessToken: string;
   orderContent: OrderContent;
-  laundryromatId: number;
+  laundromatId: number;
   addressId: number;
   orderSchedule: OrderSchedule;
 }) {
@@ -59,6 +59,13 @@ export async function postOrder({
   const desiredDeliveryDateTime = format(
     orderSchedule.desiredDeliveryDateTime,
     'yyyy-MM-dd HH:mm:ss EEE',
+  );
+  console.log(
+    orderContent,
+    laundromatId,
+    addressId,
+    desiredPickupDateTime,
+    desiredDeliveryDateTime,
   );
   try {
     const res = await fetchExtended<ApiResponse<OrderResponse>>(`/api/v1/orders`, {
@@ -76,14 +83,14 @@ export async function postOrder({
             ...orderContent.laundrySpecs,
             {
               laundrySpec: 'LAUNDRY_WEIGHT',
-              value: orderContent.laundrySpecs[0].value,
+              value: 5,
             },
           ],
           orderRequestType: orderContent.orderRequestType,
           orderUnitType: orderContent.orderUnitType,
           washOption: orderContent.washOption,
         },
-        laundromatId: laundryromatId,
+        laundromatId,
         addressId,
         orderSchedule: {
           desiredPickupDateTime,
@@ -91,8 +98,9 @@ export async function postOrder({
         },
       },
     });
+
     return res.body.data;
   } catch (error) {
-    throw new Error('주문을 완료하지 못했습니다.');
+    throw new Error('주문에 실패했습니다.');
   }
 }

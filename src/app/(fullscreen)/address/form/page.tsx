@@ -139,7 +139,7 @@ const AddressAddPage = () => {
           </div>
 
           {step < 6 && (
-            <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-4">
+            <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-6">
               <AddressButton
                 className={isValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}
                 onClick={handleNext}
@@ -150,7 +150,7 @@ const AddressAddPage = () => {
             </div>
           )}
           {step >= 6 ? (
-            <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-4">
+            <div className="shadow-top absolute bottom-0 flex w-full justify-center bg-white p-6">
               <AddressButton
                 onClick={handleConfirm}
                 className={allStepsValid ? 'bg-primary-normal' : 'bg-cool-neutral-80'}

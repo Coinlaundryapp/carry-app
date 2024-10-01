@@ -2,6 +2,7 @@
 import { RateStaIcon } from '@assets/icons';
 import { NoCoinList } from '@assets/icons';
 import { KINDS_STATUS } from '@/constants/map';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
+  const router=useRouter()
   if (data && data.length === 0) {
     return (
       <div className={`flex h-[46vh] items-center justify-center`}>
@@ -18,7 +20,12 @@ function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
     );
   }
 
-  const handleImageClick = () => {};
+const handleImageClick = (e: React.MouseEvent, addressId: string) => {
+  e.stopPropagation(); // 이벤트 버블링을 막음
+  router.push(`/imageView/${addressId}`);
+};
+
+
   return (
     <div
       className={`overflow-y-auto ${data && data.length > 2 ? 'h-[50vh] max-h-[50vh]' : 'max-h-auto'}`}
@@ -80,7 +87,7 @@ function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
                 </div>
 
                 {item.mediaResources.length !== 0 && (
-                  <div className="relative cursor-pointer" onClick={handleImageClick}>
+                  <div className="relative cursor-pointer" onClick={(e)=>handleImageClick(e,item.id)}>
                     <Image
                       className="rounded-sm"
                       alt={'Image description'}

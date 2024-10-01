@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
 const ImageView = () => {
-  const { viewId } = useParams();
+  const { addressId } = useParams();
   return <div></div>;
 };
 

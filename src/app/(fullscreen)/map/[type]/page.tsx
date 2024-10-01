@@ -122,7 +122,7 @@ export default function MapPage() {
         logoControlOptions: { position: naver.maps.Position.RIGHT_CENTER },
       });
 
-      // map.panBy({ x: 0, y: 200 });
+      
 
       mapRef.current = map;
 

@@ -12,7 +12,7 @@ function AddressButton({ onClick, children, disabled, className, ...rest }: TPro
     <button
       disabled={disabled}
       onClick={onClick}
-      className={cn(className, 'h-[52px] w-full rounded-sm text-white')}
+      className={cn(className, 'h-[52px] font-semibold w-full rounded-md text-white')}
       {...rest}
     >
       {children}

@@ -54,7 +54,7 @@ const RenderStepContent: React.FC<RenderStepContentProps> = ({
             type="text"
             title="배송지 이름"
             fontStyle="font_headline_1 font-semibold"
-            placeholder="예) 우리집 회사"
+            placeholder="예) 우리집, 회사"
             value={formData.addressLabel}
             onChange={(e) => setFormData({ ...formData, addressLabel: e.target.value })}
           />

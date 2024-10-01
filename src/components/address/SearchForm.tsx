@@ -108,21 +108,16 @@ function SearchForm({ onAddressChange }: TPros) {
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      <SearchIcon className="absolute left-8 top-10 -translate-y-1/2 transform" />
-      <button
-        className="absolute right-8 top-10 z-50 -translate-y-1/2 transform"
-        onClick={handleCancelClick}
-      >
-        <CancelIcon />
-      </button>
+     
       <Input
+        leftIcon={<SearchIcon />} 
+        status="default"
+       onClear={handleCancelClick}
         type="text"
         fontStyle="strong"
         onChange={handleChange}
         value={value}
         placeholder="건물, 지번 또는 도로명 검색"
-        status="primary"
-        iconstate="pl-4"
         className="relative px-6 py-5"
       />
       <div className="h-2 w-full bg-cool-neutral-99" />
@@ -135,12 +130,12 @@ function SearchForm({ onAddressChange }: TPros) {
             <div
               onClick={() => handleClick(address)}
               key={index}
-              className="flex cursor-pointer flex-col gap-2 px-5 py-4"
+              className="flex cursor-pointer flex-col gap-2 px-5 "
             >
-              <div className="border-b border-cool-neutral-99 pb-4">
-                <p className="font_label_1_norm mb-1">{address.addressName}</p>
-                <p className="flex items-center justify-start gap-2 text-sm text-gray-500">
-                  <span className="font_caption_2 rounded-sm border border-cool-neutral-80 p-0.5 text-cool-neutral-80">
+              <div className="border-b border-cool-neutral-99 pb-4 pt-4 ">
+                <p className="font_label_1_norm mb-1 font-medium">{address.addressName}</p>
+                <p className="flex items-center justify-start gap-2 text-sm text-gray-500 font-normal">
+                  <span className="font_caption_2 rounded-sm border-0.5 border-cool-neutral-96 py-0.5 px-1 text-cool-neutral-80">
                     지번
                   </span>
                   {address.regionAddress.addressName}
@@ -151,7 +146,7 @@ function SearchForm({ onAddressChange }: TPros) {
           <div ref={loader} className="h-4" />
         </div>
       ) : (
-        <div className="flex items-center justify-center">
+        <div className="  pt-[116px] flex items-center justify-center">
           <AddressSearchNoLIst />
         </div>
       )}

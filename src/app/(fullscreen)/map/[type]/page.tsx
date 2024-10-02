@@ -1,6 +1,6 @@
 'use client';
 import { useGeoLocation } from '@/hooks/useGeoLocation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   markerIconHtml,
   selectedMarkerIconHtml,
@@ -24,12 +24,17 @@ import Loading from '@/app/loading';
 import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
 import { useParams, useRouter } from 'next/navigation';
 import { TLaundromats } from '@/types/map-type';
+import ImageView from '@/components/map/ImageView';
+
+type TImages = {
+  mediaUrl: string;
+  extension: string;
+};
 
 export default function MapPage() {
   const { getLocation } = useGeoLocation();
   const mapRef = useRef<naver.maps.Map | null>(null);
   const userPositionRef = useRef<naver.maps.LatLng | null>(null);
-  const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
   const [selectedMarkerId, setSelectedMarkerId] = useState<number>(0); // 선택된 마커 ID 상태
   const [open, setOpen] = useState(false);
@@ -39,6 +44,8 @@ export default function MapPage() {
   const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
   const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
   const [isOrderInit, setIsOrderInit] = useState(false);
+  const [isImagView, setIsImageView] = useState(false);
+  const [seletedImges, setSelectedImages] = useState<TImages[]>([]);
 
   const [startY, setStartY] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -121,8 +128,6 @@ export default function MapPage() {
 
         logoControlOptions: { position: naver.maps.Position.RIGHT_CENTER },
       });
-
-      
 
       mapRef.current = map;
 
@@ -308,6 +313,22 @@ export default function MapPage() {
     }
   };
 
+  const handleImageClick = (e: React.MouseEvent, addressId: number) => {
+    e.stopPropagation(); // 이벤트 버블링을 막음
+
+    if (data) {
+      const images = data.find((item) => item.id === addressId);
+
+      images && setSelectedImages(images.mediaResources);
+      setIsImageView(true);
+    }
+  };
+
+  const handleCloseImageView = () => {
+    setIsImageView(false);
+    initMap();
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
     if (selectedItem && selectedItem.reviewCount !== 0) {
       setStartY(e.touches[0].clientY);
@@ -328,12 +349,16 @@ export default function MapPage() {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
   if ((isLoading && !!data) || !currentCenter) {
     return <Loading />;
   }
 
-  return (
+  if (isImagView) {
+    return <ImageView images={seletedImges} onCloseImageView={handleCloseImageView} />;
+  }
 
+  return (
     <div className="h-full w-full">
       <div id="map" className="relative h-[54vh] w-full">
         <div className="absolute left-4 top-4 z-40" onClick={handleBackClick}>
@@ -389,9 +414,14 @@ export default function MapPage() {
                 data={selectedItem}
                 expanded={expanded}
                 onClickExpended={handleExpandClick}
+                onImageClick={handleImageClick}
               />
             ) : (
-              <CoinlaundryDefault onSelectedAddress={handleSelectedAddress} data={data} />
+              <CoinlaundryDefault
+                onSelectedAddress={handleSelectedAddress}
+                data={data}
+                onImageClick={handleImageClick}
+              />
             )}
           </div>
         </div>

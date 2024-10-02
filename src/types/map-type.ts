@@ -9,7 +9,7 @@ export type TLaundromats = {
   groupDeliveryFee: number;
   latitude: number;
   longitude: number;
-  mediaResources: { extension: string; mediaUrl: string };
+  mediaResources: { extension: string; mediaUrl: string }[];
   name: string;
   options: 'WASHING_MACHINE' | 'DRYER' | 'SNEAKERS';
   reviewAverageRating: number;

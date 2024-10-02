@@ -8,10 +8,11 @@ import Image from 'next/image';
 type Props = {
   data: any;
   onSelectedAddress: (addressId: number) => void;
+  onImageClick: (e: React.MouseEvent, addressId: number) => void;
 };
 
-function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
-  const router=useRouter()
+function CoinlaundryDefault({ data, onSelectedAddress, onImageClick }: Props) {
+  const router = useRouter();
   if (data && data.length === 0) {
     return (
       <div className={`flex h-[46vh] items-center justify-center`}>
@@ -19,12 +20,6 @@ function CoinlaundryDefault({ data, onSelectedAddress }: Props) {
       </div>
     );
   }
-
-const handleImageClick = (e: React.MouseEvent, addressId: string) => {
-  e.stopPropagation(); // 이벤트 버블링을 막음
-  router.push(`/imageView/${addressId}`);
-};
-
 
   return (
     <div
@@ -87,7 +82,10 @@ const handleImageClick = (e: React.MouseEvent, addressId: string) => {
                 </div>
 
                 {item.mediaResources.length !== 0 && (
-                  <div className="relative cursor-pointer" onClick={(e)=>handleImageClick(e,item.id)}>
+                  <div
+                    className="relative cursor-pointer"
+                    onClick={(e) => onImageClick(e, item.id)}
+                  >
                     <Image
                       className="rounded-sm"
                       alt={'Image description'}

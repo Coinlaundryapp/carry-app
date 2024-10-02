@@ -33,6 +33,7 @@
     "react-dom": "^18",
     "return-fetch": "^0.4.6",
     "return-fetch-json": "^0.4.6",
+    "swiper": "^11.1.14",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.1",

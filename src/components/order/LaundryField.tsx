@@ -1,16 +1,16 @@
 import Link from 'next/link';
 import Separator from '@/components/share/Separator/Separator';
 import { ChevronRightIcon } from '@assets/icons';
-import { Address } from '@/types/api-types';
+import { TAddressRes } from '@/types/api-types';
 import { TLaundromats } from '@/types/map-type';
 
 export default function LaundryField({
   address,
   laundromat,
-}: {
+}: Readonly<{
   address: TAddressRes | undefined;
   laundromat: TLaundromats | null;
-}) {
+}>) {
   if (!address) {
     return null;
   }

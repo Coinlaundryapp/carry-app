@@ -6,13 +6,13 @@ import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
 import { getAddress } from '@/api/addressApi';
 import useOrderStore from '@/store/order-store';
+import { useAddressStore } from '@/store/address-store';
 import AddressField from '@/components/order/AddressField';
 import CostField from '@/components/order/CostField';
 import LaundryField from '@/components/order/LaundryField';
 import PrivacyField from '@/components/order/PrivacyField';
 import TimeField from '@/components/order/TimeField';
 import OrderSubmitDrawer from '@/components/order/OrderSubmitDrawer';
-import { useAddressStore } from '@/store/address-store';
 
 export default function Order({
   currentUrl,
@@ -26,9 +26,9 @@ export default function Order({
   const { orderContent, addressId, laundromat, orderSchedule, setAddressId, setOrderSchedule } =
     useOrderStore();
   const { data: address } = useQuery({
-    queryKey: ['address', selectedAddressId],
-    queryFn: () => getAddress(accessToken, selectedAddressId as number),
-    enabled: !!accessToken && selectedAddressId !== null,
+    queryKey: ['address', addressId],
+    queryFn: () => getAddress(accessToken, addressId as number),
+    enabled: !!accessToken && !!addressId,
   });
   const [allConsentsGiven, setAllConsentsGiven] = useState(false);
   if (session.status === 'unauthenticated') {
@@ -47,7 +47,7 @@ export default function Order({
     if (selectedAddressId && addressId === null) {
       setAddressId(selectedAddressId);
     }
-  }, [selectedAddressId, setAddressId]);
+  }, [selectedAddressId, setAddressId, addressId]);
 
   return (
     <div className="flex h-full flex-col justify-between bg-white">

@@ -10,6 +10,7 @@ import EllipseIcon from '@assets/icons/ellipse.svg';
 import { useModalStore } from '@/store/modal-store';
 import { useQuery } from '@tanstack/react-query';
 import { getServiceAvailabiltyRegion } from '@/api/getServiceAvailabilityRegion';
+import { useLocationStore } from '@/store/location-store';
 
 const SelectIncheonPage = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const SelectIncheonPage = () => {
   const [selectArea, setSelectArea] = useState<string | null>(null);
   const [selectDistrict, setSelectDistrict] = useState<string | null>(null);
 
+  const setLocation = useLocationStore((state) => state.setLocation);
   const openToast = useToastStore((state) => state.addToast);
 
   const cannotSelect = () => {
@@ -54,7 +56,9 @@ const SelectIncheonPage = () => {
       (region) => region.district === selectDistrict,
     )?.longitude;
 
-    console.log(latitude, longitude);
+    if (latitude && longitude) setLocation(latitude, longitude);
+
+    router.push('/');
   };
 
   return (

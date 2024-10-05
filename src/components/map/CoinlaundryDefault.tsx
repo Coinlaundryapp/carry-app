@@ -104,7 +104,7 @@ function CoinlaundryDefault({ data, onSelectedAddress, onImageClick }: Props) {
       itemCount={data ? data.length : 0}
       itemSize={130}
       className="overflow-x-hidden"
-      width={'calc(100% - 2.5rem)'}
+      width={'100%'}
     >
       {renderRow}
     </List>

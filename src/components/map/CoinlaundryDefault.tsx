@@ -20,12 +20,12 @@ function CoinlaundryDefault({ data, onSelectedAddress, onImageClick }: Props) {
     );
   }
 
-  const renderRow = ({ index, style }: any) => {
+  const renderRow = ({ index, style }: ListChildComponentProps) => {
     const item = data[index];
 
     return (
       <div
-        style={{ ...style, width: 'calc(100% - 2.5rem)' }} // 가로 너비를 100%로 설정하여 스크롤 방지
+        style={{ ...style, width: 'calc(100% - 2.5rem)' }}
         onClick={() => onSelectedAddress(item.id)}
         key={item.id}
         className="mb-4.5 border-line-norma mx-5 border-b pt-2"

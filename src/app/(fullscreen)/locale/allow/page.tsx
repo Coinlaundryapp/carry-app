@@ -12,24 +12,14 @@ const AllowLocationPage = () => {
   const searchParams = useSearchParams();
   const city = searchParams.get('city');
   const district = searchParams.get('district');
-  // const [activeLocale, setAcitveLocale] = useState('');
 
-  // useEffect(() => {
-  //   if (district === 'EUNPYEONG_GU') {
-  //     setAcitveLocale('은평구');
-  //   }
-  //   if (district === 'KEYANG_GU') {
-  //     setAcitveLocale('계양구');
-  //   }
-  // }, []);
+  let selectedLocale = '';
 
-  let activeLocale = '';
-
-  if (district === 'EUNPYEONG_GU') {
-    activeLocale = '은평구';
+  if (district === 'EUNPYEONG_GU_SEOUL') {
+    selectedLocale = '은평구';
   }
-  if (district === 'KEYANG_GU') {
-    activeLocale = '계양구';
+  if (district === 'GYEYANG_GU_INCHEON') {
+    selectedLocale = '계양구';
   }
 
   return (
@@ -37,12 +27,16 @@ const AllowLocationPage = () => {
       <div className="w-full px-[24px] py-[20px]">
         <p className="font-semibold font-heading-1">
           서비스를 이용하실 위치가 <br />
-          <span className="text-primary-normal">{activeLocale}</span>가 맞나요?
+          <span className="text-primary-normal">{selectedLocale}</span>가 맞나요?
         </p>
       </div>
       <div className="h-auto w-auto">
-        {city === 'SEOUL_SI' && <SeoulMap activeLocale={activeLocale} canSelect={false} />}
-        {city === 'INCHEON_SI' && <IncheonMap activeLocale={activeLocale} canSelect={false} />}
+        {city === 'SEOUL_SI' && (
+          <SeoulMap selectedLocale={selectedLocale} canSelect={false} activatedArea={[]} />
+        )}
+        {city === 'INCHEON_SI' && (
+          <IncheonMap selectedLocale={selectedLocale} canSelect={false} activatedArea={[]} />
+        )}
       </div>
       <div className="flex w-full flex-col gap-4 px-[24px]">
         <Button state="fillPrimary" size="full" onClick={() => {}}>

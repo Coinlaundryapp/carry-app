@@ -3,18 +3,22 @@
 import Button from '@/components/share/Button/Button';
 import { TopNavigation } from '@/components/share/TopNavigation';
 import SeoulMap from '@/components/ui/SeoulMap';
-import { ACTIVATED_SEOUL } from '@/constants/activate-region';
 import { useToastStore } from '@/store/toast-store';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import EllipseIcon from '@assets/icons/ellipse.svg';
 import { useModalStore } from '@/store/modal-store';
+import { useQuery } from '@tanstack/react-query';
+import { getServiceAvailabiltyRegion } from '@/api/getServiceAvailabilityRegion';
+import { useLocationStore } from '@/store/location-store';
 
 const SelectSeoulpage = () => {
   const router = useRouter();
   const [isActiveArea, setIsActiveArea] = useState<boolean | null>(null);
   const [selectArea, setSelectArea] = useState<string | null>(null);
+  const [selectDistrict, setSelectDistrict] = useState<string | null>(null);
 
+  const setLocation = useLocationStore((state) => state.setLocation);
   const openToast = useToastStore((state) => state.addToast);
 
   const cannotSelect = () => {
@@ -36,6 +40,23 @@ const SelectSeoulpage = () => {
       closeText: '나가기',
       onClose: () => router.push('/'),
     });
+  };
+
+  const { data: activeLocale } = useQuery({
+    queryKey: ['getServiceAvailabiltyRegion'],
+    queryFn: () => getServiceAvailabiltyRegion(),
+  });
+
+  const seoulRegion = activeLocale?.filter((region) => region.city === 'SEOUL_SI');
+  const activatedArea = seoulRegion?.map((region) => region.district);
+
+  const doneHandler = () => {
+    const latitude = seoulRegion?.find((region) => region.district === selectDistrict)?.latitude;
+    const longitude = seoulRegion?.find((region) => region.district === selectDistrict)?.longitude;
+
+    if (latitude && longitude) setLocation(latitude, longitude);
+
+    router.push('/');
   };
 
   return (
@@ -81,16 +102,19 @@ const SelectSeoulpage = () => {
       <div className="flex flex-col items-center gap-[30px]">
         <SeoulMap
           canSelect={true}
-          getValue={(v) => {
-            if (ACTIVATED_SEOUL.includes(v)) {
-              setSelectArea(v);
+          getValue={(district, name) => {
+            if (activatedArea?.includes(district)) {
+              setSelectArea(name);
+              setSelectDistrict(district);
               setIsActiveArea(true);
             } else {
               cannotSelect();
-              setSelectArea(v);
+              setSelectArea(name);
+              setSelectDistrict(null);
               setIsActiveArea(false);
             }
           }}
+          activatedArea={activatedArea || []}
         />
         <div className="flex w-fit gap-[30px] rounded-[10px] border border-line-neutral px-[20px] py-[10px]">
           <div className="flex items-center gap-[5px]">
@@ -125,7 +149,7 @@ const SelectSeoulpage = () => {
         {isActiveArea === true && (
           <>
             {selectArea && (
-              <Button state="fillPrimary" size="full" onClick={() => router.push('/')}>
+              <Button state="fillPrimary" size="full" onClick={doneHandler}>
                 맞아요
               </Button>
             )}

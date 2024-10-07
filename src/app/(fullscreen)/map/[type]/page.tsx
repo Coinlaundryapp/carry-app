@@ -302,10 +302,10 @@ export default function MapPage() {
   };
 
   const handleReturnToUserLocation = async () => {
-    const location = await getLocation();
+    const userlocation = await getLocation();
 
-    if (location && mapRef.current) {
-      const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);
+    if (userlocation && mapRef.current) {
+      const userPosition = new naver.maps.LatLng(userlocation.latitude, userlocation.longitude);
       userPositionRef.current = userPosition;
 
       mapRef.current.setCenter(userPositionRef.current); // 유저 위치로 지도 중심 이동

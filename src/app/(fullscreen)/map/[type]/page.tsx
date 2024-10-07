@@ -1,6 +1,7 @@
 'use client';
 import { useGeoLocation } from '@/hooks/useGeoLocation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useLocationStore } from '@/store/location-store';
 import {
   markerIconHtml,
   selectedMarkerIconHtml,
@@ -46,12 +47,15 @@ export default function MapPage() {
   const [isOrderInit, setIsOrderInit] = useState(false);
   const [isImagView, setIsImageView] = useState(false);
   const [seletedImges, setSelectedImages] = useState<TImages[]>([]);
+  const previousSelectedMarkerRef = useRef<naver.maps.Marker | null>(null);
+  const markersRef = useRef<{ id: number; marker: naver.maps.Marker }[]>([]);
 
   const [startY, setStartY] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
   const { type } = useParams();
   const router = useRouter();
+  const { location } = useLocationStore();
 
   const { data, isLoading } = useQuery({
     queryKey: ['laundromats', currentCenter],
@@ -81,8 +85,52 @@ export default function MapPage() {
   };
 
   useEffect(() => {
+    // if (location.lat === 0 && location.lng === 0) {
+    //   router.push('/home');
+    // }
     getLocationFromLocalStorage();
-  }, []);
+  }, [router]);
+
+  const handleMarkerClick = (markerId: number) => {
+    const selectedMarkerData = data?.find((item: TLaundromats) => item.id === markerId);
+    if (!selectedMarkerData) return;
+
+    const selectedMarkerObj = markersRef.current.find((m) => m.id === markerId)?.marker;
+    if (!selectedMarkerObj) {
+      console.error(`Marker not found for ID: ${markerId}`);
+      return;
+    }
+
+    setSelectedMarkerId(markerId);
+    setSelectedItem(selectedMarkerData);
+    setOpen(true);
+
+    // 이전에 선택된 마커가 있으면 기본 상태로 되돌림
+    if (
+      previousSelectedMarkerRef.current &&
+      previousSelectedMarkerRef.current !== selectedMarkerObj
+    ) {
+      previousSelectedMarkerRef.current.setIcon({
+        content: markerIconHtml,
+        size: new naver.maps.Size(32, 32),
+        anchor: new naver.maps.Point(16, 16),
+      });
+    }
+
+    // 선택된 마커의 아이콘을 변경
+    selectedMarkerObj.setIcon({
+      content: selectedMarkerIconHtml,
+      size: new naver.maps.Size(32, 32),
+      anchor: new naver.maps.Point(16, 16),
+    });
+    selectedMarkerObj.setZIndex(15);
+
+    // 선택된 마커로 업데이트
+    previousSelectedMarkerRef.current = selectedMarkerObj;
+
+    // 지도 중심 이동
+    mapRef.current?.panTo(selectedMarkerObj.getPosition());
+  };
 
   const initMap = async () => {
     const location = await getLocation();
@@ -113,7 +161,7 @@ export default function MapPage() {
       // 배송지 또는 임시구역 장소
       const map = new naver.maps.Map('map', {
         center: currentCenter,
-        zoom: zoomLevel, // 초기 줌 레벨 설정
+        zoom: 12, // 초기 줌 레벨 설정
         padding: { top: 10, bottom: 10, left: 10, right: 10 },
         maxZoom: 17,
         minZoom: 11,
@@ -145,8 +193,6 @@ export default function MapPage() {
       // });
 
       naver.maps.Event.addListener(map, 'dragend', () => {
-        // const newCenter = map.getCenter();
-        // // setCurrentCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
         checkOffsetMarkerVisibility(map); // 드래그 후 오프셋 마커의 가시성 체크
       });
 
@@ -177,14 +223,9 @@ export default function MapPage() {
             },
             zIndex: selectedMarkerId === loc.id ? 60 : 0,
           });
-
+          markersRef.current.push({ id: loc.id, marker });
           naver.maps.Event.addListener(marker, 'click', (e) => {
-            mapRef.current && mapRef.current.panTo(markerPosition);
-            mapRef.current?.panTo(markerPosition);
-            setSelectedMarkerId(loc.id);
-            setOpen(true);
-            const selectedMarker = data.find((item: any) => item.id === loc.id);
-            setSelectedItem(selectedMarker);
+            handleMarkerClick(loc.id);
           });
         });
 
@@ -291,33 +332,50 @@ export default function MapPage() {
     // JSON 형태로 좌표를 로컬스토리지에 저장
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
-    initMap(); // 지도는 처음 로드될 때만 초기화
-  }, [selectedMarkerId, currentCenter, data]);
+    if (data) {
+      initMap();
+    }
+  }, [data]);
 
   const handleSelectedAddress = (addressId: number) => {
-    setSelectedMarkerId(addressId);
-    if (data) {
-      const selectedMarker = data.find((item: TLaundromats) => item.id === addressId);
-      setSelectedItem(selectedMarker);
-      setOpen(true);
-    }
+    handleMarkerClick(addressId);
   };
 
   const handleBackClick = () => {
     if (type === 'order' || !selectedMarkerId) {
       return router.back();
     }
+
     if (selectedMarkerId) {
       setSelectedMarkerId(0);
-      getLocationFromLocalStorage(); // 함수 호출
       setOpen(false);
       setZoomLevel(12);
+
+      markersRef.current.forEach(({ marker }) => {
+        marker.setIcon({
+          content: markerIconHtml,
+          size: new naver.maps.Size(32, 32),
+          anchor: new naver.maps.Point(16, 16),
+        });
+      });
+
+      if (previousSelectedMarkerRef.current) {
+        previousSelectedMarkerRef.current = null;
+      }
+
+      if (mapRef.current && offsetCenterRef.current) {
+        mapRef.current.setCenter(offsetCenterRef.current);
+        mapRef.current.setZoom(12);
+      }
+      if (!isOffsetMarkerVisible) {
+        setIsOffsetMarkerVisible(true);
+      }
     }
   };
+  //
 
   const handleImageClick = (e: React.MouseEvent, addressId: number) => {
-    e.stopPropagation(); // 이벤트 버블링을 막음
-
+    e.stopPropagation();
     if (data) {
       const images = data.find((item) => item.id === addressId);
 

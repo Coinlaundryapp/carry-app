@@ -26,7 +26,7 @@ export type OrderContent = {
   laundrySpecs: LaundrySpec[];
   washOption: WashOption | null;
   dryOption: DryOption | null;
-  additionalOption: AdditionalOption[];
+  additionalOptions: AdditionalOption[];
 };
 export type OrderSchedule = {
   desiredPickupDateTime: string;
@@ -44,10 +44,6 @@ export interface LaundryOptions {
 interface OptionItem {
   selectable: boolean;
   price: number | null;
-}
-
-export interface LaundryPriceResponse {
-  data: LaundryPriceData;
 }
 
 export interface LaundryPriceData {

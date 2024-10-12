@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
 interface AddressStore {
-  selectedAddress: string;
-  setSelectedAddress: (address: string) => void;
+  selectedAddressId: number | null;
+  setSelectedAddressId: (address: number) => void;
   addressModalOpen: boolean;
   setAddressModalOpen: (isOpen: boolean) => void;
   shouldRefetch: boolean;
@@ -11,8 +11,8 @@ interface AddressStore {
 }
 
 export const useAddressStore = create<AddressStore>((set) => ({
-  selectedAddress: '',
-  setSelectedAddress: (address) => set({ selectedAddress: address }),
+  selectedAddressId: null,
+  setSelectedAddressId: (address) => set({ selectedAddressId: address }),
   addressModalOpen: false,
   setAddressModalOpen: (isOpen) => set({ addressModalOpen: isOpen }),
   shouldRefetch: false,

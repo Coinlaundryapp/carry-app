@@ -2,28 +2,26 @@ import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
 import Separator from '@/components/share/Separator/Separator';
 import { BASE_COST, BASE_DISTANCE, COST_INCREMENT, DISTANCE_INCREMENT } from '@/constants/policy';
 import useOrderStore from '@/store/order-store';
-import { Address } from '@/types/api-types';
+import { TAddressRes } from '@/types/api-types';
 import { TLaundromats } from '@/types/map-type';
 import { formatNumberWithCommas } from '@/utils/format';
 
 export default function CostField({
   address,
-  laundryromat,
+  laundromat,
 }: Readonly<{
-  address: Address | null;
-  laundryromat: TLaundromats | null;
+  address: TAddressRes | undefined;
+  laundromat: TLaundromats | null;
 }>) {
   const { totalAmount } = useOrderStore();
-  if (!address || !laundryromat) {
+  if (!address || !laundromat) {
     return null;
   }
   const deliveryCost =
-    BASE_COST + Math.floor(laundryromat.distance / DISTANCE_INCREMENT) * COST_INCREMENT;
+    BASE_COST + Math.floor(laundromat.distance / DISTANCE_INCREMENT) * COST_INCREMENT;
   // 예상 결제 금액
   const predictedCost =
-    laundryromat.distance <= BASE_DISTANCE
-      ? BASE_DISTANCE + totalAmount
-      : deliveryCost + totalAmount;
+    laundromat.distance <= BASE_DISTANCE ? BASE_DISTANCE + totalAmount : deliveryCost + totalAmount;
   return (
     <>
       <section className="p-5">
@@ -32,7 +30,7 @@ export default function CostField({
           <div className="flex items-center justify-between font-semibold text-label-normal font-body-1-reading">
             <div className="flex items-center gap-1">
               <p>배송비</p>
-              <DeliveryCostInfoDialog distance={laundryromat.distance} />
+              <DeliveryCostInfoDialog distance={laundromat.distance} />
             </div>
             <p>{formatNumberWithCommas(deliveryCost)}원</p>
           </div>

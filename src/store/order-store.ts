@@ -1,7 +1,4 @@
-
-import { Address } from '@/types/api-types';
 import { OrderContent, OrderSchedule } from '@/types/laundry-type';
-
 import { TLaundromats } from '@/types/map-type';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
@@ -10,11 +7,11 @@ export interface OrderState {
   orderContent: OrderContent;
   totalAmount: number;
   step: number;
-  laundryromat: TLaundromats | null;
-  address: Address | null;
+  laundromat: TLaundromats | null;
   orderSchedule: OrderSchedule;
-  setLaundryromat: (laundryromat: TLaundromats) => void;
-  setAddress: (address: Address) => void;
+  addressId: number | null;
+  setAddressId: (addressId: number) => void;
+  setLaundryromat: (laundromat: TLaundromats) => void;
   setOrderSchedule: (schedule: OrderSchedule) => void;
   setOrderContent: (newOptions: OrderContent | Partial<OrderContent>) => void;
   addTotalAmount: (amount: number) => void;
@@ -27,9 +24,7 @@ export interface OrderState {
   ) => void;
 }
 
-
 const useOrderStore = create<OrderState>()(
-
   persist(
     (set) => ({
       orderContent: {
@@ -39,23 +34,24 @@ const useOrderStore = create<OrderState>()(
         laundrySpecs: [],
         washOption: null,
         dryOption: null,
-        additionalOption: [],
+        additionalOptions: [],
       },
       step: 0,
       totalAmount: 0,
-      laundryromat: null,
-      address: null,
+      laundromat: null,
+      addressId: null,
       orderSchedule: {
         desiredPickupDateTime: '',
         desiredDeliveryDateTime: '',
       },
-      setAddress: (address) =>
+      setAddressId: (addressId) =>
         set(() => ({
-          address,
+          addressId,
         })),
-      setLaundryromat: (laundryromat) =>
+
+      setLaundryromat: (laundromat) =>
         set(() => ({
-          laundryromat,
+          laundromat,
         })),
       setOrderContent: (newOptions) =>
         set((state) => ({
@@ -91,12 +87,11 @@ const useOrderStore = create<OrderState>()(
             laundrySpecs: [],
             washOption: null,
             dryOption: null,
-            additionalOption: [],
+            additionalOptions: [],
           },
           totalAmount: 0,
           step: 0,
-          laundryromat: null,
-          address: null,
+          laundromat: null,
           orderSchedule: {
             desiredPickupDateTime: '',
             desiredDeliveryDateTime: '',
@@ -109,6 +104,5 @@ const useOrderStore = create<OrderState>()(
     },
   ),
 );
-
 
 export default useOrderStore;

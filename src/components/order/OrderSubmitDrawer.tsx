@@ -13,16 +13,15 @@ export default function OrderSubmitDrawer({ canSubmit }: Readonly<{ canSubmit: b
   const session = useSession();
   const accessToken = session.data?.user.accessToken as string;
   const router = useRouter();
-  const { orderContent, address, laundryromat, orderSchedule, reset } = useOrderStore();
-  const addressId = address?.id as number;
-  const laundryromatId = laundryromat?.id as number;
+  const { orderContent, addressId, laundromat, orderSchedule, reset } = useOrderStore();
+  const laundromatId = laundromat?.id as number;
   const mutation = useMutation({
     mutationFn: () =>
       postOrder({
         accessToken,
         orderContent,
-        laundryromatId,
-        addressId,
+        laundromatId,
+        addressId: addressId as number,
         orderSchedule,
       }),
     onSuccess: (data) => {
@@ -35,7 +34,7 @@ export default function OrderSubmitDrawer({ canSubmit }: Readonly<{ canSubmit: b
   });
   return (
     <Drawer>
-      <div className="sticky bottom-0 w-full bg-white p-6 shadow-emphasize">
+      <div className="w-full bg-white p-6 shadow-emphasize">
         <DrawerTrigger asChild disabled={!canSubmit}>
           <Button state={canSubmit ? 'disabled' : 'fillPrimary'} size="full" disabled={canSubmit}>
             수거 신청하기

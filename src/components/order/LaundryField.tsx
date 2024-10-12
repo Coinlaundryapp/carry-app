@@ -1,16 +1,16 @@
 import Link from 'next/link';
 import Separator from '@/components/share/Separator/Separator';
 import { ChevronRightIcon } from '@assets/icons';
-import { Address } from '@/types/api-types';
+import { TAddressRes } from '@/types/api-types';
 import { TLaundromats } from '@/types/map-type';
 
 export default function LaundryField({
   address,
-  laundryromat,
-}: {
-  address: Address | null;
-  laundryromat: TLaundromats | null;
-}) {
+  laundromat,
+}: Readonly<{
+  address: TAddressRes | undefined;
+  laundromat: TLaundromats | null;
+}>) {
   if (!address) {
     return null;
   }
@@ -23,10 +23,10 @@ export default function LaundryField({
             <ChevronRightIcon />
           </Link>
         </div>
-        {laundryromat && (
+        {laundromat && (
           <div className="mt-6 flex items-center justify-between">
             <p className="font-semibold text-label-strong font-body-1-normal">세탁소 정보</p>
-            <p className="font-semibold text-label-strong font-label-2">{laundryromat.name}</p>
+            <p className="font-semibold text-label-strong font-label-2">{laundromat.name}</p>
           </div>
         )}
       </section>

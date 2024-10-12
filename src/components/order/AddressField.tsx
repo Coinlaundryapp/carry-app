@@ -1,15 +1,10 @@
 import Link from 'next/link';
 import Tag from '@/components/share/Tag';
-import { ChevronRightIcon, EllipseIcon } from '@assets/icons';
 import Separator from '@/components/share/Separator/Separator';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { Address } from '@/types/api-types';
+import { ChevronRightIcon, EllipseIcon } from '@assets/icons';
+import { TAddressRes } from '@/types/api-types';
 
-export default function AddressField({ address }: { address: Address | null }) {
-  const router = useRouter();
-  const session = useSession();
-  const accessToken = session.data?.user?.accessToken;
+export default function AddressField({ address }: { address: TAddressRes | undefined }) {
   return (
     <>
       <section className="p-5">

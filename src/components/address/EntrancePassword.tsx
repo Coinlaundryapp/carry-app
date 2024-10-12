@@ -20,9 +20,11 @@ const ENTRANCE_PASSWORD = [
 const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraInfoChange }) => {
   const { value, text } = entranceValue;
 
-  const handleChange = (value: string) => {
-    onExtraInfoChange('');
-    onChange(value);
+  const handleChange = (value: string | number | null) => {
+    if (typeof value === 'string') {
+      onExtraInfoChange('');
+      onChange(value);
+    }
   };
   return (
     <div className="mb-6 w-full">

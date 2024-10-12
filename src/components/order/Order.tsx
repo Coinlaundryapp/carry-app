@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
-import { getDefaultAddress } from '@/api/addressApi';
+import { getAddress } from '@/api/addressApi';
 import useOrderStore from '@/store/order-store';
+import { useAddressStore } from '@/store/address-store';
 import AddressField from '@/components/order/AddressField';
 import CostField from '@/components/order/CostField';
 import LaundryField from '@/components/order/LaundryField';
 import PrivacyField from '@/components/order/PrivacyField';
 import TimeField from '@/components/order/TimeField';
-import Button from '@/components/share/Button';
 import OrderSubmitDrawer from '@/components/order/OrderSubmitDrawer';
 
 export default function Order({
@@ -22,12 +22,13 @@ export default function Order({
   const router = useRouter();
   const session = useSession();
   const accessToken = session.data?.user.accessToken;
-  const { orderContent, laundryromat, address, orderSchedule, setOrderSchedule, setAddress } =
+  const { selectedAddressId } = useAddressStore();
+  const { orderContent, addressId, laundromat, orderSchedule, setAddressId, setOrderSchedule } =
     useOrderStore();
-  const { data: defaultAddress } = useQuery({
-    queryKey: ['defaultAddress'],
-    queryFn: () => getDefaultAddress(accessToken),
-    enabled: !!accessToken,
+  const { data: address } = useQuery({
+    queryKey: ['address', addressId],
+    queryFn: () => getAddress(accessToken, addressId as number),
+    enabled: !!accessToken && !!addressId,
   });
   const [allConsentsGiven, setAllConsentsGiven] = useState(false);
   if (session.status === 'unauthenticated') {
@@ -38,26 +39,27 @@ export default function Order({
     !orderContent.orderUnitType ||
     !orderContent.orderRequestType ||
     !orderContent.laundryItemType ||
-    !address ||
-    !laundryromat ||
+    !addressId ||
+    !laundromat ||
     !orderSchedule.desiredDeliveryDateTime ||
     !allConsentsGiven;
-
   useEffect(() => {
-    if (defaultAddress && address === null) {
-      setAddress(defaultAddress);
+    if (selectedAddressId && addressId === null) {
+      setAddressId(selectedAddressId);
     }
-  }, [defaultAddress, address, setAddress]);
+  }, [selectedAddressId, setAddressId, addressId]);
 
   return (
-    <div className="h-full bg-white">
-      <AddressField address={address} />
-      <LaundryField address={address} laundryromat={laundryromat} />
-      <TimeField orderSchedule={orderSchedule} setOrderSchedule={setOrderSchedule} />
-      <CostField address={address} laundryromat={laundryromat} />
-      <PrivacyField
-        onAllConsentsGiven={(allConsentsGiven: boolean) => setAllConsentsGiven(allConsentsGiven)}
-      />
+    <div className="flex h-full flex-col justify-between bg-white">
+      <div>
+        <AddressField address={address} />
+        <LaundryField address={address} laundromat={laundromat} />
+        <TimeField orderSchedule={orderSchedule} setOrderSchedule={setOrderSchedule} />
+        <CostField address={address} laundromat={laundromat} />
+        <PrivacyField
+          onAllConsentsGiven={(allConsentsGiven: boolean) => setAllConsentsGiven(allConsentsGiven)}
+        />
+      </div>
       <OrderSubmitDrawer canSubmit={canSubmit} />
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 import { useGeoLocation } from '@/hooks/useGeoLocation';
 import { useEffect, useRef, useState } from 'react';
+import { useLocationStore } from '@/store/location-store';
 import {
   markerIconHtml,
   selectedMarkerIconHtml,
@@ -24,12 +25,17 @@ import Loading from '@/app/loading';
 import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
 import { useParams, useRouter } from 'next/navigation';
 import { TLaundromats } from '@/types/map-type';
+import ImageView from '@/components/map/ImageView';
+
+type TImages = {
+  mediaUrl: string;
+  extension: string;
+};
 
 export default function MapPage() {
   const { getLocation } = useGeoLocation();
   const mapRef = useRef<naver.maps.Map | null>(null);
   const userPositionRef = useRef<naver.maps.LatLng | null>(null);
-  const addressPositionRef = useRef<naver.maps.LatLng | null>(null);
   const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
   const [selectedMarkerId, setSelectedMarkerId] = useState<number>(0); // 선택된 마커 ID 상태
   const [open, setOpen] = useState(false);
@@ -39,12 +45,20 @@ export default function MapPage() {
   const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
   const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
   const [isOrderInit, setIsOrderInit] = useState(false);
+  const [isImagView, setIsImageView] = useState(false);
+  const [seletedImges, setSelectedImages] = useState<TImages[]>([]);
+  const previousSelectedMarkerRef = useRef<naver.maps.Marker | null>(null);
+  const markersRef = useRef<{ id: number; marker: naver.maps.Marker }[]>([]);
+  const userCircleRef = useRef<naver.maps.Circle | null>(null); // 유저 주위 원
+  const offsetCircleRef = useRef<naver.maps.Circle | null>(null);
+  const userMarkerRef = useRef<naver.maps.Marker | null>(null);
 
   const [startY, setStartY] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
   const { type } = useParams();
   const router = useRouter();
+  const { location } = useLocationStore();
 
   const { data, isLoading } = useQuery({
     queryKey: ['laundromats', currentCenter],
@@ -74,138 +88,201 @@ export default function MapPage() {
   };
 
   useEffect(() => {
+    // if (location.lat === 0 && location.lng === 0) {
+    //   router.push('/home');
+    // }
     getLocationFromLocalStorage();
-  }, []);
+  }, [router]);
+
+  const handleMarkerClick = (markerId: number) => {
+    const selectedMarkerData = data?.find((item: TLaundromats) => item.id === markerId);
+    if (!selectedMarkerData) return;
+
+    const selectedMarkerObj = markersRef.current.find((m) => m.id === markerId)?.marker;
+    if (!selectedMarkerObj) {
+      console.error(`Marker not found for ID: ${markerId}`);
+      return;
+    }
+
+    setSelectedMarkerId(markerId);
+    setSelectedItem(selectedMarkerData);
+    setOpen(true);
+
+    // 이전에 선택된 마커가 있으면 기본 상태로 되돌림
+    if (
+      previousSelectedMarkerRef.current &&
+      previousSelectedMarkerRef.current !== selectedMarkerObj
+    ) {
+      previousSelectedMarkerRef.current.setIcon({
+        content: markerIconHtml,
+        size: new naver.maps.Size(32, 32),
+        anchor: new naver.maps.Point(16, 16),
+      });
+    }
+
+    // 선택된 마커의 아이콘을 변경
+    selectedMarkerObj.setIcon({
+      content: selectedMarkerIconHtml,
+      size: new naver.maps.Size(32, 32),
+      anchor: new naver.maps.Point(16, 16),
+    });
+    selectedMarkerObj.setZIndex(15);
+
+    // 선택된 마커로 업데이트
+    previousSelectedMarkerRef.current = selectedMarkerObj;
+
+    // 지도 중심 이동
+    mapRef.current?.panTo(selectedMarkerObj.getPosition());
+  };
 
   const initMap = async () => {
-    const location = await getLocation();
+    // if (location) {
+    //   const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);
+    //   userPositionRef.current = userPosition;
 
-    if (location) {
-      const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);
-      userPositionRef.current = userPosition;
+    const savedLocationString = localStorage.getItem('임시설정구역');
 
-      const savedLocationString = localStorage.getItem('임시설정구역');
+    if (type === 'order' && data && !isOrderInit) {
+      setSelectedMarkerId(data[0].id);
+      setSelectedItem(data[0]);
+      setOpen(true);
+      setIsOrderInit(true);
+    }
 
-      if (type === 'order' && data && !isOrderInit) {
-        setSelectedMarkerId(data[0].id);
-        setSelectedItem(data[0]);
-        setOpen(true);
-        setIsOrderInit(true);
-      }
+    let offsetLocation;
+    if (savedLocationString) {
+      const savedLocation = JSON.parse(savedLocationString);
+      offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
 
-      let offsetLocation;
-      if (savedLocationString) {
-        const savedLocation = JSON.parse(savedLocationString);
-        offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
+      offsetCenterRef.current = offsetLocation;
+    } else {
+      router.back();
+    }
 
-        offsetCenterRef.current = offsetLocation;
-      } else {
-        router.back();
-      }
+    // 배송지 또는 임시구역 장소
+    const map = new naver.maps.Map('map', {
+      center: currentCenter,
+      zoom: 12, // 초기 줌 레벨 설정
+      padding: { top: 10, bottom: 10, left: 10, right: 10 },
+      maxZoom: 17,
+      minZoom: 11,
+      mapDataControl: false,
+      scaleControl: false,
 
-      // 배송지 또는 임시구역 장소
-      const map = new naver.maps.Map('map', {
-        center: currentCenter,
-        zoom: zoomLevel, // 초기 줌 레벨 설정
-        padding: { top: 10, bottom: 10, left: 10, right: 10 },
-        maxZoom: 17,
-        minZoom: 11,
-        mapDataControl: false,
-        scaleControl: false,
-        scaleControlOptions: {
-          position: naver.maps.Position.TOP_RIGHT,
-        },
-        mapDataControlOptions: {
-          position: naver.maps.Position.TOP_RIGHT,
-        },
+      scaleControlOptions: {
+        position: naver.maps.Position.TOP_RIGHT,
+      },
+      mapDataControlOptions: {
+        position: naver.maps.Position.TOP_RIGHT,
+      },
 
-        logoControlOptions: { position: naver.maps.Position.RIGHT_CENTER },
-      });
+      logoControlOptions: { position: naver.maps.Position.RIGHT_CENTER },
+    });
 
-      // map.panBy({ x: 0, y: 200 });
+    mapRef.current = map;
 
-      mapRef.current = map;
+    // 줌 레벨 변경을 추적하여 상태에 저장
+    naver.maps.Event.addListener(map, 'zoom_changed', () => {
+      setZoomLevel(map.getZoom());
+    });
 
-      // 줌 레벨 변경을 추적하여 상태에 저장
-      naver.maps.Event.addListener(map, 'zoom_changed', () => {
-        setZoomLevel(map.getZoom());
-      });
+    // **지도 중심 변경을 추적하여 상태에 저장**
+    // naver.maps.Event.addListener(map, 'center_changed', () => {
+    //   const newCenter = map.getCenter();
 
-      // **지도 중심 변경을 추적하여 상태에 저장**
-      // naver.maps.Event.addListener(map, 'center_changed', () => {
-      //   const newCenter = map.getCenter();
+    //   setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
+    // });
 
-      //   setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
+    naver.maps.Event.addListener(map, 'dragend', () => {
+      checkOffsetMarkerVisibility(map); // 드래그 후 오프셋 마커의 가시성 체크
+    });
+
+    if (offsetCenterRef.current) {
+      drawCircleAroundOffset();
+      // new naver.maps.Circle({
+      //   map: map,
+      //   center: offsetCenterRef.current,
+      //   radius: 3000,
+      //   strokeColor: '#00B4B2',
+      //   strokeOpacity: 0.8,
+      //   strokeWeight: 2,
+      //   fillColor: '#ADE4E5',
+      //   fillOpacity: 0.5,
       // });
+    }
 
-      naver.maps.Event.addListener(map, 'dragend', () => {
-        // const newCenter = map.getCenter();
-        // // setCurrentCenter({ lat: newCenter.lat(), lng: newCenter.lng() });
-        checkOffsetMarkerVisibility(map); // 드래그 후 오프셋 마커의 가시성 체크
-      });
+    data &&
+      data.forEach((loc: any) => {
+        const markerPosition = new naver.maps.LatLng(loc.latitude, loc.longitude); // 마커 위치 생성
 
-      if (userPositionRef.current && offsetCenterRef.current) {
-        new naver.maps.Circle({
-          map: map,
-          center: isUserMarkerVisible ? userPositionRef.current : offsetCenterRef.current,
-          radius: 3000,
-          strokeColor: '#00B4B2',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#ADE4E5',
-          fillOpacity: 0.5,
-        });
-      }
-
-      data &&
-        data.forEach((loc: any) => {
-          const markerPosition = new naver.maps.LatLng(loc.latitude, loc.longitude); // 마커 위치 생성
-
-          const marker = new naver.maps.Marker({
-            position: markerPosition,
-            map: map,
-            icon: {
-              content: selectedMarkerId === loc.id ? selectedMarkerIconHtml : markerIconHtml,
-              size: new naver.maps.Size(32, 32),
-              anchor: new naver.maps.Point(16, 16),
-            },
-            zIndex: selectedMarkerId === loc.id ? 60 : 0,
-          });
-
-          naver.maps.Event.addListener(marker, 'click', (e) => {
-            mapRef.current && mapRef.current.panTo(markerPosition);
-            setSelectedMarkerId(loc.id);
-            setOpen(true);
-            const selectedMarker = data.find((item: any) => item.id === loc.id);
-            setSelectedItem(selectedMarker);
-          });
-        });
-
-      if (offsetLocation) {
-        new naver.maps.Marker({
-          position: offsetLocation,
+        const marker = new naver.maps.Marker({
+          position: markerPosition,
           map: map,
           icon: {
-            content: homeMarkerIconHtml,
+            content: selectedMarkerId === loc.id ? selectedMarkerIconHtml : markerIconHtml,
             size: new naver.maps.Size(32, 32),
             anchor: new naver.maps.Point(16, 16),
           },
-          zIndex: 50,
+          zIndex: selectedMarkerId === loc.id ? 60 : 0,
         });
-      }
+        markersRef.current.push({ id: loc.id, marker });
+        naver.maps.Event.addListener(marker, 'click', (e) => {
+          handleMarkerClick(loc.id);
+        });
+      });
 
+    if (offsetLocation) {
       new naver.maps.Marker({
-        position: userPosition,
+        position: offsetLocation,
         map: map,
         icon: {
-          content: userMarkerIconHtml,
+          content: homeMarkerIconHtml,
           size: new naver.maps.Size(32, 32),
           anchor: new naver.maps.Point(16, 16),
         },
         zIndex: 50,
       });
-    } else {
-      console.error('위치를 가져올 수 없습니다.');
+    }
+    if (userPositionRef.current) {
+      addUserMarker();
+    }
+  };
+
+  const drawCircleAroundUser = () => {
+    if (userCircleRef.current) {
+      userCircleRef.current.setMap(null); // 기존 오프셋 원 제거
+    }
+    if (mapRef.current && userPositionRef.current) {
+      // 유저 주위에 새로운 원을 그림
+      userCircleRef.current = new naver.maps.Circle({
+        map: mapRef.current,
+        center: userPositionRef.current,
+        radius: 3000,
+        strokeColor: '#00B4B2',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#ADE4E5',
+        fillOpacity: 0.5,
+      });
+    }
+  };
+
+  const addUserMarker = () => {
+    if (userMarkerRef.current) {
+      userMarkerRef.current.setMap(null); // 기존 유저 마커 제거
+    }
+    if (mapRef.current && userPositionRef.current) {
+      // 유저 마커를 생성
+      userMarkerRef.current = new naver.maps.Marker({
+        position: userPositionRef.current,
+        map: mapRef.current,
+        icon: {
+          content: userMarkerIconHtml, // 유저 마커 아이콘
+          size: new naver.maps.Size(32, 32),
+          anchor: new naver.maps.Point(16, 16),
+        },
+        zIndex: 50,
+      });
     }
   };
 
@@ -224,42 +301,32 @@ export default function MapPage() {
     }
   };
 
-  const handleReturnToUserLocation = () => {
-    if (mapRef.current && userPositionRef.current) {
-      mapRef.current.panTo(userPositionRef.current);
-      // setCurrentCenter({
-      //   lat: userPositionRef.current.lat(),
-      //   lng: userPositionRef.current.lng(),
-      // });
+  const handleReturnToUserLocation = async () => {
+    const userlocation = await getLocation();
 
-      new naver.maps.Circle({
-        map: mapRef.current,
-        center: userPositionRef.current,
-        radius: 3000,
-        strokeColor: '#00B4B2',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#ADE4E5',
-        fillOpacity: 0.5,
-      });
+    if (userlocation && mapRef.current) {
+      const userPosition = new naver.maps.LatLng(userlocation.latitude, userlocation.longitude);
+      userPositionRef.current = userPosition;
 
+      mapRef.current.setCenter(userPositionRef.current); // 유저 위치로 지도 중심 이동
       mapRef.current.setZoom(zoomLevel);
+
+      addUserMarker();
+      drawCircleAroundUser(); // 유저 주위에 원 그리기
+
+      // 유저 마커 보이게 설정
+      setIsUserMarkerVisible(true);
+      setIsOffsetMarkerVisible(false);
+    } else {
+      console.log('위치를 불러오지 못했습니다.');
     }
-    setIsUserMarkerVisible(true);
-    setIsOffsetMarkerVisible(false);
   };
-
-  const handleReturnToAddressLocation = () => {
+  const drawCircleAroundOffset = () => {
+    if (offsetCircleRef.current) {
+      offsetCircleRef.current.setMap(null);
+    }
     if (mapRef.current && offsetCenterRef.current) {
-      mapRef.current.panTo(offsetCenterRef.current);
-      // setCurrentCenter({
-      //   lat: offsetCenterRef.current.lat(),
-      //   lng: offsetCenterRef.current.lng(),
-      // });
-
-      mapRef.current.setZoom(zoomLevel);
-
-      new naver.maps.Circle({
+      offsetCircleRef.current = new naver.maps.Circle({
         map: mapRef.current,
         center: offsetCenterRef.current,
         radius: 3000,
@@ -270,8 +337,18 @@ export default function MapPage() {
         fillOpacity: 0.5,
       });
     }
-    setIsUserMarkerVisible(false);
-    setIsOffsetMarkerVisible(true);
+  };
+
+  const handleReturnToAddressLocation = () => {
+    if (mapRef.current && offsetCenterRef.current) {
+      mapRef.current.setCenter(offsetCenterRef.current);
+      mapRef.current.setZoom(zoomLevel);
+
+      drawCircleAroundOffset();
+
+      setIsUserMarkerVisible(false);
+      setIsOffsetMarkerVisible(true);
+    }
   };
 
   useEffect(() => {
@@ -284,28 +361,60 @@ export default function MapPage() {
     // JSON 형태로 좌표를 로컬스토리지에 저장
     localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
-    initMap(); // 지도는 처음 로드될 때만 초기화
-  }, [selectedMarkerId, currentCenter, data]);
+    if (data) {
+      initMap();
+    }
+  }, [data]);
 
   const handleSelectedAddress = (addressId: number) => {
-    setSelectedMarkerId(addressId);
-    if (data) {
-      const selectedMarker = data.find((item: TLaundromats) => item.id === addressId);
-      setSelectedItem(selectedMarker);
-      setOpen(true);
-    }
+    handleMarkerClick(addressId);
   };
 
   const handleBackClick = () => {
     if (type === 'order' || !selectedMarkerId) {
       return router.back();
     }
+
     if (selectedMarkerId) {
       setSelectedMarkerId(0);
-      getLocationFromLocalStorage(); // 함수 호출
       setOpen(false);
       setZoomLevel(12);
+
+      markersRef.current.forEach(({ marker }) => {
+        marker.setIcon({
+          content: markerIconHtml,
+          size: new naver.maps.Size(32, 32),
+          anchor: new naver.maps.Point(16, 16),
+        });
+      });
+
+      if (previousSelectedMarkerRef.current) {
+        previousSelectedMarkerRef.current = null;
+      }
+
+      if (mapRef.current && offsetCenterRef.current) {
+        mapRef.current.setCenter(offsetCenterRef.current);
+        mapRef.current.setZoom(12);
+      }
+      if (!isOffsetMarkerVisible) {
+        setIsOffsetMarkerVisible(true);
+      }
     }
+  };
+
+  const handleImageClick = (e: React.MouseEvent, addressId: number) => {
+    e.stopPropagation();
+    if (data) {
+      const images = data.find((item) => item.id === addressId);
+
+      images && setSelectedImages(images.mediaResources);
+      setIsImageView(true);
+    }
+  };
+
+  const handleCloseImageView = () => {
+    setIsImageView(false);
+    initMap();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -328,14 +437,18 @@ export default function MapPage() {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
   if ((isLoading && !!data) || !currentCenter) {
     return <Loading />;
   }
 
-  return (
+  if (isImagView) {
+    return <ImageView images={seletedImges} onCloseImageView={handleCloseImageView} />;
+  }
 
+  return (
     <div className="h-full w-full">
-      <div id="map" className="relative h-[54vh] w-full">
+      <div id="map" className="relative h-[55vh] w-full">
         <div className="absolute left-4 top-4 z-40" onClick={handleBackClick}>
           <ArrowLeftIcon />
         </div>
@@ -389,9 +502,14 @@ export default function MapPage() {
                 data={selectedItem}
                 expanded={expanded}
                 onClickExpended={handleExpandClick}
+                onImageClick={handleImageClick}
               />
             ) : (
-              <CoinlaundryDefault onSelectedAddress={handleSelectedAddress} data={data} />
+              <CoinlaundryDefault
+                onSelectedAddress={handleSelectedAddress}
+                data={data}
+                onImageClick={handleImageClick}
+              />
             )}
           </div>
         </div>

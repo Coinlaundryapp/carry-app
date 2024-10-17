@@ -12,6 +12,7 @@ type Props = {
   data: any;
   expanded: boolean;
   onClickExpended: () => void;
+  onImageClick: (e: React.MouseEvent, addressId: number) => void;
 };
 
 const dummydata = [
@@ -33,8 +34,7 @@ const dummydata = [
   },
 ];
 
-function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
-
+function CoinlaundrySelectedItem({ data, expanded, onClickExpended, onImageClick }: Props) {
   const router = useRouter();
   const { type } = useParams();
 
@@ -114,6 +114,7 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended }: Props) {
                   style={{ width: 'calc(33.33% - 8px)' }}
                 >
                   <Image
+                    onClick={(e) => onImageClick(e, data.id)}
                     className="rounded-sm"
                     alt={'Image description'}
                     src={mediaUrl}

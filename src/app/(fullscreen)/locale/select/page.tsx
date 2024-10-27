@@ -5,7 +5,6 @@ import MessageCard from '@/components/ui/MessageCard';
 import SelectCard from '@/components/ui/SelectCard';
 import { ACTIVATED_CITY } from '@/constants/activate-region';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import SeoulImg from '@assets/images/seoul-image.svg';
 import IncheonImg from '@assets/images/incheon-image.svg';
 import { useModalStore } from '@/store/modal-store';

@@ -1,7 +1,6 @@
 'use client';
 
 import Button from '@/components/share/Button/Button';
-import MessageCard from '@/components/ui/MessageCard';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import LocaleImg from '@assets/images/locale-image.png';
@@ -56,40 +55,43 @@ const LocalePage = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-1 flex-col items-center justify-between pb-[30px] pt-[83px]">
-      <div className="flex flex-col items-center gap-3">
-        <p className="whitespace-pre text-center font-bold font-title-1">
-          서비스 가능지역인지 <br /> 확인해드릴게요!
-        </p>
-        <p className="text-label-neutral font-body-2-normal">위치 정보만 허용해주세요</p>
-      </div>
-      <div className="flex h-[180px] w-[350px] items-center justify-center">
-        <Image src={LocaleImg} alt="..." width={224} height={180} />
-      </div>
-      <div className="flex w-full flex-col gap-4 px-[24px] items-center ">
-        <MessageCard
-          message={
-            <p className="font-label-2">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-[32px]">
+      <div className="flex w-[350px] flex-col gap-[46px]">
+        <div className="flex flex-col items-center gap-[20px]">
+          <div className="flex items-center justify-center">
+            <Image src={LocaleImg} alt="..." width={115} height={undefined} />
+          </div>
+          <div className="flex flex-col gap-[12px]">
+            <p className="whitespace-pre text-center font-bold font-title-1">
+              서비스 가능지역인지 <br /> 확인해드릴게요!
+            </p>
+            <p className="text-label-neutral font-body-2-normal">
               현재&nbsp;
               <span className="text-primary-normal">
                 {ACTIVATED_CITY.map((city) => city).join(', ')}
               </span>
               에서만 서비스가 가능해요.
             </p>
-          }
-        />
-        <Button state="fillPrimary" size="full" onClick={allowHandler}>
-          허용하기
-        </Button>
-        <Button
-          state="primary"
-          size="full"
-          onClick={() => {
-            window.close();
-          }}
-        >
-          나중에 하기
-        </Button>
+          </div>
+        </div>
+        <div className="flex w-full flex-col items-center gap-4">
+          <Button state="fillPrimary" size="full" onClick={allowHandler}>
+            위치 허용하기
+          </Button>
+          <Button
+            state="primary"
+            size="full"
+            onClick={() => {
+              window.close();
+            }}
+          >
+            다음에 이용하기
+          </Button>
+        </div>
+      </div>
+      <div className="flex flex-col gap-[16px]">
+        <div>이미 사용한 적 있으신가요?</div>
+        <>카카오로 로그인</>
       </div>
     </div>
   );

@@ -1,14 +1,6 @@
 import Link from 'next/link';
 import HomeCard from '@/components/ui/HomeCard';
-import {
-  ADDRESS,
-  BUSINESS_NUMBER,
-  BUSINESS_REGISTRATION,
-  COPYRIGHT,
-  CUSTOMER_SERVICE,
-  EMAIL,
-  REPRESENTATIVE,
-} from '@/constants/business-info';
+
 import {
   ArrowRightIcon,
   BellBadgeIcon,
@@ -21,6 +13,7 @@ import {
   VolumeIcon,
 } from '@assets/icons';
 import Tooltip from '@/components/share/Tooltip';
+import Footer from '@/components/share/Footer/Footer';
 
 const CARD_DATA = [
   {
@@ -106,23 +99,7 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
-      <footer className="flex flex-col gap-5 bg-white px-5 pt-10">
-        <p className="font-bold font-label-1-reading">세탁의 민족</p>
-        <div className="flex flex-col gap-2 font-medium text-label-assistive font-caption-1">
-          <p>사업자 등록번호 : {BUSINESS_NUMBER}</p>
-          <p>대표 : {REPRESENTATIVE}</p>
-          <p>주소 : {ADDRESS}</p>
-          <p>이메일 : {EMAIL}</p>
-          <p>통신판매업신고 : {BUSINESS_REGISTRATION}</p>
-          <p>고객센터 : {CUSTOMER_SERVICE}</p>
-          <p>{COPYRIGHT}</p>
-        </div>
-        <div className="flex items-center gap-2 font-medium text-label-assistive font-caption-1">
-          <Link href="#">이용약관</Link>
-          <div className="h-3 w-[1px] bg-label-assistive" />
-          <Link href="#">개인정보 처리방침</Link>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

@@ -178,6 +178,7 @@ const config = {
         strong: 'var(--elevation-strong)',
         heavy: 'var(--elevation-heavy)',
         button: 'var(--elevation-button)',
+        drop: `var(--drop-shadow)`,
       },
       borderRadius: {
         sm: '4px',

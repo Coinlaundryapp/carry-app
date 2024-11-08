@@ -6,6 +6,13 @@ import { TAddressRes } from '@/types/api-types';
 import { TLaundromats } from '@/types/map-type';
 import { formatNumberWithCommas } from '@/utils/format';
 
+function getDeliveryCost(distance: number) {
+  if (distance <= BASE_DISTANCE) {
+    return BASE_COST;
+  }
+  return BASE_COST + Math.floor(distance / DISTANCE_INCREMENT) * COST_INCREMENT;
+}
+
 export default function CostField({
   address,
   laundromat,
@@ -17,8 +24,7 @@ export default function CostField({
   if (!address || !laundromat) {
     return null;
   }
-  const deliveryCost =
-    BASE_COST + Math.floor(laundromat.distance / DISTANCE_INCREMENT) * COST_INCREMENT;
+  const deliveryCost = getDeliveryCost(laundromat.distance);
   // 예상 결제 금액
   const predictedCost =
     laundromat.distance <= BASE_DISTANCE ? BASE_DISTANCE + totalAmount : deliveryCost + totalAmount;

@@ -41,8 +41,6 @@ const findRelevantRanges = (distance: number): CostItem[] => {
   const currentIndex = Math.floor((distance - BASE_DISTANCE) / DISTANCE_INCREMENT) + 1;
   const ranges: CostItem[] = [];
 
-  ranges.push(generateCostItem(0)); // 항상 기본 범위 포함
-
   if (currentIndex > 1) {
     ranges.push(generateCostItem(currentIndex - 1));
   }

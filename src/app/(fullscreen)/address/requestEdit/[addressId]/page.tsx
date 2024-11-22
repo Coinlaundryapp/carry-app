@@ -50,7 +50,7 @@ export default function AddressRequestEditPage({
       </div>
       <div className="absolute bottom-0 w-full bg-white p-6 shadow-emphasize">
         <Button state="fillPrimary" size="full">
-          수거 신청하기
+          수정하기
         </Button>
       </div>
     </main>

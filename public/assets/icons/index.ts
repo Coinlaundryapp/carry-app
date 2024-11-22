@@ -78,9 +78,14 @@ import GuidWashIcon from './guide-wash.svg';
 import GuideDrayerIcon from './guide-drayer.svg';
 import GuideSneakerIcon from './guide-sneaker.svg';
 import RightIcon from './right-icon.svg';
-
 import LaundryBasketIcon from './laundry-basket.svg';
 import LaundryIcon from './laundry.svg';
+import HeadPhoneIcon from './headphone.svg';
+import MenuChevronRightIcon from './menu-chevron-right.svg';
+import MenuLaundryIcon from './menu-laundry.svg';
+import MenuSettingIcon from './menu-setting.svg';
+import ChevronRightPrimaryIcon from './chevron-right-primary.svg';
+import BasketWithMagnifierIcon from './basekt-with-magnifier.svg';
 
 export {
   ArrowDownIcon,
@@ -165,4 +170,10 @@ export {
   SelectIcon,
   LaundryBasketIcon,
   LaundryIcon,
+  HeadPhoneIcon,
+  MenuChevronRightIcon,
+  MenuLaundryIcon,
+  MenuSettingIcon,
+  ChevronRightPrimaryIcon,
+  BasketWithMagnifierIcon,
 };

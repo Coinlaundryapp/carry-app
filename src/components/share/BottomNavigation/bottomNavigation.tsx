@@ -44,7 +44,7 @@ export function BottomNavigation() {
 
   const navigationBarList: NavigationBarType[] = [
     { title: '홈', path: '/', icon: 'Home' },
-    { title: '팀, 알뜰 세탁', path: '/team', icon: 'Cloth' },
+    // { title: '팀, 알뜰 세탁', path: '/team', icon: 'Cloth' },
     { title: '내 세탁 현황', path: '/status', icon: 'Box' },
     { title: '마이페이지', path: '/my', icon: 'My' },
   ];

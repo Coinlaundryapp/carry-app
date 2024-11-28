@@ -26,6 +26,7 @@ import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
 import { useParams, useRouter } from 'next/navigation';
 import { TLaundromats } from '@/types/map-type';
 import ImageView from '@/components/map/ImageView';
+import { useAddressStore } from '@/store/address-store';
 
 type TImages = {
   mediaUrl: string;
@@ -59,7 +60,8 @@ export default function MapPage() {
   const { type } = useParams();
   const router = useRouter();
   const { location } = useLocationStore();
-
+  const { selectedAddressId } = useAddressStore();
+  console.log('sss', selectedAddressId);
   const { data, isLoading } = useQuery({
     queryKey: ['laundromats', currentCenter],
     queryFn: () => getLaundromats(currentCenter),
@@ -70,7 +72,6 @@ export default function MapPage() {
    * 배송지 또는 임시 설정 구역을 가져오는 함수
    */
   const getLocationFromLocalStorage = () => {
-    const savedLocationString = localStorage.getItem('임시설정구역');
     const deliveryLocationString = localStorage.getItem('배송지');
 
     let offsetLocation;
@@ -78,10 +79,15 @@ export default function MapPage() {
       const deliveryLocation = JSON.parse(deliveryLocationString);
       offsetLocation = new naver.maps.LatLng(deliveryLocation.lat, deliveryLocation.lng);
       setCurrentCenter({ lat: deliveryLocation.lat, lng: deliveryLocation.lng });
-    } else if (savedLocationString) {
-      const savedLocation = JSON.parse(savedLocationString);
-      offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
-      setCurrentCenter({ lat: savedLocation.lat, lng: savedLocation.lng });
+    } else if (location) {
+      console.log('머냐');
+      const temporaryLocation = {
+        lat: 37.6055942215336,
+        lng: 126.920904663729,
+      };
+
+      offsetLocation = new naver.maps.LatLng(temporaryLocation.lat, temporaryLocation.lng);
+      setCurrentCenter({ lat: temporaryLocation.lat, lng: temporaryLocation.lng });
     }
 
     return offsetLocation;
@@ -89,8 +95,10 @@ export default function MapPage() {
 
   useEffect(() => {
     // if (location.lat === 0 && location.lng === 0) {
-    //   router.push('/home');
+    //   router.push('/locale');
     // }
+    // 테스트용으로 해놓음 아직 임시저장 구역이 api가 안되어있음
+
     getLocationFromLocalStorage();
   }, [router]);
 
@@ -352,14 +360,14 @@ export default function MapPage() {
   };
 
   useEffect(() => {
-    // 테스트용으로 해놓음 아직 임시저장 구역이 api가 안되어있음
-    const temporaryLocation = {
-      lat: 37.6055942215336,
-      lng: 126.920904663729,
-    };
+    // // 테스트용으로 해놓음 아직 임시저장 구역이 api가 안되어있음
+    // const temporaryLocation = {
+    //   lat: 37.6055942215336,
+    //   lng: 126.920904663729,
+    // };
 
     // JSON 형태로 좌표를 로컬스토리지에 저장
-    localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
+    // localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
 
     if (data) {
       initMap();

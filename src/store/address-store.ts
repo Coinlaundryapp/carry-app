@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface AddressStore {
   selectedAddressId: number | null;
@@ -10,12 +11,20 @@ interface AddressStore {
   triggerRefetch: () => void;
 }
 
-export const useAddressStore = create<AddressStore>((set) => ({
-  selectedAddressId: null,
-  setSelectedAddressId: (address) => set({ selectedAddressId: address }),
-  addressModalOpen: false,
-  setAddressModalOpen: (isOpen) => set({ addressModalOpen: isOpen }),
-  shouldRefetch: false,
-  setShouldRefetch: (value) => set({ shouldRefetch: value }),
-  triggerRefetch: () => set((state) => ({ shouldRefetch: !state.shouldRefetch })),
-}));
+export const useAddressStore = create<AddressStore>()(
+  persist(
+    (set) => ({
+      selectedAddressId: null,
+      setSelectedAddressId: (address) => set({ selectedAddressId: address }),
+      addressModalOpen: false,
+      setAddressModalOpen: (isOpen) => set({ addressModalOpen: isOpen }),
+      shouldRefetch: false,
+      setShouldRefetch: (value) => set({ shouldRefetch: value }),
+      triggerRefetch: () => set((state) => ({ shouldRefetch: !state.shouldRefetch })),
+    }),
+    {
+      name: 'addresId-storage',
+      partialize: (state) => ({ selectedAddressId: state.selectedAddressId }),
+    },
+  ),
+);

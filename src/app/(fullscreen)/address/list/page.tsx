@@ -14,7 +14,7 @@ import { AddPlusIcon } from '@assets/icons';
 export default function AddressSetting() {
   const router = useRouter();
 
-  const { shouldRefetch, setShouldRefetch } = useAddressStore();
+  const { shouldRefetch, setShouldRefetch, setSelectedAddressId } = useAddressStore();
   const addToast = useToastStore((state) => state.addToast);
   const goBack = () => {
     history.back();
@@ -23,7 +23,6 @@ export default function AddressSetting() {
   const goToAddAddress = () => {
     router.push('/address/form');
   };
-
   const session = useSession();
   const accessToken = session.data?.user?.accessToken;
 
@@ -39,6 +38,15 @@ export default function AddressSetting() {
       setShouldRefetch(false);
     }
   }, [shouldRefetch, refetch, setShouldRefetch]);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const defaultAddress = data.find((address: any) => address.default === true);
+      if (defaultAddress) {
+        setSelectedAddressId(defaultAddress.addressId);
+      }
+    }
+  }, [isSuccess, data, setSelectedAddressId]);
 
   if (isSuccess && data.length === 0) {
     addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error' });

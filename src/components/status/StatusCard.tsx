@@ -78,9 +78,7 @@ const StatusCard = ({ status, info, hasButton }: StatusCardProps) => {
           </p>
         </div>
       )}
-      {hasButton && <>
-      
-      </>}
+      {hasButton && <>{status === 'ORDER_COMPLETED' && <></>}</>}
     </div>
   );
 };

@@ -86,6 +86,8 @@ import MenuLaundryIcon from './menu-laundry.svg';
 import MenuSettingIcon from './menu-setting.svg';
 import ChevronRightPrimaryIcon from './chevron-right-primary.svg';
 import BasketWithMagnifierIcon from './basekt-with-magnifier.svg';
+import ReviewStar from './ReviewStar.svg';
+import CameraIcon from './camera.svg';
 
 export {
   ArrowDownIcon,
@@ -176,4 +178,6 @@ export {
   MenuSettingIcon,
   ChevronRightPrimaryIcon,
   BasketWithMagnifierIcon,
+  ReviewStar,
+  CameraIcon,
 };

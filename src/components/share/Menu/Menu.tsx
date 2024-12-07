@@ -17,7 +17,7 @@ interface MenuProps {
 }
 
 // MenuItem 컴포넌트
-export function MenuListItem({ item }: Readonly<{ item: MenuItem }>) {
+function MenuListItem({ item }: Readonly<{ item: MenuItem }>) {
   if (item.id === 'service-center') {
     return (
       <a href={item.path} className="flex w-full items-center justify-between">

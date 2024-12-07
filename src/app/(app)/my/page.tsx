@@ -64,10 +64,10 @@ const SETTINGS_SECTIONS = [
 
 export default function MyPage() {
   return (
-    <main>
+    <>
       <section className="flex flex-col gap-6 bg-background-normal-alternative px-5 py-6">
         <UserInfo />
-        <div className="shadow-drop flex items-center justify-between rounded-md bg-static-white p-5">
+        <div className="flex items-center justify-between rounded-md bg-static-white p-5 shadow-drop">
           <div className="flex flex-col">
             <h2 className="mb-1 font-semibold text-label-normal font-headline-2">
               캐리가 처음이신가요?
@@ -88,8 +88,8 @@ export default function MyPage() {
           </Fragment>
         ))}
       </div>
-      <Separator variant="horizontal8" />
-      <Footer />
-    </main>
+      {/* <Separator variant="horizontal8" /> */}
+      {/* <Footer /> */}
+    </>
   );
 }

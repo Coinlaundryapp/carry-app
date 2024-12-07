@@ -19,7 +19,7 @@ function page() {
 
   return (
     <>
-      <TopNavigation type="back" title="리뷰 작성" leftClick={() => router.back()} />
+      <TopNavigation type="back" title="계정 설정" leftClick={() => router.back()} />
       <div className="mb-[87px] px-5 pt-6">
         {MY_SETTING_MENU.map((item) => (
           <MenuListItem key={item.id} item={item} />

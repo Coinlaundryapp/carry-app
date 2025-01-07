@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 import TopNavigation from '@/components/share/TopNavigation/TopNavigation';
 import { useRouter } from 'next/navigation';
@@ -6,7 +7,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { useModalStore } from '@/store/modal-store';
 import { MenuChevronRightIcon } from '@assets/icons';
 
-function page() {
+export default function Page() {
   const router = useRouter();
   const { status } = useSession();
   const { openModal } = useModalStore();
@@ -39,7 +40,12 @@ function page() {
       <TopNavigation type="back" title="계정 설정" leftClick={() => router.back()} />
       <div className="mb-[87px] px-5 pt-6">
         {MY_SETTING_MENU.map((item) => (
-          <a href="#" onClick={handleClick} className="flex w-full items-center justify-between">
+          <a
+            key={item.id}
+            href="#"
+            onClick={handleClick}
+            className="flex w-full items-center justify-between"
+          >
             <span className="font-semibold text-label-neutral font-body-1-normal">
               {item.title}
             </span>
@@ -50,5 +56,3 @@ function page() {
     </>
   );
 }
-
-export default page;

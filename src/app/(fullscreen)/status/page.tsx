@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Seperate from '@assets/icons/separateWash.svg';
 
-const page = () => {
+const Page = () => {
   const session = useSession();
   const accessToken = session.data?.user.accessToken as string;
 
@@ -26,7 +26,9 @@ const page = () => {
         <span className="font_heading_1 font-semibold">내 세탁 현황</span>
       </div>
       <div className="flex flex-col gap-[20px]">
-        {orderList?.map((order) => <StatusCard info={[]} status={order.status} hasButton />)}
+        {orderList?.map((order) => (
+          <StatusCard key={order.id} info={[]} status={order.status} hasButton />
+        ))}
       </div>
     </div>
   ) : (
@@ -60,4 +62,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

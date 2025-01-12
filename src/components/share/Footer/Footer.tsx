@@ -12,7 +12,7 @@ import Link from 'next/link';
 export default function Footer() {
   return (
     <footer className="flex flex-col gap-5 bg-white px-5 pt-10">
-      <p className="font-bold font-label-1-reading">세탁의 민족</p>
+      <p className="font-bold font-label-1-reading">캐리</p>
       <div className="flex flex-col gap-2 font-medium text-label-assistive font-caption-1">
         <p>사업자 등록번호 : {BUSINESS_NUMBER}</p>
         <p>대표 : {REPRESENTATIVE}</p>

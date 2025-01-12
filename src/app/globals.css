@@ -87,9 +87,8 @@
 
     --static-white: #ffffff;
     --static-black: #000000;
-
+    
     /* Component/Fill */
-
     --fill-normal: #70737c14;
     --fill-strong: #70737c29;
     --fill-alternative: #70737c0d;

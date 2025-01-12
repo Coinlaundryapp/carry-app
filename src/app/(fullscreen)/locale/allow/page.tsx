@@ -2,9 +2,7 @@
 
 import Button from '@/components/share/Button/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 import SeoulMap from '@/components/ui/SeoulMap';
-import { useModalStore } from '@/store/modal-store';
 import IncheonMap from '@/components/ui/IncheonMap';
 
 const AllowLocationPage = () => {
@@ -18,6 +16,7 @@ const AllowLocationPage = () => {
   if (district === 'EUNPYEONG_GU_SEOUL') {
     selectedLocale = '은평구';
   }
+
   if (district === 'GYEYANG_GU_INCHEON') {
     selectedLocale = '계양구';
   }

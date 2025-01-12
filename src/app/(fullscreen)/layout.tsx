@@ -10,7 +10,7 @@ export default function Layout({
 }>) {
   return (
     <div className="relative mx-auto flex h-dvh max-w-[480px] flex-col justify-between overflow-hidden bg-white">
-      <div className="h-full w-full overflow-scroll">
+      <div className="scrollbar-hide h-full w-full overflow-scroll">
         <Suspense fallback={<Loading />}>{children}</Suspense>
       </div>
       <Toast />

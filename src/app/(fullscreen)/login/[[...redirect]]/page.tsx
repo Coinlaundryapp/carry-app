@@ -1,7 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { KakaoIcon } from '@assets/icons';
 import { headers } from 'next/headers';
+import KakaoLoginButton from '@/components/login/KakaoLoginButton';
 
 const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY as string;
 const KAKAO_REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL as string;
@@ -49,13 +48,7 @@ export default async function Login({
       </div>
       <Image src="/assets/images/login-image.png" alt="Laundry" width={390} height={308} />
 
-      <Link
-        href={url.toString()}
-        className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#FEE500] p-4 font-bold font-body-1-reading"
-      >
-        <KakaoIcon />
-        <p>카카오로 시작하기</p>
-      </Link>
+      <KakaoLoginButton oauthUrl={url.toString()} />
     </main>
   );
 }

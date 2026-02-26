@@ -15,6 +15,7 @@ import { getPaymentInfo } from '@/api/payment';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { formatNumberWithCommas } from '@/utils/format';
+import { isWebView } from '@/lib/webview-bridge';
 
 type PaymentMethod = 'KAKAOPAY' | 'NAVERPAY' | 'card';
 
@@ -106,8 +107,9 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
     paymentState.paymentMethod === 'card' &&
     (paymentState.card === '' || paymentState.installment === '');
 
-  // TODO: 뒤로가기 동작 정의
-  const handleBackClick = () => {};
+  const handleBackClick = () => {
+    router.back();
+  };
 
   const handlePaymentMethodChange = (value: PaymentMethod) => {
     setPaymentState((prev) => ({ ...prev, paymentMethod: value }));
@@ -155,72 +157,81 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
     if (!payment) {
       return;
     }
-    // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
-    // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-    switch (paymentState.paymentMethod) {
-      case 'card':
-        await payment.requestPayment({
-          method: 'CARD', // 카드 및 간편결제
-          amount,
-          orderId: 'NefN2Hu0HsStnHO2prILj',
-          orderName: '토스 티셔츠 외 2건',
-          successUrl: window.location.origin + '/payment/success',
-          failUrl:
-            window.location.origin +
-            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
-          customerName: '김민수',
-          customerMobilePhone: '01030168706',
-          card: {
-            useEscrow: false,
-            flowMode: 'DIRECT', // 자체창 여는 옵션
-            cardCompany: paymentState.card,
-            useCardPoint: false,
-            useAppCardOnly: false,
-          },
-        });
-        break;
-      case 'KAKAOPAY':
-        await payment.requestPayment({
-          method: 'CARD', // 카드 및 간편결제
-          amount,
-          orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
-          orderName: '토스 티셔츠 외 2건',
-          successUrl: window.location.origin + '/payment/success',
-          failUrl:
-            window.location.origin +
-            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
-          customerEmail: 'customer123@gmail.com',
-          customerName: '김토스',
-          customerMobilePhone: '01012341234',
-          // 카드 결제에 필요한 정보
-          card: {
-            useEscrow: false,
-            flowMode: 'DIRECT', // 자체창 여는 옵션
-            easyPay: 'KAKAOPAY', // 간편결제 자체창
-          },
-        });
-        break;
-      case 'NAVERPAY':
-        await payment.requestPayment({
-          method: 'CARD', // 카드 및 간편결제
-          amount,
-          orderId: 'NefN2Hu0HsStnHO2prILj', // 고유 주분번호
-          orderName: '토스 티셔츠 외 2건',
-          successUrl: window.location.origin + '/payment/success',
-          failUrl:
-            window.location.origin +
-            `/error?error=payment_error&redirectUrl=${window.location.pathname}`, // 결제 요청이 실패하면 리다이렉트되는 URL
-          customerEmail: 'customer123@gmail.com',
-          customerName: '김토스',
-          customerMobilePhone: '01012341234',
-          // 카드 결제에 필요한 정보
-          card: {
-            flowMode: 'DIRECT', // 자체창 여는 옵션
-            easyPay: 'NAVERPAY', // 간편결제 자체창
-            useCardPoint: false,
-            useAppCardOnly: false,
-          },
-        });
+
+    const successUrl = window.location.origin + '/payment/success';
+    const failUrl =
+      window.location.origin +
+      `/error?error=payment_error&redirectUrl=${window.location.pathname}`;
+
+    // WebView 환경에서 간편결제(카카오페이/네이버페이) 사용 시,
+    // 외부 앱 호출(intent://, kakaotalk:// 등)은 Android 네이티브의
+    // shouldOverrideUrlLoading에서 처리해야 합니다.
+
+    try {
+      switch (paymentState.paymentMethod) {
+        case 'card':
+          await payment.requestPayment({
+            method: 'CARD',
+            amount,
+            orderId: 'NefN2Hu0HsStnHO2prILj',
+            orderName: '토스 티셔츠 외 2건',
+            successUrl,
+            failUrl,
+            customerName: '김민수',
+            customerMobilePhone: '01030168706',
+            card: {
+              useEscrow: false,
+              flowMode: 'DIRECT',
+              cardCompany: paymentState.card,
+              useCardPoint: false,
+              useAppCardOnly: false,
+            },
+          });
+          break;
+        case 'KAKAOPAY':
+          await payment.requestPayment({
+            method: 'CARD',
+            amount,
+            orderId: 'NefN2Hu0HsStnHO2prILj',
+            orderName: '토스 티셔츠 외 2건',
+            successUrl,
+            failUrl,
+            customerEmail: 'customer123@gmail.com',
+            customerName: '김토스',
+            customerMobilePhone: '01012341234',
+            card: {
+              useEscrow: false,
+              flowMode: 'DIRECT',
+              easyPay: 'KAKAOPAY',
+            },
+          });
+          break;
+        case 'NAVERPAY':
+          await payment.requestPayment({
+            method: 'CARD',
+            amount,
+            orderId: 'NefN2Hu0HsStnHO2prILj',
+            orderName: '토스 티셔츠 외 2건',
+            successUrl,
+            failUrl,
+            customerEmail: 'customer123@gmail.com',
+            customerName: '김토스',
+            customerMobilePhone: '01012341234',
+            card: {
+              flowMode: 'DIRECT',
+              easyPay: 'NAVERPAY',
+              useCardPoint: false,
+              useAppCardOnly: false,
+            },
+          });
+      }
+    } catch (error) {
+      console.error('[Payment] 결제 요청 실패:', error);
+
+      // WebView에서 외부 앱 호출 실패 시 에러 페이지로 이동
+      if (isWebView()) {
+        router.push(`/error?error=payment_error&redirectUrl=${window.location.pathname}`);
+      }
     }
   }
 

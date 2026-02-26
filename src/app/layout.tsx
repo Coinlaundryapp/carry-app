@@ -7,6 +7,7 @@ import AuthProvider from '@/providers/AuthProvides';
 import { pretendard } from '@/font/myLocalFont';
 import Script from 'next/script';
 import ReactQueryProviders from '@/providers/ReactQueryProviders';
+import WebViewProvider from '@/providers/WebViewProvider';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -36,7 +37,9 @@ export default function RootLayout({
         />
 
         <AuthProvider>
-          <ReactQueryProviders>{children}</ReactQueryProviders>
+          <ReactQueryProviders>
+            <WebViewProvider>{children}</WebViewProvider>
+          </ReactQueryProviders>
         </AuthProvider>
       </body>
     </html>

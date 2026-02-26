@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import clsx from 'clsx';
 
@@ -7,6 +7,14 @@ import AuthProvider from '@/providers/AuthProvides';
 import { pretendard } from '@/font/myLocalFont';
 import Script from 'next/script';
 import ReactQueryProviders from '@/providers/ReactQueryProviders';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+};
 
 export const metadata: Metadata = {
   title: 'Carry',

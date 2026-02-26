@@ -54,7 +54,7 @@ export function BottomNavigation() {
       style={{
         boxShadow: '0px -2px 6px 0px #878A931A',
       }}
-      className="w-full rounded-tl-xl rounded-tr-xl px-[24px] pb-[34px] pt-[10px]"
+      className="w-full rounded-tl-xl rounded-tr-xl px-[24px] pb-[calc(34px+env(safe-area-inset-bottom,0px))] pt-[10px]"
     >
       <ul className="flex w-full justify-between gap-[14px]">
         {navigationBarList.map((item) => {

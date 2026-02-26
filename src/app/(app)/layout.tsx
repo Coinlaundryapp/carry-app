@@ -35,7 +35,7 @@ export default function Layout({
   }, [isVisible]);
 
   return (
-    <div className="relative mx-auto flex h-dvh max-w-[480px] flex-col justify-between overflow-hidden bg-white">
+    <div className="safe-area-top relative mx-auto flex h-dvh max-w-[480px] flex-col justify-between overflow-hidden bg-white">
       <div className="scrollbar-hide h-full w-full overflow-scroll pb-8" ref={ref}>
         {children}
       </div>

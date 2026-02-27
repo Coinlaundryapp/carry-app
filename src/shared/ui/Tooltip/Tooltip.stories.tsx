@@ -19,7 +19,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Template: Story = {
+export const Default: Story = {
   args: {
     message: '처음 오셨나요?',
     children: <ArrowRightIcon />,

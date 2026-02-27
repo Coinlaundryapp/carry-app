@@ -4,6 +4,7 @@ import Tab from './Tab';
 const meta = {
   title: 'Components/Tab',
   component: Tab,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },

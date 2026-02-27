@@ -1,5 +1,6 @@
-import TopNavigation from './TopNavigation';
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
+import TopNavigation from './TopNavigation';
 
 const meta = {
   title: 'Components/TopNavigation',
@@ -10,7 +11,7 @@ const meta = {
   },
   argTypes: {},
   args: {
-    leftClick: () => {},
+    leftClick: fn(),
   },
   decorators: [
     (Story: React.ComponentType) => (
@@ -38,12 +39,13 @@ export const Close: Story = {
     title: 'Title',
   },
 };
+
 export const WithoutTitle: Story = {
   args: {
     type: 'back',
-    leftClick: () => {},
   },
 };
+
 export const BackWithoutTitle: Story = {
   args: {
     type: 'back',
@@ -54,6 +56,6 @@ export const BackWithSearch: Story = {
   args: {
     type: 'back',
     title: 'Title',
-    rightClick: () => {},
+    rightClick: fn(),
   },
 };

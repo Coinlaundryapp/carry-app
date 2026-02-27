@@ -13,6 +13,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  tags: ['autodocs'],
   argTypes: {
     size: {
       control: {
@@ -41,5 +42,12 @@ export const Default: Story = {
   args: {
     value: '1',
     size: 'small',
+  },
+};
+
+export const Big: Story = {
+  args: {
+    value: '1',
+    size: 'big',
   },
 };

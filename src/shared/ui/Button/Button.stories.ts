@@ -1,27 +1,36 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
 import Button from './Button';
 
 const meta: Meta<typeof Button> = {
-  title: 'components/Button',
+  title: 'Components/Button',
   component: Button,
+  tags: ['autodocs'],
+  parameters: {
+    layout: 'centered',
+  },
   argTypes: {
     backgroundColor: { control: 'color' },
     borderColor: { control: 'color' },
     color: { control: 'color' },
     state: {
       control: 'radio',
-      options: ['primary', 'secondary', 'fillPrimary', 'fillSecondary', 'default'],
+      options: ['primary', 'secondary', 'fillPrimary', 'fillSecondary', 'default', 'disabled'],
     },
     size: {
       control: 'radio',
-      options: ['small', 'medium', 'large'],
+      options: ['small', 'medium', 'large', 'full', 'hug'],
     },
+  },
+  args: {
+    onClick: fn(),
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// --- Large ---
 export const LargePrimary: Story = {
   args: {
     children: 'Large Primary',
@@ -37,9 +46,10 @@ export const LargeSecondary: Story = {
     size: 'large',
   },
 };
+
 export const LargeFillPrimary: Story = {
   args: {
-    children: 'Large Primary',
+    children: 'Large Fill Primary',
     state: 'fillPrimary',
     size: 'large',
   },
@@ -47,7 +57,7 @@ export const LargeFillPrimary: Story = {
 
 export const LargeFillSecondary: Story = {
   args: {
-    children: 'Large Secondary',
+    children: 'Large Fill Secondary',
     state: 'fillSecondary',
     size: 'large',
   },
@@ -55,13 +65,14 @@ export const LargeFillSecondary: Story = {
 
 export const Default: Story = {
   args: {
-    children: 'Large Secondary',
+    children: 'Large Default',
     state: 'default',
     size: 'large',
   },
 };
 
-export const MedumPrimary: Story = {
+// --- Medium ---
+export const MediumPrimary: Story = {
   args: {
     children: 'Medium Primary',
     state: 'primary',
@@ -79,7 +90,7 @@ export const MediumSecondary: Story = {
 
 export const MediumFillPrimary: Story = {
   args: {
-    children: 'MediumFillPrimary',
+    children: 'Medium Fill Primary',
     state: 'fillPrimary',
     size: 'medium',
   },
@@ -93,11 +104,28 @@ export const MediumFillSecondary: Story = {
   },
 };
 
-export const MediumDefaultSecondary: Story = {
+export const MediumDefault: Story = {
   args: {
-    children: 'Medium Default Secondary',
+    children: 'Medium Default',
     state: 'default',
     size: 'medium',
+  },
+};
+
+// --- Small ---
+export const SmallPrimary: Story = {
+  args: {
+    children: 'Small Primary',
+    state: 'primary',
+    size: 'small',
+  },
+};
+
+export const SmallSecondary: Story = {
+  args: {
+    children: 'Small Secondary',
+    state: 'secondary',
+    size: 'small',
   },
 };
 
@@ -109,34 +137,44 @@ export const SmallDefault: Story = {
   },
 };
 
-export const SmallFillSecondary: Story = {
-  args: {
-    children: 'SmallFSecondary',
-    state: 'fillSecondary',
-    size: 'small',
-  },
-};
-
 export const SmallFillPrimary: Story = {
   args: {
-    children: 'FillPrimary',
+    children: 'Small Fill Primary',
     state: 'fillPrimary',
     size: 'small',
   },
 };
 
-export const SmallSecondary: Story = {
+export const SmallFillSecondary: Story = {
   args: {
-    children: 'Secondary',
-    state: 'secondary',
+    children: 'Small Fill Secondary',
+    state: 'fillSecondary',
     size: 'small',
   },
 };
 
-export const SmallPrimary: Story = {
+// --- Full / Hug / Disabled (누락 variant) ---
+export const FullWidth: Story = {
   args: {
-    children: 'Primary',
+    children: 'Full Width Button',
+    state: 'fillPrimary',
+    size: 'full',
+  },
+};
+
+export const HugSize: Story = {
+  args: {
+    children: 'Hug',
     state: 'primary',
-    size: 'small',
+    size: 'hug',
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    children: 'Disabled Button',
+    state: 'disabled',
+    size: 'large',
+    disabled: true,
   },
 };

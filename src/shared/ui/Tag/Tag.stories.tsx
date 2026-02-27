@@ -60,3 +60,10 @@ export const Red: Story = {
     color: 'red',
   },
 } satisfies Story;
+
+export const Black: Story = {
+  args: {
+    label: 'Black',
+    color: 'black',
+  },
+} satisfies Story;

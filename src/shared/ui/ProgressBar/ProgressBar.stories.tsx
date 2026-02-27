@@ -8,7 +8,12 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {},
+  argTypes: {
+    color: {
+      control: 'radio',
+      options: ['default', 'blue'],
+    },
+  },
   args: {
     percent: 25,
   },
@@ -29,9 +34,17 @@ export const Percent50: Story = {
   args: {
     percent: 50,
   },
-} satisfies Story;
+};
+
 export const Percent75: Story = {
   args: {
     percent: 75,
   },
-} satisfies Story;
+};
+
+export const Blue: Story = {
+  args: {
+    percent: 60,
+    color: 'blue',
+  },
+};

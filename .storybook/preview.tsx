@@ -4,6 +4,7 @@ import '../src/app/globals.css';
 import { pretendard } from '../src/font/myLocalFont';
 
 const preview: Preview = {
+  tags: ['autodocs'],
   parameters: {
     controls: {
       matchers: {

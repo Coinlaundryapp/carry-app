@@ -4,6 +4,7 @@ import { Avatar } from './avatar';
 const meta = {
   title: 'Components/Avatar',
   component: Avatar.Group,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },

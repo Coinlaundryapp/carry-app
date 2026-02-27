@@ -28,10 +28,18 @@ export const Success: Story = {
     status: 'success',
     label: '새 배송지가 추가되었습니다.',
   },
-} satisfies Story;
+};
+
 export const Done: Story = {
   args: {
     status: 'done',
     label: '정상적으로 탈퇴되었습니다!',
   },
-} satisfies Story;
+};
+
+export const Error: Story = {
+  args: {
+    status: 'error',
+    label: '오류가 발생했습니다. 다시 시도해주세요.',
+  },
+};

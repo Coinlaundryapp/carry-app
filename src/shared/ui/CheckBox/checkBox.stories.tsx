@@ -11,6 +11,10 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     checked: { control: 'boolean' },
+    type: {
+      control: 'radio',
+      options: ['square', 'circle', 'icon'],
+    },
   },
   args: {
     onClick: fn(),
@@ -21,17 +25,10 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const CheckBoxWithLabel: Story = {
-  args: {
-    checked: true,
-    label: '텍스트',
-    textClassName: '',
-  },
-};
-
 export const Default: Story = {
   args: {
     checked: false,
+    type: 'square',
   },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -45,5 +42,45 @@ export const Default: Story = {
 
     // onClick 핸들러 호출 확인
     await expect(args.onClick).toHaveBeenCalled();
+  },
+};
+
+export const CheckBoxWithLabel: Story = {
+  args: {
+    checked: true,
+    label: '텍스트',
+    textClassName: '',
+  },
+};
+
+export const Circle: Story = {
+  args: {
+    checked: false,
+    type: 'circle',
+    label: '원형 체크박스',
+  },
+};
+
+export const CircleChecked: Story = {
+  args: {
+    checked: true,
+    type: 'circle',
+    label: '원형 체크박스 (선택됨)',
+  },
+};
+
+export const Icon: Story = {
+  args: {
+    checked: false,
+    type: 'icon',
+    label: '아이콘 체크박스',
+  },
+};
+
+export const IconChecked: Story = {
+  args: {
+    checked: true,
+    type: 'icon',
+    label: '아이콘 체크박스 (선택됨)',
   },
 };

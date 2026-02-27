@@ -6,6 +6,7 @@ import { useModalStore } from '@shared/model/modal-store';
 const meta = {
   title: 'Components/Modal',
   component: Modal,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },

@@ -12,6 +12,7 @@ type ToastArgs = {
 const meta: Meta<ToastArgs> = {
   title: 'Components/Toast',
   component: Toast,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
@@ -54,6 +55,14 @@ export const Success: Story = {
 export const Done: Story = {
   args: {
     type: 'done',
+  },
+  render,
+};
+
+export const Error: Story = {
+  args: {
+    type: 'error',
+    message: '오류가 발생했습니다.',
   },
   render,
 };

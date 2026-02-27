@@ -18,6 +18,7 @@ const additionalContent = (
 const meta: Meta<typeof CollapsiblePanel> = {
   title: 'Components/CollapsiblePanel',
   component: CollapsiblePanel,
+  tags: ['autodocs'],
   argTypes: {
     title: { control: 'text' },
     value: { control: 'text' },

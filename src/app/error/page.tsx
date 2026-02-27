@@ -12,7 +12,8 @@ export default function AuthError() {
   const redirectUrl = searchParams.get('redirectUrl');
   const errorMessage = error && AUTH_ERROR[error] ? AUTH_ERROR[error] : AUTH_ERROR.server_error;
   const handleRedirect = () => {
-    if (redirectUrl) {
+    // 내부 경로만 허용 (open redirect 방지)
+    if (redirectUrl && redirectUrl.startsWith('/') && !redirectUrl.startsWith('//')) {
       router.replace(redirectUrl);
       return;
     }

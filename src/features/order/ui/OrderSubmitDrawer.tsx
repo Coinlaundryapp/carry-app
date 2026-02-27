@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { postOrder } from '@features/order/api/order';
 import useOrderStore from '@features/order/model/order-store';
+import { useToastStore } from '@shared/model/toast-store';
 import Button from '@shared/ui/Button';
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from '@shared/ui/primitives/drawer';
 import { LaundryBasketIcon, LaundryIcon } from '@assets/icons';
@@ -13,6 +14,7 @@ export default function OrderSubmitDrawer({ canSubmit }: Readonly<{ canSubmit: b
   const session = useSession();
   const accessToken = session.data?.user.accessToken as string;
   const router = useRouter();
+  const addToast = useToastStore((state) => state.addToast);
   const { orderContent, addressId, laundromat, orderSchedule, reset } = useOrderStore();
   const laundromatId = laundromat?.id as number;
   const mutation = useMutation({
@@ -29,7 +31,8 @@ export default function OrderSubmitDrawer({ canSubmit }: Readonly<{ canSubmit: b
       router.replace(`/status/${data.id}`);
     },
     onError: (error) => {
-      alert(error);
+      const message = error instanceof Error ? error.message : '주문 처리 중 오류가 발생했습니다.';
+      addToast({ message, type: 'error' });
     },
   });
   return (

@@ -60,6 +60,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (token && isJwtExpired(token.accessToken as string)) {
         const res = await refreshAccessToken({ refreshToken: token.refreshToken as string });
+        if (!res) {
+          // 토큰 갱신 실패 시 기존 토큰 반환 (세션 만료 처리는 클라이언트에서)
+          return { ...token, accessToken: '', refreshToken: '' };
+        }
         return {
           ...token,
           accessToken: res.accessToken,

@@ -1,4 +1,4 @@
-'use clinet';
+'use client';
 import React from 'react';
 import { Input } from '@shared/ui/Input';
 import { useAddressStore } from '@features/address/model/address-store';

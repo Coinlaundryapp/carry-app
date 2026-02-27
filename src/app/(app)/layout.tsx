@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { debounce } from 'es-toolkit';
 import ScrollUpButton from '@shared/ui/ScrollUpButton/ScrollUpButton';
 import { BottomNavigation } from '@shared/ui/BottomNavigation';
 import Toast from '@shared/ui/Toast';
 import { Modal } from '@shared/ui/Modal';
+import Loading from '@shared/ui/Loading';
 
 export default function Layout({
   children,
@@ -37,7 +38,7 @@ export default function Layout({
   return (
     <div className="safe-area-top relative mx-auto flex h-dvh max-w-[480px] flex-col justify-between overflow-hidden bg-white">
       <div className="scrollbar-hide h-full w-full overflow-scroll pb-8" ref={ref}>
-        {children}
+        <Suspense fallback={<Loading />}>{children}</Suspense>
       </div>
 
       {isVisible && <ScrollUpButton onClick={scrollToTop} />}

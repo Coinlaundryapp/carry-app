@@ -31,9 +31,12 @@ export default function Order({
     enabled: !!accessToken && !!addressId,
   });
   const [allConsentsGiven, setAllConsentsGiven] = useState(false);
-  if (session.status === 'unauthenticated') {
-    router.push(`/login/${currentUrl}`);
-  }
+
+  useEffect(() => {
+    if (session.status === 'unauthenticated') {
+      router.push(`/login/${currentUrl}`);
+    }
+  }, [session.status, router, currentUrl]);
   const canSubmit =
     !orderContent.washOption ||
     !orderContent.orderUnitType ||

@@ -52,9 +52,7 @@ export default function MapBottomPanel({
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 mx-auto max-w-[480px] rounded-t-3xl bg-white transition-transform duration-500 ease-in-out ${
-        true ? 'translate-y-0' : 'translate-y-full'
-      } `}
+      className="fixed inset-x-0 bottom-0 mx-auto max-w-[480px] translate-y-0 rounded-t-3xl bg-white transition-transform duration-500 ease-in-out"
     >
       <div className="h-full overflow-y-auto">
         <div
@@ -71,11 +69,11 @@ export default function MapBottomPanel({
           </div>
           <div className="flex items-center gap-1.5">
             <GuideDrayerIcon />
-            <span className="font_caption_1">세탁기</span>
+            <span className="font_caption_1">건조기</span>
           </div>
           <div className="flex items-center gap-1.5">
             <GuideSneakerIcon />
-            <span className="font_caption_1">세탁기</span>
+            <span className="font_caption_1">운동화</span>
           </div>
         </div>
         <div className="mt-1 text-center">

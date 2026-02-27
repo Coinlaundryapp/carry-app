@@ -1,4 +1,4 @@
-import { fetchExtended } from '@shared/api/api-client';
+import { fetchExtended, ApiError } from '@shared/api/api-client';
 import { ApiResponse, AuthResponse } from '@shared/types/api-types';
 
 export async function login({
@@ -25,25 +25,33 @@ export async function login({
       refreshToken: data.refreshToken,
     };
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === '422') {
-        throw Error('login_error');
-      }
+    if (error instanceof ApiError && error.status === 422) {
+      throw new Error('login_error');
     }
-    throw Error('server_error');
+    throw new Error('server_error');
   }
 }
-export async function refreshAccessToken({ refreshToken }: { refreshToken: string }) {
-  const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/reissue', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      cookie: `refreshToken=${refreshToken}`,
-    },
-  });
-  const data = res.body.data;
-  return {
-    accessToken: data.accessToken,
-    refreshToken: data.refreshToken,
-  };
+
+export async function refreshAccessToken({
+  refreshToken,
+}: {
+  refreshToken: string;
+}): Promise<{ accessToken: string; refreshToken: string } | null> {
+  try {
+    const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/reissue', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        cookie: `refreshToken=${refreshToken}`,
+      },
+    });
+    const data = res.body.data;
+    return {
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+    };
+  } catch (error) {
+    console.error('[Auth] Token refresh failed:', error);
+    return null;
+  }
 }

@@ -99,7 +99,6 @@ export function Input({
           readOnly={status === 'done'}
           className={`peer w-full bg-transparent text-label-normal caret-primary-normal font-body-2-normal placeholder:text-label-assistive focus:outline-none ${iconstate ? iconstate : ''}`}
           {...props}
-          {...props}
         />
         {status === 'success' && successIcon && <div>{successIcon}</div>}
         {status === 'error' && errorIcon && <div>{errorIcon}</div>}

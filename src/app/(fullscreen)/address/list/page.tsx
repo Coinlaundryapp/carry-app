@@ -48,9 +48,11 @@ export default function AddressSetting() {
     }
   }, [isSuccess, data, setSelectedAddressId]);
 
-  if (isSuccess && data.length === 0) {
-    addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error' });
-  }
+  useEffect(() => {
+    if (isSuccess && data && data.length === 0) {
+      addToast({ message: '기본 배송지 하나 이상은 필요합니다.', type: 'error' });
+    }
+  }, [isSuccess, data, addToast]);
 
   const renderButton = () => (
     <button

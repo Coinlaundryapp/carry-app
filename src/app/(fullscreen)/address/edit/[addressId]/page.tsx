@@ -32,9 +32,10 @@ const EditFormPage = () => {
     staleTime: 0,
   });
 
-  // 기존 데이터로 폼 채우기
+  // 기존 데이터로 폼 채우기 — form 객체는 매 렌더마다 새로 생성되므로 deps에서 제외
   useEffect(() => {
     form.populateForm(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, form.populateForm]);
 
   const { mutate } = useMutation({

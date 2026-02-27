@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- 외부 동적 이미지 URL, 도메인 사전등록 불가 */
 'use client';
 import React, { useRef } from 'react';
 

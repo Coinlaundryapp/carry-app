@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- 스텁 페이지, 추후 next/image로 전환 예정 */
 'use client';
 import React from 'react';
 import { useParams } from 'next/navigation';

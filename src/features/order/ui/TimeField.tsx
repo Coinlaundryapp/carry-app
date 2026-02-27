@@ -89,10 +89,11 @@ export default function TimeField({
   orderSchedule: OrderSchedule;
   setOrderSchedule: (schedule: OrderSchedule) => void;
 }>) {
+  // date는 컴포넌트 마운트 시점 기준으로 고정 — deps에 넣으면 매 렌더마다 재생성되어 무한 루프
   const date = new Date();
   const desiredPickupDateTimeOptions = useMemo(
     () => generateDateTimeOptions(date, 7, { start: 10, end: 20 }, false),
-    [],
+    [], // eslint-disable-line react-hooks/exhaustive-deps -- date는 마운트 시점 고정
   );
   const desiredDeliveryDateTimeOptions = useMemo(() => {
     return generateDateTimeOptions(
@@ -102,6 +103,7 @@ export default function TimeField({
       true,
       orderSchedule.desiredPickupDateTime,
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderSchedule.desiredPickupDateTime]);
   const handlePickupDateTimeChange = (value: string) => {
     setOrderSchedule({

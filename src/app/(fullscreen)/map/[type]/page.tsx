@@ -33,9 +33,10 @@ export default function MapPage() {
     enabled: !!map.currentCenter,
   });
 
-  // ── data가 로드되면 맵에 주입 ──
+  // ── data가 로드되면 맵에 주입 — map 객체는 매 렌더마다 새로 생성되므로 개별 메서드만 참조 ──
   useEffect(() => {
     map.setData(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, map.setData]);
 
   // ── 이미지 뷰에서 복귀 시 맵 재초기화 (DOM 업데이트 후 실행) ──
@@ -44,6 +45,7 @@ export default function MapPage() {
       map.initMap();
     }
     wasImageViewRef.current = isImageView;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isImageView, map.initMap]);
 
   // ── 이미지 핸들러 ──

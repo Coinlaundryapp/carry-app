@@ -11,6 +11,7 @@ import {
   userMarkerIconHtml,
 } from '@/app/(fullscreen)/map/[type]/marker';
 import { TLaundromats } from '@features/map/types/map-type';
+import { STORAGE_KEYS } from '@features/map/lib/constants';
 
 interface UseNaverMapOptions {
   /** 'order' | 'map' 등 페이지 타입 */
@@ -144,7 +145,7 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
   const initMap = useCallback(() => {
     const data = dataRef.current;
     const center = currentCenterRef.current;
-    const savedLocationString = localStorage.getItem('임시설정구역');
+    const savedLocationString = localStorage.getItem(STORAGE_KEYS.TEMP_REGION);
 
     if (type === 'order' && data && !isOrderInitRef.current) {
       setSelectedMarkerId(data[0].id);
@@ -312,7 +313,7 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
 
   // ── 최초 위치 로드 ──
   useEffect(() => {
-    const deliveryLocationString = localStorage.getItem('배송지');
+    const deliveryLocationString = localStorage.getItem(STORAGE_KEYS.DELIVERY_ADDRESS);
 
     if (deliveryLocationString) {
       const deliveryLocation = JSON.parse(deliveryLocationString);

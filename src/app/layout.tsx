@@ -33,7 +33,7 @@ export default function RootLayout({
         <Script
           type="text/javascript"
           src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_ID}`}
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
         />
 
         <AuthProvider>

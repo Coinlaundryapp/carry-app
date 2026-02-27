@@ -124,12 +124,11 @@ export default function TimeField({
     }
 
     setOrderSchedule({
-      desiredPickupDateTime: desiredPickupDateTimeOptions[0].value,
-      desiredDeliveryDateTime:
-        (desiredDeliveryDateTimeOptions.length > 0 && desiredDeliveryDateTimeOptions[0].value) ||
-        '',
+      desiredPickupDateTime: desiredPickupDateTimeOptions[0]?.value ?? '',
+      desiredDeliveryDateTime: desiredDeliveryDateTimeOptions[0]?.value ?? '',
     });
-  }, [desiredDeliveryDateTimeOptions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 초기 마운트 시 + 옵션 변경 시에만 실행
+  }, [desiredPickupDateTimeOptions, desiredDeliveryDateTimeOptions]);
 
   return (
     <>

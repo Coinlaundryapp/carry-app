@@ -60,16 +60,19 @@ function SearchForm({ onAddressChange }: TPros) {
     debouncedSearch(inputValue);
   };
 
-  const fetchMoreAddresses = async (page: number) => {
-    if (!addressSearchState || !hasNext) return;
-    try {
-      const result = await getAddressSearchList(value, page);
-
-      setHasNext(result.pagination.hasNext);
-    } catch (error) {
-      console.error('Error fetching more addresses:', error);
-    }
-  };
+  const fetchMoreAddresses = useCallback(
+    async (nextPage: number) => {
+      if (!addressSearchState || !hasNext) return;
+      try {
+        const result = await getAddressSearchList(value, nextPage);
+        setAddresses((prev) => [...prev, ...result.content]);
+        setHasNext(result.pagination.hasNext);
+      } catch (error) {
+        console.error('Error fetching more addresses:', error);
+      }
+    },
+    [addressSearchState, hasNext, value],
+  );
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -107,7 +110,7 @@ function SearchForm({ onAddressChange }: TPros) {
     if (page > 1 && addressSearchState) {
       fetchMoreAddresses(page);
     }
-  }, [page]);
+  }, [page, addressSearchState, fetchMoreAddresses]);
 
   return (
     <div className="relative flex h-full w-full flex-col">
@@ -129,11 +132,12 @@ function SearchForm({ onAddressChange }: TPros) {
         <DefaultSearch />
       ) : addresses.length > 0 ? (
         <div className="flex-1 overflow-y-auto">
-          {addresses.map((address, index) => (
-            <div
+          {addresses.map((address) => (
+            <button
+              type="button"
               onClick={() => handleClick(address)}
-              key={index}
-              className="flex cursor-pointer flex-col gap-2 px-5 "
+              key={address.addressName}
+              className="flex w-full cursor-pointer flex-col gap-2 px-5 text-left"
             >
               <div className="border-b border-cool-neutral-99 pb-4 pt-4 ">
                 <p className="font_label_1_norm mb-1 font-medium">{address.addressName}</p>
@@ -144,7 +148,7 @@ function SearchForm({ onAddressChange }: TPros) {
                   {address.regionAddress.addressName}
                 </p>
               </div>
-            </div>
+            </button>
           ))}
           <div ref={loader} className="h-4" />
         </div>

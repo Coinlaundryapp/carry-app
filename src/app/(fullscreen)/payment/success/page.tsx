@@ -40,7 +40,9 @@ export default function SuccessPage({
       hasConfirmed.current = true;
       mutation.mutate();
     }
-  }, [accessToken]); // eslint-disable-line react-hooks/exhaustive-deps
+    // mutation.mutate는 useMutation의 안정적 참조 — 의존성 불필요
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken]);
 
   useEffect(() => {
     if (mutation.isError) {

@@ -80,10 +80,15 @@ function CoinlaundryDefault({ data, onSelectedAddress, onImageClick }: Props) {
           </div>
 
           {item.mediaResources.length !== 0 && (
-            <div className="relative cursor-pointer" onClick={(e) => onImageClick(e, item.id)}>
+            <button
+              type="button"
+              className="relative cursor-pointer"
+              onClick={(e) => onImageClick(e, item.id)}
+              aria-label={`${item.name} 이미지 ${item.mediaResources.length}장 보기`}
+            >
               <Image
                 className="rounded-sm"
-                alt={'Image description'}
+                alt={`${item.name} 매장 이미지`}
                 src={item.mediaResources[0]?.mediaUrl}
                 width={60}
                 height={60}
@@ -92,7 +97,7 @@ function CoinlaundryDefault({ data, onSelectedAddress, onImageClick }: Props) {
               <div className="absolute bottom-1 right-1 flex h-4 w-2 items-center justify-center rounded-sm bg-[#171719] bg-opacity-50 p-2">
                 <span className="text-sm text-white">{item.mediaResources.length}</span>
               </div>
-            </div>
+            </button>
           )}
         </div>
       </div>

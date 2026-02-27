@@ -33,7 +33,7 @@ export default function Layout({
         divElement.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [isVisible]);
+  }, []);
 
   return (
     <div className="safe-area-top relative mx-auto flex h-dvh max-w-[480px] flex-col justify-between overflow-hidden bg-white">

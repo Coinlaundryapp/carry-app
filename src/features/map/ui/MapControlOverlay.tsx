@@ -25,9 +25,14 @@ export default function MapControlOverlay({
   return (
     <>
       {/* 뒤로가기 버튼 */}
-      <div className="absolute left-4 top-4 z-40" onClick={onBackClick}>
+      <button
+        type="button"
+        onClick={onBackClick}
+        className="absolute left-4 top-4 z-40"
+        aria-label="뒤로가기"
+      >
         <ArrowLeftIcon />
-      </div>
+      </button>
 
       {/* 내 위치 버튼 */}
       <button

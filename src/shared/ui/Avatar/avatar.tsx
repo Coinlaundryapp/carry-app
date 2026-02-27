@@ -12,7 +12,7 @@ const Group = ({ avatarList, sort = 'desc' }: Props) => {
     <ul className="relative flex">
       {avatarList.map((avatar, index, list) => (
         <li
-          key={index}
+          key={avatar}
           // TODO: tailwind z-index 안 먹음..
           style={{
             zIndex: sort === 'desc' ? list.length - index : index + 1,

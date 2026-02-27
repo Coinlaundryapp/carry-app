@@ -9,7 +9,7 @@ const Rating = ({ rating }: { rating: number }) => {
 
         if (isPartialStar) {
           return (
-            <div key={index} className="relative">
+            <div key={`star-${index}`} className="relative">
               {/* 회색 배경 별 */}
               <ReviewStar style={{ color: '#EAEBEC' }} />
               {/* 노란색 반 별 */}
@@ -20,7 +20,7 @@ const Rating = ({ rating }: { rating: number }) => {
           );
         }
 
-        return <ReviewStar key={index} style={{ color: index < rating ? '#FFD700' : '#EAEBEC' }} />;
+        return <ReviewStar key={`star-${index}`} style={{ color: index < rating ? '#FFD700' : '#EAEBEC' }} />;
       })}
     </div>
   );

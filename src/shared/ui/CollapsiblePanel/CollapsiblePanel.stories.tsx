@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { userEvent, within, expect } from '@storybook/test';
 import CollapsiblePanel from './CollapsiblePanel';
 import { AvatarGirlIcon } from '@assets/icons';
 
@@ -34,8 +35,22 @@ export const Default: Story = {
   args: {
     title: '함께하는 멤버',
     value: 'example-value',
-
     children: 'This is the content inside the collapsible panel.',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 제목 표시 확인
+    await expect(canvas.getByText('함께하는 멤버')).toBeInTheDocument();
+
+    // 트리거 클릭 → 패널 펼치기
+    const trigger = canvas.getByRole('button');
+    await userEvent.click(trigger);
+
+    // 컨텐츠 표시 확인
+    await expect(
+      canvas.getByText('This is the content inside the collapsible panel.'),
+    ).toBeInTheDocument();
   },
 };
 

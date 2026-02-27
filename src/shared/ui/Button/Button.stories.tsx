@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import { fn, userEvent, within, expect } from '@storybook/test';
 import Button from './Button';
 
 const meta: Meta<typeof Button> = {
@@ -68,6 +68,16 @@ export const Default: Story = {
     children: 'Large Default',
     state: 'default',
     size: 'large',
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button');
+
+    // 버튼 클릭
+    await userEvent.click(button);
+
+    // onClick 핸들러 호출 확인
+    await expect(args.onClick).toHaveBeenCalled();
   },
 };
 
@@ -176,5 +186,12 @@ export const Disabled: Story = {
     state: 'disabled',
     size: 'large',
     disabled: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button');
+
+    // disabled 상태 확인
+    await expect(button).toBeDisabled();
   },
 };

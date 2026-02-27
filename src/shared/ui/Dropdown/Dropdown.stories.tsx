@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import { fn } from '@storybook/test';
+import { fn, expect, within } from '@storybook/test';
 import clsx from 'clsx';
 import Dropdown, { DropdownProps } from './Dropdown';
 import { pretendard } from '@/font/myLocalFont';
@@ -84,4 +84,14 @@ export const Disabled: Story = {
     placeholder: '선택 불가',
   },
   render,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // placeholder 텍스트 표시 확인
+    await expect(canvas.getByText('선택 불가')).toBeInTheDocument();
+
+    // trigger가 disabled 상태인지 확인
+    const trigger = canvas.getByRole('combobox');
+    await expect(trigger).toBeDisabled();
+  },
 };

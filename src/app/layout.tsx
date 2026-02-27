@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body className={clsx(pretendard.className, 'overflow-hidden bg-black')}>
         <Script
           type="text/javascript"

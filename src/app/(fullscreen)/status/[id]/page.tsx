@@ -22,8 +22,6 @@ export default function MyOrderStatusPage({ params }: { params: { id: string } }
     enabled: !!accessToken,
   });
 
-  console.log(orderDetail);
-
   return (
     <div className="flex h-full w-full flex-col items-center justify-center justify-between px-[20px] pb-[30px] pt-[66px]">
       <div className="flex flex-col gap-[40px] self-stretch">

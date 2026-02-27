@@ -38,10 +38,10 @@ function CoinlaundrySelectedItem({ data, expanded, onClickExpended, onImageClick
   const router = useRouter();
   const { type } = useParams();
 
-  const { setLaundryromat } = useOrderStore();
+  const { setLaundromat } = useOrderStore();
 
   const handleSelectClick = () => {
-    setLaundryromat(data);
+    setLaundromat(data);
     router.back();
   };
 

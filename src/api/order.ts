@@ -60,13 +60,6 @@ export async function postOrder({
     orderSchedule.desiredDeliveryDateTime,
     'yyyy-MM-dd HH:mm:ss EEE',
   );
-  console.log(
-    orderContent,
-    laundromatId,
-    addressId,
-    desiredPickupDateTime,
-    desiredDeliveryDateTime,
-  );
   try {
     const res = await fetchExtended<ApiResponse<OrderResponse>>(`/api/v1/orders`, {
       method: 'POST',

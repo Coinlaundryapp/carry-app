@@ -11,7 +11,7 @@ export interface OrderState {
   orderSchedule: OrderSchedule;
   addressId: number | null;
   setAddressId: (addressId: number) => void;
-  setLaundryromat: (laundromat: TLaundromats) => void;
+  setLaundromat: (laundromat: TLaundromats) => void;
   setOrderSchedule: (schedule: OrderSchedule) => void;
   setOrderContent: (newOptions: OrderContent | Partial<OrderContent>) => void;
   addTotalAmount: (amount: number) => void;
@@ -49,7 +49,7 @@ const useOrderStore = create<OrderState>()(
           addressId,
         })),
 
-      setLaundryromat: (laundromat) =>
+      setLaundromat: (laundromat) =>
         set(() => ({
           laundromat,
         })),

@@ -77,7 +77,7 @@ const generateDateTimeOptions = (
 
 const getTimePeriod = (hour: number, minute: number): string => {
   const period = hour < 12 ? '오전' : '오후';
-  const adjustedHour = hour <= 12 ? hour : hour - 12;
+  const adjustedHour = hour % 12 || 12;
   const minuteString = minute === 0 ? '' : '30분';
 
   return `${period} ${adjustedHour}시 ${minuteString}`.trim();

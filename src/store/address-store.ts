@@ -23,7 +23,7 @@ export const useAddressStore = create<AddressStore>()(
       triggerRefetch: () => set((state) => ({ shouldRefetch: !state.shouldRefetch })),
     }),
     {
-      name: 'addresId-storage',
+      name: 'addressId-storage',
       partialize: (state) => ({ selectedAddressId: state.selectedAddressId }),
     },
   ),

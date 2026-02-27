@@ -8,52 +8,36 @@ export async function getPaymentInfo({
 }: {
   orderId: number;
   accessToken: string | undefined;
-}) {
-  // const res = await fetchExtended<ApiResponse<Payment>>(`/api/v1/prices?${orderId.toString()}`, {
-  //   method: 'GET',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   cache: 'no-cache',
-  // });
-  // return res.body.data;
-  // try {
-  //   const data: PaymentInfo = {
-  //     id: 54,
-  //     orderedAt: '2024-09-23T14:35:20Z',
-  //     confirmedPayment: {
-  //       discounts: {
-  //         laundryDiscounts: [],
-  //         deliveryDiscounts: [],
-  //       },
-  //       charges: {
-  //         laundryPrice: 10500,
-  //         deliveryFee: 4000,
-  //         serviceFee: 1050,
-  //       },
-  //       netAmount: 15500,
+}): Promise<PaymentInfo> {
+  // TODO: 백엔드 API 연동 시 아래 주석을 해제하고 목 데이터를 제거하세요
+  // const res = await fetchExtended<ApiResponse<PaymentInfo>>(
+  //   `/api/v1/orders/${orderId}/payment`,
+  //   {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${accessToken}`,
   //     },
-  //   };
-  //   return 1;
-  // } catch (error) {
-  //   throw new Error('주문을 완료하지 못했습니다.');
-  // }
+  //     cache: 'no-cache',
+  //   },
+  // );
+  // return res.body.data;
 
-  const data = {
-    id: 54, // orderId, 주문 번호
+  // --- MOCK DATA (백엔드 연동 전까지 사용) ---
+  const data: PaymentInfo = {
+    id: orderId,
     orderedAt: '2024-09-23T14:35:20Z',
     confirmedPayment: {
-      // 최종 금액이 결정된 결제 정보
       discounts: {
         laundryDiscounts: [],
         deliveryDiscounts: [],
       },
       charges: {
-        laundryPrice: 10500, // 세탁 가격
-        deliveryFee: 4000, // 배송 수수료
-        serviceFee: 1050, // 대행 수수료
+        laundryPrice: 10500,
+        deliveryFee: 4000,
+        serviceFee: 1050,
       },
-      netAmount: 15550, // (부과된 요금 총액 - 할인 총액)
+      netAmount: 15550,
     },
   };
 
@@ -71,32 +55,31 @@ export async function postConfirmPayment({
   paymentKey: string;
   amount: number;
 }) {
-  try {
-    // const res = await fetchExtended<ApiResponse<any>>(`/api/v1/orders/${orderId}/payments`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${accessToken}`,
-    //   },
-    //   body: {
-    //     orderId,
-    //     paymentKey,
-    //     amount,
-    //   },
-    // });
-    // return res.body.data;
-    const data = {
-      id: 435634, // orderId, 주문 번호
-      status: 'PAYMENT_COMPLETED', // [Enum] 주문 명세서 상태
-      orderUnitType: 'SOLO',
-      orderRequestType: 'NEW',
-      laundryItemType: 'REGULAR',
-      laundromatName: '하늘이 세탁소',
-      orderedAt: '2024-09-23T14:35:20Z',
-      confirmedAmount: 15500,
-    };
-    return data;
-  } catch (error) {
-    throw new Error('결제에 실패하였습니다.');
-  }
+  // TODO: 백엔드 API 연동 시 아래 주석을 해제하고 목 데이터를 제거하세요
+  // try {
+  //   const res = await fetchExtended<ApiResponse<any>>(`/api/v1/orders/${orderId}/payments`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${accessToken}`,
+  //     },
+  //     body: { orderId, paymentKey, amount },
+  //   });
+  //   return res.body.data;
+  // } catch (error) {
+  //   throw new Error('결제에 실패하였습니다.');
+  // }
+
+  // --- MOCK DATA (백엔드 연동 전까지 사용) ---
+  const data = {
+    id: orderId,
+    status: 'PAYMENT_COMPLETED',
+    orderUnitType: 'SOLO',
+    orderRequestType: 'NEW',
+    laundryItemType: 'REGULAR',
+    laundromatName: '하늘이 세탁소',
+    orderedAt: new Date().toISOString(),
+    confirmedAmount: amount,
+  };
+  return data;
 }

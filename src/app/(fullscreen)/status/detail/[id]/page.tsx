@@ -21,8 +21,6 @@ export default function OrederStatusDetailPage({ params }: { params: { id: strin
     enabled: !!accessToken,
   });
 
-  console.log(orderDetail);
-
   return (
     <>
       <TopNavigation

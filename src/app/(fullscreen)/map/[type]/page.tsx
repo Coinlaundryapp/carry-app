@@ -61,7 +61,6 @@ export default function MapPage() {
   const router = useRouter();
   const { location } = useLocationStore();
   const { selectedAddressId } = useAddressStore();
-  console.log('sss', selectedAddressId);
   const { data, isLoading } = useQuery({
     queryKey: ['laundromats', currentCenter],
     queryFn: () => getLaundromats(currentCenter),
@@ -80,7 +79,6 @@ export default function MapPage() {
       offsetLocation = new naver.maps.LatLng(deliveryLocation.lat, deliveryLocation.lng);
       setCurrentCenter({ lat: deliveryLocation.lat, lng: deliveryLocation.lng });
     } else if (location) {
-      console.log('머냐');
       const temporaryLocation = {
         lat: 37.6055942215336,
         lng: 126.920904663729,
@@ -326,7 +324,7 @@ export default function MapPage() {
       setIsUserMarkerVisible(true);
       setIsOffsetMarkerVisible(false);
     } else {
-      console.log('위치를 불러오지 못했습니다.');
+      console.warn('위치를 불러오지 못했습니다.');
     }
   };
   const drawCircleAroundOffset = () => {

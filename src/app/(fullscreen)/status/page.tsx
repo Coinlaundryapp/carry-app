@@ -18,8 +18,6 @@ const Page = () => {
     enabled: !!accessToken,
   });
 
-  console.log(orderList);
-
   return orderList?.length ? (
     <div className="flex h-full w-full flex-col gap-[12px]">
       <div className="flex px-[20px] py-[24px]">

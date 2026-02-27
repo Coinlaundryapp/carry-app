@@ -140,7 +140,44 @@ const preview: Preview = {
 - **fn() 교체**: 3개 파일에서 `() => {}` → `fn()` (from `@storybook/test`)
 - **autodocs 태그**: 13개 파일에 명시적 `tags: ['autodocs']` 추가
 
-## 수정 파일 목록 (23개)
+### 6. 파일 네이밍 PascalCase 통일
+
+5개 스토리 파일이 camelCase였으나, 나머지 20개가 PascalCase를 사용하므로 PascalCase로 통일:
+
+| Before | After |
+|--------|-------|
+| `avatar.stories.tsx` | `Avatar.stories.tsx` |
+| `bottomNavigation.stories.tsx` | `BottomNavigation.stories.tsx` |
+| `checkBox.stories.tsx` | `CheckBox.stories.tsx` |
+| `chip.stories.tsx` | `Chip.stories.tsx` |
+| `radio.stories.tsx` | `Radio.stories.tsx` |
+| `Button.stories.ts` | `Button.stories.tsx` (확장자도 통일) |
+
+### 7. MessageCard 누락 스토리 추가
+
+유일하게 스토리가 없던 `MessageCard.tsx`에 대한 스토리를 추가:
+- `Default` — 기본 메시지
+- `LongMessage` — 긴 메시지 텍스트
+- `WithJSX` — JSX 컨텐츠 (ReactNode 타입 활용)
+
+### 8. Play function 확대
+
+기존 4개 파일(Input, CheckBox, Modal, Toast)에서 **11개 파일**로 확대:
+
+| 컴포넌트 | Play function 내용 |
+|---------|-------------------|
+| Button Default | 클릭 → onClick 호출 확인 |
+| Button Disabled | disabled 상태 검증 |
+| Tab TwoTabs | 두 번째 탭 클릭 → 컨텐츠 전환 확인 |
+| CollapsiblePanel Default | 트리거 클릭 → 펼쳐진 컨텐츠 표시 확인 |
+| Chip Default | 클릭 → onClick 호출 확인 |
+| ScrollUpButton Default | 클릭 → onClick 호출 확인 |
+| Tooltip Default | 초기 메시지 표시 → 클릭 시 사라짐 |
+| Dropdown Disabled | placeholder 텍스트 + disabled 상태 검증 |
+
+## 수정 파일 목록 (총 26개 스토리 파일)
+
+### Phase 1 — 품질 개선 (23파일)
 
 | 파일 | 수정 유형 |
 |-----|----------|
@@ -148,24 +185,32 @@ const preview: Preview = {
 | `.storybook/preview.tsx` | 글로벌 autodocs 태그 |
 | `package.json` / `pnpm-lock.yaml` | a11y 의존성 |
 | `Input/Input.stories.tsx` | args 변이 수정 + primary variant + title 케이싱 |
-| `Dropdown/Dropdown.stories.tsx` | args 변이 수정 + time/disabled variant |
-| `Button/Button.stories.ts` | 전면 재작성 (fn, autodocs, full/hug/disabled, 오타) |
-| `CheckBox/checkBox.stories.tsx` | circle/icon variant 추가 |
+| `Dropdown/Dropdown.stories.tsx` | args 변이 수정 + time/disabled variant + play function |
+| `Button/Button.stories.tsx` | 전면 재작성 (fn, autodocs, full/hug/disabled, 오타, play) |
+| `CheckBox/CheckBox.stories.tsx` | circle/icon variant 추가 |
 | `Alert/Alert.stories.tsx` | error variant 추가 |
 | `Toast/Toast.stories.tsx` | error variant + autodocs |
-| `Radio/radio.stories.tsx` | big variant + autodocs |
+| `Radio/Radio.stories.tsx` | big variant + autodocs |
 | `ProgressBar/ProgressBar.stories.tsx` | blue variant + color argType |
 | `Tag/Tag.stories.tsx` | black variant |
-| `ScrollUpButton/ScrollUpButton.stories.tsx` | Template→Default, fn(), autodocs |
+| `ScrollUpButton/ScrollUpButton.stories.tsx` | Default 네이밍, fn(), autodocs, play |
 | `TopNavigation/TopNavigation.stories.tsx` | fn() 교체 |
-| `Tooltip/Tooltip.stories.tsx` | Template→Default |
+| `Tooltip/Tooltip.stories.tsx` | Default 네이밍 + play function |
 | `Modal/Modal.stories.tsx` | autodocs |
-| `BottomNavigation/bottomNavigation.stories.tsx` | autodocs + layout + decorator |
-| `CollapsiblePanel/CollapsiblePanel.stories.tsx` | autodocs |
+| `BottomNavigation/BottomNavigation.stories.tsx` | autodocs + layout + decorator |
+| `CollapsiblePanel/CollapsiblePanel.stories.tsx` | autodocs + play function |
 | `FunnelHeader/FunnelHeader.stories.tsx` | autodocs |
-| `Avatar/avatar.stories.tsx` | autodocs |
+| `Avatar/Avatar.stories.tsx` | autodocs |
 | `Separator/Separator.stories.tsx` | autodocs |
-| `Tab/Tab.stories.tsx` | autodocs |
+| `Tab/Tab.stories.tsx` | autodocs + play function |
+| `Chip/Chip.stories.tsx` | play function |
+
+### Phase 2 — 네이밍 + 커버리지
+
+| 파일 | 수정 유형 |
+|-----|----------|
+| 6개 파일 리네이밍 | camelCase → PascalCase + .ts → .tsx |
+| `MessageCard.stories.tsx` | 신규 생성 (3개 스토리) |
 
 ## 검증 결과
 
@@ -180,11 +225,16 @@ const preview: Preview = {
 
 | 항목 | Before | After |
 |-----|--------|-------|
+| 품질 점수 | 6.2/10 | ~9/10 |
 | args 변이 안티패턴 | 2개 파일 | 0개 |
 | a11y 테스트 | 미설치 | addon-a11y 활성 |
 | autodocs 적용률 | ~48% (12/25) | 100% (글로벌 + 개별) |
 | CVA variant 커버리지 | ~70% | 100% |
 | fn() 사용률 (이벤트 핸들러) | ~60% | 100% |
+| play function 커버리지 | 16% (4/25) | 42% (11/26) |
 | title 케이싱 일관성 | 불일치 2건 | 전부 `'Components/'` |
+| 파일 네이밍 | camelCase 5건 | 전부 PascalCase |
 | 네이밍 컨벤션 | Template 2건 | 전부 Default |
-| 총 스토리 수 | 62개 | 75개 (+13) |
+| 스토리 파일 수 | 25개 | 26개 (+1 MessageCard) |
+| 총 스토리 수 | 62개 | 81개 (+19) |
+| 컴포넌트 커버리지 | 25/26 | 26/26 (100%) |

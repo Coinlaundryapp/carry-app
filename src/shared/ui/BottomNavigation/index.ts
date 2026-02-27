@@ -1,1 +1,1 @@
-export { BottomNavigation } from './bottomNavigation';
+export { BottomNavigation } from './BottomNavigation';

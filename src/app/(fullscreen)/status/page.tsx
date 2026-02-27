@@ -35,7 +35,7 @@ const Page = () => {
         <p className="font_headline_2 text-label-neutral">
           아직 <br /> 내 세탁 기록이 없어요!
         </p>
-        <Seperate alt="..." width={120} height={120} />
+        <Seperate aria-label="분리세탁 아이콘" width={120} height={120} />
       </div>
       <div className="flex flex-1 items-center justify-center">
         <div className="flex flex-col items-center gap-[32px]">

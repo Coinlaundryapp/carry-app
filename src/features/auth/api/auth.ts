@@ -1,7 +1,7 @@
 import NextAuth, { DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { isJwtExpired } from '@features/auth/lib/jwt';
-import { login, refreshAccessToken } from '@features/auth/api/token';
+import { login, loginWithKakaoToken, refreshAccessToken } from '@features/auth/api/token';
 
 declare module 'next-auth' {
   interface User {
@@ -23,16 +23,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       credentials: {
         code: {},
         redirectUri: {},
+        kakaoAccessToken: {},
       },
       authorize: async (credentials) => {
-        const authorizationCode = credentials.code as string;
-        const redirectUri = credentials.redirectUri as string;
-
-        if (!authorizationCode) {
-          throw new Error('Invalid authorization code');
-        }
         try {
-          const res = await login({ authorizationCode, redirectUri });
+          const kakaoAccessToken = credentials.kakaoAccessToken as string;
+          let res;
+
+          if (kakaoAccessToken) {
+            // WebView 로그인: 네이티브 카카오 SDK에서 받은 accessToken
+            res = await loginWithKakaoToken({ accessToken: kakaoAccessToken });
+          } else {
+            // 브라우저 로그인: 카카오 OAuth 인가 코드
+            const authorizationCode = credentials.code as string;
+            const redirectUri = credentials.redirectUri as string;
+
+            if (!authorizationCode) {
+              throw new Error('Invalid authorization code');
+            }
+            res = await login({ authorizationCode, redirectUri });
+          }
+
           if (res) {
             return {
               accessToken: res.accessToken,

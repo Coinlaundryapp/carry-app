@@ -32,9 +32,7 @@ export default async function Login({
 
   // WebView 로그인 완료 후 리다이렉트 경로 계산
   const redirectPath = redirect ? redirect.join('/') : '';
-  const queryString = new URLSearchParams(
-    searchParams as Record<string, string>,
-  ).toString();
+  const queryString = new URLSearchParams(searchParams as Record<string, string>).toString();
   const webViewRedirectUrl = [
     '/login-done',
     redirectPath && `/${redirectPath}`,

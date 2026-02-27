@@ -2,7 +2,7 @@ import React from 'react';
 import Dropdown from '../share/Dropdown/Dropdown';
 import { Input } from '../share/Input';
 import { REQUEST_OPTIONS } from '@/constants/request-options';
-import { TSelectedRequest } from '@/app/(fullscreen)/address/edit/[addressId]/page';
+import { TSelectedRequest } from '@/hooks/useAddressForm';
 
 type TProps = {
   selectedRequest: TSelectedRequest;

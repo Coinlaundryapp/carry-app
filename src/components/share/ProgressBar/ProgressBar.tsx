@@ -1,4 +1,6 @@
-import { Progress } from '@/components/share/ui/progress';
+'use client';
+
+import * as ProgressPrimitive from '@radix-ui/react-progress';
 import { cva } from 'class-variance-authority';
 
 const colorVariants = cva('h-full w-full flex-1 transition-all', {
@@ -9,6 +11,7 @@ const colorVariants = cva('h-full w-full flex-1 transition-all', {
     },
   },
 });
+
 export default function ProgressBar({
   percent,
   color = 'default',
@@ -16,5 +19,15 @@ export default function ProgressBar({
   percent: number;
   color?: 'default' | 'blue';
 }) {
-  return <Progress value={percent} color={colorVariants({ color })} />;
+  return (
+    <ProgressPrimitive.Root
+      className="relative h-2 w-full overflow-hidden rounded-md bg-label-disable"
+      value={percent}
+    >
+      <ProgressPrimitive.Indicator
+        className={colorVariants({ color })}
+        style={{ transform: `translateX(-${100 - (percent || 0)}%)` }}
+      />
+    </ProgressPrimitive.Root>
+  );
 }

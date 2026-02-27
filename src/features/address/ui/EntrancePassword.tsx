@@ -28,20 +28,25 @@ const EntrancePassword: React.FC<TProps> = ({ entranceValue, onChange, onExtraIn
   };
   return (
     <div className="mb-6 w-full">
-      <div className="font_headline_1 font-semibold mb-3">공동현관 출입 방법</div>
-      <p className="font_label_2 mb-[20px]  text-label-alternative">
+      <div className="font_headline_1 mb-3 font-semibold">공동현관 출입 방법</div>
+      <p className="font_label_2 mb-[20px] text-label-alternative">
         입력된 공동현관 비밀번호는 새벽 배송을 위해 필요한 정보로,
         <br />
-        <span className="text-primary-normal font-semibold">서비스 이용 후 파기됨</span>을 약속드립니다.
+        <span className="font-semibold text-primary-normal">서비스 이용 후 파기됨</span>을
+        약속드립니다.
       </p>
       <Radio.Group value={value} onChange={handleChange} size="big">
         {ENTRANCE_PASSWORD.map((item) => (
           <div key={item.value} className="flex flex-col space-y-3">
-            <label className="flex items-center space-x-2 ">
+            <label className="flex items-center space-x-2">
               <Radio.Button value={item.value} />
-              <span  className={`font-normal font-body-2-normal ${
-    value === item.value ? 'text-black' : 'text-cool-neutral-80'
-  }`}>{item.label}</span>
+              <span
+                className={`font-normal font-body-2-normal ${
+                  value === item.value ? 'text-black' : 'text-cool-neutral-80'
+                }`}
+              >
+                {item.label}
+              </span>
             </label>
             <div className="ml-6">
               {item.value === 'PASSWORD' && value === 'PASSWORD' && (

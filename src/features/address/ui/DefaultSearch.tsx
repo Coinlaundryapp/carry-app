@@ -9,9 +9,11 @@ function DefaultSearch() {
         <ul className="list-inside list-disc space-y-2">
           {SEARCH_TEXT.map((item) => (
             <li key={item.main}>
-              <span className=" font_label_1_normal font-medium">{item.main}</span>
+              <span className="font_label_1_normal font-medium">{item.main}</span>
               <br />
-              <span className="font_caption_1 pl-6 text-label-alternative font-normal">예시) {item.sub}</span>
+              <span className="font_caption_1 pl-6 font-normal text-label-alternative">
+                예시) {item.sub}
+              </span>
             </li>
           ))}
         </ul>

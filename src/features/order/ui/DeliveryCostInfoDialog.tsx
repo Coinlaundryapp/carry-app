@@ -8,7 +8,12 @@ import {
 } from '@shared/ui/primitives/dialog';
 import { ExitIcon, QuestionMarkIcon, SelectIcon } from '@assets/icons';
 import { cn } from '@shared/lib/utils';
-import { BASE_COST, BASE_DISTANCE, COST_INCREMENT, DISTANCE_INCREMENT } from '@features/order/lib/policy';
+import {
+  BASE_COST,
+  BASE_DISTANCE,
+  COST_INCREMENT,
+  DISTANCE_INCREMENT,
+} from '@features/order/lib/policy';
 
 interface CostItem {
   label: string;

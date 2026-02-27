@@ -6,7 +6,11 @@ import { useRouter } from 'next/navigation';
 import { getPrices } from '@features/order/api/order';
 import LaundryFunnel from '@features/order/ui/LaundryFunnel';
 import Loading from '@shared/ui/Loading';
-import { LaundryItemType, OrderRequestType, OrderUnitType } from '@features/order/types/laundry-type';
+import {
+  LaundryItemType,
+  OrderRequestType,
+  OrderUnitType,
+} from '@features/order/types/laundry-type';
 
 export default function LaundryPage({
   params,

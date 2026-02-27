@@ -2,7 +2,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useToastStore } from '@shared/model/toast-store';
 import Toast from './Toast';
 
-const meta = {
+type ToastArgs = {
+  message: string;
+  type: 'success' | 'done' | 'error';
+  duration: number;
+};
+
+const meta: Meta<ToastArgs> = {
   title: 'Components/Toast',
   component: Toast,
   parameters: {
@@ -13,13 +19,13 @@ const meta = {
     type: 'success',
     duration: 3000,
   },
-} satisfies Meta;
+};
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const render = (args: any) => {
+type Story = StoryObj<ToastArgs>;
+
+const render = (args: ToastArgs) => {
   const addToast = useToastStore((state) => state.addToast);
   const handleClick = () => {
     addToast({ message: args.message, type: args.type, duration: args.duration });

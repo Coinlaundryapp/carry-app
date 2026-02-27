@@ -1,15 +1,6 @@
 // Address feature — public API
-export {
-  getAddress,
-  getAddresses,
-  postAddress,
-  putAddress,
-} from './api/addressApi';
-export type {
-  AddressPayload,
-  GetAddressesResType,
-  AddressListItem,
-} from './types/address-type';
+export { getAddress, getAddresses, postAddress, putAddress } from './api/addressApi';
+export type { AddressPayload, GetAddressesResType, AddressListItem } from './types/address-type';
 export { useAddressForm } from './lib/useAddressForm';
 export { useAddressStore } from './model/address-store';
 

@@ -24,9 +24,7 @@ export default function FullscreenError({
         <div className="mb-6">
           <DeliveryManSadIcon />
         </div>
-        <h2 className="mb-2 font-semibold text-label-normal font-heading-1">
-          문제가 발생했습니다
-        </h2>
+        <h2 className="mb-2 font-semibold text-label-normal font-heading-1">문제가 발생했습니다</h2>
         <p className="font-medium text-label-alternative font-body-1-normal">
           잠시 후 다시 시도해 주세요.
         </p>

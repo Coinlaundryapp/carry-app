@@ -114,11 +114,10 @@ function SearchForm({ onAddressChange }: TPros) {
 
   return (
     <div className="relative flex h-full w-full flex-col">
-     
       <Input
-        leftIcon={<SearchIcon />} 
+        leftIcon={<SearchIcon />}
         status="default"
-       onClear={handleCancelClick}
+        onClear={handleCancelClick}
         type="text"
         fontStyle="strong"
         onChange={handleChange}
@@ -139,10 +138,10 @@ function SearchForm({ onAddressChange }: TPros) {
               key={address.addressName}
               className="flex w-full cursor-pointer flex-col gap-2 px-5 text-left"
             >
-              <div className="border-b border-cool-neutral-99 pb-4 pt-4 ">
+              <div className="border-b border-cool-neutral-99 pb-4 pt-4">
                 <p className="font_label_1_norm mb-1 font-medium">{address.addressName}</p>
-                <p className="flex items-center justify-start gap-2 text-sm text-gray-500 font-normal">
-                  <span className="font_caption_2 rounded-sm border-0.5 border-cool-neutral-96 py-0.5 px-1 text-cool-neutral-80">
+                <p className="flex items-center justify-start gap-2 text-sm font-normal text-gray-500">
+                  <span className="font_caption_2 rounded-sm border-0.5 border-cool-neutral-96 px-1 py-0.5 text-cool-neutral-80">
                     지번
                   </span>
                   {address.regionAddress.addressName}
@@ -153,7 +152,7 @@ function SearchForm({ onAddressChange }: TPros) {
           <div ref={loader} className="h-4" />
         </div>
       ) : (
-        <div className="  pt-[116px] flex items-center justify-center">
+        <div className="flex items-center justify-center pt-[116px]">
           <AddressSearchNoLIst />
         </div>
       )}

@@ -24,8 +24,13 @@ const AddressAddPage = () => {
   const form = useAddressForm();
 
   const { mutate } = useMutation({
-    mutationFn: ({ accessToken, newAddress }: { accessToken: string; newAddress: AddressPayload }) =>
-      postAddress(accessToken, newAddress),
+    mutationFn: ({
+      accessToken,
+      newAddress,
+    }: {
+      accessToken: string;
+      newAddress: AddressPayload;
+    }) => postAddress(accessToken, newAddress),
     onSuccess: () => {
       triggerRefetch();
       addToast({ message: '새 배송지가 추가되었습니다.', type: 'success' });

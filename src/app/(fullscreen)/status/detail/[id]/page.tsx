@@ -60,7 +60,7 @@ export default function OrederStatusDetailPage({ params }: { params: { id: strin
               <div className="flex items-center justify-between">
                 <span className="font_body_1_reading font-semibold">세탁 서비스</span>
                 <span className="font_body_1_reading font-semibold">
-                  {orderDetail?.orderContent.orderUnitType === "SOLO" }
+                  {orderDetail?.orderContent.orderUnitType === 'SOLO'}
                 </span>
               </div>
               <div className="flex flex-col gap-[12px]">

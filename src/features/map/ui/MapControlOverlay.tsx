@@ -35,10 +35,7 @@ export default function MapControlOverlay({
       </button>
 
       {/* 내 위치 버튼 */}
-      <button
-        onClick={onReturnToUserLocation}
-        className="z-70 absolute bottom-0 left-4"
-      >
+      <button onClick={onReturnToUserLocation} className="z-70 absolute bottom-0 left-4">
         {isUserMarkerVisible ? <SelectedCurrentUser /> : <UserCurrentMarkerIcon />}
       </button>
 

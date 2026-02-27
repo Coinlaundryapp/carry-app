@@ -20,7 +20,12 @@ const Rating = ({ rating }: { rating: number }) => {
           );
         }
 
-        return <ReviewStar key={`star-${index}`} style={{ color: index < rating ? '#FFD700' : '#EAEBEC' }} />;
+        return (
+          <ReviewStar
+            key={`star-${index}`}
+            style={{ color: index < rating ? '#FFD700' : '#EAEBEC' }}
+          />
+        );
       })}
     </div>
   );

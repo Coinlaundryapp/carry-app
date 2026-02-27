@@ -119,8 +119,7 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
 
     const successUrl = window.location.origin + '/payment/success';
     const failUrl =
-      window.location.origin +
-      `/error?error=payment_error&redirectUrl=${window.location.pathname}`;
+      window.location.origin + `/error?error=payment_error&redirectUrl=${window.location.pathname}`;
 
     // Toss orderId: 주문별 고유 식별자 (영문, 숫자, -, _ 만 허용)
     const tossOrderId = `CARRY_${paymentInfo.id}_${Date.now()}`;

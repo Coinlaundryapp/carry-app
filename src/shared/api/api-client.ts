@@ -21,7 +21,10 @@ const returnFetchThrowingErrorByStatusCode: ReturnFetch = (args) =>
     interceptors: {
       response: async (response) => {
         if (response.status >= 400) {
-          const body = await response.clone().text().catch(() => '');
+          const body = await response
+            .clone()
+            .text()
+            .catch(() => '');
           throw new ApiError(response.status, response.url, body.slice(0, 500));
         }
         return response;

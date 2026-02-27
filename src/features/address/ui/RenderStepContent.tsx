@@ -4,7 +4,11 @@ import AddressForm from '@features/address/ui/AddressForm';
 import EntrancePassword from '@features/address/ui/EntrancePassword';
 import { Input } from '@shared/ui/Input';
 import AddressRequest from '@features/address/ui/AddressRequest';
-import type { AddressFormData, AddressEntry, EntranceSelection } from '@features/address/lib/useAddressForm';
+import type {
+  AddressFormData,
+  AddressEntry,
+  EntranceSelection,
+} from '@features/address/lib/useAddressForm';
 
 interface RenderStepContentProps {
   step: number;

@@ -1,6 +1,11 @@
 import DeliveryCostInfoDialog from '@features/order/ui/DeliveryCostInfoDialog';
 import Separator from '@shared/ui/Separator/Separator';
-import { BASE_COST, BASE_DISTANCE, COST_INCREMENT, DISTANCE_INCREMENT } from '@features/order/lib/policy';
+import {
+  BASE_COST,
+  BASE_DISTANCE,
+  COST_INCREMENT,
+  DISTANCE_INCREMENT,
+} from '@features/order/lib/policy';
 import useOrderStore from '@features/order/model/order-store';
 import { TAddressRes } from '@shared/types/api-types';
 import { TLaundromats } from '@features/map/types/map-type';

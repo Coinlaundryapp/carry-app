@@ -1,12 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  IndicatorIcon,
-  GuidWashIcon,
-  GuideDrayerIcon,
-  GuideSneakerIcon,
-} from '@assets/icons';
+import { IndicatorIcon, GuidWashIcon, GuideDrayerIcon, GuideSneakerIcon } from '@assets/icons';
 import CoinlaundryDefault from '@features/map/ui/CoinlaundryDefault';
 import CoinlaundrySelectedItem from '@features/map/ui/CoinlaundrySelectedItem';
 import { TLaundromats } from '@features/map/types/map-type';
@@ -51,9 +46,7 @@ export default function MapBottomPanel({
   };
 
   return (
-    <div
-      className="fixed inset-x-0 bottom-0 mx-auto max-w-[480px] translate-y-0 rounded-t-3xl bg-white transition-transform duration-500 ease-in-out"
-    >
+    <div className="fixed inset-x-0 bottom-0 mx-auto max-w-[480px] translate-y-0 rounded-t-3xl bg-white transition-transform duration-500 ease-in-out">
       <div className="h-full overflow-y-auto">
         <div
           className="mx-auto flex items-center justify-center py-1"

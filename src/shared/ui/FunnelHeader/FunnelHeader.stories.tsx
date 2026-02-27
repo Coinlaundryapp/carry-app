@@ -4,6 +4,7 @@ import FunnelHeader from './FunnelHeader';
 const meta: Meta<typeof FunnelHeader> = {
   title: 'Components/FunnelHeader',
   component: FunnelHeader,
+  tags: ['autodocs'],
   argTypes: {
     title: { control: 'text' },
     subTitle: { control: 'text' },

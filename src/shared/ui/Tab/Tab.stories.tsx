@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { userEvent, within, expect } from '@storybook/test';
 import Tab from './Tab';
 
 const meta = {
   title: 'Components/Tab',
   component: Tab,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },
@@ -39,6 +41,19 @@ type Story = StoryObj<typeof meta>;
 export const TwoTabs: Story = {
   args: {
     defaultTab: 'distance',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 초기 상태: 첫 번째 탭 컨텐츠 표시
+    await expect(canvas.getByText('Make changes to your account here.')).toBeInTheDocument();
+
+    // 두 번째 탭 클릭
+    const secondTab = canvas.getByText('세탁 요금');
+    await userEvent.click(secondTab);
+
+    // 두 번째 탭 컨텐츠 표시 확인
+    await expect(canvas.getByText('Change your password here.')).toBeInTheDocument();
   },
 } satisfies Story;
 export const ThreeTabs: Story = {

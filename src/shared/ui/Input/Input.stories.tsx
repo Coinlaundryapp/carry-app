@@ -5,13 +5,15 @@ import { Input, InputProps } from './Input';
 import { InputErrorIcon, InputSuccessIcon, SearchIcon } from '@assets/icons';
 
 const meta = {
-  title: 'components/Input',
+  title: 'Components/Input',
   component: Input,
   tags: ['autodocs'],
   args: {
     type: 'text',
     status: 'default',
     placeholder: 'Placeholder',
+    onChange: fn(),
+    onClear: fn(),
   },
   decorators: [
     (Story: React.ComponentType) => (
@@ -26,11 +28,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const render = (args: InputProps) => {
-  const [value, setValue] = useState(args.value);
-  args.value = value;
-  args.onClear = fn(() => setValue(''));
-  args.onChange = fn((e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value));
-  return <Input {...args} />;
+  const [value, setValue] = useState(args.value ?? '');
+  return (
+    <Input
+      {...args}
+      value={value}
+      onClear={() => setValue('')}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+    />
+  );
 };
 
 export const Default: Story = {
@@ -50,6 +56,16 @@ export const Default: Story = {
     await userEvent.type(input, '안녕하세요');
     await expect(input).toHaveValue('안녕하세요');
   },
+};
+
+export const Primary: Story = {
+  args: {
+    value: '',
+    status: 'primary',
+    title: '이름',
+    placeholder: '이름을 입력하세요',
+  },
+  render,
 };
 
 export const Success: Story = {
@@ -85,6 +101,7 @@ export const Done: Story = {
   },
   render,
 };
+
 export const Search: Story = {
   args: {
     type: 'text',

@@ -1,4 +1,4 @@
-import { GetAddressesResType } from '@features/address/types/address-type';
+import { GetAddressesResType, AddressPayload } from '@features/address/types/address-type';
 import { fetchExtended } from '@shared/api/api-client';
 import { ApiResponse, TGetAddressSearchListRes, TAddressRes, Address } from '@shared/types/api-types';
 
@@ -54,7 +54,7 @@ export async function getAddress(
   return data;
 }
 
-export async function postAddress(accessToken: string, newAddress: any) {
+export async function postAddress(accessToken: string, newAddress: AddressPayload) {
   const res = await fetchExtended(`/api/v1/users/me/shipping-addresses`, {
     method: 'POST',
     headers: {
@@ -71,7 +71,7 @@ export async function postAddress(accessToken: string, newAddress: any) {
 export async function putAddress(
   accessToken: string,
   addressId: string | string[],
-  editAddress: any,
+  editAddress: AddressPayload,
 ) {
   const res = await fetchExtended(`/api/v1/users/me/shipping-addresses/${addressId}`, {
     method: 'PUT',

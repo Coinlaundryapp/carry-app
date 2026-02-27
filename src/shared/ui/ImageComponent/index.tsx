@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
-import DummyImage from './Rectangle 1946.svg';
+import DummyImage from '@assets/icons/Rectangle 1967.svg';
 
 type TProps = {
   imageUrl: string;

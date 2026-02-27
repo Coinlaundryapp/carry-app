@@ -6,6 +6,9 @@ import { useAddressStore } from '@features/address/model/address-store';
 import { debounce } from 'es-toolkit';
 import DefaultSearch from './DefaultSearch';
 import { getAddressSearchList } from '@features/address/api/addressApi';
+import type { TGetAddressSearchListRes } from '@shared/types/api-types';
+
+type AddressSearchItem = TGetAddressSearchListRes['content'][number];
 
 type TPros = {
   onAddressChange: (value: string) => void;
@@ -15,13 +18,13 @@ function SearchForm({ onAddressChange }: TPros) {
   const { addressModalOpen, setAddressModalOpen } = useAddressStore();
   const [value, setValue] = useState('');
   const [page, setPage] = useState(1);
-  const [addresses, setAddresses] = useState<any[]>([]);
+  const [addresses, setAddresses] = useState<AddressSearchItem[]>([]);
   const [addressSearchState, setAddressSearchState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(true);
   const loader = useRef<HTMLDivElement | null>(null);
 
-  const handleClick = (address: any) => {
+  const handleClick = (address: AddressSearchItem) => {
     setValue(address.regionAddress.addressName);
     onAddressChange(address.regionAddress.addressName);
     setAddressModalOpen(false);
@@ -126,7 +129,7 @@ function SearchForm({ onAddressChange }: TPros) {
         <DefaultSearch />
       ) : addresses.length > 0 ? (
         <div className="flex-1 overflow-y-auto">
-          {addresses.map((address: any, index) => (
+          {addresses.map((address, index) => (
             <div
               onClick={() => handleClick(address)}
               key={index}

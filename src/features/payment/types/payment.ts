@@ -1,7 +1,13 @@
-type Discounts = {
-  laundryDiscounts: any[];
-  deliveryDiscounts: any[];
+type Discount = {
+  name: string;
+  amount: number;
 };
+
+type Discounts = {
+  laundryDiscounts: Discount[];
+  deliveryDiscounts: Discount[];
+};
+
 type Charges = {
   laundryPrice: number;
   deliveryFee: number;

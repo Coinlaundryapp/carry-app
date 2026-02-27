@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority';
 import Seperate from '@assets/icons/separateWash.svg';
 import Economic from '@assets/icons/economiWash.svg';
 import InfoIcon from '@assets/icons/information-circle-red.svg';
-import { OrderDetailRes } from '@shared/types/api-types';
+import { OrderDetailRes, OrderListRes } from '@shared/types/api-types';
 
 const statusBadge = cva(
   'flex items-center justify-center rounded-xl bg-primary px-[8px] py-[4px]',
@@ -26,7 +26,7 @@ const statusBadge = cva(
 
 interface StatusCardProps {
   status: LaundryStatusType | undefined;
-  info: any;
+  info: OrderDetailRes | OrderListRes;
   hasButton: boolean;
 }
 

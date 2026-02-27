@@ -1,4 +1,4 @@
-import type { AndroidBridge } from '@/types/webview';
+import type { AndroidBridge } from '@shared/types/webview';
 
 /**
  * WebView 환경 여부를 판별합니다.
@@ -53,9 +53,9 @@ export function registerCallback<K extends keyof Omit<Window, keyof WindowEventM
 ): () => void {
   if (typeof window === 'undefined') return () => {};
 
-  (window as Record<string, unknown>)[name as string] = callback;
+  (window as unknown as Record<string, unknown>)[name as string] = callback;
 
   return () => {
-    delete (window as Record<string, unknown>)[name as string];
+    delete (window as unknown as Record<string, unknown>)[name as string];
   };
 }

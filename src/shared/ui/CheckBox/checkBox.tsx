@@ -1,7 +1,7 @@
 import React, { useId } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@shared/lib/utils';
-import CheckIcon from '@/../public/assets/icons/check.svg';
+import { CheckIcon } from '@assets/icons';
 import { twMerge } from 'tailwind-merge';
 
 type CheckBoxType = 'circle' | 'square' | 'icon';

@@ -4,9 +4,10 @@ import { NoCoinList } from '@assets/icons';
 import { KINDS_STATUS } from '@features/map/lib/constants';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import Image from 'next/image';
+import type { TLaundromats } from '@features/map/types/map-type';
 
 type Props = {
-  data: any;
+  data: TLaundromats[];
   onSelectedAddress: (addressId: number) => void;
   onImageClick: (e: React.MouseEvent, addressId: number) => void;
 };

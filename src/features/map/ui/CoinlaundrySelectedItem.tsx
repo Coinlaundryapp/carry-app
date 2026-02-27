@@ -7,9 +7,10 @@ import { useParams, useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import useOrderStore from '@features/order/model/order-store';
 import Review from './Review';
+import type { TLaundromats } from '@features/map/types/map-type';
 
 type Props = {
-  data: any;
+  data: TLaundromats;
   expanded: boolean;
   onClickExpended: () => void;
   onImageClick: (e: React.MouseEvent, addressId: number) => void;

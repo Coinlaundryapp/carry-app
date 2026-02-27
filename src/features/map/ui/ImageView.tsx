@@ -5,9 +5,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { TopNavigation } from '@shared/ui/TopNavigation';
 import SwiperCore from 'swiper';
+import type { MediaResource } from '@features/map/types/map-type';
 
 type TProps = {
-  images: any;
+  images: MediaResource[];
   onCloseImageView: () => void;
 };
 const ImageView = ({ images, onCloseImageView }: TProps) => {

@@ -81,7 +81,7 @@ export default function MapBottomPanel({
         <div className="mt-1 text-center">
           {open ? (
             <CoinlaundrySelectedItem
-              data={selectedItem}
+              data={selectedItem!}
               expanded={expanded}
               onClickExpended={handleExpandClick}
               onImageClick={onImageClick}
@@ -89,7 +89,7 @@ export default function MapBottomPanel({
           ) : (
             <CoinlaundryDefault
               onSelectedAddress={onSelectedAddress}
-              data={data}
+              data={data ?? []}
               onImageClick={onImageClick}
             />
           )}

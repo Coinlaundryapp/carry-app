@@ -1,4 +1,4 @@
-import InfoCircleIcon from '../../../public/assets/icons/information-circle.svg';
+import { InformationCircle as InfoCircleIcon } from '@assets/icons';
 
 interface MessageCardProps {
   message: React.ReactNode;

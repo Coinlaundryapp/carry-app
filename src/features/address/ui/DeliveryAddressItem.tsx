@@ -9,8 +9,10 @@ import { deleteAddress, patchDefaultAddress } from '@features/address/api/addres
 import { useModalStore } from '@shared/model/modal-store';
 import { useToastStore } from '@shared/model/toast-store';
 import { useAddressStore } from '@features/address/model/address-store';
+import type { AddressListItem } from '@features/address/types/address-type';
+
 interface DeliveryAddressItemProps {
-  item: any;
+  item: AddressListItem;
   isDefault: boolean;
   selected: boolean;
 }
@@ -57,7 +59,7 @@ export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddress
       closeText: '취소',
       type: 'confirm',
       onConfirm: () => {
-        const { addressId } = item;
+        const addressId = String(item.addressId);
         if (accessToken) {
           mutate({ accessToken, addressId });
         }
@@ -76,7 +78,7 @@ export default function DeliveryAddressItem({ item, isDefault }: DeliveryAddress
       closeText: '취소',
       type: 'confirm',
       onConfirm: () => {
-        const { addressId } = item;
+        const addressId = String(item.addressId);
         if (accessToken && addressId) {
           patchDefaultAddressMutate.mutate({ accessToken, addressId });
         }

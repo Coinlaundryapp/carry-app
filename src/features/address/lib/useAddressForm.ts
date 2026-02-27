@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { validateAllSteps, validateForm } from '@features/address/lib/addressValidation';
 import { REQUEST_OPTIONS } from '@features/address/lib/request-options';
-import { formatPhoneNumber } from '@shared/lib/formaPhoneNumber';
+import { formatPhoneNumber } from '@shared/lib/formatPhoneNumber';
+import type { TAddressRes } from '@shared/types/api-types';
 
 // ── 공유 타입 ──
 
@@ -116,7 +117,7 @@ export function useAddressForm() {
 
   // ── 편집 모드: 기존 데이터로 폼 채우기 ──
 
-  const populateForm = useCallback((data: any) => {
+  const populateForm = useCallback((data: TAddressRes | undefined) => {
     if (!data) return;
     setFormData({
       addressLabel: data.addressLabel || '',

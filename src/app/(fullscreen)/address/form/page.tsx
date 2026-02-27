@@ -11,6 +11,7 @@ import { useSession } from 'next-auth/react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useToastStore } from '@shared/model/toast-store';
+import type { AddressPayload } from '@features/address/types/address-type';
 
 const AddressAddPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -23,7 +24,7 @@ const AddressAddPage = () => {
   const form = useAddressForm();
 
   const { mutate } = useMutation({
-    mutationFn: ({ accessToken, newAddress }: { accessToken: string; newAddress: any }) =>
+    mutationFn: ({ accessToken, newAddress }: { accessToken: string; newAddress: AddressPayload }) =>
       postAddress(accessToken, newAddress),
     onSuccess: () => {
       triggerRefetch();

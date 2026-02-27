@@ -41,8 +41,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
           throw new Error('Authentication failed');
         } catch (error) {
-          // @ts-ignore
-          error.cause = { err: error.message };
+          if (error instanceof Error) {
+            (error as Error & { cause?: { err: string } }).cause = { err: error.message };
+          }
           throw error;
         }
       },

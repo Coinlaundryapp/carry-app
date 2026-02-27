@@ -1,9 +1,9 @@
 import React from 'react';
 import UserIcon from './user-icon.svg';
-
+import type { ReviewData } from '@features/map/types/map-type';
 import { RateStaIcon } from '@assets/icons';
 
-const Review = ({ data }: any) => {
+const Review = ({ data }: { data: ReviewData }) => {
   return (
     <div className="h-auto w-full border-t border-t-line-neutral py-[20px]">
       <div className="mb-2 flex gap-2">

@@ -2,7 +2,7 @@ import Footer from '@shared/ui/Footer/Footer';
 import Separator from '@shared/ui/Separator/Separator';
 import React from 'react';
 
-function layout({ children }: any) {
+function layout({ children }: { children: React.ReactNode }) {
   return (
     <main>
       {children}

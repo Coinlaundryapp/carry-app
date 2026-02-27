@@ -18,6 +18,7 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const render = (args: any) => {
   const addToast = useToastStore((state) => state.addToast);
   const handleClick = () => {

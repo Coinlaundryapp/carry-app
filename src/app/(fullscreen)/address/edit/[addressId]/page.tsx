@@ -12,6 +12,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useToastStore } from '@shared/model/toast-store';
 import Loading from '@shared/ui/Loading';
+import type { AddressPayload } from '@features/address/types/address-type';
 
 const EditFormPage = () => {
   const { addressModalOpen } = useAddressStore();
@@ -43,7 +44,7 @@ const EditFormPage = () => {
       addressId,
     }: {
       accessToken: string;
-      editAddress: any;
+      editAddress: AddressPayload;
       addressId: string | string[];
     }) => putAddress(accessToken, addressId, editAddress),
     onSuccess: () => {

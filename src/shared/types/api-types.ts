@@ -19,7 +19,7 @@ export type TGetAddressSearchListRes = {
   content: {
     addressName: string;
     addressType: string;
-    regionAddresss: { addressName: string };
+    regionAddress: { addressName: string };
     roadAddress: string | null;
   }[];
   pagination: {

@@ -41,7 +41,7 @@ export default function AddressSetting() {
 
   useEffect(() => {
     if (isSuccess && data) {
-      const defaultAddress = data.find((address: any) => address.default === true);
+      const defaultAddress = data.find((address) => address.isDefault === true);
       if (defaultAddress) {
         setSelectedAddressId(defaultAddress.addressId);
       }

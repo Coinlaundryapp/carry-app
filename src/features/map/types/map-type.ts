@@ -11,7 +11,21 @@ export type TLaundromats = {
   longitude: number;
   mediaResources: { extension: string; mediaUrl: string }[];
   name: string;
-  options: 'WASHING_MACHINE' | 'DRYER' | 'SNEAKERS';
+  options: ('WASHING_MACHINE' | 'DRYER' | 'SNEAKERS')[];
   reviewAverageRating: number;
   reviewCount: number;
+  type?: string;
+  individualDeliveryFee?: number;
+};
+
+export type MediaResource = {
+  extension: string;
+  mediaUrl: string;
+};
+
+export type ReviewData = {
+  userId: string;
+  content: string;
+  day: string;
+  text: string;
 };

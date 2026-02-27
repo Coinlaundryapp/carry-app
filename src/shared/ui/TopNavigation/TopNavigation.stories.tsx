@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import { fn, userEvent, within, expect } from '@storybook/test';
 import TopNavigation from './TopNavigation';
 
 const meta = {
@@ -31,6 +31,17 @@ export const Back: Story = {
     type: 'back',
     title: 'Title',
   },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    // 타이틀 표시 확인
+    await expect(canvas.getByText('Title')).toBeInTheDocument();
+
+    // 뒤로가기 버튼 클릭 → leftClick 호출 확인
+    const buttons = canvas.getAllByRole('button');
+    await userEvent.click(buttons[0]);
+    await expect(args.leftClick).toHaveBeenCalled();
+  },
 };
 
 export const Close: Story = {
@@ -57,5 +68,16 @@ export const BackWithSearch: Story = {
     type: 'back',
     title: 'Title',
     rightClick: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    // 버튼 2개 렌더링 확인 (왼쪽 + 오른쪽)
+    const buttons = canvas.getAllByRole('button');
+    await expect(buttons).toHaveLength(2);
+
+    // 오른쪽 검색 버튼 클릭 → rightClick 호출 확인
+    await userEvent.click(buttons[1]);
+    await expect(args.rightClick).toHaveBeenCalled();
   },
 };

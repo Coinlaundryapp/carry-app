@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { within, expect } from '@storybook/test';
 import Tag from './Tag';
 
 const meta = {
@@ -23,6 +24,12 @@ export const Primary: Story = {
   args: {
     label: 'Primary',
     color: 'primary',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 라벨 텍스트 렌더링 확인
+    await expect(canvas.getByText('Primary')).toBeInTheDocument();
   },
 } satisfies Story;
 

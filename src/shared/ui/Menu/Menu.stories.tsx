@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { within, expect } from '@storybook/test';
 import Menu from './Menu';
 
 const meta = {
@@ -37,6 +38,20 @@ export const Default: Story = {
         },
       ],
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 메뉴 제목 표시 확인
+    await expect(canvas.getByText('내 계정')).toBeInTheDocument();
+
+    // 메뉴 아이템 3개 모두 렌더링 확인
+    await expect(canvas.getByText('프로필 설정')).toBeInTheDocument();
+    await expect(canvas.getByText('주소 관리')).toBeInTheDocument();
+    await expect(canvas.getByText('고객센터')).toBeInTheDocument();
+
+    // 고객센터 운영시간 표시 확인
+    await expect(canvas.getByText('09:00 ~ 18:00')).toBeInTheDocument();
   },
 };
 

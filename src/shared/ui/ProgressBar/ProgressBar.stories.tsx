@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { within, expect } from '@storybook/test';
 import ProgressBar from './ProgressBar';
 
 const meta = {
@@ -33,6 +34,16 @@ type Story = StoryObj<typeof meta>;
 export const Percent50: Story = {
   args: {
     percent: 50,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Radix ProgressBar의 role="progressbar" 렌더링 확인
+    const progressbar = canvas.getByRole('progressbar');
+    await expect(progressbar).toBeInTheDocument();
+
+    // aria-valuenow 속성으로 값 확인
+    await expect(progressbar).toHaveAttribute('aria-valuenow', '50');
   },
 };
 

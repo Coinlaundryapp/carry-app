@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { within, expect } from '@storybook/test';
 import MessageCard from './MessageCard';
 
 const meta = {
@@ -17,6 +18,12 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     message: '빠른 시간 내에 연락드리겠습니다.',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 메시지 텍스트 렌더링 확인
+    await expect(canvas.getByText('빠른 시간 내에 연락드리겠습니다.')).toBeInTheDocument();
   },
 };
 

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { within, expect } from '@storybook/test';
 import Alert from './Alert';
 
 const meta = {
@@ -28,6 +29,12 @@ export const Success: Story = {
     status: 'success',
     label: '새 배송지가 추가되었습니다.',
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 라벨 텍스트 렌더링 확인
+    await expect(canvas.getByText('새 배송지가 추가되었습니다.')).toBeInTheDocument();
+  },
 };
 
 export const Done: Story = {
@@ -41,5 +48,11 @@ export const Error: Story = {
   args: {
     status: 'error',
     label: '오류가 발생했습니다. 다시 시도해주세요.',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 에러 라벨 텍스트 렌더링 확인
+    await expect(canvas.getByText('오류가 발생했습니다. 다시 시도해주세요.')).toBeInTheDocument();
   },
 };

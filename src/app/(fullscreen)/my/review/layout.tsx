@@ -1,9 +1,9 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
-import { TopNavigation } from '@/components/share/TopNavigation';
-import { useModalStore } from '@/store/modal-store';
-import { useReviewStore } from '@/store/review-store';
+import Button from '@shared/ui/Button/Button';
+import { TopNavigation } from '@shared/ui/TopNavigation';
+import { useModalStore } from '@shared/model/modal-store';
+import { useReviewStore } from '@features/review/model/review-store';
 import { useRouter } from 'next/navigation';
 
 export default function Layout({

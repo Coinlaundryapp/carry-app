@@ -2,12 +2,12 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import clsx from 'clsx';
 
-import AuthProvider from '@/providers/AuthProvides';
+import AuthProvider from '@shared/providers/AuthProvides';
 
 import { pretendard } from '@/font/myLocalFont';
 import Script from 'next/script';
-import ReactQueryProviders from '@/providers/ReactQueryProviders';
-import WebViewProvider from '@/providers/WebViewProvider';
+import ReactQueryProviders from '@shared/providers/ReactQueryProviders';
+import WebViewProvider from '@shared/providers/WebViewProvider';
 
 export const viewport: Viewport = {
   width: 'device-width',

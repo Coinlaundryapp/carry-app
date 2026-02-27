@@ -1,16 +1,16 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
-import { TopNavigation } from '@/components/share/TopNavigation';
-import IncheonMap from '@/components/ui/IncheonMap';
-import { useToastStore } from '@/store/toast-store';
+import Button from '@shared/ui/Button/Button';
+import { TopNavigation } from '@shared/ui/TopNavigation';
+import IncheonMap from '@features/location/ui/IncheonMap';
+import { useToastStore } from '@shared/model/toast-store';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import EllipseIcon from '@assets/icons/ellipse.svg';
-import { useModalStore } from '@/store/modal-store';
+import { useModalStore } from '@shared/model/modal-store';
 import { useQuery } from '@tanstack/react-query';
-import { getServiceAvailabiltyRegion } from '@/api/getServiceAvailabilityRegion';
-import { useLocationStore } from '@/store/location-store';
+import { getServiceAvailabiltyRegion } from '@features/location/api/getServiceAvailabilityRegion';
+import { useLocationStore } from '@features/location/model/location-store';
 
 const SelectIncheonPage = () => {
   const router = useRouter();

@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useAddressForm } from '@/hooks/useAddressForm';
-import { useAddressStore } from '@/store/address-store';
-import RenderStepContent from '@/components/address/RenderStepContent';
-import AddressButton from '@/components/address/AddressButton';
-import SearchForm from '@/components/address/SearchForm';
-import { getAddress, putAddress } from '@/api/addressApi';
+import { useAddressForm } from '@features/address/lib/useAddressForm';
+import { useAddressStore } from '@features/address/model/address-store';
+import RenderStepContent from '@features/address/ui/RenderStepContent';
+import AddressButton from '@features/address/ui/AddressButton';
+import SearchForm from '@features/address/ui/SearchForm';
+import { getAddress, putAddress } from '@features/address/api/addressApi';
 import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
-import { useToastStore } from '@/store/toast-store';
-import Loading from '@/components/share/Loading';
+import { useToastStore } from '@shared/model/toast-store';
+import Loading from '@shared/ui/Loading';
 
 const EditFormPage = () => {
   const { addressModalOpen } = useAddressStore();

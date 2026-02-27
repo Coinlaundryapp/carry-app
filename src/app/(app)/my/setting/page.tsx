@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import TopNavigation from '@/components/share/TopNavigation/TopNavigation';
+import TopNavigation from '@shared/ui/TopNavigation/TopNavigation';
 import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
-import { useModalStore } from '@/store/modal-store';
+import { useModalStore } from '@shared/model/modal-store';
 import { MenuChevronRightIcon } from '@assets/icons';
 
 export default function Page() {

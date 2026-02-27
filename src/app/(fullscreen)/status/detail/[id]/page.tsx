@@ -1,12 +1,12 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
-import { TopNavigation } from '@/components/share/TopNavigation';
+import Button from '@shared/ui/Button/Button';
+import { TopNavigation } from '@shared/ui/TopNavigation';
 import { useRouter } from 'next/navigation';
 import QuestionMark from '@assets/icons/question_mark.svg';
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
-import { getOrderDetail } from '@/api/getOrderDetail';
+import { getOrderDetail } from '@features/status/api/getOrderDetail';
 
 export default function OrederStatusDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();

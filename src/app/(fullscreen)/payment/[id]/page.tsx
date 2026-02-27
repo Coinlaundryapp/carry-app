@@ -2,26 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import { loadTossPayments, TossPaymentsPayment } from '@tosspayments/tosspayments-sdk';
-import Button from '@/components/share/Button';
-import Dropdown from '@/components/share/Dropdown/Dropdown';
-import { Radio } from '@/components/share/Radio';
-import Separator from '@/components/share/Separator/Separator';
-import { TopNavigation } from '@/components/share/TopNavigation';
-import DeliveryCostInfoDialog from '@/components/order/DeliveryCostInfoDialog';
-import Loading from '@/components/share/Loading';
+import Button from '@shared/ui/Button';
+import Dropdown from '@shared/ui/Dropdown/Dropdown';
+import { Radio } from '@shared/ui/Radio';
+import Separator from '@shared/ui/Separator/Separator';
+import { TopNavigation } from '@shared/ui/TopNavigation';
+import DeliveryCostInfoDialog from '@features/order/ui/DeliveryCostInfoDialog';
+import Loading from '@shared/ui/Loading';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { getPaymentInfo } from '@/api/payment';
+import { getPaymentInfo } from '@features/payment/api/payment';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { formatNumberWithCommas } from '@/utils/format';
-import { isWebView } from '@/lib/webview-bridge';
+import { formatNumberWithCommas } from '@shared/lib/format';
+import { isWebView } from '@shared/lib/webview-bridge';
 import {
   type PaymentMethod,
   PAYMENT_METHODS,
   CARD_INSTITUTIONS,
   INSTALLMENT_OPTIONS,
-} from '@/constants/payment';
+} from '@features/payment/lib/constants';
 
 type PaymentState = {
   paymentMethod: PaymentMethod;

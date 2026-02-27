@@ -1,7 +1,7 @@
 'use client';
 
-import Button from '@/components/share/Button';
-import { AUTH_ERROR, AuthErrorType } from '@/types/auth-error-types';
+import Button from '@shared/ui/Button';
+import { AUTH_ERROR, AuthErrorType } from '@shared/types/auth-error-types';
 import { DeliveryManSadIcon } from '@assets/icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 

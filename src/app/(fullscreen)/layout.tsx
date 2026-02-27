@@ -1,6 +1,6 @@
-import Loading from '@/components/share/Loading';
-import { Modal } from '@/components/share/Modal';
-import Toast from '@/components/share/Toast';
+import Loading from '@shared/ui/Loading';
+import { Modal } from '@shared/ui/Modal';
+import Toast from '@shared/ui/Toast';
 import { Suspense } from 'react';
 
 export default function Layout({

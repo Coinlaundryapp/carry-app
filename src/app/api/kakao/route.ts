@@ -1,4 +1,4 @@
-import { signIn } from '@/auth';
+import { signIn } from '@features/auth/api/auth';
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 

@@ -1,9 +1,9 @@
 'use client';
-import Rating from '@/components/my/Rating';
-import ReviewCard from '@/components/my/ReviewCard';
-import ReviewTextarea from '@/components/my/ReviewTextarea';
-import Button from '@/components/share/Button/Button';
-import Separator from '@/components/share/Separator/Separator';
+import Rating from '@features/review/ui/Rating';
+import ReviewCard from '@features/review/ui/ReviewCard';
+import ReviewTextarea from '@features/review/ui/ReviewTextarea';
+import Button from '@shared/ui/Button/Button';
+import Separator from '@shared/ui/Separator/Separator';
 import { CameraIcon } from '@assets/icons';
 
 import React from 'react';

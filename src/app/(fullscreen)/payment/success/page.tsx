@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import Button from '@/components/share/Button';
+import Button from '@shared/ui/Button';
 import { ModalOkIcon } from '@assets/icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { postConfirmPayment } from '@/api/payment';
+import { postConfirmPayment } from '@features/payment/api/payment';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Loading from '@/components/share/Loading';
+import Loading from '@shared/ui/Loading';
 
 export default function SuccessPage({
   searchParams,

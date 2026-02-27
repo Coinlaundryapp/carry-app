@@ -18,6 +18,8 @@
       }
     ],
     "paths": {
+      "@shared/*": ["./src/shared/*"],
+      "@features/*": ["./src/features/*"],
       "@/*": ["./src/*"],
       "@assets/*": ["./public/assets/*"]
     }

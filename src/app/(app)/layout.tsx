@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { debounce } from 'es-toolkit';
-import ScrollUpButton from '@/components/share/ScrollUpButton/ScrollUpButton';
-import { BottomNavigation } from '@/components/share/BottomNavigation';
-import Toast from '@/components/share/Toast';
-import { Modal } from '@/components/share/Modal';
+import ScrollUpButton from '@shared/ui/ScrollUpButton/ScrollUpButton';
+import { BottomNavigation } from '@shared/ui/BottomNavigation';
+import Toast from '@shared/ui/Toast';
+import { Modal } from '@shared/ui/Modal';
 
 export default function Layout({
   children,

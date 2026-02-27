@@ -4,11 +4,11 @@ import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { getAddresses } from '@/api/addressApi';
-import { useAddressStore } from '@/store/address-store';
-import { useToastStore } from '@/store/toast-store';
-import DeliveryAddressList from '@/components/address/DeliveryAddressList';
-import { TopNavigation } from '@/components/share/TopNavigation';
+import { getAddresses } from '@features/address/api/addressApi';
+import { useAddressStore } from '@features/address/model/address-store';
+import { useToastStore } from '@shared/model/toast-store';
+import DeliveryAddressList from '@features/address/ui/DeliveryAddressList';
+import { TopNavigation } from '@shared/ui/TopNavigation';
 import { AddPlusIcon } from '@assets/icons';
 
 export default function AddressSetting() {

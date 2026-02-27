@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { DeliveryManSadIcon } from '@assets/icons';
-import Button from '@/components/share/Button';
+import Button from '@shared/ui/Button';
 
 export default function NotFoundPage() {
   return (

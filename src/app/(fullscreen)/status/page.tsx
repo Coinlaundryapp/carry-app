@@ -1,8 +1,8 @@
 'use client';
 
-import { getOrderList } from '@/api/getOrderList';
-import Button from '@/components/share/Button/Button';
-import StatusCard from '@/components/status/StatusCard';
+import { getOrderList } from '@features/status/api/getOrderList';
+import Button from '@shared/ui/Button/Button';
+import StatusCard from '@features/status/ui/StatusCard';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';

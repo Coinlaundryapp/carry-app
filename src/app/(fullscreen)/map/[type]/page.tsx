@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { getLaundromats } from '@/api/mapApi';
-import { useNaverMap } from '@/hooks/useNaverMap';
+import { getLaundromats } from '@features/map/api/mapApi';
+import { useNaverMap } from '@features/map/lib/useNaverMap';
 import Loading from '@/app/loading';
-import ImageView from '@/components/map/ImageView';
-import MapBottomPanel from '@/components/map/MapBottomPanel';
-import MapControlOverlay from '@/components/map/MapControlOverlay';
+import ImageView from '@features/map/ui/ImageView';
+import MapBottomPanel from '@features/map/ui/MapBottomPanel';
+import MapControlOverlay from '@features/map/ui/MapControlOverlay';
 
 type TImages = {
   mediaUrl: string;

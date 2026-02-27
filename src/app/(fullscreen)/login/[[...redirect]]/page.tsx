@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { headers } from 'next/headers';
-import KakaoLoginButton from '@/components/login/KakaoLoginButton';
+import KakaoLoginButton from '@features/auth/ui/KakaoLoginButton';
 
 const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY as string;
 const KAKAO_REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL as string;

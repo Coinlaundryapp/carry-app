@@ -30,6 +30,19 @@ export default async function Login({
   url.searchParams.append('redirect_uri', BASE_URL + '/api/kakao');
   url.searchParams.append('state', encodeURIComponent(JSON.stringify(state)));
 
+  // WebView 로그인 완료 후 리다이렉트 경로 계산
+  const redirectPath = redirect ? redirect.join('/') : '';
+  const queryString = new URLSearchParams(
+    searchParams as Record<string, string>,
+  ).toString();
+  const webViewRedirectUrl = [
+    '/login-done',
+    redirectPath && `/${redirectPath}`,
+    queryString && `?${queryString}`,
+  ]
+    .filter(Boolean)
+    .join('');
+
   return (
     <main className="flex flex-col items-center gap-10 px-4 pt-[74px] text-center">
       <div>
@@ -48,7 +61,7 @@ export default async function Login({
       </div>
       <Image src="/assets/images/login-image.png" alt="Laundry" width={390} height={308} />
 
-      <KakaoLoginButton oauthUrl={url.toString()} />
+      <KakaoLoginButton oauthUrl={url.toString()} redirectUrl={webViewRedirectUrl} />
     </main>
   );
 }

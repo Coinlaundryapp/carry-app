@@ -32,6 +32,30 @@ export async function login({
   }
 }
 
+export async function loginWithKakaoToken({ accessToken }: { accessToken: string }) {
+  try {
+    const res = await fetchExtended<ApiResponse<AuthResponse>>('/api/v1/sign/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        accessToken,
+      },
+    });
+    const data = res.body.data;
+    return {
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+    };
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 422) {
+      throw new Error('login_error');
+    }
+    throw new Error('server_error');
+  }
+}
+
 export async function refreshAccessToken({
   refreshToken,
 }: {

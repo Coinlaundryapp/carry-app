@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { userEvent, within, expect } from '@storybook/test';
 import Modal from './Modal';
 import { useModalStore } from '@shared/model/modal-store';
 
@@ -126,4 +127,29 @@ const render = () => {
 };
 export const Usage: Story = {
   render,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 1) basic modal 열기
+    const basicButton = canvas.getByText('basic modal');
+    await userEvent.click(basicButton);
+
+    // 모달 제목 확인
+    await expect(canvas.getByText('서비스를 이용할 수 없어요')).toBeInTheDocument();
+
+    // 확인 버튼 클릭으로 닫기
+    const closeButton = canvas.getByText('확인');
+    await userEvent.click(closeButton);
+
+    // 2) confirm modal 열기
+    const confirmButton = canvas.getByText('confirm modal');
+    await userEvent.click(confirmButton);
+
+    // 취소/허용 버튼 모두 존재 확인
+    await expect(canvas.getByText('취소')).toBeInTheDocument();
+    await expect(canvas.getByText('허용')).toBeInTheDocument();
+
+    // 취소 버튼으로 닫기
+    await userEvent.click(canvas.getByText('취소'));
+  },
 };

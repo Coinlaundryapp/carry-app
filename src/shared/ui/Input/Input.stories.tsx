@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import { fn, userEvent, within, expect } from '@storybook/test';
 import { Input, InputProps } from './Input';
 import { InputErrorIcon, InputSuccessIcon, SearchIcon } from '@assets/icons';
 
@@ -39,6 +39,17 @@ export const Default: Story = {
     status: 'default',
   },
   render,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole('textbox');
+
+    // 초기 상태: 빈 값
+    await expect(input).toHaveValue('');
+
+    // 텍스트 입력
+    await userEvent.type(input, '안녕하세요');
+    await expect(input).toHaveValue('안녕하세요');
+  },
 };
 
 export const Success: Story = {
@@ -59,6 +70,12 @@ export const Error: Story = {
     errorIcon: <InputErrorIcon />,
   },
   render,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // 에러 메시지 표시 확인
+    await expect(canvas.getByText('Error message')).toBeInTheDocument();
+  },
 };
 
 export const Done: Story = {

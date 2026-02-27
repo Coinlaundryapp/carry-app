@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { userEvent, within, expect } from '@storybook/test';
 import { useToastStore } from '@shared/model/toast-store';
 import Toast from './Toast';
 
@@ -39,6 +40,16 @@ const render = (args: ToastArgs) => {
 };
 export const Success: Story = {
   render,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Open 버튼 클릭
+    const openButton = canvas.getByText('Open');
+    await userEvent.click(openButton);
+
+    // 토스트 메시지 표시 확인
+    await expect(canvas.getByText('Hello, World!')).toBeInTheDocument();
+  },
 };
 export const Done: Story = {
   args: {

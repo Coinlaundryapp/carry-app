@@ -8,6 +8,7 @@ import { pretendard } from '@/font/myLocalFont';
 import Script from 'next/script';
 import ReactQueryProviders from '@shared/providers/ReactQueryProviders';
 import WebViewProvider from '@shared/providers/WebViewProvider';
+import { env } from '@shared/config/env';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -32,7 +33,7 @@ export default function RootLayout({
       <body className={clsx(pretendard.className, 'overflow-hidden bg-black')}>
         <Script
           type="text/javascript"
-          src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_ID}`}
+          src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${env.NEXT_PUBLIC_NAVER_ID}`}
           strategy="afterInteractive"
         />
 

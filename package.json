@@ -38,6 +38,8 @@
     "@radix-ui/react-progress": "^1.1.8",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@sentry/nextjs": "^10.40.0",
+    "@t3-oss/env-nextjs": "^0.13.10",
     "@tanstack/react-query": "^5.90.21",
     "@tosspayments/tosspayments-sdk": "^2.5.0",
     "class-variance-authority": "^0.7.1",
@@ -56,6 +58,7 @@
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.1",
+    "zod": "^4.3.6",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

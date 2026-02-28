@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import { headers } from 'next/headers';
 import KakaoLoginButton from '@features/auth/ui/KakaoLoginButton';
+import { env } from '@shared/config/env';
 
-const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY as string;
-const KAKAO_REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL as string;
+const KAKAO_REST_API_KEY = env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+const KAKAO_REDIRECT_URL = env.NEXT_PUBLIC_KAKAO_REDIRECT_URL;
 
 export default async function Login({
   params,

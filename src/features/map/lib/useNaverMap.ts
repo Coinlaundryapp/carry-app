@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGeoLocation } from '@features/location/lib/useGeoLocation';
 import { useLocationStore } from '@features/location/model/location-store';
+import { useMapStore } from '@features/map/model/map-store';
 import {
   markerIconHtml,
   selectedMarkerIconHtml,
@@ -12,6 +13,12 @@ import {
 } from '@/app/(fullscreen)/map/[type]/marker';
 import { TLaundromats } from '@features/map/types/map-type';
 import { STORAGE_KEYS } from '@features/map/lib/constants';
+import {
+  createMarkerIconOptions,
+  createCircleOptions,
+  createMapOptions,
+  parseStoredLocation,
+} from '@features/map/lib/map-utils';
 
 interface UseNaverMapOptions {
   /** 'order' | 'map' 등 페이지 타입 */
@@ -22,6 +29,22 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
   const router = useRouter();
   const { getLocation } = useGeoLocation();
   const { location } = useLocationStore();
+
+  // ── Store ──
+  const {
+    selectedMarkerId,
+    setSelectedMarkerId,
+    selectedItem,
+    setSelectedItem,
+    open,
+    setOpen,
+    zoomLevel,
+    setZoomLevel,
+    isOffsetMarkerVisible,
+    setIsOffsetMarkerVisible,
+    isUserMarkerVisible,
+    setIsUserMarkerVisible,
+  } = useMapStore();
 
   // ── Refs ──
   const mapRef = useRef<naver.maps.Map | null>(null);
@@ -36,28 +59,24 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
   const currentCenterRef = useRef<any>(null);
   const isOrderInitRef = useRef(false);
 
-  // ── State ──
-  const [selectedMarkerId, setSelectedMarkerId] = useState<number>(0);
-  const [selectedItem, setSelectedItem] = useState<TLaundromats | null>(null);
-  const [open, setOpen] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState<number>(12);
+  // ── Local State (naver.maps 좌표 의존) ──
   const [currentCenter, setCurrentCenter] = useState<any>(null);
-  const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
-  const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
 
   // ── 내부 유틸 ──
   const drawCircleAroundUser = useCallback(() => {
     userCircleRef.current?.setMap(null);
     if (mapRef.current && userPositionRef.current) {
+      const pos = userPositionRef.current;
+      const opts = createCircleOptions({ lat: pos.lat(), lng: pos.lng() });
       userCircleRef.current = new naver.maps.Circle({
         map: mapRef.current,
         center: userPositionRef.current,
-        radius: 3000,
-        strokeColor: '#00B4B2',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#ADE4E5',
-        fillOpacity: 0.5,
+        radius: opts.radius,
+        strokeColor: opts.strokeColor,
+        strokeOpacity: opts.strokeOpacity,
+        strokeWeight: opts.strokeWeight,
+        fillColor: opts.fillColor,
+        fillOpacity: opts.fillOpacity,
       });
     }
   }, []);
@@ -65,15 +84,17 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
   const drawCircleAroundOffset = useCallback(() => {
     offsetCircleRef.current?.setMap(null);
     if (mapRef.current && offsetCenterRef.current) {
+      const pos = offsetCenterRef.current;
+      const opts = createCircleOptions({ lat: pos.lat(), lng: pos.lng() });
       offsetCircleRef.current = new naver.maps.Circle({
         map: mapRef.current,
         center: offsetCenterRef.current,
-        radius: 3000,
-        strokeColor: '#00B4B2',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#ADE4E5',
-        fillOpacity: 0.5,
+        radius: opts.radius,
+        strokeColor: opts.strokeColor,
+        strokeOpacity: opts.strokeOpacity,
+        strokeWeight: opts.strokeWeight,
+        fillColor: opts.fillColor,
+        fillOpacity: opts.fillOpacity,
       });
     }
   }, []);
@@ -81,71 +102,80 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
   const addUserMarker = useCallback(() => {
     userMarkerRef.current?.setMap(null);
     if (mapRef.current && userPositionRef.current) {
+      const iconOpts = createMarkerIconOptions(userMarkerIconHtml);
       userMarkerRef.current = new naver.maps.Marker({
         position: userPositionRef.current,
         map: mapRef.current,
         icon: {
-          content: userMarkerIconHtml,
-          size: new naver.maps.Size(32, 32),
-          anchor: new naver.maps.Point(16, 16),
+          content: iconOpts.content,
+          size: new naver.maps.Size(iconOpts.size.w, iconOpts.size.h),
+          anchor: new naver.maps.Point(iconOpts.anchor.x, iconOpts.anchor.y),
         },
         zIndex: 50,
       });
     }
   }, []);
 
-  const checkVisibility = useCallback((map: naver.maps.Map) => {
-    if (userPositionRef.current) {
-      setIsUserMarkerVisible(map.getBounds().hasPoint(userPositionRef.current));
-    }
-    if (offsetCenterRef.current) {
-      setIsOffsetMarkerVisible(map.getBounds().hasPoint(offsetCenterRef.current));
-    }
-  }, []);
+  const checkVisibility = useCallback(
+    (map: naver.maps.Map) => {
+      if (userPositionRef.current) {
+        setIsUserMarkerVisible(map.getBounds().hasPoint(userPositionRef.current));
+      }
+      if (offsetCenterRef.current) {
+        setIsOffsetMarkerVisible(map.getBounds().hasPoint(offsetCenterRef.current));
+      }
+    },
+    [setIsUserMarkerVisible, setIsOffsetMarkerVisible],
+  );
 
   // ── 마커 클릭 ──
-  const handleMarkerClick = useCallback((markerId: number) => {
-    const data = dataRef.current;
-    const selectedMarkerData = data?.find((item) => item.id === markerId);
-    if (!selectedMarkerData) return;
+  const handleMarkerClick = useCallback(
+    (markerId: number) => {
+      const data = dataRef.current;
+      const selectedMarkerData = data?.find((item) => item.id === markerId);
+      if (!selectedMarkerData) return;
 
-    const selectedMarkerObj = markersRef.current.find((m) => m.id === markerId)?.marker;
-    if (!selectedMarkerObj) {
-      console.error(`Marker not found for ID: ${markerId}`);
-      return;
-    }
+      const selectedMarkerObj = markersRef.current.find((m) => m.id === markerId)?.marker;
+      if (!selectedMarkerObj) {
+        console.error(`Marker not found for ID: ${markerId}`);
+        return;
+      }
 
-    setSelectedMarkerId(markerId);
-    setSelectedItem(selectedMarkerData);
-    setOpen(true);
+      setSelectedMarkerId(markerId);
+      setSelectedItem(selectedMarkerData);
+      setOpen(true);
 
-    if (
-      previousSelectedMarkerRef.current &&
-      previousSelectedMarkerRef.current !== selectedMarkerObj
-    ) {
-      previousSelectedMarkerRef.current.setIcon({
-        content: markerIconHtml,
-        size: new naver.maps.Size(32, 32),
-        anchor: new naver.maps.Point(16, 16),
+      const defaultIcon = createMarkerIconOptions(markerIconHtml);
+      if (
+        previousSelectedMarkerRef.current &&
+        previousSelectedMarkerRef.current !== selectedMarkerObj
+      ) {
+        previousSelectedMarkerRef.current.setIcon({
+          content: defaultIcon.content,
+          size: new naver.maps.Size(defaultIcon.size.w, defaultIcon.size.h),
+          anchor: new naver.maps.Point(defaultIcon.anchor.x, defaultIcon.anchor.y),
+        });
+      }
+
+      const selectedIcon = createMarkerIconOptions(selectedMarkerIconHtml);
+      selectedMarkerObj.setIcon({
+        content: selectedIcon.content,
+        size: new naver.maps.Size(selectedIcon.size.w, selectedIcon.size.h),
+        anchor: new naver.maps.Point(selectedIcon.anchor.x, selectedIcon.anchor.y),
       });
-    }
+      selectedMarkerObj.setZIndex(15);
+      previousSelectedMarkerRef.current = selectedMarkerObj;
 
-    selectedMarkerObj.setIcon({
-      content: selectedMarkerIconHtml,
-      size: new naver.maps.Size(32, 32),
-      anchor: new naver.maps.Point(16, 16),
-    });
-    selectedMarkerObj.setZIndex(15);
-    previousSelectedMarkerRef.current = selectedMarkerObj;
-
-    mapRef.current?.panTo(selectedMarkerObj.getPosition());
-  }, []);
+      mapRef.current?.panTo(selectedMarkerObj.getPosition());
+    },
+    [setSelectedMarkerId, setSelectedItem, setOpen],
+  );
 
   // ── 지도 초기화 ──
   const initMap = useCallback(() => {
     const data = dataRef.current;
     const center = currentCenterRef.current;
-    const savedLocationString = localStorage.getItem(STORAGE_KEYS.TEMP_REGION);
+    const savedLocation = parseStoredLocation(STORAGE_KEYS.TEMP_REGION);
 
     if (type === 'order' && data && !isOrderInitRef.current) {
       setSelectedMarkerId(data[0].id);
@@ -155,8 +185,7 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
     }
 
     let offsetLocation;
-    if (savedLocationString) {
-      const savedLocation = JSON.parse(savedLocationString);
+    if (savedLocation) {
       offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
       offsetCenterRef.current = offsetLocation;
     } else {
@@ -170,12 +199,13 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
       mapRef.current = null;
     }
 
+    const mapOpts = createMapOptions(center);
     const map = new naver.maps.Map('map', {
       center: center,
-      zoom: 12,
-      padding: { top: 10, bottom: 10, left: 10, right: 10 },
-      maxZoom: 17,
-      minZoom: 11,
+      zoom: mapOpts.zoom,
+      padding: mapOpts.padding,
+      maxZoom: mapOpts.maxZoom,
+      minZoom: mapOpts.minZoom,
       mapDataControl: false,
       scaleControl: false,
       scaleControlOptions: { position: naver.maps.Position.TOP_RIGHT },
@@ -197,6 +227,7 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
     }
 
     // 마커 배치
+    const defaultIcon = createMarkerIconOptions(markerIconHtml);
     markersRef.current = [];
     data?.forEach((loc) => {
       const markerPosition = new naver.maps.LatLng(loc.latitude, loc.longitude);
@@ -204,9 +235,9 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
         position: markerPosition,
         map,
         icon: {
-          content: markerIconHtml,
-          size: new naver.maps.Size(32, 32),
-          anchor: new naver.maps.Point(16, 16),
+          content: defaultIcon.content,
+          size: new naver.maps.Size(defaultIcon.size.w, defaultIcon.size.h),
+          anchor: new naver.maps.Point(defaultIcon.anchor.x, defaultIcon.anchor.y),
         },
         zIndex: 0,
       });
@@ -217,13 +248,14 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
     });
 
     if (offsetLocation) {
+      const homeIcon = createMarkerIconOptions(homeMarkerIconHtml);
       new naver.maps.Marker({
         position: offsetLocation,
         map,
         icon: {
-          content: homeMarkerIconHtml,
-          size: new naver.maps.Size(32, 32),
-          anchor: new naver.maps.Point(16, 16),
+          content: homeIcon.content,
+          size: new naver.maps.Size(homeIcon.size.w, homeIcon.size.h),
+          anchor: new naver.maps.Point(homeIcon.anchor.x, homeIcon.anchor.y),
         },
         zIndex: 50,
       });
@@ -232,7 +264,18 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
     if (userPositionRef.current) {
       addUserMarker();
     }
-  }, [type, checkVisibility, drawCircleAroundOffset, addUserMarker, handleMarkerClick, router]);
+  }, [
+    type,
+    checkVisibility,
+    drawCircleAroundOffset,
+    addUserMarker,
+    handleMarkerClick,
+    router,
+    setSelectedMarkerId,
+    setSelectedItem,
+    setOpen,
+    setZoomLevel,
+  ]);
 
   // ── 외부에서 data 주입 ──
   const setData = useCallback(
@@ -267,7 +310,14 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
     } else {
       console.warn('위치를 불러오지 못했습니다.');
     }
-  }, [getLocation, zoomLevel, addUserMarker, drawCircleAroundUser]);
+  }, [
+    getLocation,
+    zoomLevel,
+    addUserMarker,
+    drawCircleAroundUser,
+    setIsUserMarkerVisible,
+    setIsOffsetMarkerVisible,
+  ]);
 
   // ── 배송지로 복귀 ──
   const handleReturnToAddressLocation = useCallback(() => {
@@ -280,7 +330,7 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
       setIsUserMarkerVisible(false);
       setIsOffsetMarkerVisible(true);
     }
-  }, [zoomLevel, drawCircleAroundOffset]);
+  }, [zoomLevel, drawCircleAroundOffset, setIsUserMarkerVisible, setIsOffsetMarkerVisible]);
 
   // ── 뒤로가기 ──
   const handleBackClick = useCallback(() => {
@@ -292,11 +342,12 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
     setOpen(false);
     setZoomLevel(12);
 
+    const defaultIcon = createMarkerIconOptions(markerIconHtml);
     markersRef.current.forEach(({ marker }) => {
       marker.setIcon({
-        content: markerIconHtml,
-        size: new naver.maps.Size(32, 32),
-        anchor: new naver.maps.Point(16, 16),
+        content: defaultIcon.content,
+        size: new naver.maps.Size(defaultIcon.size.w, defaultIcon.size.h),
+        anchor: new naver.maps.Point(defaultIcon.anchor.x, defaultIcon.anchor.y),
       });
     });
 
@@ -309,14 +360,22 @@ export function useNaverMap({ type }: UseNaverMapOptions) {
     if (!isOffsetMarkerVisible) {
       setIsOffsetMarkerVisible(true);
     }
-  }, [type, selectedMarkerId, isOffsetMarkerVisible, router]);
+  }, [
+    type,
+    selectedMarkerId,
+    isOffsetMarkerVisible,
+    router,
+    setSelectedMarkerId,
+    setOpen,
+    setZoomLevel,
+    setIsOffsetMarkerVisible,
+  ]);
 
   // ── 최초 위치 로드 ──
   useEffect(() => {
-    const deliveryLocationString = localStorage.getItem(STORAGE_KEYS.DELIVERY_ADDRESS);
+    const deliveryLocation = parseStoredLocation(STORAGE_KEYS.DELIVERY_ADDRESS);
 
-    if (deliveryLocationString) {
-      const deliveryLocation = JSON.parse(deliveryLocationString);
+    if (deliveryLocation) {
       const center = { lat: deliveryLocation.lat, lng: deliveryLocation.lng };
       currentCenterRef.current = center;
       setCurrentCenter(center);

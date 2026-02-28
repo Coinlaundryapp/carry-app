@@ -1,4 +1,10 @@
 import '@testing-library/jest-dom/vitest';
+import { server } from './mocks/server';
+
+// ── MSW 서버 라이프사이클 ───────────────────────────────────────────────────
+beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 // ── SVG mock ────────────────────────────────────────────────────────────────
 // @svgr/webpack이 SVG를 React 컴포넌트로 변환하는데, Vitest에서는 이를 흉내낸다.

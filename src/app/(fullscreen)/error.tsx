@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import { useRouter } from 'next/navigation';
 import Button from '@shared/ui/Button';
 import { DeliveryManSadIcon } from '@assets/icons';
@@ -16,6 +17,7 @@ export default function FullscreenError({
 
   useEffect(() => {
     console.error('[FullscreenError]', error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

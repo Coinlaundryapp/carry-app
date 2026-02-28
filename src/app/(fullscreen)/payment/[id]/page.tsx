@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { loadTossPayments, TossPaymentsPayment } from '@tosspayments/tosspayments-sdk';
+import * as Sentry from '@sentry/nextjs';
 import Button from '@shared/ui/Button';
 import Dropdown from '@shared/ui/Dropdown/Dropdown';
 import { Radio } from '@shared/ui/Radio';
@@ -29,7 +30,9 @@ type PaymentState = {
   installment: string;
 };
 
-const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
+import { env } from '@shared/config/env';
+
+const clientKey = env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
 
 /**
  * Toss Payments customerKey 생성
@@ -97,6 +100,9 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
         setPayment(payment);
       } catch (error) {
         console.error('Error fetching payment:', error);
+        Sentry.captureException(error, {
+          tags: { source: 'toss-payment-init' },
+        });
       }
     }
 
@@ -186,6 +192,7 @@ export default function PaymentPage({ params }: Readonly<{ params: { id: string 
       }
     } catch (error) {
       console.error('[Payment] 결제 요청 실패:', error);
+      Sentry.captureException(error, { tags: { source: 'toss-payment-request' } });
 
       // WebView에서 외부 앱 호출 실패 시 에러 페이지로 이동
       if (isWebView()) {

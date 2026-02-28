@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import * as Sentry from '@sentry/nextjs';
 import Link from 'next/link';
 import { KakaoIcon } from '@assets/icons';
 import { useWebView } from '@shared/lib/useWebView';
@@ -44,6 +45,7 @@ export default function KakaoLoginButton({
 
           if (result?.error) {
             console.error('[WebViewLogin] signIn failed:', result.error);
+            Sentry.captureMessage(`WebView signIn failed: ${result.error}`, 'error');
             router.replace(`/error?error=${encodeURIComponent(result.error)}`);
             return;
           }
@@ -51,6 +53,7 @@ export default function KakaoLoginButton({
           router.replace(redirectUrl);
         } catch (error) {
           console.error('[WebViewLogin] Unexpected error:', error);
+          Sentry.captureException(error, { tags: { source: 'webview-login' } });
           router.replace('/error?error=server_error');
         } finally {
           isProcessingRef.current = false;

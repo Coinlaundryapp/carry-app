@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import Button from '@shared/ui/Button';
 import { DeliveryManSadIcon } from '@assets/icons';
 
@@ -13,6 +14,7 @@ export default function AppError({
 }) {
   useEffect(() => {
     console.error('[AppError]', error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

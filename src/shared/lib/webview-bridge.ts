@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import type { AndroidBridge } from '@shared/types/webview';
 
 /**
@@ -29,6 +30,7 @@ export function callBridge<T>(
       return action(window.AndroidBridge);
     } catch (error) {
       console.error('[WebViewBridge] Bridge call failed:', error);
+      Sentry.captureException(error, { tags: { source: 'webview-bridge' } });
       return fallback?.();
     }
   }

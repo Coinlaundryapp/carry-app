@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import { fetchExtended, ApiError } from '@shared/api/api-client';
 import { ApiResponse, AuthResponse } from '@shared/types/api-types';
 
@@ -76,6 +77,7 @@ export async function refreshAccessToken({
     };
   } catch (error) {
     console.error('[Auth] Token refresh failed:', error);
+    Sentry.captureException(error, { tags: { source: 'token-refresh' } });
     return null;
   }
 }

@@ -1,5 +1,7 @@
+import * as Sentry from '@sentry/nextjs';
 import returnFetch, { ReturnFetch } from 'return-fetch';
 import returnFetchJson from 'return-fetch-json';
+import { env } from '@shared/config/env';
 
 export class ApiError extends Error {
   status: number;
@@ -25,7 +27,14 @@ const returnFetchThrowingErrorByStatusCode: ReturnFetch = (args) =>
             .clone()
             .text()
             .catch(() => '');
-          throw new ApiError(response.status, response.url, body.slice(0, 500));
+          const apiError = new ApiError(response.status, response.url, body.slice(0, 500));
+          Sentry.addBreadcrumb({
+            category: 'api',
+            message: `${response.status} ${response.url}`,
+            level: 'error',
+            data: { body: body.slice(0, 200) },
+          });
+          throw apiError;
         }
         return response;
       },
@@ -35,6 +44,6 @@ const returnFetchThrowingErrorByStatusCode: ReturnFetch = (args) =>
 export const fetchExtended = returnFetchJson({
   jsonParser: JSON.parse,
   fetch: returnFetchThrowingErrorByStatusCode({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
+    baseUrl: env.NEXT_PUBLIC_BACKEND_URL,
   }),
 });

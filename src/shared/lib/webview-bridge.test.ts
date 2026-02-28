@@ -1,26 +1,23 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { isWebView, callBridge, registerCallback } from './webview-bridge';
 
-describe('webview-bridge', () => {
-  const originalWindow = globalThis.window;
+/* window를 Record로 안전하게 캐스팅하는 헬퍼 */
+const win = window as unknown as Record<string, unknown>;
 
+describe('webview-bridge', () => {
   afterEach(() => {
     // AndroidBridge 정리
-    if (typeof window !== 'undefined') {
-      delete (window as Record<string, unknown>).AndroidBridge;
-    }
+    delete win.AndroidBridge;
   });
 
   describe('isWebView', () => {
     it('브라우저 환경에서 AndroidBridge 없으면 false', () => {
-      delete (window as Record<string, unknown>).AndroidBridge;
+      delete win.AndroidBridge;
       expect(isWebView()).toBe(false);
     });
 
     it('WebView 환경(AndroidBridge 존재)에서 true', () => {
-      (window as Record<string, unknown>).AndroidBridge = {
-        getDeviceInfo: vi.fn(),
-      };
+      win.AndroidBridge = { getDeviceInfo: vi.fn() };
       expect(isWebView()).toBe(true);
     });
   });
@@ -28,7 +25,7 @@ describe('webview-bridge', () => {
   describe('callBridge', () => {
     it('bridge 존재 시 action 실행 + 반환값 확인', () => {
       const mockBridge = { getDeviceInfo: vi.fn().mockReturnValue('test-info') };
-      (window as Record<string, unknown>).AndroidBridge = mockBridge;
+      win.AndroidBridge = mockBridge;
 
       const result = callBridge((bridge) => bridge.getDeviceInfo());
       expect(mockBridge.getDeviceInfo).toHaveBeenCalled();
@@ -36,7 +33,7 @@ describe('webview-bridge', () => {
     });
 
     it('bridge 없을 시 fallback 실행', () => {
-      delete (window as Record<string, unknown>).AndroidBridge;
+      delete win.AndroidBridge;
       const fallback = vi.fn().mockReturnValue('fallback-value');
 
       const result = callBridge((bridge) => bridge.getDeviceInfo(), fallback);
@@ -50,7 +47,7 @@ describe('webview-bridge', () => {
           throw new Error('Bridge error');
         }),
       };
-      (window as Record<string, unknown>).AndroidBridge = mockBridge;
+      win.AndroidBridge = mockBridge;
 
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const fallback = vi.fn().mockReturnValue('recovered');
@@ -67,7 +64,7 @@ describe('webview-bridge', () => {
     });
 
     it('fallback도 없을 시 undefined 반환', () => {
-      delete (window as Record<string, unknown>).AndroidBridge;
+      delete win.AndroidBridge;
 
       const result = callBridge((bridge) => bridge.getDeviceInfo());
       expect(result).toBeUndefined();
@@ -77,27 +74,27 @@ describe('webview-bridge', () => {
   describe('registerCallback', () => {
     it('window에 콜백 등록 확인', () => {
       const callback = vi.fn();
-      registerCallback('onNativeBackPressed' as keyof Window, callback as never);
+      registerCallback('onNativeBackPressed', callback);
 
-      expect((window as Record<string, unknown>).onNativeBackPressed).toBe(callback);
+      expect(win.onNativeBackPressed).toBe(callback);
 
       // 정리
-      delete (window as Record<string, unknown>).onNativeBackPressed;
+      delete win.onNativeBackPressed;
     });
 
     it('cleanup 함수 호출 시 window에서 제거 확인', () => {
       const callback = vi.fn();
-      const cleanup = registerCallback('onNativeBackPressed' as keyof Window, callback as never);
+      const cleanup = registerCallback('onNativeBackPressed', callback);
 
-      expect((window as Record<string, unknown>).onNativeBackPressed).toBe(callback);
+      expect(win.onNativeBackPressed).toBe(callback);
 
       cleanup();
-      expect((window as Record<string, unknown>).onNativeBackPressed).toBeUndefined();
+      expect(win.onNativeBackPressed).toBeUndefined();
     });
 
     it('cleanup을 여러 번 호출해도 에러 없음', () => {
       const callback = vi.fn();
-      const cleanup = registerCallback('onNativeBackPressed' as keyof Window, callback as never);
+      const cleanup = registerCallback('onNativeBackPressed', callback);
 
       cleanup();
       expect(() => cleanup()).not.toThrow();

@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { validateAllSteps, validateForm } from '@features/address/lib/addressValidation';
-import { REQUEST_OPTIONS } from '@features/address/lib/request-options';
+import {
+  buildAddressPayload,
+  addressResponseToFormData,
+} from '@features/address/lib/address-form-utils';
 import { formatPhoneNumber } from '@shared/lib/formatPhoneNumber';
 import type { TAddressRes } from '@shared/types/api-types';
 
@@ -94,50 +97,20 @@ export function useAddressForm() {
 
   // ── 주소 페이로드 빌드 ──
 
-  const buildPayload = useCallback(() => {
-    let deliveryNotes = '';
-    if (selectedRequest.value === '4') {
-      deliveryNotes = selectedRequest.requestText;
-    } else {
-      const option = REQUEST_OPTIONS.find((o) => o.value === selectedRequest.value);
-      deliveryNotes = option ? option.label : '';
-    }
-
-    return {
-      addressLabel: formData.addressLabel,
-      recipientPhone: formData.phone,
-      recipientName: formData.name,
-      baseAddress: address.main,
-      detailAddress: address.detail,
-      deliveryNotes,
-      entranceType: selectedValue.value,
-      entranceDetail: selectedValue.text,
-    };
-  }, [formData, address, selectedValue, selectedRequest]);
+  const buildPayload = useCallback(
+    () => buildAddressPayload(formData, address, selectedValue, selectedRequest),
+    [formData, address, selectedValue, selectedRequest],
+  );
 
   // ── 편집 모드: 기존 데이터로 폼 채우기 ──
 
   const populateForm = useCallback((data: TAddressRes | undefined) => {
     if (!data) return;
-    setFormData({
-      addressLabel: data.addressLabel || '',
-      name: data.recipientName || '',
-      phone: data.recipientPhone || '',
-    });
-    setAddress({
-      main: data.baseAddress || '',
-      detail: data.detailAddress || '',
-    });
-    setSelectedValue({
-      value: data.entranceType || '1',
-      text: data.entranceDetail || '',
-    });
-    setSelectedRequest({
-      value: data.deliveryNotes
-        ? REQUEST_OPTIONS.find((option) => option.label === data.deliveryNotes)?.value || '4'
-        : '1',
-      requestText: data.deliveryNotes || '',
-    });
+    const result = addressResponseToFormData(data);
+    setFormData(result.formData);
+    setAddress(result.address);
+    setSelectedValue(result.entrance);
+    setSelectedRequest(result.request);
   }, []);
 
   return {

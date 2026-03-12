@@ -2,9 +2,9 @@ name: Code Quality
 
 on:
   pull_request:
-    branches: [dev, main]
+    branches: [develop, main]
   push:
-    branches: [dev]
+    branches: [develop]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -12,9 +12,9 @@ concurrency:
 
 jobs:
   quality:
-    name: Lint · Format · Typecheck
+    name: Lint · Typecheck · Test · Build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -35,21 +35,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: ESLint
-        run: pnpm lint
+        run: pnpm turbo run lint
 
       - name: Prettier
         run: pnpm format:check
 
       - name: TypeScript
-        run: pnpm typecheck
+        run: pnpm turbo run typecheck
 
       - name: Unit Tests
-        run: pnpm test
+        run: pnpm turbo run test
 
       - name: Build
-        run: pnpm build
+        run: pnpm turbo run build
         env:
-          NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
-          NEXT_PUBLIC_KAKAO_REDIRECT_URL: ${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
-          NEXT_PUBLIC_KAKAO_REST_API_KEY: ${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }}
-          NEXT_PUBLIC_NAVER_ID: ${{ secrets.NEXT_PUBLIC_NAVER_ID }}
+          SKIP_ENV_VALIDATION: 1

@@ -11,8 +11,8 @@ function Loading({ text }: TProps) {
       <FramIcon />
       <CarIcon />
       <div className="flex flex-col items-center justify-center">
-        <h2 className="font-semibold font-headline-1">잠시만 기다려 주세요!</h2>
-        <p className="font-medium text-label-alternative font-body-1-reading">
+        <h2 className="font-headline-1 font-semibold">잠시만 기다려 주세요!</h2>
+        <p className="text-label-alternative font-body-1-reading font-medium">
           {text ? text : '해당 페이지로 이동하고 있어요'}
         </p>
       </div>

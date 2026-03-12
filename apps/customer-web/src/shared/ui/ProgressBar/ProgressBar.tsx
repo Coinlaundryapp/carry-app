@@ -21,7 +21,7 @@ export default function ProgressBar({
 }) {
   return (
     <ProgressPrimitive.Root
-      className="relative h-2 w-full overflow-hidden rounded-md bg-label-disable"
+      className="bg-label-disable relative h-2 w-full overflow-hidden rounded-md"
       value={percent}
     >
       <ProgressPrimitive.Indicator

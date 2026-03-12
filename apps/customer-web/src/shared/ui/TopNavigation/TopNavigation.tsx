@@ -31,7 +31,7 @@ export default function TopNavigation({
         {type === 'close' ? <CloseIcon /> : <ArrowLeftIcon />}
       </button>
 
-      <p className="font_headline_1 font-semibold text-label-strong">{title}</p>
+      <p className="font_headline_1 text-label-strong font-semibold">{title}</p>
       <div className="flex h-9 w-9 items-center justify-center">
         {rightClick && (
           <button onClick={rightClick} className="p-1.5">

@@ -20,10 +20,10 @@ function CollapsiblePanel({ value, title, children, additionalContent }: TProps)
               <span>{title}</span>
               {additionalContent && additionalContent}
             </div>
-            <ChevronDownIcon className="h-4 w-4 shrink-0 text-label-alternative transition-transform duration-200" />
+            <ChevronDownIcon className="text-label-alternative h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionPrimitive.Trigger>
         </AccordionPrimitive.Header>
-        <AccordionPrimitive.Content className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+        <AccordionPrimitive.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm">
           <div className="pb-4 pt-0">{children}</div>
         </AccordionPrimitive.Content>
       </AccordionPrimitive.Item>

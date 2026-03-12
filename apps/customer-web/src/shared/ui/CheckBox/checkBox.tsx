@@ -69,7 +69,7 @@ export function CheckBox({ checked, onClick, label, textClassName, type = 'squar
       {label && (
         <label
           htmlFor={id}
-          className={twMerge('cursor-pointer text-label-normal font-body-2-normal', textClassName)}
+          className={twMerge('text-label-normal font-body-2-normal cursor-pointer', textClassName)}
         >
           {label}
         </label>

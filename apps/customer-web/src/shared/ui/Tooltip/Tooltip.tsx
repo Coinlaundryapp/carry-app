@@ -38,7 +38,7 @@ export default function Tooltip({
       {children}
       <div className="absolute -left-[88px] -top-[40px]">
         <ToolTipBoxIcon className="relative" />
-        <p className="absolute left-2.5 top-1.5 font-normal text-white font-label-1-normal">
+        <p className="font-label-1-normal absolute left-2.5 top-1.5 font-normal text-white">
           {message}
         </p>
       </div>

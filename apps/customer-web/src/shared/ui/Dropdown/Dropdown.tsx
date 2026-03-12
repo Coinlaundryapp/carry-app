@@ -39,13 +39,13 @@ export default function Dropdown({
     <SelectPrimitive.Root value={value} onValueChange={onChange} disabled={disabled}>
       <SelectPrimitive.Trigger
         className={cn(
-          'flex h-12 w-full items-center justify-between whitespace-nowrap rounded-md border border-line-normal bg-transparent px-4 py-3 focus:outline-none',
+          'border-line-normal flex h-12 w-full items-center justify-between whitespace-nowrap rounded-md border bg-transparent px-4 py-3 focus:outline-none',
           value === '' && 'text-label-assistive',
           className,
         )}
       >
         <p
-          className={cn('truncate font-medium text-label-neutral font-body-2-reading', {
+          className={cn('text-label-neutral font-body-2-reading truncate font-medium', {
             'font-label-1-normal': type === 'time',
             'text-label-assistive': value === '',
           })}
@@ -55,7 +55,7 @@ export default function Dropdown({
         <SelectPrimitive.Icon asChild>
           <ArrowDownIcon
             className={cn(
-              'h-[14px] w-[14px] flex-shrink-0 fill-label-normal transition-transform duration-200',
+              'fill-label-normal h-[14px] w-[14px] flex-shrink-0 transition-transform duration-200',
               value === '' && 'fill-label-assistive',
             )}
           />
@@ -64,7 +64,7 @@ export default function Dropdown({
 
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
-          className="relative z-50 max-h-64 min-w-[8rem] overflow-hidden rounded-[10px] border bg-white font-medium text-label-neutral shadow-emphasize font-body-2-reading data-[side=bottom]:translate-y-3 data-[side=left]:-translate-x-3 data-[side=right]:translate-x-3 data-[side=top]:-translate-y-3 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+          className="text-label-neutral shadow-emphasize font-body-2-reading data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-64 min-w-[8rem] overflow-hidden rounded-[10px] border bg-white font-medium data-[side=bottom]:translate-y-3 data-[side=left]:-translate-x-3 data-[side=right]:translate-x-3 data-[side=top]:-translate-y-3"
           position="popper"
         >
           <SelectPrimitive.Viewport
@@ -78,8 +78,8 @@ export default function Dropdown({
                 key={item.value}
                 value={item.value}
                 className={cn(
-                  'flex w-full cursor-default items-center gap-[10px] px-4 py-3 outline-none active:bg-cyan-50 active:text-primary-normal',
-                  item.value === value && 'bg-cyan-50 text-primary-normal',
+                  'active:text-primary-normal flex w-full cursor-default items-center gap-[10px] px-4 py-3 outline-none active:bg-cyan-50',
+                  item.value === value && 'text-primary-normal bg-cyan-50',
                 )}
               >
                 {indicator === 'radio' && <RadioIndicator checked={item.value === value} />}

@@ -66,7 +66,7 @@ export function BottomNavigation() {
               className={`${isCurrentPage ? 'text-primary-normal' : 'text-interaction-inactive'}`}
             >
               <Link href={item.path}>
-                <figure className="flex w-[62px] flex-col items-center gap-[4px] font-medium font-caption-1">
+                <figure className="font-caption-1 flex w-[62px] flex-col items-center gap-[4px] font-medium">
                   {isCurrentPage ? Icon[item.icon].active : Icon[item.icon].inactive}
                   <figcaption>{item.title}</figcaption>
                 </figure>

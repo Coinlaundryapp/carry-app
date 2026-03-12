@@ -12,8 +12,8 @@ import Link from 'next/link';
 export default function Footer() {
   return (
     <footer className="flex flex-col gap-5 bg-white px-5 pt-10">
-      <p className="font-bold font-label-1-reading">캐리</p>
-      <div className="flex flex-col gap-2 font-medium text-label-assistive font-caption-1">
+      <p className="font-label-1-reading font-bold">캐리</p>
+      <div className="text-label-assistive font-caption-1 flex flex-col gap-2 font-medium">
         <p>사업자 등록번호 : {BUSINESS_NUMBER}</p>
         <p>대표 : {REPRESENTATIVE}</p>
         <p>주소 : {ADDRESS}</p>
@@ -22,9 +22,9 @@ export default function Footer() {
         <p>고객센터 : {CUSTOMER_SERVICE}</p>
         <p>{COPYRIGHT}</p>
       </div>
-      <div className="flex items-center gap-2 font-medium text-label-assistive font-caption-1">
+      <div className="text-label-assistive font-caption-1 flex items-center gap-2 font-medium">
         <Link href="#">이용약관</Link>
-        <div className="h-3 w-[1px] bg-label-assistive" />
+        <div className="bg-label-assistive h-3 w-[1px]" />
         <Link href="#">개인정보 처리방침</Link>
       </div>
     </footer>

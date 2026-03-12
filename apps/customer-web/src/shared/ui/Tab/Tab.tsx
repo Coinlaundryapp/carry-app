@@ -19,7 +19,7 @@ export default function Tab({ defaultTab, data }: TabProps) {
           <TabsPrimitive.Trigger
             key={tab.value}
             value={tab.value}
-            className="inline-flex w-full items-center justify-center border-b border-fill-alternative py-3 font-semibold text-label-alternative transition-all font-body-1-normal data-[state=active]:border-b-2 data-[state=active]:border-primary-normal data-[state=active]:text-primary-normal"
+            className="border-fill-alternative text-label-alternative font-body-1-normal data-[state=active]:border-primary-normal data-[state=active]:text-primary-normal inline-flex w-full items-center justify-center border-b py-3 font-semibold transition-all data-[state=active]:border-b-2"
           >
             {tab.label}
           </TabsPrimitive.Trigger>

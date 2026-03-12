@@ -29,7 +29,7 @@ export default function Alert({ status, label }: AlertProps) {
           })}
         />
       )}
-      <p className="font-semibold text-white font-body-2-normal">{label}</p>
+      <p className="font-body-2-normal font-semibold text-white">{label}</p>
     </div>
   );
 }

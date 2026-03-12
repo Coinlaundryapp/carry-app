@@ -77,9 +77,9 @@ export default function Modal() {
         )}
 
         <div className="mb-1 flex h-full flex-col items-center justify-center gap-2 whitespace-pre-wrap text-center">
-          <h3 className="font-semibold text-label-normal font-headline-1">{title}</h3>
+          <h3 className="text-label-normal font-headline-1 font-semibold">{title}</h3>
           {description && (
-            <p className="font-normal text-label-neutral font-body-2-normal">{description}</p>
+            <p className="text-label-neutral font-body-2-normal font-normal">{description}</p>
           )}
         </div>
         <div className="flex w-full gap-5 px-5">

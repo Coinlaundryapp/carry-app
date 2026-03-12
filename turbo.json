@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalPassThroughEnv": ["SKIP_ENV_VALIDATION", "VITEST"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

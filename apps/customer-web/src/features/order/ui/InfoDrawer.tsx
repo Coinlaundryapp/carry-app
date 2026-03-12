@@ -1,0 +1,33 @@
+import Image from 'next/image';
+import Button from '@shared/ui/Button';
+import { Drawer, DrawerClose, DrawerContent } from '@shared/ui/primitives/drawer';
+import { DialogTitle } from '@shared/ui/primitives/dialog';
+
+export default function InfoDrawer({ defaultOpen }: { defaultOpen: boolean }) {
+  return (
+    <Drawer defaultOpen={defaultOpen}>
+      <DrawerContent showIndicator={false}>
+        <div className="text-label-strong font-heading-2 flex w-full flex-col items-center px-6 pb-5 pt-[30px] font-semibold">
+          <DialogTitle asChild>
+            <p>
+              <span className="text-primary-normal">검흰빨래</span> 걱정이신가요?
+            </p>
+          </DialogTitle>
+          <p>이염 방지 시트 사용하니 걱정마세요!</p>
+          <Image
+            src="/assets/images/basket.png"
+            alt="Laundry info"
+            width={120}
+            height={120}
+            className="mb-8 mt-6"
+          />
+          <DrawerClose asChild>
+            <Button state="fillPrimary" size="full">
+              확인
+            </Button>
+          </DrawerClose>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}

@@ -20,7 +20,7 @@ export default function Alert({ status, label }: AlertProps) {
   return (
     <div className={cn(alertVariants({ status }))}>
       {status === 'error' ? (
-        <CautionIcon />
+        <CautionIcon className="h-[18px] w-[18px]" />
       ) : (
         <CircleCheckIcon
           className={clsx('h-[18px] w-[18px]', {

@@ -1,0 +1,30 @@
+'use client';
+
+import { TopNavigation } from '@shared/ui/TopNavigation';
+import { useAddressStore } from '@features/address/model/address-store';
+import { useRouter } from 'next/navigation';
+
+export default function Layout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const router = useRouter();
+  const { addressModalOpen, setAddressModalOpen } = useAddressStore();
+
+  const handleBackClick = () => {
+    if (addressModalOpen) {
+      setAddressModalOpen(false);
+    } else {
+      router.back();
+    }
+  };
+
+  return (
+    <>
+      <TopNavigation type="back" title="배송지 추가" leftClick={handleBackClick} />
+
+      {children}
+    </>
+  );
+}

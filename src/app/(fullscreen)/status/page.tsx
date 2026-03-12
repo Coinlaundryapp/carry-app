@@ -1,8 +1,8 @@
 'use client';
 
-import { getOrderList } from '@/api/getOrderList';
-import Button from '@/components/share/Button/Button';
-import StatusCard from '@/components/status/StatusCard';
+import { getOrderList } from '@features/status/api/getOrderList';
+import Button from '@shared/ui/Button/Button';
+import StatusCard from '@features/status/ui/StatusCard';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -18,8 +18,6 @@ const Page = () => {
     enabled: !!accessToken,
   });
 
-  console.log(orderList);
-
   return orderList?.length ? (
     <div className="flex h-full w-full flex-col gap-[12px]">
       <div className="flex px-[20px] py-[24px]">
@@ -27,7 +25,7 @@ const Page = () => {
       </div>
       <div className="flex flex-col gap-[20px]">
         {orderList?.map((order) => (
-          <StatusCard key={order.id} info={[]} status={order.status} hasButton />
+          <StatusCard key={order.id} info={order} status={order.status} hasButton />
         ))}
       </div>
     </div>
@@ -37,7 +35,7 @@ const Page = () => {
         <p className="font_headline_2 text-label-neutral">
           아직 <br /> 내 세탁 기록이 없어요!
         </p>
-        <Seperate alt="..." width={120} height={120} />
+        <Seperate aria-label="분리세탁 아이콘" width={120} height={120} />
       </div>
       <div className="flex flex-1 items-center justify-center">
         <div className="flex flex-col items-center gap-[32px]">

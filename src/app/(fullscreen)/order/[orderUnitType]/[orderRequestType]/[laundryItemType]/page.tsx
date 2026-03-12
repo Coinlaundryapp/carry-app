@@ -3,10 +3,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { getPrices } from '@/api/order';
-import LaundryFunnel from '@/components/order/LaundryFunnel';
-import Loading from '@/components/share/Loading';
-import { LaundryItemType, OrderRequestType, OrderUnitType } from '@/types/laundry-type';
+import { getPrices } from '@features/order/api/order';
+import LaundryFunnel from '@features/order/ui/LaundryFunnel';
+import Loading from '@shared/ui/Loading';
+import {
+  LaundryItemType,
+  OrderRequestType,
+  OrderUnitType,
+} from '@features/order/types/laundry-type';
 
 export default function LaundryPage({
   params,

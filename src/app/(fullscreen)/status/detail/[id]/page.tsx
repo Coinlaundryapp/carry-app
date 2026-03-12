@@ -1,12 +1,12 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
-import { TopNavigation } from '@/components/share/TopNavigation';
+import Button from '@shared/ui/Button/Button';
+import { TopNavigation } from '@shared/ui/TopNavigation';
 import { useRouter } from 'next/navigation';
 import QuestionMark from '@assets/icons/question_mark.svg';
 import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
-import { getOrderDetail } from '@/api/getOrderDetail';
+import { getOrderDetail } from '@features/status/api/getOrderDetail';
 
 export default function OrederStatusDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -20,8 +20,6 @@ export default function OrederStatusDetailPage({ params }: { params: { id: strin
     queryFn: () => getOrderDetail(accessToken, Number(orderId)),
     enabled: !!accessToken,
   });
-
-  console.log(orderDetail);
 
   return (
     <>
@@ -62,7 +60,7 @@ export default function OrederStatusDetailPage({ params }: { params: { id: strin
               <div className="flex items-center justify-between">
                 <span className="font_body_1_reading font-semibold">세탁 서비스</span>
                 <span className="font_body_1_reading font-semibold">
-                  {orderDetail?.orderContent.orderUnitType === "SOLO" }
+                  {orderDetail?.orderContent.orderUnitType === 'SOLO'}
                 </span>
               </div>
               <div className="flex flex-col gap-[12px]">

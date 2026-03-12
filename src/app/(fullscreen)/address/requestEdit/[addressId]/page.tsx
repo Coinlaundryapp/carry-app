@@ -2,10 +2,10 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import AddressRequest from '@/components/address/AddressRequest';
-import { TopNavigation } from '@/components/share/TopNavigation';
-import EntrancePassword from '@/components/address/EntrancePassword';
-import Button from '@/components/share/Button';
+import AddressRequest from '@features/address/ui/AddressRequest';
+import { TopNavigation } from '@shared/ui/TopNavigation';
+import EntrancePassword from '@features/address/ui/EntrancePassword';
+import Button from '@shared/ui/Button';
 
 export default function AddressRequestEditPage({
   params,

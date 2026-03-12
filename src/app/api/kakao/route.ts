@@ -1,4 +1,4 @@
-import { signIn } from '@/auth';
+import { signIn } from '@features/auth/api/auth';
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
@@ -39,8 +39,8 @@ export async function GET(request: Request) {
     return NextResponse.redirect(origin + redirectUrl);
   } catch (error) {
     console.error('Sign in error:', error);
-    // @ts-ignore
-    const errorMessage = error.cause?.err || 'Unknown error';
+    const errorMessage =
+      (error as Error & { cause?: { err?: string } })?.cause?.err || 'Unknown error';
     return NextResponse.redirect(origin + `/error?error=${encodeURIComponent(errorMessage)}`);
   }
 }

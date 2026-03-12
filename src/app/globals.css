@@ -100,7 +100,8 @@
     /* Shadow */
     --elevation-button: 0px 0px 8px 0px #2f74eb1a;
     --elevation-normal: 0px 1px 2px 0px #0000001f;
-    --elevation-emphasize: 0px 2px 8px 0px rgba(0, 0, 0, 0.12), 0px 1px 4px 0px rgba(0, 0, 0, 0.08),
+    --elevation-emphasize:
+      0px 2px 8px 0px rgba(0, 0, 0, 0.12), 0px 1px 4px 0px rgba(0, 0, 0, 0.08),
       0px 0px 1px 0px rgba(0, 0, 0, 0.08);
     --elevation-strong: 0px 6px 12px 0px #0000001f;
     --elevation-heavy: 0px 16px 20px 0px #0000001f;
@@ -281,5 +282,23 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Safe Area - WebView 노치/상태바/홈 인디케이터 대응 */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .safe-area-x {
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+  .safe-area-all {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
   }
 }

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import HomeCard from '@/components/ui/HomeCard';
+import HomeCard from '@shared/ui/HomeCard';
 
 import {
   ArrowRightIcon,
@@ -12,8 +12,8 @@ import {
   SneakersIcon,
   VolumeIcon,
 } from '@assets/icons';
-import Tooltip from '@/components/share/Tooltip';
-import Footer from '@/components/share/Footer/Footer';
+import Tooltip from '@shared/ui/Tooltip';
+import Footer from '@shared/ui/Footer/Footer';
 
 const CARD_DATA = [
   {

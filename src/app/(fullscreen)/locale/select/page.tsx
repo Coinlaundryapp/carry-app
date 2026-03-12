@@ -1,15 +1,15 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
-import MessageCard from '@/components/ui/MessageCard';
-import SelectCard from '@/components/ui/SelectCard';
-import { ACTIVATED_CITY } from '@/constants/activate-region';
+import Button from '@shared/ui/Button/Button';
+import MessageCard from '@shared/ui/MessageCard';
+import SelectCard from '@shared/ui/SelectCard';
+import { ACTIVATED_CITY } from '@features/location/lib/activate-region';
 import { useRouter } from 'next/navigation';
 import SeoulImg from '@assets/images/seoul-image.svg';
 import IncheonImg from '@assets/images/incheon-image.svg';
-import { useModalStore } from '@/store/modal-store';
+import { useModalStore } from '@shared/model/modal-store';
 import { useQuery } from '@tanstack/react-query';
-import { getServiceAvailabiltyRegion } from '@/api/getServiceAvailabilityRegion';
+import { getServiceAvailabiltyRegion } from '@features/location/api/getServiceAvailabilityRegion';
 
 const SelectLocalePage = () => {
   const router = useRouter();

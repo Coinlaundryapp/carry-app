@@ -1,7 +1,7 @@
 'use client';
 
-import { TopNavigation } from '@/components/share/TopNavigation';
-import { useAddressStore } from '@/store/address-store';
+import { TopNavigation } from '@shared/ui/TopNavigation';
+import { useAddressStore } from '@features/address/model/address-store';
 import { useRouter } from 'next/navigation';
 
 export default function Layout({

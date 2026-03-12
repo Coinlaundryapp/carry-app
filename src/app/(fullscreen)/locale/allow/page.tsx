@@ -1,9 +1,9 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
+import Button from '@shared/ui/Button/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
-import SeoulMap from '@/components/ui/SeoulMap';
-import IncheonMap from '@/components/ui/IncheonMap';
+import SeoulMap from '@features/location/ui/SeoulMap';
+import IncheonMap from '@features/location/ui/IncheonMap';
 
 const AllowLocationPage = () => {
   const rotuer = useRouter();

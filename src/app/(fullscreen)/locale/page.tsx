@@ -1,14 +1,14 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
+import Button from '@shared/ui/Button/Button';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import LocaleImg from '@assets/images/locale-image.png';
-import { ACTIVATED_CITY } from '@/constants/activate-region';
-import { useModalStore } from '@/store/modal-store';
-import { useGeoLocation } from '@/hooks/useGeoLocation';
-import { fetchExtended } from '@/api/api-client';
-import { ApiResponse, ServiceAvailabilityResponse } from '@/types/api-types';
+import { ACTIVATED_CITY } from '@features/location/lib/activate-region';
+import { useModalStore } from '@shared/model/modal-store';
+import { useGeoLocation } from '@features/location/lib/useGeoLocation';
+import { fetchExtended } from '@shared/api/api-client';
+import { ApiResponse, ServiceAvailabilityResponse } from '@shared/types/api-types';
 
 const LocalePage = () => {
   const router = useRouter();

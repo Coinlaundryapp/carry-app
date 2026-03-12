@@ -1,14 +1,14 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
-import { Input } from '@/components/share/Input';
+import Button from '@shared/ui/Button/Button';
+import { Input } from '@shared/ui/Input';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LocaleImg from '@assets/images/locale-image.png';
 import Image from 'next/image';
-import { useModalStore } from '@/store/modal-store';
+import { useModalStore } from '@shared/model/modal-store';
 import { useSession } from 'next-auth/react';
-import { fetchExtended } from '@/api/api-client';
-import { NotificationBody } from '@/types/api-types';
+import { fetchExtended } from '@shared/api/api-client';
+import { NotificationBody } from '@shared/types/api-types';
 import { useState } from 'react';
 
 const OpenNotificationPage = () => {

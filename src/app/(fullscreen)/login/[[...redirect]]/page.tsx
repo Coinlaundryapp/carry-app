@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { KakaoIcon } from '@assets/icons';
 import { headers } from 'next/headers';
+import KakaoLoginButton from '@features/auth/ui/KakaoLoginButton';
+import { env } from '@shared/config/env';
 
-const KAKAO_REST_API_KEY = process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY as string;
-const KAKAO_REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL as string;
+const KAKAO_REST_API_KEY = env.NEXT_PUBLIC_KAKAO_REST_API_KEY;
+const KAKAO_REDIRECT_URL = env.NEXT_PUBLIC_KAKAO_REDIRECT_URL;
 
 export default async function Login({
   params,
@@ -31,6 +31,17 @@ export default async function Login({
   url.searchParams.append('redirect_uri', BASE_URL + '/api/kakao');
   url.searchParams.append('state', encodeURIComponent(JSON.stringify(state)));
 
+  // WebView 로그인 완료 후 리다이렉트 경로 계산
+  const redirectPath = redirect ? redirect.join('/') : '';
+  const queryString = new URLSearchParams(searchParams as Record<string, string>).toString();
+  const webViewRedirectUrl = [
+    '/login-done',
+    redirectPath && `/${redirectPath}`,
+    queryString && `?${queryString}`,
+  ]
+    .filter(Boolean)
+    .join('');
+
   return (
     <main className="flex flex-col items-center gap-10 px-4 pt-[74px] text-center">
       <div>
@@ -49,13 +60,7 @@ export default async function Login({
       </div>
       <Image src="/assets/images/login-image.png" alt="Laundry" width={390} height={308} />
 
-      <Link
-        href={url.toString()}
-        className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#FEE500] p-4 font-bold font-body-1-reading"
-      >
-        <KakaoIcon />
-        <p>카카오로 시작하기</p>
-      </Link>
+      <KakaoLoginButton oauthUrl={url.toString()} redirectUrl={webViewRedirectUrl} />
     </main>
   );
 }

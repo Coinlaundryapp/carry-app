@@ -1,6 +1,6 @@
 'use client';
 
-import { TopNavigation } from '@/components/share/TopNavigation';
+import { TopNavigation } from '@shared/ui/TopNavigation';
 import { useRouter } from 'next/navigation';
 
 export default function Layout({

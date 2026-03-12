@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { debounce } from 'es-toolkit';
-import ScrollUpButton from '@/components/share/ScrollUpButton/ScrollUpButton';
-import { BottomNavigation } from '@/components/share/BottomNavigation';
-import Toast from '@/components/share/Toast';
-import { Modal } from '@/components/share/Modal';
+import ScrollUpButton from '@shared/ui/ScrollUpButton/ScrollUpButton';
+import { BottomNavigation } from '@shared/ui/BottomNavigation';
+import Toast from '@shared/ui/Toast';
+import { Modal } from '@shared/ui/Modal';
+import Loading from '@shared/ui/Loading';
 
 export default function Layout({
   children,
@@ -32,12 +33,12 @@ export default function Layout({
         divElement.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [isVisible]);
+  }, []);
 
   return (
-    <div className="relative mx-auto flex h-dvh max-w-[480px] flex-col justify-between overflow-hidden bg-white">
+    <div className="safe-area-top relative mx-auto flex h-dvh max-w-[480px] flex-col justify-between overflow-hidden bg-white">
       <div className="scrollbar-hide h-full w-full overflow-scroll pb-8" ref={ref}>
-        {children}
+        <Suspense fallback={<Loading />}>{children}</Suspense>
       </div>
 
       {isVisible && <ScrollUpButton onClick={scrollToTop} />}

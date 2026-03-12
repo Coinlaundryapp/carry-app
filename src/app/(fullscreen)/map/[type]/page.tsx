@@ -1,32 +1,14 @@
 'use client';
-import { useGeoLocation } from '@/hooks/useGeoLocation';
+
 import { useEffect, useRef, useState } from 'react';
-import { useLocationStore } from '@/store/location-store';
-import {
-  markerIconHtml,
-  selectedMarkerIconHtml,
-  homeMarkerIconHtml,
-  userMarkerIconHtml,
-} from './marker';
-import {
-  ArrowLeftIcon,
-  GuidWashIcon,
-  GuideDrayerIcon,
-  GuideSneakerIcon,
-  IndicatorIcon,
-  MapBackIcon,
-  UserCurrentMarkerIcon,
-  SelectedCurrentUser,
-} from '@assets/icons';
-import CoinlaundryDefault from '@/components/map/CoinlaundryDefault';
 import { useQuery } from '@tanstack/react-query';
-import { getLaundromats } from '@/api/mapApi';
+import { useParams } from 'next/navigation';
+import { getLaundromats } from '@features/map/api/mapApi';
+import { useNaverMap } from '@features/map/lib/useNaverMap';
 import Loading from '@/app/loading';
-import CoinlaundrySelectedItem from '@/components/map/CoinlaundrySelectedItem';
-import { useParams, useRouter } from 'next/navigation';
-import { TLaundromats } from '@/types/map-type';
-import ImageView from '@/components/map/ImageView';
-import { useAddressStore } from '@/store/address-store';
+import ImageView from '@features/map/ui/ImageView';
+import MapBottomPanel from '@features/map/ui/MapBottomPanel';
+import MapControlOverlay from '@features/map/ui/MapControlOverlay';
 
 type TImages = {
   mediaUrl: string;
@@ -34,494 +16,80 @@ type TImages = {
 };
 
 export default function MapPage() {
-  const { getLocation } = useGeoLocation();
-  const mapRef = useRef<naver.maps.Map | null>(null);
-  const userPositionRef = useRef<naver.maps.LatLng | null>(null);
-  const offsetCenterRef = useRef<naver.maps.LatLng | null>(null);
-  const [selectedMarkerId, setSelectedMarkerId] = useState<number>(0); // 선택된 마커 ID 상태
-  const [open, setOpen] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState<number>(12); // 줌 레벨 상태
-  const [currentCenter, setCurrentCenter] = useState<naver.maps.LatLng | null | any>(null);
-  const [selectedItem, setSelectedItem] = useState<any>(null);
-  const [isOffsetMarkerVisible, setIsOffsetMarkerVisible] = useState(true);
-  const [isUserMarkerVisible, setIsUserMarkerVisible] = useState(false);
-  const [isOrderInit, setIsOrderInit] = useState(false);
-  const [isImagView, setIsImageView] = useState(false);
-  const [seletedImges, setSelectedImages] = useState<TImages[]>([]);
-  const previousSelectedMarkerRef = useRef<naver.maps.Marker | null>(null);
-  const markersRef = useRef<{ id: number; marker: naver.maps.Marker }[]>([]);
-  const userCircleRef = useRef<naver.maps.Circle | null>(null); // 유저 주위 원
-  const offsetCircleRef = useRef<naver.maps.Circle | null>(null);
-  const userMarkerRef = useRef<naver.maps.Marker | null>(null);
-
-  const [startY, setStartY] = useState(0);
-  const [expanded, setExpanded] = useState(false);
-
   const { type } = useParams();
-  const router = useRouter();
-  const { location } = useLocationStore();
-  const { selectedAddressId } = useAddressStore();
-  console.log('sss', selectedAddressId);
+
+  // ── 이미지 뷰 상태 ──
+  const [isImageView, setIsImageView] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<TImages[]>([]);
+  const wasImageViewRef = useRef(false);
+
+  // ── 맵 컨트롤러 (data는 아래 useEffect에서 주입) ──
+  const map = useNaverMap({ type: type as string });
+
+  // ── 세탁소 데이터 조회 ──
   const { data, isLoading } = useQuery({
-    queryKey: ['laundromats', currentCenter],
-    queryFn: () => getLaundromats(currentCenter),
-    enabled: !!currentCenter,
+    queryKey: ['laundromats', map.currentCenter],
+    queryFn: () => getLaundromats(map.currentCenter),
+    enabled: !!map.currentCenter,
   });
 
-  /**
-   * 배송지 또는 임시 설정 구역을 가져오는 함수
-   */
-  const getLocationFromLocalStorage = () => {
-    const deliveryLocationString = localStorage.getItem('배송지');
-
-    let offsetLocation;
-    if (deliveryLocationString) {
-      const deliveryLocation = JSON.parse(deliveryLocationString);
-      offsetLocation = new naver.maps.LatLng(deliveryLocation.lat, deliveryLocation.lng);
-      setCurrentCenter({ lat: deliveryLocation.lat, lng: deliveryLocation.lng });
-    } else if (location) {
-      console.log('머냐');
-      const temporaryLocation = {
-        lat: 37.6055942215336,
-        lng: 126.920904663729,
-      };
-
-      offsetLocation = new naver.maps.LatLng(temporaryLocation.lat, temporaryLocation.lng);
-      setCurrentCenter({ lat: temporaryLocation.lat, lng: temporaryLocation.lng });
-    }
-
-    return offsetLocation;
-  };
-
+  // ── data가 로드되면 맵에 주입 — map 객체는 매 렌더마다 새로 생성되므로 개별 메서드만 참조 ──
   useEffect(() => {
-    // if (location.lat === 0 && location.lng === 0) {
-    //   router.push('/locale');
-    // }
-    // 테스트용으로 해놓음 아직 임시저장 구역이 api가 안되어있음
+    map.setData(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, map.setData]);
 
-    getLocationFromLocalStorage();
-  }, [router]);
-
-  const handleMarkerClick = (markerId: number) => {
-    const selectedMarkerData = data?.find((item: TLaundromats) => item.id === markerId);
-    if (!selectedMarkerData) return;
-
-    const selectedMarkerObj = markersRef.current.find((m) => m.id === markerId)?.marker;
-    if (!selectedMarkerObj) {
-      console.error(`Marker not found for ID: ${markerId}`);
-      return;
-    }
-
-    setSelectedMarkerId(markerId);
-    setSelectedItem(selectedMarkerData);
-    setOpen(true);
-
-    // 이전에 선택된 마커가 있으면 기본 상태로 되돌림
-    if (
-      previousSelectedMarkerRef.current &&
-      previousSelectedMarkerRef.current !== selectedMarkerObj
-    ) {
-      previousSelectedMarkerRef.current.setIcon({
-        content: markerIconHtml,
-        size: new naver.maps.Size(32, 32),
-        anchor: new naver.maps.Point(16, 16),
-      });
-    }
-
-    // 선택된 마커의 아이콘을 변경
-    selectedMarkerObj.setIcon({
-      content: selectedMarkerIconHtml,
-      size: new naver.maps.Size(32, 32),
-      anchor: new naver.maps.Point(16, 16),
-    });
-    selectedMarkerObj.setZIndex(15);
-
-    // 선택된 마커로 업데이트
-    previousSelectedMarkerRef.current = selectedMarkerObj;
-
-    // 지도 중심 이동
-    mapRef.current?.panTo(selectedMarkerObj.getPosition());
-  };
-
-  const initMap = async () => {
-    // if (location) {
-    //   const userPosition = new naver.maps.LatLng(location.latitude, location.longitude);
-    //   userPositionRef.current = userPosition;
-
-    const savedLocationString = localStorage.getItem('임시설정구역');
-
-    if (type === 'order' && data && !isOrderInit) {
-      setSelectedMarkerId(data[0].id);
-      setSelectedItem(data[0]);
-      setOpen(true);
-      setIsOrderInit(true);
-    }
-
-    let offsetLocation;
-    if (savedLocationString) {
-      const savedLocation = JSON.parse(savedLocationString);
-      offsetLocation = new naver.maps.LatLng(savedLocation.lat, savedLocation.lng);
-
-      offsetCenterRef.current = offsetLocation;
-    } else {
-      router.back();
-    }
-
-    // 배송지 또는 임시구역 장소
-    const map = new naver.maps.Map('map', {
-      center: currentCenter,
-      zoom: 12, // 초기 줌 레벨 설정
-      padding: { top: 10, bottom: 10, left: 10, right: 10 },
-      maxZoom: 17,
-      minZoom: 11,
-      mapDataControl: false,
-      scaleControl: false,
-
-      scaleControlOptions: {
-        position: naver.maps.Position.TOP_RIGHT,
-      },
-      mapDataControlOptions: {
-        position: naver.maps.Position.TOP_RIGHT,
-      },
-
-      logoControlOptions: { position: naver.maps.Position.RIGHT_CENTER },
-    });
-
-    mapRef.current = map;
-
-    // 줌 레벨 변경을 추적하여 상태에 저장
-    naver.maps.Event.addListener(map, 'zoom_changed', () => {
-      setZoomLevel(map.getZoom());
-    });
-
-    // **지도 중심 변경을 추적하여 상태에 저장**
-    // naver.maps.Event.addListener(map, 'center_changed', () => {
-    //   const newCenter = map.getCenter();
-
-    //   setCurrentCenter({ lat: newCenter.y, lng: newCenter.x });
-    // });
-
-    naver.maps.Event.addListener(map, 'dragend', () => {
-      checkOffsetMarkerVisibility(map); // 드래그 후 오프셋 마커의 가시성 체크
-    });
-
-    if (offsetCenterRef.current) {
-      drawCircleAroundOffset();
-      // new naver.maps.Circle({
-      //   map: map,
-      //   center: offsetCenterRef.current,
-      //   radius: 3000,
-      //   strokeColor: '#00B4B2',
-      //   strokeOpacity: 0.8,
-      //   strokeWeight: 2,
-      //   fillColor: '#ADE4E5',
-      //   fillOpacity: 0.5,
-      // });
-    }
-
-    data &&
-      data.forEach((loc: any) => {
-        const markerPosition = new naver.maps.LatLng(loc.latitude, loc.longitude); // 마커 위치 생성
-
-        const marker = new naver.maps.Marker({
-          position: markerPosition,
-          map: map,
-          icon: {
-            content: selectedMarkerId === loc.id ? selectedMarkerIconHtml : markerIconHtml,
-            size: new naver.maps.Size(32, 32),
-            anchor: new naver.maps.Point(16, 16),
-          },
-          zIndex: selectedMarkerId === loc.id ? 60 : 0,
-        });
-        markersRef.current.push({ id: loc.id, marker });
-        naver.maps.Event.addListener(marker, 'click', (e) => {
-          handleMarkerClick(loc.id);
-        });
-      });
-
-    if (offsetLocation) {
-      new naver.maps.Marker({
-        position: offsetLocation,
-        map: map,
-        icon: {
-          content: homeMarkerIconHtml,
-          size: new naver.maps.Size(32, 32),
-          anchor: new naver.maps.Point(16, 16),
-        },
-        zIndex: 50,
-      });
-    }
-    if (userPositionRef.current) {
-      addUserMarker();
-    }
-  };
-
-  const drawCircleAroundUser = () => {
-    if (userCircleRef.current) {
-      userCircleRef.current.setMap(null); // 기존 오프셋 원 제거
-    }
-    if (mapRef.current && userPositionRef.current) {
-      // 유저 주위에 새로운 원을 그림
-      userCircleRef.current = new naver.maps.Circle({
-        map: mapRef.current,
-        center: userPositionRef.current,
-        radius: 3000,
-        strokeColor: '#00B4B2',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#ADE4E5',
-        fillOpacity: 0.5,
-      });
-    }
-  };
-
-  const addUserMarker = () => {
-    if (userMarkerRef.current) {
-      userMarkerRef.current.setMap(null); // 기존 유저 마커 제거
-    }
-    if (mapRef.current && userPositionRef.current) {
-      // 유저 마커를 생성
-      userMarkerRef.current = new naver.maps.Marker({
-        position: userPositionRef.current,
-        map: mapRef.current,
-        icon: {
-          content: userMarkerIconHtml, // 유저 마커 아이콘
-          size: new naver.maps.Size(32, 32),
-          anchor: new naver.maps.Point(16, 16),
-        },
-        zIndex: 50,
-      });
-    }
-  };
-
-  const checkOffsetMarkerVisibility = (map: naver.maps.Map) => {
-    if (userPositionRef.current) {
-      const bounds = map.getBounds();
-      const isVisibleUser = bounds.hasPoint(userPositionRef.current);
-
-      setIsUserMarkerVisible(isVisibleUser);
-    }
-
-    if (offsetCenterRef.current) {
-      const bounds = map.getBounds();
-      const isVisible = bounds.hasPoint(offsetCenterRef.current);
-      setIsOffsetMarkerVisible(isVisible);
-    }
-  };
-
-  const handleReturnToUserLocation = async () => {
-    const userlocation = await getLocation();
-
-    if (userlocation && mapRef.current) {
-      const userPosition = new naver.maps.LatLng(userlocation.latitude, userlocation.longitude);
-      userPositionRef.current = userPosition;
-
-      mapRef.current.setCenter(userPositionRef.current); // 유저 위치로 지도 중심 이동
-      mapRef.current.setZoom(zoomLevel);
-
-      addUserMarker();
-      drawCircleAroundUser(); // 유저 주위에 원 그리기
-
-      // 유저 마커 보이게 설정
-      setIsUserMarkerVisible(true);
-      setIsOffsetMarkerVisible(false);
-    } else {
-      console.log('위치를 불러오지 못했습니다.');
-    }
-  };
-  const drawCircleAroundOffset = () => {
-    if (offsetCircleRef.current) {
-      offsetCircleRef.current.setMap(null);
-    }
-    if (mapRef.current && offsetCenterRef.current) {
-      offsetCircleRef.current = new naver.maps.Circle({
-        map: mapRef.current,
-        center: offsetCenterRef.current,
-        radius: 3000,
-        strokeColor: '#00B4B2',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#ADE4E5',
-        fillOpacity: 0.5,
-      });
-    }
-  };
-
-  const handleReturnToAddressLocation = () => {
-    if (mapRef.current && offsetCenterRef.current) {
-      mapRef.current.setCenter(offsetCenterRef.current);
-      mapRef.current.setZoom(zoomLevel);
-
-      drawCircleAroundOffset();
-
-      setIsUserMarkerVisible(false);
-      setIsOffsetMarkerVisible(true);
-    }
-  };
-
+  // ── 이미지 뷰에서 복귀 시 맵 재초기화 (DOM 업데이트 후 실행) ──
   useEffect(() => {
-    // // 테스트용으로 해놓음 아직 임시저장 구역이 api가 안되어있음
-    // const temporaryLocation = {
-    //   lat: 37.6055942215336,
-    //   lng: 126.920904663729,
-    // };
-
-    // JSON 형태로 좌표를 로컬스토리지에 저장
-    // localStorage.setItem('임시설정구역', JSON.stringify(temporaryLocation));
-
-    if (data) {
-      initMap();
+    if (wasImageViewRef.current && !isImageView) {
+      map.initMap();
     }
-  }, [data]);
+    wasImageViewRef.current = isImageView;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isImageView, map.initMap]);
 
-  const handleSelectedAddress = (addressId: number) => {
-    handleMarkerClick(addressId);
-  };
-
-  const handleBackClick = () => {
-    if (type === 'order' || !selectedMarkerId) {
-      return router.back();
-    }
-
-    if (selectedMarkerId) {
-      setSelectedMarkerId(0);
-      setOpen(false);
-      setZoomLevel(12);
-
-      markersRef.current.forEach(({ marker }) => {
-        marker.setIcon({
-          content: markerIconHtml,
-          size: new naver.maps.Size(32, 32),
-          anchor: new naver.maps.Point(16, 16),
-        });
-      });
-
-      if (previousSelectedMarkerRef.current) {
-        previousSelectedMarkerRef.current = null;
-      }
-
-      if (mapRef.current && offsetCenterRef.current) {
-        mapRef.current.setCenter(offsetCenterRef.current);
-        mapRef.current.setZoom(12);
-      }
-      if (!isOffsetMarkerVisible) {
-        setIsOffsetMarkerVisible(true);
-      }
-    }
-  };
-
+  // ── 이미지 핸들러 ──
   const handleImageClick = (e: React.MouseEvent, addressId: number) => {
     e.stopPropagation();
     if (data) {
       const images = data.find((item) => item.id === addressId);
-
-      images && setSelectedImages(images.mediaResources);
+      if (images) setSelectedImages(images.mediaResources);
       setIsImageView(true);
     }
   };
 
   const handleCloseImageView = () => {
     setIsImageView(false);
-    initMap();
+    // initMap은 위 useEffect에서 DOM 업데이트 후 호출됨
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (selectedItem && selectedItem.reviewCount !== 0) {
-      setStartY(e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    const touchY = e.touches[0].clientY;
-
-    if (startY - touchY > 40) {
-      setExpanded(true);
-    }
-
-    if (touchY - startY > 40) {
-      setExpanded(false);
-    }
-  };
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
-  if ((isLoading && !!data) || !currentCenter) {
+  // ── 로딩/이미지뷰 분기 ──
+  if (!map.currentCenter || (isLoading && !data)) {
     return <Loading />;
   }
 
-  if (isImagView) {
-    return <ImageView images={seletedImges} onCloseImageView={handleCloseImageView} />;
+  if (isImageView) {
+    return <ImageView images={selectedImages} onCloseImageView={handleCloseImageView} />;
   }
 
   return (
     <div className="h-full w-full">
       <div id="map" className="relative h-[55vh] w-full">
-        <div className="absolute left-4 top-4 z-40" onClick={handleBackClick}>
-          <ArrowLeftIcon />
-        </div>
+        <MapControlOverlay
+          isUserMarkerVisible={map.isUserMarkerVisible}
+          isOffsetMarkerVisible={map.isOffsetMarkerVisible}
+          onBackClick={map.handleBackClick}
+          onReturnToUserLocation={map.handleReturnToUserLocation}
+          onReturnToAddressLocation={map.handleReturnToAddressLocation}
+        />
       </div>
-      <div
-        className={`fixed inset-x-0 bottom-0 mx-auto max-w-[480px] rounded-t-3xl bg-white transition-transform duration-500 ease-in-out ${
-          true ? 'translate-y-0' : 'translate-y-full'
-        } `}
-      >
-        <div className="h-full overflow-y-auto">
-          <div
-            className="mx-auto flex items-center justify-center py-1"
-            onTouchStart={open ? handleTouchStart : undefined}
-            onTouchMove={open ? handleTouchMove : undefined}
-          >
-            <IndicatorIcon />
-          </div>
-          <div className="mr-5 flex justify-end gap-2">
-            <div className="flex items-center gap-1.5">
-              <GuidWashIcon />
-              <span className="font_caption_1">세탁기</span>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              <GuideDrayerIcon />
-              <span className="font_caption_1">세탁기</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <GuideSneakerIcon />
-              <span className="font_caption_1">세탁기</span>
-            </div>
-          </div>
-          <div className="mt-1 text-center">
-            <button
-              onClick={handleReturnToUserLocation}
-              className="z-70 absolute bottom-[100%] left-4"
-            >
-              {isUserMarkerVisible ? <SelectedCurrentUser /> : <UserCurrentMarkerIcon />}
-            </button>
-            {!isOffsetMarkerVisible && (
-              <button
-                onClick={handleReturnToAddressLocation}
-                className="font_label_1_normal absolute left-1/2 top-[-50px] flex -translate-x-1/2 transform items-center gap-2 rounded-xl bg-white p-2"
-              >
-                <MapBackIcon /> 서비스지역으로 이동하기
-              </button>
-            )}
-
-            {open ? (
-              <CoinlaundrySelectedItem
-                data={selectedItem}
-                expanded={expanded}
-                onClickExpended={handleExpandClick}
-                onImageClick={handleImageClick}
-              />
-            ) : (
-              <CoinlaundryDefault
-                onSelectedAddress={handleSelectedAddress}
-                data={data}
-                onImageClick={handleImageClick}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <MapBottomPanel
+        open={map.open}
+        selectedItem={map.selectedItem}
+        data={data}
+        onSelectedAddress={map.handleMarkerClick}
+        onImageClick={handleImageClick}
+      />
     </div>
   );
 }

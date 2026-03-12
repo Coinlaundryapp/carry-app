@@ -1,12 +1,12 @@
 'use client';
 
-import Button from '@/components/share/Button/Button';
-import StatusCard from '@/components/status/StatusCard';
+import Button from '@shared/ui/Button/Button';
+import StatusCard from '@features/status/ui/StatusCard';
 import { useRouter, useSearchParams } from 'next/navigation';
 import OKIcon from '@assets/icons/ok2.svg';
 import InfoIcon from '@assets/icons/information-circle-red.svg';
 import { useQuery } from '@tanstack/react-query';
-import { getOrderDetail } from '@/api/getOrderDetail';
+import { getOrderDetail } from '@features/status/api/getOrderDetail';
 import { useSession } from 'next-auth/react';
 
 export default function MyOrderStatusPage({ params }: { params: { id: string } }) {
@@ -21,8 +21,6 @@ export default function MyOrderStatusPage({ params }: { params: { id: string } }
     queryFn: () => getOrderDetail(accessToken, Number(orderId)),
     enabled: !!accessToken,
   });
-
-  console.log(orderDetail);
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center justify-between px-[20px] pb-[30px] pt-[66px]">

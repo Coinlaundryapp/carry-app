@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import Button from '@/components/share/Button';
+import Button from '@shared/ui/Button';
 import { ModalOkIcon } from '@assets/icons';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { postConfirmPayment } from '@/api/payment';
+import { useMutation } from '@tanstack/react-query';
+import { postConfirmPayment } from '@features/payment/api/payment';
 import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Loading from '@/components/share/Loading';
+import Loading from '@shared/ui/Loading';
 
 export default function SuccessPage({
   searchParams,
@@ -22,25 +22,38 @@ export default function SuccessPage({
   const router = useRouter();
   const session = useSession();
   const accessToken = session.data?.user.accessToken;
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['postConfirmPayment', searchParams],
-    queryFn: () =>
+  const hasConfirmed = useRef(false);
+
+  const mutation = useMutation({
+    mutationFn: () =>
       postConfirmPayment({
         accessToken: accessToken as string,
         orderId: searchParams.orderId,
         paymentKey: searchParams.paymentKey,
         amount: searchParams.amount,
       }),
-    enabled: !!accessToken,
-    staleTime: 0,
+    retry: false,
   });
-  if (isLoading) {
+
+  useEffect(() => {
+    if (accessToken && !hasConfirmed.current) {
+      hasConfirmed.current = true;
+      mutation.mutate();
+    }
+    // mutation.mutate는 useMutation의 안정적 참조 — 의존성 불필요
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (mutation.isError) {
+      router.replace(`/error?error=payment_error&redirectUrl=/payment/${searchParams.orderId}`);
+    }
+  }, [mutation.isError, router, searchParams.orderId]);
+
+  if (!mutation.isSuccess) {
     return <Loading />;
   }
-  if (isError) {
-    router.push(`/error?error=payment_error&redirectUrl=/payment/${searchParams.orderId}`);
-    return null;
-  }
+
   return (
     <main className="flex h-dvh flex-col items-center justify-between gap-[108px] px-6">
       <div className="mt-[103px] flex flex-col items-center justify-center">

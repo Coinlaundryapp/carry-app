@@ -1,6 +1,6 @@
-import Menu from '@/components/share/Menu/Menu';
-import Footer from '@/components/share/Footer/Footer';
-import Separator from '@/components/share/Separator/Separator';
+import Menu from '@shared/ui/Menu/Menu';
+import Footer from '@shared/ui/Footer/Footer';
+import Separator from '@shared/ui/Separator/Separator';
 import {
   BasketWithMagnifierIcon,
   ChevronRightPrimaryIcon,
@@ -9,7 +9,7 @@ import {
   MenuSettingIcon,
 } from '@assets/icons';
 import { Fragment } from 'react';
-import UserInfo from '@/components/user/UserInfo';
+import UserInfo from '@features/auth/ui/UserInfo';
 import Link from 'next/link';
 
 const SETTINGS_SECTIONS = [

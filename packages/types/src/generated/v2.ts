@@ -1142,6 +1142,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v2/coordinator/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 二쇰Ц 紐⑸줉 議고쉶 (肄붾뵒�꽕�씠�꽣)
+         * @description 肄붾뵒�꽕�씠�꽣媛� �쟾泥� 二쇰Ц�쓣 �긽�깭濡� �븘�꽣�빐 議고쉶�븳�떎. �냼�쑀�옄 寃�利� �뾾�쓬.
+         */
+        get: operations["getOrders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 二쇰Ц �긽�꽭 議고쉶 (肄붾뵒�꽕�씠�꽣)
+         * @description 肄붾뵒�꽕�씠�꽣媛� �냼�쑀�옄 寃�利� �뾾�씠 二쇰Ц �떒嫄댁쓣 議고쉶�븳�떎.
+         */
+        get: operations["getOrder_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/dispatches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 諛곗감 紐⑸줉 議고쉶 (肄붾뵒�꽕�씠�꽣)
+         * @description �긽�깭쨌沅뚯뿭�쑝濡� �븘�꽣�빐 �쟾泥� 諛곗감瑜� 議고쉶�빀�땲�떎. 誘몃같�젙(PENDING) 諛곗감 �슫�쁺�뿉 �궗�슜�빀�땲�떎.
+         */
+        get: operations["getDispatches"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v2/coordinator/dispatches/{dispatchId}": {
         parameters: {
             query?: never;
@@ -5435,6 +5495,89 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiResponseListDeliveryResponse"];
+                };
+            };
+        };
+    };
+    getOrders: {
+        parameters: {
+            query?: {
+                /** @description 二쇰Ц �긽�깭 �븘�꽣(�깮�왂 �떆 �쟾泥�) */
+                status?: "CREATED" | "DISPATCHED" | "PICKED_UP" | "INVOICED" | "PAYMENT_FAILED" | "PAID" | "IN_PROGRESS" | "COMPLETED" | "REFUND_PENDING" | "REFUNDED" | "CANCELLED";
+                /** @description 留덉��留됱쑝濡� 議고쉶�븳 二쇰Ц ID (泥� �럹�씠吏��뒗 �깮�왂) */
+                cursor?: number;
+                /** @description �럹�씠吏� �겕湲� */
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 二쇰Ц 紐⑸줉 議고쉶 �꽦怨� */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseListOrderResponse"];
+                };
+            };
+        };
+    };
+    getOrder_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 二쇰Ц 議고쉶 �꽦怨� */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
+                };
+            };
+            /** @description 二쇰Ц�쓣 李얠쓣 �닔 �뾾�쓬 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
+                };
+            };
+        };
+    };
+    getDispatches: {
+        parameters: {
+            query?: {
+                status?: "PENDING" | "ASSIGNED" | "ACCEPTED" | "CANCELLED" | "TIMEOUT";
+                areaCode?: string;
+                cursor?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 諛곗감 紐⑸줉 議고쉶 �꽦怨� */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseListDispatchResponse"];
                 };
             };
         };

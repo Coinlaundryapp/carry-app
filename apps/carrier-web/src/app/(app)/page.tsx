@@ -52,6 +52,12 @@ export default function HomePage() {
         >
           배차 보기
         </Link>
+        <Link
+          href="/deliveries"
+          className="rounded-lg border border-blue-600 px-4 py-3 text-center font-semibold text-blue-600"
+        >
+          내 배달
+        </Link>
       </nav>
     </main>
   );

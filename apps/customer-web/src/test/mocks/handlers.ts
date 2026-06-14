@@ -61,6 +61,7 @@ const mockV2Geocode = [
   },
 ];
 
+// 앱이 기대하는 중첩 가격 구조(매핑 결과) — 테스트 기대값.
 const mockPriceData = {
   washOption: {
     standard: { selectable: true, price: 5000 },
@@ -74,6 +75,22 @@ const mockPriceData = {
     foldLaundry: { selectable: true, price: 2000 },
     addSoftener: { selectable: true, price: 1000 },
   },
+};
+
+// v2 PricePolicyResponse 원형 — getPrices가 위 중첩 구조로 매핑한다.
+const mockV2PricePolicy = {
+  id: 1,
+  orderUnitType: 'SOLO',
+  orderRequestType: 'NEW',
+  laundryItemType: 'REGULAR',
+  optionPrices: [
+    { optionType: 'WASH', subOptionType: 'STANDARD', price: 5000, selectable: true },
+    { optionType: 'WASH', subOptionType: 'HOT_WATER', price: 7000, selectable: true },
+    { optionType: 'DRY', subOptionType: 'LOW_HEAT', price: 3000, selectable: true },
+    { optionType: 'DRY', subOptionType: 'HIGH_HEAT', price: 5000, selectable: true },
+    { optionType: 'ADDITIONAL', subOptionType: 'FOLD_LAUNDRY', price: 2000, selectable: true },
+    { optionType: 'ADDITIONAL', subOptionType: 'ADD_SOFTENER', price: 1000, selectable: true },
+  ],
 };
 
 const mockOrderResponse = {
@@ -146,19 +163,38 @@ const mockOrderDetail = {
   confirmedPayment: null,
 };
 
+// v2 NearbyLaundromatResponse 원형 — getLaundromats가 앱 TLaundromats로 매핑한다.
+const mockV2Nearby = [
+  {
+    laundromat: {
+      id: 1,
+      name: '깨끗한 빨래방',
+      roadAddress: '서울시 강남구 테헤란로 100',
+      detailAddress: null,
+      zipCode: null,
+      latitude: 37.5065,
+      longitude: 127.0536,
+      options: ['WASHING_MACHINE' as const, 'DRYER' as const],
+      mediaResources: [],
+    },
+    distanceMeters: 500,
+  },
+];
+
+// 매핑 결과(앱 TLaundromats) — 테스트 기대값. v2 미제공 필드(배송비·리뷰)는 0.
 const mockLaundromats = [
   {
     id: 1,
     name: '깨끗한 빨래방',
     address: '서울시 강남구 테헤란로 100',
     distance: 500,
-    groupDeliveryFee: 3000,
     latitude: 37.5065,
     longitude: 127.0536,
-    mediaResources: [],
     options: ['WASHING_MACHINE' as const, 'DRYER' as const],
-    reviewAverageRating: 4.5,
-    reviewCount: 100,
+    mediaResources: [],
+    groupDeliveryFee: 0,
+    reviewAverageRating: 0,
+    reviewCount: 0,
   },
 ];
 
@@ -287,10 +323,10 @@ export const handlers = [
 
   // ── 가격 + 주문 API ──
 
-  // 가격 조회
-  http.get('*/api/v1/prices', () => {
+  // 가격 정책 조회 (v2) — 평면 optionPrices, getPrices가 중첩 구조로 매핑
+  http.get('*/api/v2/prices', () => {
     return HttpResponse.json(
-      { data: mockPriceData, status: 200, message: 'success' },
+      { data: mockV2PricePolicy, status: 200, code: 'SUCCESS', message: 'success' },
       { status: 200 },
     );
   }),
@@ -321,10 +357,10 @@ export const handlers = [
 
   // ── 세탁소 + 서비스 지역 ──
 
-  // 세탁소 목록
-  http.get('*/api/v1/laundromats', () => {
+  // 주변 세탁소 검색 (v2 findNearby) — NearbyLaundromatResponse[]
+  http.get('*/api/v2/laundromats', () => {
     return HttpResponse.json(
-      { data: mockLaundromats, status: 200, message: 'success' },
+      { data: mockV2Nearby, status: 200, code: 'SUCCESS', message: 'success' },
       { status: 200 },
     );
   }),
@@ -345,9 +381,11 @@ export const mockData = {
   v2AddressList: mockV2AddressList,
   v2Geocode: mockV2Geocode,
   priceData: mockPriceData,
+  v2PricePolicy: mockV2PricePolicy,
   orderResponse: mockOrderResponse,
   orderList: mockOrderList,
   orderDetail: mockOrderDetail,
   laundromats: mockLaundromats,
+  v2Nearby: mockV2Nearby,
   serviceRegions: mockServiceRegions,
 };

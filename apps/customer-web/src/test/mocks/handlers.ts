@@ -173,6 +173,22 @@ const mockOrderDetail = {
   confirmedPayment: null,
 };
 
+// v2 InvoiceResponse 원형 — getPaymentInfo가 앱 PaymentInfo로 매핑(chargeType 버킷팅).
+const mockV2Invoice = {
+  id: 10,
+  orderId: 1,
+  customerId: 100,
+  status: 'ISSUED',
+  lineItems: [
+    { chargeType: 'LAUNDRY_PRICE', description: '세탁 비용 (5kg)', amount: 10500 },
+    { chargeType: 'DELIVERY_FEE', description: '배달비', amount: 4000 },
+    { chargeType: 'SERVICE_FEE', description: '서비스 수수료', amount: 1050 },
+  ],
+  weight: 5,
+  totalAmount: 15550,
+  createdAt: '2024-09-23T14:35:20Z',
+};
+
 // v2 NearbyLaundromatResponse 원형 — getLaundromats가 앱 TLaundromats로 매핑한다.
 const mockV2Nearby = [
   {
@@ -349,6 +365,14 @@ export const handlers = [
     );
   }),
 
+  // 청구서 조회 (v2) — getPaymentInfo가 PaymentInfo로 매핑
+  http.get('*/api/v2/payments/:orderId/invoice', () => {
+    return HttpResponse.json(
+      { data: mockV2Invoice, status: 200, code: 'SUCCESS', message: 'success' },
+      { status: 200 },
+    );
+  }),
+
   // 주문 상세 (더 구체적인 경로 우선)
   http.get('*/api/v1/orders/:id/details', () => {
     return HttpResponse.json(
@@ -393,6 +417,7 @@ export const mockData = {
   priceData: mockPriceData,
   v2PricePolicy: mockV2PricePolicy,
   orderResponse: mockOrderResponse,
+  v2Invoice: mockV2Invoice,
   orderList: mockOrderList,
   orderDetail: mockOrderDetail,
   laundromats: mockLaundromats,

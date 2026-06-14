@@ -21,6 +21,10 @@ export type TGetAddressSearchListRes = {
     addressType: string;
     regionAddress: { addressName: string };
     roadAddress: string | null;
+    /** v2 geocode가 동봉하는 지오 필드 — 검색 결과 선택 시 배송지 폼에 채워진다. */
+    latitude?: number;
+    longitude?: number;
+    zipCode?: string;
   }[];
   pagination: {
     hasNext: boolean;
@@ -39,10 +43,15 @@ export type TAddressRes = {
   entranceDetail: string;
   entranceType: string;
   id: number;
-  isDefaultAddress: false;
+  isDefaultAddress: boolean;
   recipientName: string;
   recipientPhone: string;
   userId: number;
+  /** v2 라운드트립용 지오 필드 — 편집 저장 시 그대로 다시 전송한다. */
+  latitude?: number;
+  longitude?: number;
+  zipCode?: string;
+  areaCode?: string;
 };
 
 // 서비스 가능 여부 api

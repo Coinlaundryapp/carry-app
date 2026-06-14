@@ -1,5 +1,6 @@
 import { REQUEST_OPTIONS } from '@features/address/lib/request-options';
 import type { TAddressRes } from '@shared/types/api-types';
+import type { AddressPayload } from '@features/address/types/address-type';
 import type {
   AddressFormData,
   AddressEntry,
@@ -7,17 +8,15 @@ import type {
   RequestSelection,
 } from './useAddressForm';
 
-// ── 페이로드 타입 ──
-
-export type AddressPayload = {
-  addressLabel: string;
-  recipientPhone: string;
-  recipientName: string;
-  baseAddress: string;
-  detailAddress: string;
-  deliveryNotes: string;
-  entranceType: string;
-  entranceDetail: string;
+/**
+ * 배송지 폼이 보유하는 지오 필드 — 주소검색(geocode) 선택 시 채워지거나(생성)
+ * 편집 시 기존 배송지에서 라운드트립된다. v2 생성/수정의 필수 필드를 채우는 출처.
+ */
+export type AddressGeo = {
+  latitude?: number;
+  longitude?: number;
+  zipCode?: string;
+  areaCode?: string;
 };
 
 // ── 순수 변환 함수 ──
@@ -55,12 +54,16 @@ export function deliveryNotesToRequest(notes: string): RequestSelection {
 
 /**
  * 폼 전체 상태 → API 페이로드 조립
+ *
+ * geo(좌표·우편번호·권역)는 주소검색 선택/편집 라운드트립으로 채워진다. 누락 시의 기본값
+ * (areaCode 'GANGNAM' 등)은 API 매핑 레이어(`addressApi`)가 채우므로 여기선 그대로 흘린다.
  */
 export function buildAddressPayload(
   formData: AddressFormData,
   address: AddressEntry,
   entrance: EntranceSelection,
   request: RequestSelection,
+  geo: AddressGeo = {},
 ): AddressPayload {
   return {
     addressLabel: formData.addressLabel,
@@ -71,6 +74,10 @@ export function buildAddressPayload(
     deliveryNotes: requestToDeliveryNotes(request),
     entranceType: entrance.value,
     entranceDetail: entrance.text,
+    latitude: geo.latitude,
+    longitude: geo.longitude,
+    zipCode: geo.zipCode,
+    areaCode: geo.areaCode,
   };
 }
 
@@ -84,6 +91,7 @@ export function addressResponseToFormData(data: TAddressRes): {
   address: AddressEntry;
   entrance: EntranceSelection;
   request: RequestSelection;
+  geo: AddressGeo;
 } {
   return {
     formData: {
@@ -104,6 +112,13 @@ export function addressResponseToFormData(data: TAddressRes): {
         ? REQUEST_OPTIONS.find((option) => option.label === data.deliveryNotes)?.value || '4'
         : '1',
       requestText: data.deliveryNotes || '',
+    },
+    // 편집 저장 시 v2 필수 지오 필드를 그대로 다시 보내기 위해 보존한다.
+    geo: {
+      latitude: data.latitude,
+      longitude: data.longitude,
+      zipCode: data.zipCode,
+      areaCode: data.areaCode,
     },
   };
 }

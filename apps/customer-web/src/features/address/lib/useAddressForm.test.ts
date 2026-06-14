@@ -44,6 +44,29 @@ describe('useAddressForm', () => {
     expect(result.current.address.main).toBe('서울시 강남구 테헤란로 123');
   });
 
+  it('handleAddressSelect → 주소 main + geo(좌표·우편번호) 채움, buildPayload에 반영', () => {
+    const { result } = renderHook(() => useAddressForm());
+
+    act(() => {
+      result.current.handleAddressSelect({
+        addressName: '서울시 강남구 역삼동 123-45',
+        latitude: 37.5065,
+        longitude: 127.0536,
+        zipCode: '06234',
+      });
+    });
+
+    expect(result.current.address.main).toBe('서울시 강남구 역삼동 123-45');
+
+    const payload = result.current.buildPayload();
+    expect(payload).toMatchObject({
+      baseAddress: '서울시 강남구 역삼동 123-45',
+      latitude: 37.5065,
+      longitude: 127.0536,
+      zipCode: '06234',
+    });
+  });
+
   it('handleChange → entrance value 변경', () => {
     const { result } = renderHook(() => useAddressForm());
 

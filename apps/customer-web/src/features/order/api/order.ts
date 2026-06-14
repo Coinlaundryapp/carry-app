@@ -1,14 +1,11 @@
-import { format } from 'date-fns';
 import type { Schemas } from '@carry/types';
-import { fetchExtended } from '@shared/api/api-client';
-import { ApiResponse } from '@shared/types/api-types';
+import { newIdempotencyKey } from '@carry/api';
 import { createV2Client } from '@shared/api/v2-client';
 import {
   LaundryItemType,
   LaundryPriceData,
   OrderContent,
   OrderRequestType,
-  OrderResponse,
   OrderSchedule,
   OrderUnitType,
 } from '@features/order/types/laundry-type';
@@ -70,6 +67,36 @@ export async function getPrices({
   return toLaundryPriceData(data);
 }
 
+type V2Order = Schemas['OrderResponse'];
+type V2SelectedOption = Schemas['SelectedOptionRequest'];
+
+/**
+ * v1의 분리된 옵션(washOption·dryOption·additionalOptions)을 v2 `selectedOptions`
+ * (`{optionType, subOptionType}[]`)로 평탄화한다. optionType은 가격 정책과 동일한
+ * WASH/DRY/ADDITIONAL 코드를 쓴다(백엔드는 @NotBlank 자유 문자열이라 거부는 없음).
+ */
+function buildSelectedOptions(content: OrderContent): V2SelectedOption[] {
+  const options: V2SelectedOption[] = [];
+  if (content.washOption) {
+    options.push({ optionType: 'WASH', subOptionType: content.washOption });
+  }
+  if (content.dryOption) {
+    options.push({ optionType: 'DRY', subOptionType: content.dryOption });
+  }
+  for (const additional of content.additionalOptions ?? []) {
+    options.push({ optionType: 'ADDITIONAL', subOptionType: additional });
+  }
+  return options;
+}
+
+/**
+ * 주문 생성 — v1 `POST /v1/orders` → v2 `POST /api/v2/orders`(createOrder).
+ * **Idempotency-Key**를 붙여 멱등 생성한다(@carry/api request가 헤더 부착, 재시도 시
+ * 동일 키로 백엔드가 중복 생성 억제 — #82 계열). 응답에서 화면은 `id`만 쓴다(상태 페이지 이동).
+ *
+ * ⚠️ v2 createOrder 계약엔 `orderUnitType`·`orderRequestType`·`laundrySpecs`가 없어 전송
+ * 시 버려진다(후속 known-debt). 날짜는 v1 커스텀 포맷 → ISO date-time으로 전환.
+ */
 export async function postOrder({
   accessToken,
   orderContent,
@@ -82,48 +109,21 @@ export async function postOrder({
   laundromatId: number;
   addressId: number;
   orderSchedule: OrderSchedule;
-}) {
-  const desiredPickupDateTime = format(
-    orderSchedule.desiredPickupDateTime,
-    'yyyy-MM-dd HH:mm:ss EEE',
-  );
-  const desiredDeliveryDateTime = format(
-    orderSchedule.desiredDeliveryDateTime,
-    'yyyy-MM-dd HH:mm:ss EEE',
-  );
+}): Promise<V2Order> {
+  const client = createV2Client({ accessToken });
   try {
-    const res = await fetchExtended<ApiResponse<OrderResponse>>(`/api/v1/orders`, {
+    return await client.request<V2Order>('/api/v2/orders', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
+      idempotencyKey: newIdempotencyKey(),
       body: {
-        orderContent: {
-          additionalOptions: orderContent.additionalOptions,
-          dryOption: orderContent.dryOption,
-          laundryItemType: orderContent.laundryItemType,
-          laundrySpecs: [
-            ...orderContent.laundrySpecs,
-            {
-              laundrySpec: 'LAUNDRY_WEIGHT',
-              value: 5,
-            },
-          ],
-          orderRequestType: orderContent.orderRequestType,
-          orderUnitType: orderContent.orderUnitType,
-          washOption: orderContent.washOption,
-        },
+        shippingAddressId: addressId,
         laundromatId,
-        addressId,
-        orderSchedule: {
-          desiredPickupDateTime,
-          desiredDeliveryDateTime,
-        },
+        laundryItemType: orderContent.laundryItemType ?? '',
+        selectedOptions: buildSelectedOptions(orderContent),
+        desiredPickupAt: new Date(orderSchedule.desiredPickupDateTime).toISOString(),
+        desiredDeliveryAt: new Date(orderSchedule.desiredDeliveryDateTime).toISOString(),
       },
     });
-
-    return res.body.data;
   } catch (error) {
     throw new Error('주문에 실패했습니다.');
   }

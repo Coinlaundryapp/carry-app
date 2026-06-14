@@ -91,19 +91,22 @@ describe('order API', () => {
       },
     };
 
-    it('정상 주문 생성 → OrderResponse 반환', async () => {
+    it('정상 주문 생성 → v2 OrderResponse 반환(화면은 id 사용)', async () => {
       const result = await postOrder(orderParams);
       expect(result).toEqual(mockData.orderResponse);
+      expect(result.id).toBe(1);
     });
 
-    it('요청 본문에 LAUNDRY_WEIGHT spec 주입 + 날짜 포맷 변환', async () => {
+    it('v2 요청 본문 매핑 + Idempotency-Key 헤더', async () => {
       let capturedBody: Record<string, unknown> | null = null;
+      let idempotencyKey: string | null = null;
 
       server.use(
-        http.post('*/api/v1/orders', async ({ request }) => {
+        http.post('*/api/v2/orders', async ({ request }) => {
           capturedBody = (await request.json()) as Record<string, unknown>;
+          idempotencyKey = request.headers.get('Idempotency-Key');
           return HttpResponse.json(
-            { data: mockData.orderResponse, status: 201, message: 'created' },
+            { data: mockData.orderResponse, status: 201, code: 'SUCCESS', message: 'created' },
             { status: 201 },
           );
         }),
@@ -111,30 +114,30 @@ describe('order API', () => {
 
       await postOrder(orderParams);
 
-      expect(capturedBody).not.toBeNull();
       const body = capturedBody as unknown as Record<string, unknown>;
-      const content = body.orderContent as Record<string, unknown>;
-      const specs = content.laundrySpecs as { laundrySpec: string; value: number }[];
-
-      // LAUNDRY_WEIGHT spec이 주입되었는지 확인
-      expect(specs).toContainEqual({ laundrySpec: 'LAUNDRY_WEIGHT', value: 5 });
-
-      // 기존 spec도 유지되는지 확인
-      expect(specs).toContainEqual({ laundrySpec: 'LAUNDRY_COLOR', value: 1 });
-
-      // 날짜 포맷이 'yyyy-MM-dd HH:mm:ss EEE' 패턴인지 확인
-      const schedule = body.orderSchedule as Record<string, string>;
-      expect(schedule.desiredPickupDateTime).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \w{3}$/);
-      expect(schedule.desiredDeliveryDateTime).toMatch(
-        /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \w{3}$/,
-      );
+      // v1 분리 옵션 → v2 selectedOptions 평탄화
+      expect(body.selectedOptions).toEqual([
+        { optionType: 'WASH', subOptionType: 'STANDARD' },
+        { optionType: 'DRY', subOptionType: 'LOW_HEAT' },
+        { optionType: 'ADDITIONAL', subOptionType: 'FOLD_LAUNDRY' },
+      ]);
+      expect(body.shippingAddressId).toBe(1);
+      expect(body.laundromatId).toBe(1);
+      expect(body.laundryItemType).toBe('REGULAR');
+      // 날짜는 ISO date-time
+      expect(body.desiredPickupAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
+      // v2 계약에 없는 필드는 전송 안 함
+      expect(body.orderContent).toBeUndefined();
+      expect(body.orderUnitType).toBeUndefined();
+      // 멱등 키 부착
+      expect(idempotencyKey).toBeTruthy();
     });
 
     it('에러 시 "주문에 실패했습니다." 에러 발생', async () => {
       server.use(
-        http.post('*/api/v1/orders', () => {
+        http.post('*/api/v2/orders', () => {
           return HttpResponse.json(
-            { data: null, status: 500, message: 'Internal Server Error' },
+            { status: 500, code: 'INTERNAL_ERROR', message: 'Internal Server Error' },
             { status: 500 },
           );
         }),

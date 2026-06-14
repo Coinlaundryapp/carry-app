@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { logout } from '@features/auth';
+import { logout, useRole } from '@features/auth';
 
 /**
- * 코디네이터 홈 — 운영 메뉴 허브. 세부 화면(주문·배차·환불)은 후속 단계에서 추가된다.
+ * 코디네이터 홈 — 운영 메뉴 허브. ADMIN은 운영 대시보드 메뉴가 추가로 노출된다(role 가드).
  */
 export default function HomePage() {
   const router = useRouter();
+  const { isAdmin } = useRole();
 
   function handleLogout() {
     logout();
@@ -18,6 +19,9 @@ export default function HomePage() {
   const menus = [
     { href: '/orders', title: '주문 운영', desc: '주문 조회·취소·환불' },
     { href: '/dispatches', title: '배차 조율', desc: '미배정 배차 배정·취소' },
+    ...(isAdmin
+      ? [{ href: '/admin', title: '운영 대시보드', desc: 'ADMIN — 운영 요약·이벤트' }]
+      : []),
   ];
 
   return (

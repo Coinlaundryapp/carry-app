@@ -7,54 +7,68 @@ import { getOrderList } from './getOrderList';
 
 const TOKEN = 'test-access-token';
 
-describe('status API', () => {
+describe('status API (v2)', () => {
   describe('getOrderDetail', () => {
-    it('주문 상세 정상 반환', async () => {
+    it('v2 OrderResponse → 앱 OrderDetailRes 매핑(화면 핵심 필드)', async () => {
       const result = await getOrderDetail(TOKEN, 1);
-      expect(result).toEqual(mockData.orderDetail);
+      const order = mockData.orderResponse;
+
+      expect(result.id).toBe(order.id);
+      expect(result.status).toBe(order.status);
+      expect(result.orderShedule.desiredPickupDateTime).toBe(order.desiredPickupAt);
+      expect(result.shippingAddress.baseAddress).toBe(order.roadAddress);
+      expect(result.shippingAddress.recipientName).toBe(order.recipientName);
+      // selectedOptions 역추출
+      expect(result.orderContent.washOption).toBe('STANDARD');
+      expect(result.orderContent.dryOption).toBe('LOW_HEAT');
+      // v2 미보유 → degrade 기본값
+      expect(result.laundromatName).toBe('');
+      expect(result.orderContent.orderUnitType).toBe('SOLO');
+      expect(result.paymentDetails.netAmount).toBe(order.totalAmount);
     });
 
-    it('존재하지 않는 주문 → ApiError 발생', async () => {
+    it('존재하지 않는 주문(404) → 에러 발생', async () => {
       server.use(
-        http.get('*/api/v1/orders/:id/details', () => {
-          return HttpResponse.json(
-            { data: null, status: 404, message: 'Not Found' },
+        http.get('*/api/v2/orders/:orderId', () =>
+          HttpResponse.json(
+            { status: 404, code: 'NOT_FOUND', message: 'Not Found' },
             { status: 404 },
-          );
-        }),
+          ),
+        ),
       );
-
       await expect(getOrderDetail(TOKEN, 9999)).rejects.toThrow();
     });
   });
 
   describe('getOrderList', () => {
-    it('목록 조회 (cursor 없음)', async () => {
+    it('v2 목록 → 앱 OrderListRes[] 매핑(id·status)', async () => {
       const result = await getOrderList(TOKEN);
-      expect(result).toEqual(mockData.orderList);
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe(mockData.orderResponse.id);
+      expect(result[0].status).toBe(mockData.orderResponse.status);
+      expect(result[0].laundromatName).toBe('');
     });
 
-    it('페이지네이션 (cursor 있음)', async () => {
-      const nextPage = [
-        {
-          ...mockData.orderList[0],
-          id: 2,
-          laundromatName: '두번째 빨래방',
-        },
-      ];
-
+    it('페이지네이션 (cursor 있음) → cursor 쿼리 전달', async () => {
+      let capturedUrl = '';
       server.use(
-        http.get('*/api/v1/orders', () => {
+        http.get('*/api/v2/orders/my', ({ request }) => {
+          capturedUrl = request.url;
           return HttpResponse.json(
-            { data: nextPage, status: 200, message: 'success' },
+            {
+              data: [{ ...mockData.orderResponse, id: 2 }],
+              status: 200,
+              code: 'SUCCESS',
+              message: 'success',
+            },
             { status: 200 },
           );
         }),
       );
 
       const result = await getOrderList(TOKEN, 1);
-      expect(result).toEqual(nextPage);
       expect(result[0].id).toBe(2);
+      expect(capturedUrl).toContain('cursor=1');
     });
   });
 });

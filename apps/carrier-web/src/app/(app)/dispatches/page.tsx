@@ -39,7 +39,8 @@ export default function DispatchesPage() {
     setNotice(null);
     try {
       await claimDispatch(id);
-      setNotice('배차를 선점했습니다. ‘내 배차’ 탭에서 수락하세요.');
+      // self-claim은 PENDING→ACCEPTED로 바로 전이하고 배달이 생성된다(별도 수락 단계 없음).
+      setNotice('배차를 수락했습니다. ‘내 배달’에서 진행하세요.');
       await load('available');
     } catch (e) {
       // 409 = 경합(다른 배달원이 먼저 선점). 목록을 새로고침해 최신 상태를 보여준다.

@@ -48,7 +48,9 @@ const realSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
  * 에러 시: 401이면 refresh single-flight 후 1회 재시도, 그 외엔 [decideRetry] 정책(docs/14)대로 재시도.
  */
 export function createApiClient(config: ApiClientConfig) {
-  const fetchImpl = config.fetchImpl ?? fetch;
+  // 전역 fetch는 **요청 시점에** 해석한다 — 생성 시점에 캡처하면 이후 globalThis.fetch를 교체하는
+  // 환경(msw 인터셉터·테스트 모킹)을 우회해버린다(F1 M-1 라이브 발견).
+  const resolveFetch = () => config.fetchImpl ?? globalThis.fetch;
   const retryPolicy = config.retryPolicy ?? defaultRetryPolicy;
   const sleep = config.sleep ?? realSleep;
   const coordinator =
@@ -81,7 +83,7 @@ export function createApiClient(config: ApiClientConfig) {
         }
       }
 
-      const res = await fetchImpl(config.baseUrl + path, { ...rest, headers, body: serializedBody });
+      const res = await resolveFetch()(config.baseUrl + path, { ...rest, headers, body: serializedBody });
       try {
         return await unwrap<T>(res);
       } catch (error) {

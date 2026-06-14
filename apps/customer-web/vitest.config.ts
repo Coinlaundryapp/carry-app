@@ -19,6 +19,11 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     css: true,
+    // @carry/api는 node 전역 fetch(절대 URL 필요)를 쓴다. msw는 host 무관 매칭이므로
+    // 테스트용 베이스 URL을 주입한다(prod는 실제 NEXT_PUBLIC_BACKEND_URL 사용).
+    env: {
+      NEXT_PUBLIC_BACKEND_URL: 'http://localhost',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],

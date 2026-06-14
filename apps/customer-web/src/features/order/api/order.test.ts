@@ -18,9 +18,9 @@ describe('order API', () => {
 
     it('에러 응답 → ApiError 발생', async () => {
       server.use(
-        http.get('*/api/v1/prices', () => {
+        http.get('*/api/v2/prices', () => {
           return HttpResponse.json(
-            { data: null, status: 500, message: 'Internal Server Error' },
+            { status: 500, code: 'INTERNAL_ERROR', message: 'Internal Server Error' },
             { status: 500 },
           );
         }),
@@ -33,6 +33,41 @@ describe('order API', () => {
           laundryItemType: 'REGULAR',
         }),
       ).rejects.toThrow();
+    });
+
+    it('일부 옵션만 온 정책 → 누락 옵션은 {selectable:false, price:null}', async () => {
+      server.use(
+        http.get('*/api/v2/prices', () =>
+          HttpResponse.json(
+            {
+              data: {
+                id: 2,
+                orderUnitType: 'SOLO',
+                orderRequestType: 'NEW',
+                laundryItemType: 'REGULAR',
+                optionPrices: [
+                  { optionType: 'WASH', subOptionType: 'STANDARD', price: 4000, selectable: true },
+                ],
+              },
+              status: 200,
+              code: 'SUCCESS',
+              message: 'success',
+            },
+            { status: 200 },
+          ),
+        ),
+      );
+
+      const result = await getPrices({
+        orderUnitType: 'SOLO',
+        orderRequestType: 'NEW',
+        laundryItemType: 'REGULAR',
+      });
+
+      expect(result.washOption.standard).toEqual({ selectable: true, price: 4000 });
+      expect(result.washOption.hotWater).toEqual({ selectable: false, price: null });
+      expect(result.dryOption.lowHeat).toEqual({ selectable: false, price: null });
+      expect(result.additionalOption.addSoftener).toEqual({ selectable: false, price: null });
     });
   });
 

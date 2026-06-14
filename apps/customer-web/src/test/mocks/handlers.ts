@@ -13,63 +13,53 @@ const authSuccessBody = {
 
 // ── Mock 데이터 ──
 
-const mockAddressList = [
-  { addressId: 1, addressLabel: '집', fullAddress: '서울시 강남구 테헤란로 123', isDefault: true },
+// v2 ShippingAddressResponse 원형 — addressApi가 앱 형태로 매핑한다.
+const mockV2Address = {
+  id: 1,
+  alias: '집',
+  roadAddress: '서울시 강남구 테헤란로 123',
+  detailAddress: '101동 202호',
+  zipCode: '06234',
+  latitude: 37.5065,
+  longitude: 127.0536,
+  recipientName: '홍길동',
+  recipientPhone: '010-1234-5678',
+  entranceInfo: '비밀번호 1234#',
+  areaCode: 'GANGNAM',
+  isDefault: true,
+};
+
+const mockV2AddressList = [
+  mockV2Address,
   {
-    addressId: 2,
-    addressLabel: '회사',
-    fullAddress: '서울시 서초구 서초대로 456',
+    id: 2,
+    alias: '회사',
+    roadAddress: '서울시 서초구 서초대로 456',
+    detailAddress: '',
+    zipCode: '06789',
+    latitude: 37.4837,
+    longitude: 127.0324,
+    recipientName: '홍길동',
+    recipientPhone: '010-1234-5678',
+    entranceInfo: null,
+    areaCode: 'GANGNAM',
     isDefault: false,
   },
 ];
 
-const mockAddressDetail = {
-  id: 1,
-  userId: 100,
-  addressLabel: '집',
-  recipientName: '홍길동',
-  recipientPhone: '010-1234-5678',
-  baseAddress: '서울시 강남구 테헤란로 123',
-  detailAddress: '101동 202호',
-  deliveryNotes: '문 앞에 놓아주세요',
-  entranceType: 'PASSWORD',
-  entranceDetail: '1234',
-  isDefaultAddress: false,
-};
-
-const mockAddressSearchResult = {
-  content: [
-    {
-      addressName: '서울시 강남구 테헤란로 123',
-      addressType: 'ROAD',
-      regionAddress: { addressName: '서울시 강남구 역삼동 123-45' },
-      roadAddress: '서울시 강남구 테헤란로 123',
-    },
-  ],
-  pagination: {
-    hasNext: false,
-    pageNumber: 1,
-    pageSize: 5,
-    totalElements: 1,
-    totalPages: 1,
+// v2 GeocodingResponse 원형 — geocode 검색 결과.
+const mockV2Geocode = [
+  {
+    jibunAddress: '서울시 강남구 역삼동 123-45',
+    roadAddress: '서울시 강남구 테헤란로 123',
+    latitude: 37.5065,
+    longitude: 127.0536,
+    sido: '서울특별시',
+    sigungu: '강남구',
+    dongmyun: '역삼동',
+    postalCode: '06234',
   },
-};
-
-const mockDefaultAddress = {
-  id: 1,
-  userId: 100,
-  isDefaultAddress: true,
-  addressLabel: '집',
-  recipientName: '홍길동',
-  recipientPhone: '010-1234-5678',
-  baseAddress: '서울시 강남구 테헤란로 123',
-  detailAddress: '101동 202호',
-  latitude: 37.5065,
-  longitude: 127.0536,
-  deliveryNotes: '문 앞에 놓아주세요',
-  entranceType: 'PASSWORD',
-  entranceDetail: '1234',
-};
+];
 
 const mockPriceData = {
   washOption: {
@@ -243,56 +233,54 @@ export const handlers = [
     );
   }),
 
-  // ── 주소 API ──
+  // ── 주소 API (v2) ──
 
-  // 기본 주소 설정 (가장 구체적인 경로 우선)
-  http.patch('*/api/v1/users/me/shipping-addresses/:id/default', () => {
-    return HttpResponse.json({ data: null, status: 200, message: 'success' }, { status: 200 });
+  // 기본 배송지 설정 (가장 구체적인 경로 우선) — v2는 PUT …/default
+  http.put('*/api/v2/shipping-addresses/:id/default', () => {
+    return new HttpResponse(null, { status: 200 });
   }),
 
-  // 주소 상세 조회
-  http.get('*/api/v1/users/me/shipping-addresses/:id', () => {
+  // 배송지 상세 조회
+  http.get('*/api/v2/shipping-addresses/:id', () => {
     return HttpResponse.json(
-      { data: mockAddressDetail, status: 200, message: 'success' },
+      { data: mockV2Address, status: 200, code: 'SUCCESS', message: 'success' },
       { status: 200 },
     );
   }),
 
-  // 주소 수정
-  http.put('*/api/v1/users/me/shipping-addresses/:id', () => {
-    return HttpResponse.json({ data: null, status: 200, message: 'success' }, { status: 200 });
-  }),
-
-  // 주소 삭제
-  http.delete('*/api/v1/users/me/shipping-addresses/:id', () => {
-    return HttpResponse.json({ data: null, status: 200, message: 'success' }, { status: 200 });
-  }),
-
-  // 주소 목록 조회
-  http.get('*/api/v1/users/me/shipping-addresses', () => {
+  // 배송지 수정
+  http.put('*/api/v2/shipping-addresses/:id', () => {
     return HttpResponse.json(
-      { data: mockAddressList, status: 200, message: 'success' },
+      { data: mockV2Address, status: 200, code: 'SUCCESS', message: 'success' },
       { status: 200 },
     );
   }),
 
-  // 주소 생성
-  http.post('*/api/v1/users/me/shipping-addresses', () => {
-    return HttpResponse.json({ data: null, status: 201, message: 'created' }, { status: 201 });
+  // 배송지 삭제 — v2는 204 No Content
+  http.delete('*/api/v2/shipping-addresses/:id', () => {
+    return new HttpResponse(null, { status: 204 });
   }),
 
-  // 기본 주소 조회 (사용자 정보)
-  http.get('*/api/v1/users/me', () => {
+  // 배송지 목록 조회
+  http.get('*/api/v2/shipping-addresses', () => {
     return HttpResponse.json(
-      { data: mockDefaultAddress, status: 200, message: 'success' },
+      { data: mockV2AddressList, status: 200, code: 'SUCCESS', message: 'success' },
       { status: 200 },
     );
   }),
 
-  // 주소 검색
-  http.get('*/api/v1/addresses', () => {
+  // 배송지 생성 — v2는 201
+  http.post('*/api/v2/shipping-addresses', () => {
     return HttpResponse.json(
-      { data: mockAddressSearchResult, status: 200, message: 'success' },
+      { data: mockV2Address, status: 201, code: 'SUCCESS', message: 'created' },
+      { status: 201 },
+    );
+  }),
+
+  // 주소 검색 — v2 geocode
+  http.get('*/api/v2/geo/geocode', () => {
+    return HttpResponse.json(
+      { data: mockV2Geocode, status: 200, code: 'SUCCESS', message: 'success' },
       { status: 200 },
     );
   }),
@@ -353,10 +341,9 @@ export const handlers = [
 // ── 테스트에서 사용할 mock 데이터 export ──
 
 export const mockData = {
-  addressList: mockAddressList,
-  addressDetail: mockAddressDetail,
-  addressSearchResult: mockAddressSearchResult,
-  defaultAddress: mockDefaultAddress,
+  v2Address: mockV2Address,
+  v2AddressList: mockV2AddressList,
+  v2Geocode: mockV2Geocode,
   priceData: mockPriceData,
   orderResponse: mockOrderResponse,
   orderList: mockOrderList,

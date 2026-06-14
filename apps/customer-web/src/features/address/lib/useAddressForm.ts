@@ -5,9 +5,18 @@ import { validateAllSteps, validateForm } from '@features/address/lib/addressVal
 import {
   buildAddressPayload,
   addressResponseToFormData,
+  type AddressGeo,
 } from '@features/address/lib/address-form-utils';
 import { formatPhoneNumber } from '@shared/lib/formatPhoneNumber';
 import type { TAddressRes } from '@shared/types/api-types';
+
+/** 주소검색(geocode) 결과에서 폼으로 가져오는 선택 항목. */
+export type AddressSelection = {
+  addressName: string;
+  latitude?: number;
+  longitude?: number;
+  zipCode?: string;
+};
 
 // ── 공유 타입 ──
 
@@ -55,6 +64,8 @@ export function useAddressForm() {
     name: '',
     phone: '',
   });
+  // v2 필수 지오 필드 — 주소검색 선택/편집 라운드트립으로 채워진다.
+  const [geo, setGeo] = useState<AddressGeo>({});
 
   // ── 핸들러 ──
 
@@ -69,6 +80,20 @@ export function useAddressForm() {
 
   const handleMainAddressChange = useCallback((value: string) => {
     setAddress((prev) => ({ ...prev, main: value }));
+  }, []);
+
+  /**
+   * 주소검색 결과 선택 — 도로명/지번을 main에 넣고, geocode가 준 좌표·우편번호를
+   * 폼 지오 상태에 보존한다(생성 페이로드의 v2 필수 필드 출처).
+   */
+  const handleAddressSelect = useCallback((selected: AddressSelection) => {
+    setAddress((prev) => ({ ...prev, main: selected.addressName }));
+    setGeo((prev) => ({
+      ...prev,
+      latitude: selected.latitude,
+      longitude: selected.longitude,
+      zipCode: selected.zipCode,
+    }));
   }, []);
 
   const handleExtraInfoChange = useCallback((text: string) => {
@@ -98,8 +123,8 @@ export function useAddressForm() {
   // ── 주소 페이로드 빌드 ──
 
   const buildPayload = useCallback(
-    () => buildAddressPayload(formData, address, selectedValue, selectedRequest),
-    [formData, address, selectedValue, selectedRequest],
+    () => buildAddressPayload(formData, address, selectedValue, selectedRequest, geo),
+    [formData, address, selectedValue, selectedRequest, geo],
   );
 
   // ── 편집 모드: 기존 데이터로 폼 채우기 ──
@@ -111,6 +136,7 @@ export function useAddressForm() {
     setAddress(result.address);
     setSelectedValue(result.entrance);
     setSelectedRequest(result.request);
+    setGeo(result.geo);
   }, []);
 
   return {
@@ -129,6 +155,7 @@ export function useAddressForm() {
     handlePhoneChange,
     handleChange,
     handleMainAddressChange,
+    handleAddressSelect,
     handleExtraInfoChange,
     handleNext,
     handleChangeRequest,

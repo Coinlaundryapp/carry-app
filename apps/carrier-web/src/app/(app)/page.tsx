@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getMe, logout, type UserProfile } from '@features/auth';
 import { useV2Client } from '@shared/api/useV2Client';
@@ -43,6 +44,15 @@ export default function HomePage() {
           </p>
         </section>
       )}
+
+      <nav className="flex flex-col gap-2">
+        <Link
+          href="/dispatches"
+          className="rounded-lg bg-blue-600 px-4 py-3 text-center font-semibold text-white"
+        >
+          배차 보기
+        </Link>
+      </nav>
     </main>
   );
 }

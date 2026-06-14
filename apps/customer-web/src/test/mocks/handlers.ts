@@ -114,64 +114,8 @@ const mockOrderResponse = {
   totalAmount: 15000,
 };
 
-const mockOrderList = [
-  {
-    id: 1,
-    orderedAt: '2024-01-15T10:00:00',
-    status: 'ORDER_COMPLETED' as const,
-    orderContent: {
-      orderUnitType: 'SOLO' as const,
-      orderRequestType: 'NEW',
-      laundryItemType: 'REGULAR' as const,
-    },
-    laundromatName: '깨끗한 빨래방',
-    paymentDetails: {
-      estimatedPayment: {
-        discounts: { laundryDiscounts: [], deliveryDiscounts: [] },
-        charges: { laundryPrice: 10000, deliveryFee: 3000, serviceFee: 2000 },
-        netAmount: 15000,
-      },
-    },
-    confirmedPayment: null,
-  },
-];
-
-const mockOrderDetail = {
-  id: 1,
-  status: 'ORDER_COMPLETED' as const,
-  orderContent: {
-    orderUnitType: 'SOLO' as const,
-    orderRequestType: 'NEW',
-    laundryItemType: 'REGULAR' as const,
-    laundrySpecs: [],
-    washOption: 'STANDARD',
-    dryOption: 'LOW_HEAT',
-    additonalOption: [],
-  },
-  laundromatName: '깨끗한 빨래방',
-  shippingAddress: {
-    addressLabel: '집',
-    recipientPhone: '010-1234-5678',
-    recipientName: '홍길동',
-    baseAddress: '서울시 강남구 테헤란로 123',
-    detailAddress: '101동 202호',
-    deliveryNotes: '문 앞에 놓아주세요',
-    entranceType: 'PASSWORD',
-    entranceDetail: '1234',
-  },
-  orderShedule: {
-    desiredPickupDateTime: '2024-01-15 10:00:00 Mon',
-    desiredDeliveryDate: '2024-01-16 18:00:00 Tue',
-  },
-  paymentDetails: {
-    estimatedPayment: {
-      discounts: { laundryDiscounts: [], deliveryDiscounts: [] },
-    },
-    charges: { laundryPrice: 10000, deliveryFee: 3000, serviceFee: 2000 },
-    netAmount: 15000,
-  },
-  confirmedPayment: null,
-};
+// v2 주문 목록 — getMyOrders는 OrderResponse[]. 상세(getOrder)도 동일 OrderResponse를 쓴다.
+const mockV2OrderList = [mockOrderResponse];
 
 // v2 InvoiceResponse 원형 — getPaymentInfo가 앱 PaymentInfo로 매핑(chargeType 버킷팅).
 const mockV2Invoice = {
@@ -373,18 +317,18 @@ export const handlers = [
     );
   }),
 
-  // 주문 상세 (더 구체적인 경로 우선)
-  http.get('*/api/v1/orders/:id/details', () => {
+  // 내 주문 목록 (v2) — 'my'를 :orderId보다 먼저 등록해야 매칭됨
+  http.get('*/api/v2/orders/my', () => {
     return HttpResponse.json(
-      { data: mockOrderDetail, status: 200, message: 'success' },
+      { data: mockV2OrderList, status: 200, code: 'SUCCESS', message: 'success' },
       { status: 200 },
     );
   }),
 
-  // 주문 목록
-  http.get('*/api/v1/orders', () => {
+  // 주문 상세 (v2)
+  http.get('*/api/v2/orders/:orderId', () => {
     return HttpResponse.json(
-      { data: mockOrderList, status: 200, message: 'success' },
+      { data: mockOrderResponse, status: 200, code: 'SUCCESS', message: 'success' },
       { status: 200 },
     );
   }),
@@ -418,8 +362,7 @@ export const mockData = {
   v2PricePolicy: mockV2PricePolicy,
   orderResponse: mockOrderResponse,
   v2Invoice: mockV2Invoice,
-  orderList: mockOrderList,
-  orderDetail: mockOrderDetail,
+  v2OrderList: mockV2OrderList,
   laundromats: mockLaundromats,
   v2Nearby: mockV2Nearby,
   serviceRegions: mockServiceRegions,

@@ -58,6 +58,9 @@ export default function HomePage() {
         >
           내 배달
         </Link>
+        <Link href="/areas" className="text-center text-sm text-gray-500 underline">
+          활동 권역 관리
+        </Link>
       </nav>
     </main>
   );

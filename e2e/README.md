@@ -29,7 +29,15 @@ pnpm --filter @carry/e2e e2e:report     # HTML 리포트
 - `playwright.config.ts` — webServer(customer-web)·baseURL·리포터
 - `fixtures/auth.ts` — `devLogin(api, role)` + role별 토큰 주입 fixture
 - `specs/smoke.spec.ts` — dev-login 4역할 토큰 획득 + customer-web 홈 렌더
+- `specs/journey.spec.ts` — **F1 핵심 여정**(라이브 v2): 인증→배송지(M-2)→주문+멱등키(M-6)→목록·상세(M-8)를 dev-login 토큰으로 실 백엔드에 관통 검증
 
-## 범위 메모
+## 핵심 여정(journey.spec) 메모
 
-현 customer-web은 v1 인증이라 smoke는 "dev-login 토큰 획득 + 홈 렌더"까지다. UI 로그인 연동(토큰 주입으로 인증 화면 진입)은 F1(customer v1→v2 마이그레이션)에서 `@carry/api`·`@carry/types`와 함께 추가한다.
+customer-web feature API가 호출하는 v2 엔드포인트를 dev-login 토큰으로 실 백엔드에 대고 관통 검증한다(단위 테스트의 msw 계약이 실 백엔드와 일치함을 증명). 자체적으로 ADMIN으로 세탁소를 등록하고 CUSTOMER로 배송지·주문을 만든다.
+
+**우회(외부/인프라 의존)** — 라이브 불가라 건너뛴다:
+- 주소검색(Naver geocode 키 부재) → 배송지 좌표·`areaCode`를 직접 주입
+- 세탁소 검색 `findNearby`(로컬 postgres에 **PostGIS 확장 부재** → 500) → ADMIN `POST /v2/laundromats`로 직접 등록해 우회
+- 가격 정책(로컬 시드 부재 → 404)·결제 승인(Toss PG 부재) → 여정에서 제외
+
+**로컬 DB 주의**: Flyway local 비활성(ddl-auto:update)이라 **IDENTITY 시퀀스가 누적 데이터와 desync**되면 INSERT가 `duplicate key (id)=(1)`로 깨질 수 있다. 발생 시 `ALTER TABLE <t> ALTER COLUMN id RESTART WITH <max+1>`로 진행. 클린 볼륨에선 무관.

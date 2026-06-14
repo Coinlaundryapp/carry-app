@@ -93,15 +93,25 @@ const mockV2PricePolicy = {
   ],
 };
 
+// v2 OrderResponse 원형 — 주문 생성 응답. 화면은 id만 사용(상태 페이지 이동).
 const mockOrderResponse = {
   id: 1,
-  status: 'ORDER_COMPLETED' as const,
-  orderUnitType: 'SOLO' as const,
-  orderRequestType: 'NEW' as const,
-  laundryItemType: 'REGULAR' as const,
-  laundromatName: '깨끗한 빨래방',
-  orderedAt: '2024-01-15T10:00:00',
-  estimatedAmount: 15000,
+  customerId: 100,
+  status: 'ORDER_COMPLETED',
+  laundromatId: 1,
+  laundryItemType: 'REGULAR',
+  selectedOptions: [
+    { optionType: 'WASH', subOptionType: 'STANDARD' },
+    { optionType: 'DRY', subOptionType: 'LOW_HEAT' },
+  ],
+  roadAddress: '서울시 강남구 테헤란로 123',
+  detailAddress: '101동 202호',
+  recipientName: '홍길동',
+  recipientPhone: '010-1234-5678',
+  desiredPickupAt: '2024-01-15T10:00:00Z',
+  desiredDeliveryAt: '2024-01-16T18:00:00Z',
+  carrierId: null,
+  totalAmount: 15000,
 };
 
 const mockOrderList = [
@@ -331,10 +341,10 @@ export const handlers = [
     );
   }),
 
-  // 주문 생성
-  http.post('*/api/v1/orders', () => {
+  // 주문 생성 (v2) — Idempotency-Key 멱등
+  http.post('*/api/v2/orders', () => {
     return HttpResponse.json(
-      { data: mockOrderResponse, status: 201, message: 'created' },
+      { data: mockOrderResponse, status: 201, code: 'SUCCESS', message: 'created' },
       { status: 201 },
     );
   }),

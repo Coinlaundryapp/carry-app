@@ -18,7 +18,7 @@ export function createV2Client(
     fetchImpl?: typeof fetch;
   } = {},
 ) {
-  // env 미설정(테스트 등)이면 ''로 폴백 → 상대경로로 현재 origin에 resolve(구 fetchExtended와 동치).
+  // env 미설정(테스트 등)이면 ''로 폴백 → 상대경로로 현재 origin에 resolve.
   const baseUrl = opts.baseUrl ?? env.NEXT_PUBLIC_BACKEND_URL ?? '';
   const tokenStore = opts.accessToken
     ? {

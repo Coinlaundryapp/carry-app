@@ -54,36 +54,6 @@ export type TAddressRes = {
   areaCode?: string;
 };
 
-// 서비스 가능 여부 api
-type ServiceAvailabilityLevel = 'AVAILABLE' | 'POTENTIALLY_AVAILABLE' | 'UNAVAILABLE';
-
-export interface ServiceAvailabilityResponse {
-  serviceAvailabilityLevel: ServiceAvailabilityLevel;
-  region: {
-    city: string;
-    district: string | null;
-  };
-}
-
-export interface ServiceAvailabiltyRegionRes {
-  city: 'SEOUL_SI' | 'INCHEON_SI';
-  district: string;
-  latitude: number;
-  longitude: number;
-}
-
-// 서비스 오픈 알림 등록 api
-type NotificationType = 'ALARM_TALK' | 'SMS' | 'EMAIL';
-
-export interface NotificationBody {
-  region: {
-    city: string;
-    district: string;
-  };
-  notificationType: NotificationType;
-  contact: string;
-}
-
 export interface ErrorResponse {
   status: number;
   message: string;

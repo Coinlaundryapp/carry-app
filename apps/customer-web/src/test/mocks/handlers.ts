@@ -168,21 +168,6 @@ const mockLaundromats = [
   },
 ];
 
-const mockServiceRegions = [
-  {
-    city: 'SEOUL_SI' as const,
-    district: '강남구',
-    latitude: 37.5172,
-    longitude: 127.0473,
-  },
-  {
-    city: 'SEOUL_SI' as const,
-    district: '서초구',
-    latitude: 37.4837,
-    longitude: 127.0324,
-  },
-];
-
 // ── 핸들러 ──
 
 export const handlers = [
@@ -333,20 +318,12 @@ export const handlers = [
     );
   }),
 
-  // ── 세탁소 + 서비스 지역 ──
+  // ── 세탁소 ──
 
   // 주변 세탁소 검색 (v2 findNearby) — NearbyLaundromatResponse[]
   http.get('*/api/v2/laundromats', () => {
     return HttpResponse.json(
       { data: mockV2Nearby, status: 200, code: 'SUCCESS', message: 'success' },
-      { status: 200 },
-    );
-  }),
-
-  // 서비스 가능 지역
-  http.get('*/api/v1/service-availability/regions', () => {
-    return HttpResponse.json(
-      { data: mockServiceRegions, status: 200, message: 'success' },
       { status: 200 },
     );
   }),
@@ -365,5 +342,4 @@ export const mockData = {
   v2OrderList: mockV2OrderList,
   laundromats: mockLaundromats,
   v2Nearby: mockV2Nearby,
-  serviceRegions: mockServiceRegions,
 };

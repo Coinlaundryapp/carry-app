@@ -1,15 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '@/test/mocks/server';
-import { login, loginWithKakaoToken, refreshAccessToken } from './token';
+import { devLogin, loginWithKakao, refreshAccessToken } from './token';
 
-describe('token API', () => {
-  describe('login', () => {
-    it('정상 응답 → accessToken + refreshToken 반환', async () => {
-      const result = await login({
-        authorizationCode: 'test-code',
-        redirectUri: 'http://localhost:3000/callback',
-      });
+describe('token API (v2)', () => {
+  describe('loginWithKakao', () => {
+    it('REGISTERED 응답 → accessToken + refreshToken 반환', async () => {
+      const result = await loginWithKakao('kakao-access-token');
 
       expect(result).toEqual({
         accessToken: 'mock-access-token',
@@ -17,76 +14,39 @@ describe('token API', () => {
       });
     });
 
-    it('422 응답 → login_error 에러', async () => {
+    it('REGISTRATION_REQUIRED 응답 → registration_required 에러(가입 흐름 후속)', async () => {
       server.use(
-        http.post('*/api/v1/sign/login', () => {
-          return HttpResponse.json(
-            { data: null, status: 422, message: 'Unprocessable Entity' },
-            { status: 422 },
-          );
-        }),
+        http.post('*/api/v2/auth/login', () =>
+          HttpResponse.json(
+            {
+              data: { status: 'REGISTRATION_REQUIRED', signupToken: 'st' },
+              status: 200,
+              code: 'SUCCESS',
+              message: 'ok',
+            },
+            { status: 200 },
+          ),
+        ),
       );
 
-      await expect(
-        login({
-          authorizationCode: 'invalid-code',
-          redirectUri: 'http://localhost:3000/callback',
-        }),
-      ).rejects.toThrow('login_error');
-    });
-
-    it('500 응답 → server_error 에러', async () => {
-      server.use(
-        http.post('*/api/v1/sign/login', () => {
-          return HttpResponse.json(
-            { data: null, status: 500, message: 'Internal Server Error' },
-            { status: 500 },
-          );
-        }),
-      );
-
-      await expect(
-        login({
-          authorizationCode: 'test-code',
-          redirectUri: 'http://localhost:3000/callback',
-        }),
-      ).rejects.toThrow('server_error');
+      await expect(loginWithKakao('new-user-token')).rejects.toThrow('registration_required');
     });
   });
 
-  describe('loginWithKakaoToken', () => {
-    it('정상 응답 → accessToken + refreshToken 반환', async () => {
-      const result = await loginWithKakaoToken({
-        accessToken: 'kakao-access-token',
-      });
+  describe('devLogin', () => {
+    it('역할로 호출 → 토큰 반환', async () => {
+      const result = await devLogin('CUSTOMER');
 
       expect(result).toEqual({
         accessToken: 'mock-access-token',
         refreshToken: 'mock-refresh-token',
       });
-    });
-
-    it('422 응답 → login_error 에러', async () => {
-      server.use(
-        http.post('*/api/v1/sign/login', () => {
-          return HttpResponse.json(
-            { data: null, status: 422, message: 'Unprocessable Entity' },
-            { status: 422 },
-          );
-        }),
-      );
-
-      await expect(loginWithKakaoToken({ accessToken: 'invalid-token' })).rejects.toThrow(
-        'login_error',
-      );
     });
   });
 
   describe('refreshAccessToken', () => {
-    it('정상 갱신 → 새 토큰 반환', async () => {
-      const result = await refreshAccessToken({
-        refreshToken: 'old-refresh-token',
-      });
+    it('정상 회전 → 새 토큰 반환', async () => {
+      const result = await refreshAccessToken('old-refresh-token');
 
       expect(result).toEqual({
         accessToken: 'new-access-token',
@@ -94,19 +54,17 @@ describe('token API', () => {
       });
     });
 
-    it('만료된 토큰 → null 반환', async () => {
+    it('회전 실패(401 재사용감지 등) → null 반환', async () => {
       server.use(
-        http.post('*/api/v1/sign/reissue', () => {
-          return HttpResponse.json(
-            { data: null, status: 401, message: 'Unauthorized' },
+        http.post('*/api/v2/auth/refresh', () =>
+          HttpResponse.json(
+            { status: 401, code: 'AUTH_TOKEN_INVALID', message: 'invalid' },
             { status: 401 },
-          );
-        }),
+          ),
+        ),
       );
 
-      const result = await refreshAccessToken({
-        refreshToken: 'expired-token',
-      });
+      const result = await refreshAccessToken('expired-token');
 
       expect(result).toBeNull();
     });

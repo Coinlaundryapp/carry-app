@@ -1,7 +1,7 @@
 import NextAuth, { DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { isJwtExpired } from '@features/auth/lib/jwt';
-import { login, loginWithKakaoToken, refreshAccessToken } from '@features/auth/api/token';
+import { devLogin, loginWithKakao, refreshAccessToken } from '@features/auth/api/token';
 
 declare module 'next-auth' {
   interface User {
@@ -21,36 +21,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        code: {},
-        redirectUri: {},
+        // WebView Kakao(네이티브 토큰), 로컬·e2e dev-login(역할). 브라우저 OAuth 코드 흐름은
+        // v2 미지원(옵션 B 보류)이라 제거 — 콘솔 준비 시 Kakao JS SDK 토큰 교환으로 재개.
         kakaoAccessToken: {},
+        devRole: {},
       },
       authorize: async (credentials) => {
         try {
-          const kakaoAccessToken = credentials.kakaoAccessToken as string;
+          const kakaoAccessToken = credentials.kakaoAccessToken as string | undefined;
+          const devRole = credentials.devRole as string | undefined;
+
           let res;
-
-          if (kakaoAccessToken) {
-            // WebView 로그인: 네이티브 카카오 SDK에서 받은 accessToken
-            res = await loginWithKakaoToken({ accessToken: kakaoAccessToken });
+          if (devRole) {
+            // 비프로덕션 dev-login: 역할별 토큰(Kakao 불요).
+            res = await devLogin(devRole);
+          } else if (kakaoAccessToken) {
+            // WebView 로그인: 네이티브 Kakao SDK access token → v2 서버 검증.
+            res = await loginWithKakao(kakaoAccessToken);
           } else {
-            // 브라우저 로그인: 카카오 OAuth 인가 코드
-            const authorizationCode = credentials.code as string;
-            const redirectUri = credentials.redirectUri as string;
-
-            if (!authorizationCode) {
-              throw new Error('Invalid authorization code');
-            }
-            res = await login({ authorizationCode, redirectUri });
+            throw new Error('Invalid credentials');
           }
 
-          if (res) {
-            return {
-              accessToken: res.accessToken,
-              refreshToken: res.refreshToken,
-            };
-          }
-          throw new Error('Authentication failed');
+          return {
+            accessToken: res.accessToken,
+            refreshToken: res.refreshToken,
+          };
         } catch (error) {
           if (error instanceof Error) {
             (error as Error & { cause?: { err: string } }).cause = { err: error.message };
@@ -70,7 +65,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (token && isJwtExpired(token.accessToken as string)) {
-        const res = await refreshAccessToken({ refreshToken: token.refreshToken as string });
+        const res = await refreshAccessToken(token.refreshToken as string);
         if (!res) {
           // 토큰 갱신 실패 시 기존 토큰 반환 (세션 만료 처리는 클라이언트에서)
           return { ...token, accessToken: '', refreshToken: '' };

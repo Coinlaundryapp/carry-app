@@ -190,29 +190,45 @@ const mockServiceRegions = [
 // ── 핸들러 ──
 
 export const handlers = [
-  // 로그인 (authorizationCode + redirectUri 방식)
-  http.post('*/api/v1/sign/login', async ({ request }) => {
+  // Kakao 로그인 (v2 — kakaoAccessToken 서버 검증)
+  http.post('*/api/v2/auth/login', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>;
-
-    // authorizationCode 방식
-    if (body.authorizationCode) {
-      return HttpResponse.json(authSuccessBody, { status: 200 });
+    if (body.kakaoAccessToken) {
+      return HttpResponse.json(
+        {
+          data: {
+            status: 'REGISTERED',
+            accessToken: 'mock-access-token',
+            refreshToken: 'mock-refresh-token',
+          },
+          status: 200,
+          code: 'SUCCESS',
+          message: 'success',
+        },
+        { status: 200 },
+      );
     }
-
-    // accessToken 방식 (카카오 토큰)
-    if (body.accessToken) {
-      return HttpResponse.json(authSuccessBody, { status: 200 });
-    }
-
-    // 잘못된 요청
     return HttpResponse.json(
-      { data: null, status: 422, message: 'Unprocessable Entity' },
-      { status: 422 },
+      { status: 400, code: 'INVALID_INPUT', message: 'kakaoAccessToken required' },
+      { status: 400 },
     );
   }),
 
-  // 토큰 갱신
-  http.post('*/api/v1/sign/reissue', () => {
+  // dev-login (v2 — 역할별 토큰)
+  http.post('*/api/v2/auth/dev-login', () => {
+    return HttpResponse.json(
+      {
+        data: { accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token' },
+        status: 200,
+        code: 'SUCCESS',
+        message: 'success',
+      },
+      { status: 200 },
+    );
+  }),
+
+  // 토큰 회전 (v2)
+  http.post('*/api/v2/auth/refresh', () => {
     return HttpResponse.json(
       {
         data: {
@@ -220,6 +236,7 @@ export const handlers = [
           refreshToken: 'new-refresh-token',
         },
         status: 200,
+        code: 'SUCCESS',
         message: 'success',
       },
       { status: 200 },

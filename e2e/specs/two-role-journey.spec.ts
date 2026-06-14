@@ -5,9 +5,11 @@ import { request, type APIRequestContext } from '@playwright/test';
  * F2 — **2-role(customer → carrier) 사가 관통**을 라이브 백엔드로 실증한다.
  *
  * customer가 주문하면 OrderCreatedEvent → carry-dispatch가 PENDING 배차 생성. carrier가
- * 권역을 등록하고 그 배차를 선점·수락하면 DispatchAcceptedEvent → carry-delivery가 Delivery를
- * 생성(PICKUP_PENDING). carrier가 상태기계(수거→세탁→건조→배달)를 관통해 DELIVERED에 도달한다.
- * 두 비동기 핸드오프(주문→배차, 수락→배달)는 Kafka 경유라 polling으로 대기한다.
+ * 권역을 등록하고 그 배차를 선점하면(self-claim은 PENDING→ACCEPTED 직행) DispatchAcceptedEvent
+ * → carry-delivery가 Delivery를 생성(PICKUP_PENDING). carrier가 상태기계(수거→세탁→건조)를
+ * 관통해 LAUNDRY_COMPLETE에 도달한다. 두 비동기 핸드오프(주문→배차, 선점→배달)는 Kafka 경유라
+ * polling으로 대기한다. 최종 배달(→DELIVERED)은 주문 PAID를 요구하는데 결제 사가(PG 어댑터)가
+ * 보류 상태라, 그 경계를 ORDER_NOT_PAID(402)로 명시 단언한다.
  *
  * carrier-web의 feature API가 치는 바로 그 v2 엔드포인트들을 dev-login 토큰으로 호출한다 —
  * 단위 테스트(msw)가 고정한 계약이 실 백엔드·사가와 일치함을 증명한다.
@@ -59,7 +61,7 @@ test.describe('F2 2-role 여정 (라이브 사가)', () => {
   // 사가 2홉(각 polling) + 미디어 업로드 + 4단계 전이라 기본 타임아웃을 늘린다.
   test.setTimeout(180_000);
 
-  test('customer 주문 → carrier 수락·배달 완료', async () => {
+  test('customer 주문 → carrier 선점·세탁 완료 (배달 완료는 결제 의존)', async () => {
     const admin = await authedContext('ADMIN');
     const customer = await authedContext('CUSTOMER');
     const carrier = await authedContext('CARRIER');
@@ -134,16 +136,15 @@ test.describe('F2 2-role 여정 (라이브 사가)', () => {
         return list.find((d) => d.orderId === orderId)?.id ?? null;
       });
 
-      // ── 4. CARRIER: 선점 → 수락 ──
+      // ── 4. CARRIER: 선점 ──
+      // 캐리어 self-claim은 PENDING → ACCEPTED로 **직접** 전이하며 곧바로 DispatchAcceptedEvent를
+      // 발행한다(별도 accept 엔드포인트는 coordinator-ASSIGNED 경로 전용). 따라서 claim 한 번으로
+      // 배달 사가가 트리거된다.
       const claimRes = await carrier.post(`/api/v2/dispatches/${dispatchId}/claim`);
       expect(claimRes.status(), await claimRes.text()).toBe(200);
-      expect((await claimRes.json()).data.status).toBe('ASSIGNED');
+      expect((await claimRes.json()).data.status).toBe('ACCEPTED');
 
-      const acceptRes = await carrier.post(`/api/v2/dispatches/${dispatchId}/accept`);
-      expect(acceptRes.status(), await acceptRes.text()).toBe(200);
-      expect((await acceptRes.json()).data.status).toBe('ACCEPTED');
-
-      // ── 5. 사가 2홉: 수락 → Delivery 생성 (Kafka). 내 배달에 나타날 때까지 대기 ──
+      // ── 5. 사가 2홉: 선점(=수락) → Delivery 생성 (Kafka). 내 배달에 나타날 때까지 대기 ──
       const delivery = await poll('생성된 배달', async () => {
         const res = await carrier.get('/api/v2/deliveries/my?size=50');
         if (!res.ok()) return null;
@@ -181,17 +182,22 @@ test.describe('F2 2-role 여정 (라이브 사가)', () => {
       expect(dryingRes.status(), await dryingRes.text()).toBe(200);
       expect((await dryingRes.json()).data.status).toBe('LAUNDRY_COMPLETE');
 
+      // ── 7. 최종 배달(→DELIVERED)은 주문 PAID를 요구한다 ──
+      // 결제 사가는 보류 상태다(PgProvider TOSS_PAYMENTS 어댑터 미구현 → 주문이 PAID에 도달
+      // 불가, F1서 Toss PG로 보류한 그 결제). 따라서 이 결제 경계를 ORDER_NOT_PAID(402)로
+      // **명시 단언**한다 — 2-role(customer↔carrier) 사가 핸드오프와 배달 상태기계(수거→세탁→
+      // 건조)는 여기까지 완전히 관통됨이 증명된다. PG 어댑터 배선 시 DELIVERED까지 확장한다.
       const deliveryRes = await carrier.post(`/api/v2/deliveries/${deliveryId}/delivery`, {
         data: { photoIds: [await uploadPhoto(carrier, 'delivery.jpg')] },
       });
-      expect(deliveryRes.status(), await deliveryRes.text()).toBe(200);
-      expect((await deliveryRes.json()).data.status).toBe('DELIVERED');
+      expect(deliveryRes.status(), await deliveryRes.text()).toBe(402);
+      expect((await deliveryRes.json()).code).toBe('ORDER_NOT_PAID');
 
-      // ── 7. 최종 단언: 배달이 DELIVERED로 마감 + 무게 기록 ──
+      // ── 8. 최종 단언: 배달은 LAUNDRY_COMPLETE에 머물고 수거 무게가 기록돼 있다 ──
       const finalRes = await carrier.get(`/api/v2/deliveries/${deliveryId}`);
       expect(finalRes.ok()).toBeTruthy();
       const final = (await finalRes.json()).data;
-      expect(final.status).toBe('DELIVERED');
+      expect(final.status).toBe('LAUNDRY_COMPLETE');
       expect(Number(final.actualWeight)).toBe(3.5);
     } finally {
       await admin.dispose();

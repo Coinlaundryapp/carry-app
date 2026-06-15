@@ -14,7 +14,9 @@ const Page = () => {
 
   const { data: orderList } = useQuery({
     queryKey: ['getOrderList'],
-    queryFn: () => getOrderList(accessToken, 0),
+    // 첫 페이지는 cursor 없이 조회한다. cursor=0을 넘기면 백엔드가 "id < 0"으로 해석해
+    // 항상 빈 목록이 돌아온다(0은 유효 주문 id라 시작점이 아니다).
+    queryFn: () => getOrderList(accessToken),
     enabled: !!accessToken,
   });
 

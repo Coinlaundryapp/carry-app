@@ -1,0 +1,133 @@
+name: E2E (live full-stack)
+
+# 라이브 백엔드 풀스택(Postgres·Redis·Kafka 3-node·kafka-connect·LocalStack + carry-app bootRun)을
+# 띄우고 Playwright UI-level E2E를 돌린다. 무겁고 외부(backend repo) 의존이라 **일반 PR을 차단하지
+# 않는다** — nightly·수동·`e2e` 라벨 PR에서만 실행한다. 일반 PR 게이트는 ci.yml(Lint·Typecheck·Test·Build).
+#
+# ⚠️ 선행 시크릿: `CARRY_PLATFORM_REPO_TOKEN` — carry-platform(백엔드) 리포를 체크아웃할 PAT
+#    (repo:read). 같은 org라도 기본 GITHUB_TOKEN으로는 다른 private 리포를 못 받는다. 미설정 시 RED.
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # 매일 (UTC) — 일반 PR과 분리된 야간 회귀
+  workflow_dispatch:
+  pull_request:
+    types: [labeled, synchronize, reopened]
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: live full-stack E2E
+    # PR은 'e2e' 라벨이 붙은 경우에만(일반 PR 비차단). schedule·dispatch는 항상 실행.
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'e2e')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BACKEND_URL: http://localhost:8081
+      PG_DSN: postgresql://carry:carry@localhost:5432/carry
+
+    steps:
+      - name: Checkout carry-app (frontend·e2e)
+        uses: actions/checkout@v4
+
+      - name: Checkout carry-platform (backend)
+        uses: actions/checkout@v4
+        with:
+          repository: Coinlaundryapp/carry-platform
+          ref: develop
+          token: ${{ secrets.CARRY_PLATFORM_REPO_TOKEN }}
+          path: backend
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Start infra (postgres·redis·kafka·connect·localstack)
+        working-directory: backend
+        run: docker compose up -d postgres redis kafka-1 kafka-2 kafka-3 kafka-connect localstack
+
+      - name: Wait for Postgres
+        run: |
+          for i in $(seq 1 30); do
+            if docker exec carry-postgres pg_isready -U carry -d carry >/dev/null 2>&1; then
+              echo "postgres ready"; exit 0
+            fi
+            sleep 2
+          done
+          echo "postgres not ready"; docker logs carry-postgres --tail 50; exit 1
+
+      - name: Start backend (bootRun, local 프로파일=스텁 PG)
+        working-directory: backend
+        env:
+          SPRING_PROFILES_ACTIVE: local
+          SERVER_PORT: '8081'
+          MANAGEMENT_TRACING_ENABLED: 'false'
+          # 환불 보상 스위퍼를 가속해 refund 여정이 합리적 시간에 REFUNDED에 도달하게 한다.
+          CARRY_PAYMENT_REFUND_RETRY_INTERVAL_MS: '5000'
+        run: |
+          nohup ./gradlew :carry-app:bootRun > "$GITHUB_WORKSPACE/backend.log" 2>&1 &
+          echo "backend pid $!"
+
+      - name: Wait for backend health (스키마 ddl-auto 생성 포함)
+        run: |
+          for i in $(seq 1 120); do
+            if curl -sf http://localhost:8081/actuator/health 2>/dev/null | grep -q '"status":"UP"'; then
+              echo "backend UP"; exit 0
+            fi
+            sleep 5
+          done
+          echo "backend not healthy"; tail -120 "$GITHUB_WORKSPACE/backend.log"; exit 1
+
+      - name: Seed (service_areas·schedules·price policies)
+        # local 프로파일은 ddl-auto:update로 스키마를 만든다 → 백엔드 기동(스키마 생성) 후 주입한다.
+        run: docker exec -i carry-postgres psql -U carry -d carry < backend/carry-loadtest/src/gatling/resources/seed.sql
+
+      - name: Register Debezium outbox connector
+        # connector json은 로컬(Docker Desktop)용 host.docker.internal을 쓴다 → CI(compose 네트워크)에선
+        # 컨테이너명 carry-postgres로 치환한다. outbox_events 테이블은 백엔드 ddl-auto가 만든 뒤라야 한다.
+        run: |
+          sed 's/host\.docker\.internal/carry-postgres/g' backend/infra/debezium/register-connector.json > /tmp/connector.json
+          for i in $(seq 1 60); do
+            code=$(curl -s -o /tmp/conn-resp.json -w '%{http_code}' -X POST http://localhost:8083/connectors \
+              -H 'Content-Type: application/json' --data @/tmp/connector.json || true)
+            if [ "$code" = "201" ] || [ "$code" = "409" ]; then echo "connector registered ($code)"; break; fi
+            echo "connect not ready ($code), retrying…"; sleep 3
+          done
+          cat /tmp/conn-resp.json || true
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright (chromium)
+        run: pnpm --filter @carry/e2e exec playwright install --with-deps chromium
+
+      - name: Run E2E (api + customer/carrier/coordinator UI)
+        run: pnpm --filter @carry/e2e e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: e2e/playwright-report
+          retention-days: 14
+
+      - name: Dump backend log on failure
+        if: failure()
+        run: tail -200 "$GITHUB_WORKSPACE/backend.log" || true

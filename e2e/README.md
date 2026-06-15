@@ -18,11 +18,18 @@
 
 ```bash
 pnpm --filter @carry/e2e exec playwright install chromium   # 최초 1회
-pnpm --filter @carry/e2e e2e            # 헤드리스 실행
+pnpm --filter @carry/e2e e2e            # 헤드리스 실행(전 project)
 pnpm --filter @carry/e2e e2e:report     # HTML 리포트
+# 특정 앱만: --project=customer-ui|carrier-ui|coordinator-ui|api
 ```
 
-환경 오버라이드: `BACKEND_URL`, `E2E_WEB_PORT`(기본 3100), `E2E_WEB_URL`.
+환경 오버라이드: `BACKEND_URL`, `E2E_CUSTOMER_PORT`(3100)·`E2E_CARRIER_PORT`(3001)·`E2E_COORDINATOR_PORT`(3002) 및 `*_URL`.
+
+## CI (`.github/workflows/e2e.yml`)
+
+라이브 백엔드 풀스택 의존이라 **일반 PR을 차단하지 않는다**. nightly(cron)·`workflow_dispatch`·`e2e` 라벨 PR에서만 실행한다(일반 PR 게이트는 `ci.yml`=Lint·Typecheck·Test·Build). 잡은 carry-platform(백엔드)을 체크아웃해 compose 인프라+bootRun을 띄우고 seed·Debezium 등록 후 Playwright를 돌린다.
+
+> ⚠️ **선행 시크릿** `CARRY_PLATFORM_REPO_TOKEN` — carry-platform 리포 체크아웃용 PAT(repo:read). 같은 org라도 기본 `GITHUB_TOKEN`으로는 다른 private 리포를 못 받는다. 미설정 시 워크플로 RED. 최초 검증은 `workflow_dispatch`로 1회 구동 권장.
 
 ## 구조 (F4 멀티앱)
 

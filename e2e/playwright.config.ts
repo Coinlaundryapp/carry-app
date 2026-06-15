@@ -79,6 +79,14 @@ export default defineConfig({
     webServer('customer-web', CUSTOMER_PORT, CUSTOMER_URL, {
       // NextAuth(@auth/core)가 미들웨어에서 요구 — E2E 전용 더미(실 시크릿 아님).
       AUTH_SECRET: process.env.AUTH_SECRET ?? 'e2e-dummy-secret-not-for-production',
+      // ⚠️ customer-web env 검증(@t3-oss/env-nextjs)은 SKIP_ENV_VALIDATION을 서버에서만 본다
+      // (NEXT_PUBLIC_ 접두사가 없어 클라이언트 번들에 인라인 안 됨). 클라이언트 hydration 시
+      // 검증이 다시 돌아 NEXT_PUBLIC_* 키 부재로 throw → 페이지 blank. E2E 전용 더미로 채운다
+      // (Kakao/Naver/Toss 실 기능은 외부 의존이라 e2e에서 구동 안 함).
+      NEXT_PUBLIC_NAVER_ID: 'e2e-naver-id',
+      NEXT_PUBLIC_KAKAO_REST_API_KEY: 'e2e-kakao-rest-key',
+      NEXT_PUBLIC_KAKAO_REDIRECT_URL: `${CUSTOMER_URL}/api/kakao`,
+      NEXT_PUBLIC_TOSS_CLIENT_KEY: 'test_ck_e2e_dummy',
     }),
     webServer('carrier-web', CARRIER_PORT, CARRIER_URL),
     webServer('coordinator-web', COORDINATOR_PORT, COORDINATOR_URL),

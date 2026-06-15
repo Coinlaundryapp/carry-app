@@ -42,7 +42,11 @@ function webServer(appDir: string, port: number, url: string, extraEnv: Record<s
 
 export default defineConfig({
   testDir: './specs',
-  fullyParallel: true,
+  // ⚠️ 라이브 사가 통합 E2E라 **직렬 실행**한다. 모든 스펙이 고정 id dev 유저를 공유하고 같은
+  // available 배차를 선점·주문을 생성하므로, 병렬이면 ①배차 선점 경합 ②유저별 상한(배송지 10개)
+  // ③3개 Next dev 서버 동시 부하로 인한 goto 타임아웃이 발생한다. 격리 가능한 단위가 아니다.
+  fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: [['html', { open: 'never' }], ['list']],

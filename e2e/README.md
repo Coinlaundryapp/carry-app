@@ -24,12 +24,26 @@ pnpm --filter @carry/e2e e2e:report     # HTML 리포트
 
 환경 오버라이드: `BACKEND_URL`, `E2E_WEB_PORT`(기본 3100), `E2E_WEB_URL`.
 
-## 구조
+## 구조 (F4 멀티앱)
 
-- `playwright.config.ts` — webServer(customer-web)·baseURL·리포터
-- `fixtures/auth.ts` — `devLogin(api, role)` + role별 토큰 주입 fixture
-- `specs/smoke.spec.ts` — dev-login 4역할 토큰 획득 + customer-web 홈 렌더
-- `specs/journey.spec.ts` — **F1 핵심 여정**(라이브 v2): 인증→배송지(M-2)→주문+멱등키(M-6)→목록·상세(M-8)를 dev-login 토큰으로 실 백엔드에 관통 검증
+playwright.config는 3개 프론트(customer 3100·carrier 3001·coordinator 3002)를 **webServer 배열**로 자동
+기동하고, 앱별 **project**가 각자 baseURL을 갖는다:
+
+- `api` — baseURL 없음. API-level 스펙(`journey`·`two-role-journey`·`refund-journey`). `request` 컨텍스트가 `BACKEND_URL`을 직접 호출.
+- `customer-ui` — customer-web(3100). `customer-ui.spec.ts` + `smoke.spec.ts`(홈 렌더).
+- `carrier-ui` — carrier-web(3001). `carrier-ui.spec.ts`.
+- `coordinator-ui` — coordinator-web(3002). `coordinator-ui.spec.ts`.
+
+파일:
+- `fixtures/auth.ts` — `devLogin(api, role)` + role별 토큰 주입 fixture(API-level용).
+- `fixtures/ui-auth.ts` — **UI-level 인증**: carrier/coordinator는 실 dev-login 버튼 구동(`loginCarrierUI`/`loginCoordinatorUI`), customer는 NextAuth credentials 흐름으로 세션 식재(`signInCustomerUI`). customer 로그인 UI는 Kakao 전용이라 dev-login 버튼이 없다.
+- `specs/smoke.spec.ts` — dev-login 4역할 토큰 획득 + customer-web 홈 렌더.
+- `specs/journey.spec.ts` — **F1 핵심 여정**(라이브 v2): 인증→배송지(M-2)→주문+멱등키(M-6)→목록·상세(M-8)를 dev-login 토큰으로 실 백엔드에 관통 검증.
+- `specs/{customer,carrier,coordinator}-ui.spec.ts` — **F4 UI-level 핵심경로**(브라우저로 각 앱 관통).
+
+환경 오버라이드: `E2E_CUSTOMER_PORT`/`E2E_CARRIER_PORT`/`E2E_COORDINATOR_PORT`(및 `*_URL`).
+
+> ⚠️ carrier/coordinator-web은 브라우저에서 직접 백엔드를 호출하므로 백엔드 CORS가 해당 origin을 허용해야 한다(carry-platform `SecurityConfig` `allowedOriginPatterns=http://localhost:[*]`).
 
 ## 핵심 여정(journey.spec) 메모
 

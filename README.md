@@ -41,13 +41,14 @@
 ```
 carry-app/
 ├── apps/
-│   ├── customer-web/         # 고객용 웹 앱 (Android WebView)
-│   ├── carrier-web/          # 배달원용 웹 앱 (예정)
-│   └── coordinator-web/      # 코디네이터용 웹 앱 (예정)
+│   ├── customer-web/         # 고객용 모바일 웹 앱 (설치형 PWA)
+│   ├── carrier-web/          # 배달원용 모바일 웹 앱 (설치형 PWA)
+│   └── coordinator-web/      # 코디네이터/ADMIN용 웹 앱 (데스크톱)
 ├── packages/
-│   ├── ui/                   # 공유 UI 컴포넌트 (추출 예정)
-│   ├── types/                # 공유 타입 정의 (추출 예정)
-│   └── config/               # 공유 설정 (추출 예정)
+│   ├── api/                  # 공유 API 클라이언트 (토큰 refresh·401 single-flight)
+│   ├── ui/                   # 공유 UI 컴포넌트
+│   ├── types/                # 공유 타입 (openapi 생성 포함, `pnpm gen:types`)
+│   └── config/               # 공유 설정
 ├── docs/                     # 프로젝트 문서
 ├── turbo.json                # Turborepo 태스크 파이프라인
 └── pnpm-workspace.yaml       # pnpm 워크스페이스
@@ -57,11 +58,13 @@ carry-app/
 
 ## 앱 목록
 
-| 앱 | 포트 | 상태 | 설명 |
-|----|------|------|------|
-| **customer-web** | 3000 | 운영 중 | 고객용 — 세탁물 주문, 결제, 상태 추적 |
-| **carrier-web** | 3001 | 예정 | 배달원용 — 배차 수락, 수거/배달 관리 |
-| **coordinator-web** | 3002 | 예정 | 코디네이터용 — 운영 대시보드, 배차 관리 |
+| 앱 | 포트 | 상태 | 형태 | 설명 |
+|----|------|------|------|------|
+| **customer-web** | 3000 | 완료 (F0~F4) | 모바일 · 설치형 PWA | 고객용 — 세탁물 주문, 결제, 상태 추적 |
+| **carrier-web** | 3001 | 완료 (F0~F4) | 모바일 · 설치형 PWA | 배달원용 — 배차 수락, 수거/배달 관리 |
+| **coordinator-web** | 3002 | 완료 (F0~F4) | 데스크톱 | 코디네이터/ADMIN용 — 운영 대시보드, 배차/주문 관리, 환불 |
+
+> 모바일 앱(customer·carrier)은 **설치형 PWA**입니다 — 매니페스트·아이콘·최소 서비스 워커로 홈 화면 추가/standalone 구동, 네이티브 터치 질감(탭 하이라이트·바운스·줌 지연 제거). 오프라인 캐싱은 미도입.
 
 ---
 

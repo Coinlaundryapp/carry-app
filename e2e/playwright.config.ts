@@ -61,7 +61,7 @@ export default defineConfig({
     {
       // 기존 API-level 스펙 — baseURL 불요(request 컨텍스트가 BACKEND_URL을 직접 잡는다).
       name: 'api',
-      testMatch: /(journey|two-role-journey|refund-journey)\.spec\.ts$/,
+      testMatch: /(journey|two-role-journey|refund-journey|authz-negative)\.spec\.ts$/,
       use: { ...devices['Desktop Chrome'] },
     },
     {

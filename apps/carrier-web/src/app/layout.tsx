@@ -20,10 +20,7 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'Carry 배달원',
   },
-  icons: {
-    icon: '/icons/icon-192.png',
-    apple: '/icons/apple-touch-icon-180.png',
-  },
+  // 아이콘은 App Router 파일 컨벤션(app/apple-icon.png)으로 제공 — metadata.icons 중복 선언 불요.
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

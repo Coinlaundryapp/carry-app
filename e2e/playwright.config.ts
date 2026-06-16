@@ -31,7 +31,9 @@ function webServer(appDir: string, port: number, url: string, extraEnv: Record<s
     cwd: path.resolve(__dirname, '..'),
     url,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    // Next dev 콜드스타트(Sentry/OpenTelemetry 인스트루멘테이션 컴파일 포함)가 무거워 120s로는
+    // 부족할 수 있다(customer-web 특히). 느린 CI 러너의 거짓 타임아웃을 막으려 넉넉히 둔다.
+    timeout: 240_000,
     env: {
       SKIP_ENV_VALIDATION: '1',
       NEXT_PUBLIC_BACKEND_URL: BACKEND_URL,
@@ -64,16 +66,19 @@ export default defineConfig({
     },
     {
       // smoke는 customer 홈을 렌더하므로 customer baseURL이 필요 → customer-ui와 한 project.
+      // customer는 모바일 웹앱(설치형 PWA)이라 모바일 디바이스(뷰포트·터치·UA)로 검증한다.
       name: 'customer-ui',
       testMatch: /(customer-ui|smoke)\.spec\.ts$/,
-      use: { ...devices['Desktop Chrome'], baseURL: CUSTOMER_URL },
+      use: { ...devices['Pixel 5'], baseURL: CUSTOMER_URL },
     },
     {
+      // carrier도 모바일 웹앱(설치형 PWA) → 모바일 디바이스로 검증.
       name: 'carrier-ui',
       testMatch: /carrier-ui\.spec\.ts$/,
-      use: { ...devices['Desktop Chrome'], baseURL: CARRIER_URL },
+      use: { ...devices['Pixel 5'], baseURL: CARRIER_URL },
     },
     {
+      // coordinator는 데스크톱(운영 대시보드)이라 Desktop Chrome 유지.
       name: 'coordinator-ui',
       testMatch: /coordinator-ui\.spec\.ts$/,
       use: { ...devices['Desktop Chrome'], baseURL: COORDINATOR_URL },

@@ -1,6 +1,7 @@
 import { test, expect, request, type APIRequestContext, type Page } from '@playwright/test';
 import { devLogin, type Role } from '../fixtures/auth';
 import { loginCarrierUI } from '../fixtures/ui-auth';
+import { registerPwaTests } from '../fixtures/pwa';
 
 /**
  * F4 U4-2 — carrier-web **UI-level 핵심경로**.
@@ -156,3 +157,5 @@ test.describe('carrier-web UI', () => {
     await reloadUntilVisible(page, `주문 #${orderId}`);
   });
 });
+
+registerPwaTests('carrier-web');

@@ -36,17 +36,21 @@ pnpm --filter @carry/e2e e2e:report     # HTML 리포트
 playwright.config는 3개 프론트(customer 3100·carrier 3001·coordinator 3002)를 **webServer 배열**로 자동
 기동하고, 앱별 **project**가 각자 baseURL을 갖는다:
 
-- `api` — baseURL 없음. API-level 스펙(`journey`·`two-role-journey`·`refund-journey`). `request` 컨텍스트가 `BACKEND_URL`을 직접 호출.
-- `customer-ui` — customer-web(3100). `customer-ui.spec.ts` + `smoke.spec.ts`(홈 렌더).
-- `carrier-ui` — carrier-web(3001). `carrier-ui.spec.ts`.
-- `coordinator-ui` — coordinator-web(3002). `coordinator-ui.spec.ts`.
+- `api` — baseURL 없음. API-level 스펙(`journey`·`two-role-journey`·`refund-journey`·`authz-negative`). `request` 컨텍스트가 `BACKEND_URL`을 직접 호출.
+- `customer-ui` — customer-web(3100), **모바일 디바이스(Pixel 5)**. `customer-ui.spec.ts` + `smoke.spec.ts`(홈 렌더).
+- `carrier-ui` — carrier-web(3001), **모바일 디바이스(Pixel 5)**. `carrier-ui.spec.ts`.
+- `coordinator-ui` — coordinator-web(3002), Desktop Chrome(데스크톱 앱). `coordinator-ui.spec.ts`.
+
+> customer·carrier는 모바일 웹앱(설치형 PWA)이라 Pixel 5 뷰포트·터치·UA로 검증한다. coordinator는 데스크톱.
 
 파일:
 - `fixtures/auth.ts` — `devLogin(api, role)` + role별 토큰 주입 fixture(API-level용).
 - `fixtures/ui-auth.ts` — **UI-level 인증**: carrier/coordinator는 실 dev-login 버튼 구동(`loginCarrierUI`/`loginCoordinatorUI`), customer는 NextAuth credentials 흐름으로 세션 식재(`signInCustomerUI`). customer 로그인 UI는 Kakao 전용이라 dev-login 버튼이 없다.
+- `fixtures/pwa.ts` — **PWA 검증 묶음**(`registerPwaTests(app)`): manifest standalone·아이콘 192/512/maskable·`sw.js`·head(manifest/theme-color/apple-touch-icon). `page.request` read-only라 사가 상태 무교란. customer-ui·carrier-ui 스펙에서 호출.
 - `specs/smoke.spec.ts` — dev-login 4역할 토큰 획득 + customer-web 홈 렌더.
 - `specs/journey.spec.ts` — **F1 핵심 여정**(라이브 v2): 인증→배송지(M-2)→주문+멱등키(M-6)→목록·상세(M-8)를 dev-login 토큰으로 실 백엔드에 관통 검증.
-- `specs/{customer,carrier,coordinator}-ui.spec.ts` — **F4 UI-level 핵심경로**(브라우저로 각 앱 관통).
+- `specs/{customer,carrier,coordinator}-ui.spec.ts` — **F4 UI-level 핵심경로**(브라우저로 각 앱 관통) + PWA 검증(모바일) + 인증 가드(미인증→로그인) 네거티브.
+- `specs/authz-negative.spec.ts` — **인가 네거티브**: 실 필터체인에서 역할 위반 403(#144 세탁소 운영역할·코디네이터 전용)·무토큰 401. 거부=무변경(비파괴).
 
 환경 오버라이드: `E2E_CUSTOMER_PORT`/`E2E_CARRIER_PORT`/`E2E_COORDINATOR_PORT`(및 `*_URL`).
 

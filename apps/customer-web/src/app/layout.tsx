@@ -9,6 +9,7 @@ import Script from 'next/script';
 import ReactQueryProviders from '@shared/providers/ReactQueryProviders';
 import WebViewProvider from '@shared/providers/WebViewProvider';
 import { env } from '@shared/config/env';
+import ServiceWorkerRegister from '../shared/pwa/ServiceWorkerRegister';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -16,11 +17,22 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
+  themeColor: '#13c2c2',
 };
 
 export const metadata: Metadata = {
   title: 'Carry',
-  description: 'Carry',
+  description: '세탁 픽업·배송 서비스',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Carry',
+  },
+  icons: {
+    icon: '/icons/icon-192.png',
+    apple: '/icons/apple-touch-icon-180.png',
+  },
 };
 
 export default function RootLayout({
@@ -37,6 +49,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
+        <ServiceWorkerRegister />
         <AuthProvider>
           <ReactQueryProviders>
             <WebViewProvider>{children}</WebViewProvider>

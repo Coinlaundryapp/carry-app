@@ -29,10 +29,8 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'Carry',
   },
-  icons: {
-    icon: '/icons/icon-192.png',
-    apple: '/icons/apple-touch-icon-180.png',
-  },
+  // 아이콘은 App Router 파일 컨벤션으로 제공한다 — app/apple-icon.png(apple-touch-icon),
+  // app/favicon.ico(favicon). 파일 컨벤션이 존재하면 metadata.icons는 무시되므로 중복 선언하지 않는다.
 };
 
 export default function RootLayout({

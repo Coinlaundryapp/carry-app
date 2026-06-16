@@ -1,6 +1,7 @@
 import { test, expect, request, type APIRequestContext } from '@playwright/test';
 import { devLogin, type Role } from '../fixtures/auth';
 import { signInCustomerUI } from '../fixtures/ui-auth';
+import { registerPwaTests } from '../fixtures/pwa';
 
 /**
  * F4 U4-1 — customer-web **UI-level 핵심경로**.
@@ -119,3 +120,5 @@ test.describe('customer-web UI', () => {
     await expect(page.getByText(`주문번호 ${orderId}`)).toBeVisible();
   });
 });
+
+registerPwaTests('customer-web');

@@ -732,6 +732,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v2/admin/dlq/purge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * DLQ parked 硫붿떆吏� �룓湲�(purge)
+         * @description 吏��젙 �넗�뵿 DLQ�뿉�꽌 redrive 洹몃９�쓽 泥섎━�셿猷� 吏��젏(committed offset)源뚯�� 臾쇰━ �젅�떒�빐 �옍瑜� 硫붿떆吏�(�옱諛쒗뻾�맂 copy + parked poison)瑜� �쉶�닔�빀�땲�떎. redrive媛� �븘吏� 泥섎━�븯吏� �븡��� 誘몄쿂由щ텇��� 蹂댁〈�맗�땲�떎. 誘쇨컧 �슫�쁺 �옉�뾽�쑝濡� 媛먯궗 濡쒓렇�뿉 湲곕줉�맗�땲�떎.
+         */
+        post: operations["purge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v2/terms": {
         parameters: {
             query?: never;
@@ -2746,6 +2766,44 @@ export interface components {
              */
             parked: number;
         };
+        /** @description DLQ �룓湲� �슂泥� */
+        DlqPurgeRequest: {
+            /**
+             * @description �썝蹂� �넗�뵿紐�(.DLQ �젒誘몄궗 �젣�쇅)
+             * @example order.event
+             */
+            topic: string;
+        };
+        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        ApiResponseDlqPurgeResponse: {
+            /**
+             * Format: int32
+             * @description HTTP �긽�깭 肄붾뱶
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description �쓳�떟 肄붾뱶
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description �쓳�떟 硫붿떆吏�
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["DlqPurgeResponse"];
+            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            traceId?: string;
+        };
+        /** @description DLQ �룓湲� 寃곌낵 */
+        DlqPurgeResponse: {
+            /**
+             * Format: int32
+             * @description 臾쇰━ �젅�떒�쑝濡� �룓湲곕맂 �젅肄붾뱶 嫄댁닔
+             */
+            purged: number;
+        };
         /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
         ApiResponseListTermResponse: {
             /**
@@ -3732,6 +3790,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
                 };
             };
+            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
             /** @description �꽭�긽�냼瑜� 李얠쓣 �닔 �뾾�쓬 */
             404: {
                 headers: {
@@ -3760,6 +3827,15 @@ export interface operations {
         responses: {
             /** @description �샃�뀡 �닔�젙 �꽦怨� */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4300,6 +4376,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
                 };
             };
+            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
             /** @description �씠誘� 議댁옱�븯�뒗 �꽭�긽�냼 */
             409: {
                 headers: {
@@ -4328,6 +4413,15 @@ export interface operations {
         responses: {
             /** @description �씠誘몄�� 異붽�� �꽦怨� */
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4889,6 +4983,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ApiResponseDlqRedriveResponse"];
+                };
+            };
+        };
+    };
+    purge: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DlqPurgeRequest"];
+            };
+        };
+        responses: {
+            /** @description �룓湲� �셿猷� */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDlqPurgeResponse"];
+                };
+            };
+            /** @description �옒紐삳맂 �넗�뵿紐�(.DLQ �젒誘몄궗 �룷�븿 �삉�뒗 怨듬갚) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDlqPurgeResponse"];
+                };
+            };
+            /** @description ADMIN 沅뚰븳 �뾾�쓬 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDlqPurgeResponse"];
                 };
             };
         };
@@ -5715,6 +5851,15 @@ export interface operations {
         responses: {
             /** @description �씠誘몄�� �궘�젣 �꽦怨� */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

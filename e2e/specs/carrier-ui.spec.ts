@@ -156,6 +156,12 @@ test.describe('carrier-web UI', () => {
     await page.goto('/deliveries');
     await reloadUntilVisible(page, `주문 #${orderId}`);
   });
+
+  // 네거티브 — 미인증으로 보호 라우트 진입 시 로그인 화면으로 가드된다(거부=무변경, 비파괴).
+  test('미인증으로 /dispatches 진입 시 로그인 화면으로 가드된다', async ({ page }) => {
+    await page.goto('/dispatches');
+    await expect(page.getByRole('button', { name: '배달원으로 로그인' })).toBeVisible();
+  });
 });
 
 registerPwaTests('carrier-web');

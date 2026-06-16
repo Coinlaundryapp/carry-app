@@ -224,4 +224,10 @@ test.describe('coordinator-web UI', () => {
     // 환불 보상 사가 완료까지 새로고침 대기 → 상태가 환불완료(REFUNDED)가 된다.
     await reloadUntilStatus(page, '환불완료');
   });
+
+  // 네거티브 — 미인증으로 보호 라우트 진입 시 로그인 화면으로 가드된다(거부=무변경, 비파괴).
+  test('미인증으로 /orders 진입 시 로그인 화면으로 가드된다', async ({ page }) => {
+    await page.goto('/orders/1');
+    await expect(page.getByRole('button', { name: '로그인' })).toBeVisible();
+  });
 });

@@ -119,6 +119,15 @@ test.describe('customer-web UI', () => {
     await expect(page.getByText('내 세탁 현황')).toBeVisible();
     await expect(page.getByText(`주문번호 ${orderId}`)).toBeVisible();
   });
+
+  // customer 심화 — 로그인 화면이 카카오 로그인 안내·버튼으로 렌더된다(read-only, 비파괴).
+  // (customer는 미들웨어 하드 가드가 아니라 클라이언트가 인증을 처리하는 모델이라, 보호 라우트
+  //  리다이렉트 대신 로그인 UI 자체의 렌더를 검증한다.)
+  test('로그인 화면이 카카오 로그인 안내·버튼으로 렌더된다', async ({ page }) => {
+    await page.goto('/login');
+    await expect(page.getByText('코인세탁소에서 더이상 기다릴 필요 없이')).toBeVisible();
+    await expect(page.getByText('카카오로 시작하기').first()).toBeVisible();
+  });
 });
 
 registerPwaTests('customer-web');

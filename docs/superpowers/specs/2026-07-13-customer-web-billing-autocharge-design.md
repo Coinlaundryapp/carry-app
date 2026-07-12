@@ -93,11 +93,13 @@ customer-web을 새 백엔드 계약에 맞춘다. 핵심 UX 원칙(백엔드와
   | Invoice OVERDUE | 연체 |
   | Payment REFUND_PENDING / Invoice(취소 후 환불 진행) | 환불 처리중 |
   | Payment REFUNDED / Invoice REFUNDED | 환불 완료 |
+  | Invoice CANCELLED (미과금 취소) | 배지 없음 |
+  - 모르는 상태 조합은 안전 기본(배지 숨김).
   - 현재 `{}원` 스텁을 실 `invoice.totalAmount`로 교체.
 - **취소 주문 표시**: 주문 CANCELLED이면 배송 트랙은 "취소"로 종결. 결제 배지는 위 표대로(수거 전 취소 → 인보이스 없음 → 배지 없음; 과금 후 취소 → 환불 처리중/완료).
 - **실패/연체 배너**: 결제 실패·연체 시 "결제 수단에 문제가 있어요 · 카드 확인 필요" + CTA → 카드 변경(§4.2)/연체 해소(§4.6). 환불 처리중/완료는 정보성 표시(배너 아님).
 - **상세 화면**: 인보이스 조회는 주문 상세와 병렬 `useQuery`; 인보이스 404(수거 전)는 결제 지표 숨김.
-- **목록 화면 N+1 회피**: `StatusCard`는 상세(`status/[id]`)와 목록(`status/page.tsx`, N개 매핑) 양쪽에서 쓰인다. 목록에서는 **주문별 인보이스를 조회하지 않는다** — 배송 진행 트랙만 표시하고 결제 배지는 목록 API(`GET /api/v2/orders/my`)가 제공하는 필드로 커버 가능한 범위만(없으면 목록에선 결제 배지 생략). 인보이스 병렬 조회는 상세 화면 전용. `StatusCard`에 `variant: 'list' | 'detail'` prop으로 분기.
+- **목록 화면 N+1 회피**: `StatusCard`는 상세(`status/[id]`)와 목록(`status/page.tsx`, N개 매핑) 양쪽에서 쓰인다. `GET /api/v2/orders/my`의 `OrderResponse`에는 결제/인보이스 상태 필드가 없으므로, **목록에서는 결제 배지를 항상 생략**하고 배송 진행 트랙만 표시한다(주문별 인보이스 조회 금지). 인보이스 병렬 조회는 상세 화면 전용. `StatusCard`에 `variant: 'list' | 'detail'` prop으로 분기.
 
 ### 4.5 수동 결제 화면 → 영수증 (`features/payment`)
 
@@ -123,14 +125,14 @@ customer-web을 새 백엔드 계약에 맞춘다. 핵심 UX 원칙(백엔드와
 
 ## 6. 에러 처리
 
-에러 판별은 `error instanceof ApiError` 후 `error.code`(백엔드 `ApiResponse.error.code`). 코드 문자열은 백엔드 `ErrorCode.kt`와 대조해 확정한다.
+에러 판별은 `error instanceof ApiError` 후 `error.code`(백엔드 envelope `ApiResponse.code` — 평면 구조 `{status, code, message, data, traceId}`, 중첩 `.error` 없음). 코드 문자열은 백엔드 `ErrorCode.kt`에 존재함이 확인됨(`BILLING_KEY_REQUIRED`·`OVERDUE_INVOICE_EXISTS`·`BILLING_KEY_ISSUE_FAILED`·`BILLING_KEY_NOT_FOUND`).
 
 | 상황 | 처리 |
 |---|---|
 | createOrder 409 BILLING_KEY_REQUIRED | 등록 시트(조회-제출 레이스 폴백) |
 | createOrder 409 OVERDUE_INVOICE_EXISTS | 연체 해소 화면 |
-| registerBillingKey 400 (BILLING_KEY_ISSUE_FAILED — 코드 확정 필요; 확정 전엔 register 400 전반을 발급 실패로 처리) | 토스트 + 재시도 |
-| getMyBillingKey 404 (BILLING_KEY_NOT_FOUND) | 카드 없음(등록 유도) |
+| registerBillingKey 400 BILLING_KEY_ISSUE_FAILED | 토스트 + 재시도 |
+| getMyBillingKey 404 BILLING_KEY_NOT_FOUND | 카드 없음(등록 유도) |
 | 인보이스 404 (수거 전) | 결제 지표 숨김 |
 
 ## 7. 테스트

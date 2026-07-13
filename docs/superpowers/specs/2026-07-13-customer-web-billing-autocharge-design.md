@@ -105,7 +105,7 @@ customer-web을 새 백엔드 계약에 맞춘다. 핵심 UX 원칙(백엔드와
 
 **제거**: `app/(fullscreen)/payment/[id]/page.tsx`의 Toss SDK 로드·`payment.requestPayment`·결제수단 선택 UI·`generateCustomerKey`; `payment/success/page.tsx`·confirm 경로; `features/payment/api/payment.ts`의 `postConfirmPayment` 목; `PAYMENT_METHODS`/`INSTALLMENT_OPTIONS` 등 결제창 전용 상수(카드사 목록 `CARD_INSTITUTIONS`는 등록 시트에서 재사용하므로 유지).
 
-**용도변경**: `/payment/[id]` → 읽기전용 영수증. `getPaymentInfo`(기존, `GET invoice`) 재사용해 항목별 비용(세탁비·배달비·수수료)·총액·결제일 표시. 상태 화면에서 "영수증 보기" 링크로 진입. `PaymentInfo` 매퍼(`toPaymentInfo`)는 유지.
+**용도변경**: `/payment/[id]` → 읽기전용 영수증. `getPaymentInfo`(기존, `GET invoice`) 재사용해 항목별 비용(세탁비·배달비·수수료)·총액·주문일 표시(`PaymentInfo`에 paid-at 필드 없음 — 결제일 아닌 주문일). 상태 화면에서 "영수증 보기" 링크로 진입. `PaymentInfo` 매퍼(`toPaymentInfo`)는 유지.
 
 ### 4.6 연체 해소 경로
 

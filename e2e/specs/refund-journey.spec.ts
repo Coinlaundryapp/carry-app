@@ -6,9 +6,13 @@ import { request, type APIRequestContext } from '@playwright/test';
  *
  * F2 2-role 여정이 결제 벽(PG 어댑터 미구현)에 막혀 ORDER_NOT_PAID(402) 경계까지였다면,
  * F3는 **스텁 PG 어댑터(#134, local 프로파일)**로 그 벽을 허문다:
- *   customer 주문 → carrier 선점·수거(→ PickupCompletedEvent → 인보이스 발행) →
- *   customer 결제(스텁 PG → PAID) → **coordinator 주문 취소** → 환불 보상 사가
- *   (markRefundPending → RefundRetrySweeper PG 환불 → RefundCompletedEvent) → 주문 REFUNDED.
+ *   customer 빌링키 등록 → 주문 → carrier 선점·수거(→ PickupCompletedEvent → 인보이스 발행) →
+ *   자동과금(등록된 빌링키로 즉시 COMPLETED, 수동 `/payments/pay` 없음) → **coordinator 주문 취소** →
+ *   환불 보상 사가(markRefundPending → RefundRetrySweeper PG 환불 → RefundCompletedEvent) →
+ *   주문 REFUNDED.
+ *
+ * 빌링키 재설계(F1~F11) 이후 주문 생성 자체가 등록된 빌링키를 전제하므로, 주문 생성 전에
+ * `POST /api/v2/billing-keys`로 빌링키를 먼저 arrange한다(billing-customer-ui.spec.ts와 동일 패턴).
  *
  * 3번째 액터(coordinator)가 환불을 구동한다. 환불 완료는 비동기(스위퍼 주기)라 polling으로
  * 대기한다 — 로컬 부팅 시 `CARRY_PAYMENT_REFUND_RETRY_INTERVAL_MS`를 낮춰 가속한다.
@@ -54,6 +58,15 @@ async function uploadPhoto(carrier: APIRequestContext, name: string): Promise<nu
   return (await res.json()).data.id as number;
 }
 
+/** authKey로 빌링키를 등록한다(목 PG: authKey 문자열을 그대로 수용). */
+async function registerBillingKeyApi(customer: APIRequestContext, authKey: string): Promise<void> {
+  const res = await customer.post('/api/v2/billing-keys', {
+    headers: { 'Idempotency-Key': `e2e-bk-${authKey}` },
+    data: { authKey },
+  });
+  expect(res.status(), await res.text()).toBe(201);
+}
+
 test.describe('F3 환불 보상 여정 (3-role 라이브 사가)', () => {
   // 사가 다홉(주문→배차→배달→인보이스→결제→환불) + 스위퍼 주기라 타임아웃을 넉넉히.
   test.setTimeout(240_000);
@@ -80,10 +93,12 @@ test.describe('F3 환불 보상 여정 (3-role 라이브 사가)', () => {
       expect(laundromatRes.status(), await laundromatRes.text()).toBe(201);
       const laundromatId = (await laundromatRes.json()).data.id as number;
 
-      // ── 1. CUSTOMER: 본인 + 배송지 + 주문 ──
+      // ── 1. CUSTOMER: 본인 + 빌링키 arrange(주문 생성이 등록된 빌링키를 전제) + 배송지 + 주문 ──
       const meRes = await customer.get('/api/v2/users/me');
       expect(meRes.ok()).toBeTruthy();
       const customerId = (await meRes.json()).data.id as number;
+
+      await registerBillingKeyApi(customer, `e2e3r-billing-${Date.now()}`);
 
       const addrRes = await customer.post('/api/v2/shipping-addresses', {
         data: {
@@ -165,13 +180,18 @@ test.describe('F3 환불 보상 여정 (3-role 라이브 사가)', () => {
       });
       expect(invoice.totalAmount).toBeGreaterThan(0);
 
-      // ── 5. CUSTOMER: 결제(스텁 PG → 즉시 성공) ──
-      const payRes = await customer.post(`/api/v2/payments/pay?orderId=${orderId}`, {
-        headers: { 'Idempotency-Key': `e2e3r-pay-${orderId}` },
-        data: { pgProvider: 'TOSS_PAYMENTS', paymentKey: `stub-${orderId}` },
-      });
-      expect(payRes.status(), await payRes.text()).toBe(201);
-      expect((await payRes.json()).data.status).toBe('COMPLETED');
+      // ── 5. 사가 홉: 인보이스 발행이 자동과금을 트리거 → 결제 COMPLETED 대기(수동 /payments/pay 없음) ──
+      const payment = await poll(
+        '자동과금 완료(COMPLETED)',
+        async () => {
+          const res = await customer.get(`/api/v2/payments/${orderId}/payment`);
+          if (!res.ok()) return null;
+          const data = (await res.json()).data as { status: string };
+          return data.status === 'COMPLETED' ? data : null;
+        },
+        60_000,
+      );
+      expect(payment.status).toBe('COMPLETED');
 
       // ── 6. 사가 홉: 결제 완료 → 주문 PAID 대기 ──
       await poll('주문 PAID', async () => {

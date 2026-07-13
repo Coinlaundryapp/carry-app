@@ -19,8 +19,7 @@ import { signInCustomerUI } from '../fixtures/ui-auth';
  * 과금**된다 — `PaymentSagaHandler.onInvoiceIssued`가 `InvoiceIssuedEvent`(Kafka 자체 소비)를 받아
  * `AutoChargeService.attemptCharge`를 즉시 구동하므로 폴링 몇 초~수십 초면 COMPLETED에 도달한다.
  * `PaymentController`에는 더 이상 수동 `/payments/pay`가 없다(환불 스펙 refund-journey.spec.ts·
- * coordinator-ui.spec.ts가 여전히 그 엔드포인트를 호출하는데, 빌링키 재설계로 이미 제거된 것으로
- * 보인다 — 이 스펙과 무관한 기존 스펙의 회귀이니 별도 확인 필요). 결제 완료는 customer-web
+ * coordinator-ui.spec.ts도 빌링키 arrange + 자동과금 폴링으로 이관 완료). 결제 완료는 customer-web
  * `/status/{id}` 배지("결제 완료")로 관찰한다.
  *
  * **연체(OVERDUE) 실패 경로를 다루지 않는 이유**: 스텁 PG(`StubPgProviderAdapter`, local 프로파일)의

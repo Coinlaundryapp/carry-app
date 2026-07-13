@@ -14,7 +14,8 @@ function subOption(order: V2Order, optionType: string): string {
  * v2 OrderResponse → 앱 OrderDetailRes 매핑(strangler).
  * ⚠️ v2 주문엔 laundromatName·주문단위(orderUnitType)·결제 분해(charges)·배송지 라벨·요청사항이
  * 없어 기본값으로 degrade한다(화면이 읽는 핵심은 id·status·수거일시·세탁소명; 후속 known-debt).
- * 결제 분해는 청구서(M-7 invoice)에 있고 주문 응답엔 totalAmount만 있다.
+ * 결제 분해·금액은 청구서(M-7 invoice)에 있다. OrderResponse에서 totalAmount가 제거돼
+ * netAmount는 여기서 0으로 두고, 금액은 인보이스 조회로 이관(Task 8).
  */
 export function toOrderDetail(order: V2Order): OrderDetailRes {
   return {

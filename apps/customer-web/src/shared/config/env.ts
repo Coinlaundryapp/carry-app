@@ -19,7 +19,6 @@ export const env = createEnv({
     NEXT_PUBLIC_NAVER_ID: z.string().min(1),
     NEXT_PUBLIC_KAKAO_REST_API_KEY: z.string().min(1),
     NEXT_PUBLIC_KAKAO_REDIRECT_URL: z.string().url(),
-    NEXT_PUBLIC_TOSS_CLIENT_KEY: z.string().min(1),
   },
 
   /**
@@ -32,7 +31,6 @@ export const env = createEnv({
     NEXT_PUBLIC_NAVER_ID: process.env.NEXT_PUBLIC_NAVER_ID,
     NEXT_PUBLIC_KAKAO_REST_API_KEY: process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY,
     NEXT_PUBLIC_KAKAO_REDIRECT_URL: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL,
-    NEXT_PUBLIC_TOSS_CLIENT_KEY: process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY,
   },
 
   /**

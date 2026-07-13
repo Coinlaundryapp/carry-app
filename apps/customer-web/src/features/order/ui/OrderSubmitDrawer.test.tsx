@@ -17,11 +17,10 @@ vi.mock('next-auth/react', () => ({
   useSession: () => ({ data: { user: { accessToken: 'test-access-token' } } }),
 }));
 
-// @assets/icons는 실제 .svg 자산을 import한다 — 워크스페이스 경로에 `[projects]`가 포함돼
-// setup.ts의 `vi.mock('*.svg', ...)` glob이 매칭되지 않으므로(대괄호가 glob 문자 클래스로 해석됨)
-// 이 화면이 쓰는 아이콘을 통째로 스텁 처리한다.
-// 이 화면이 쓰는 아이콘만 명시 스텁 — Proxy 네임스페이스는 vite named-import interop에서
-// 열거 키가 없어 undefined로 잡히고, `then` 트랩은 모듈을 thenable로 오인시켜 로더가 hang한다.
+// @assets/icons는 실제 .svg 자산을 import하는데, 워크스페이스 경로의 `[projects]` 대괄호 때문에
+// setup.ts의 `vi.mock('*.svg')` glob이 매칭되지 않는다. 이 화면이 쓰는 아이콘만 명시 스텁으로 둔다
+// — Proxy 네임스페이스는 named-import interop에서 열거 키가 없어 undefined가 되고, `then` 트랩은
+// 모듈을 thenable로 오인시켜 로더가 hang하기 때문에 Proxy는 쓰지 않는다.
 vi.mock('@assets/icons', () => ({
   LaundryBasketIcon: (props: Record<string, unknown>) => (
     <svg data-testid="icon-basket" {...props} />

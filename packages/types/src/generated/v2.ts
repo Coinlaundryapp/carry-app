@@ -241,7 +241,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v2/payments/pay": {
+    "/api/v2/billing-keys": {
         parameters: {
             query?: never;
             header?: never;
@@ -251,10 +251,30 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * 寃곗젣 �슂泥�
-         * @description 二쇰Ц�뿉 ����븳 寃곗젣瑜� �슂泥��빀�땲�떎. Idempotency-Key �뿤�뜑 �젣怨� �떆 �룞�씪 �궎 �옱�슂泥���� 湲곗〈 寃곌낵瑜� �옱�깮�븯硫�(�씠以� 泥�援� 諛⑹��), 吏꾩쭨 �옱�떆�룄�뒗 �깉 �궎瑜� �궗�슜�빀�땲�떎.
+         * 빌링키 등록
+         * @description PG SDK 카드 등록창 결과(authKey)로 자동결제 수단을 등록합니다. 이미 등록된 카드가 있으면 기존 키를 무효화하고 새 키로 교체합니다.
          */
-        post: operations["requestPayment"];
+        post: operations["registerBillingKey"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/billing-keys/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 내 빌링키 조회
+         * @description 현재 등록된 활성 빌링키를 조회합니다
+         */
+        get: operations["getActive"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -355,7 +375,7 @@ export interface paths {
         get: operations["findNearby"];
         put?: never;
         /** �꽭�긽�냼 �벑濡� */
-        post: operations["register"];
+        post: operations["registerLaundromat"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1974,15 +1994,47 @@ export interface components {
              */
             totalAmount: number;
         };
-        /** @description 寃곗젣 �슂泥� */
-        PaymentRequest: {
+        /** @description 빌링키 등록 요청 */
+        BillingKeyRegisterRequest: {
             /**
-             * @description PG�궗
-             * @example TOSS
+             * @description PG SDK 카드 등록창 결과 authKey
+             * @example auth_key_from_toss_sdk
              */
-            pgProvider: string;
-            /** @description PG 寃곗젣 �궎 */
-            paymentKey: string;
+            authKey: string;
+        };
+        /** @description 빌링키 등록 응답 — 카드 마스킹 정보만 제공, 원본 billingKey/customerKey 는 노출하지 않는다 */
+        BillingKeyResponse: {
+            /** @description 카드사 */
+            cardCompany: string;
+            /** @description 카드 뒷 4자리 */
+            cardLast4: string;
+            /**
+             * Format: date-time
+             * @description 등록 시각
+             */
+            registeredAt: string;
+        };
+        /** @description 표준 API 응답 봉투 */
+        ApiResponseBillingKeyResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["BillingKeyResponse"];
+            /** @description 트레이싱 ID (요청 추적용, 선택적 필드) */
+            traceId?: string;
         };
         /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
         ApiResponsePaymentResponse: {
@@ -2165,11 +2217,6 @@ export interface components {
              * @description 諛곕떖�썝 ID
              */
             carrierId?: number | null;
-            /**
-             * Format: int64
-             * @description 珥� 湲덉븸
-             */
-            totalAmount?: number | null;
             /** @description �떎�젣 臾닿쾶(kg) */
             actualWeight?: number | null;
             /** @description 痍⑥냼 �궗�쑀 */
@@ -4091,57 +4138,73 @@ export interface operations {
             };
         };
     };
-    requestPayment: {
+    registerBillingKey: {
         parameters: {
-            query: {
-                orderId: number;
-            };
-            header?: {
-                "Idempotency-Key"?: string;
-            };
+            query?: never;
+            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PaymentRequest"];
+                "application/json": components["schemas"]["BillingKeyRegisterRequest"];
             };
         };
         responses: {
-            /** @description 寃곗젣 �슂泥� �꽦怨� */
+            /** @description 빌링키 등록 성공 */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiResponsePaymentResponse"];
+                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
                 };
             };
-            /** @description �옒紐삳맂 �슂泥� */
+            /** @description PG 발급 거절 또는 잘못된 요청 */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiResponsePaymentResponse"];
+                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
                 };
             };
-            /** @description 二쇰Ц�쓣 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 인증 필요 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
+                };
+            };
+        };
+    };
+    getActive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 빌링키 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
+                };
+            };
+            /** @description 등록된 빌링키 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiResponsePaymentResponse"];
-                };
-            };
-            /** @description �룞�씪 Idempotency-Key �슂泥� 吏꾪뻾 以� */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponsePaymentResponse"];
+                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
                 };
             };
         };
@@ -4173,6 +4236,15 @@ export interface operations {
             };
             /** @description �옒紐삳맂 �슂泥� */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
+                };
+            };
+            /** @description 주문 생성 전제조건 미충족 — BILLING_KEY_REQUIRED(활성 빌링키 없음) 또는 OVERDUE_INVOICE_EXISTS(연체 인보이스 존재) */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4345,7 +4417,7 @@ export interface operations {
             };
         };
     };
-    register: {
+    registerLaundromat: {
         parameters: {
             query?: never;
             header?: never;
@@ -5639,7 +5711,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description 二쇰Ц �긽�깭 �븘�꽣(�깮�왂 �떆 �쟾泥�) */
-                status?: "CREATED" | "DISPATCHED" | "PICKED_UP" | "INVOICED" | "PAYMENT_FAILED" | "PAID" | "IN_PROGRESS" | "COMPLETED" | "REFUND_PENDING" | "REFUNDED" | "CANCELLED";
+                status?: "CREATED" | "DISPATCHED" | "PICKED_UP" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
                 /** @description 留덉��留됱쑝濡� 議고쉶�븳 二쇰Ц ID (泥� �럹�씠吏��뒗 �깮�왂) */
                 cursor?: number;
                 /** @description �럹�씠吏� �겕湲� */

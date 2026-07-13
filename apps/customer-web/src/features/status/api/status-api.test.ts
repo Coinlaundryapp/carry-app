@@ -24,7 +24,8 @@ describe('status API (v2)', () => {
       // v2 미보유 → degrade 기본값
       expect(result.laundromatName).toBe('');
       expect(result.orderContent.orderUnitType).toBe('SOLO');
-      expect(result.paymentDetails.netAmount).toBe(order.totalAmount);
+      // 금액은 인보이스 조회로 이관(Task 8) — 주문 응답엔 더 이상 없음
+      expect(result.paymentDetails.netAmount).toBe(0);
     });
 
     it('존재하지 않는 주문(404) → 에러 발생', async () => {

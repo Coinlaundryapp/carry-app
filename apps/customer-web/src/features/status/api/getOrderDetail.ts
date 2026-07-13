@@ -49,7 +49,8 @@ export function toOrderDetail(order: V2Order): OrderDetailRes {
         discounts: { laundryDiscounts: [], deliveryDiscounts: [] },
       },
       charges: { laundryPrice: 0, deliveryFee: 0, serviceFee: 0 },
-      netAmount: order.totalAmount ?? 0,
+      // 금액은 인보이스 조회로 이관(Task 8) — 주문 응답엔 더 이상 없음
+      netAmount: 0,
     },
     confirmedPayment: null,
   };

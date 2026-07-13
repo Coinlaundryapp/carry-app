@@ -6,10 +6,8 @@ import { PaymentInfo } from '@features/payment/types/payment';
  * 결제 API.
  *
  * - [getPaymentInfo] 청구서 조회는 **v2**(`GET /api/v2/payments/{orderId}/invoice`)로 배선.
- * - [postConfirmPayment] 결제 승인은 **실 Toss PG 키가 필요**해 로컬/e2e에서 라이브 검증이
- *   불가하다(브라우저 Kakao OAuth 보류와 같은 클래스). PG 콘솔 준비 전까지 목을 유지한다
- *   (F1 M-7 사용자 결정). 배선 대상은 v2 `POST /api/v2/payments/pay?orderId`
- *   (+Idempotency-Key, body `{pgProvider:'TOSS', paymentKey}`).
+ * - 자동결제(빌링키) 전환으로 수동 결제 승인(postConfirmPayment)은 제거됨. 결제는
+ *   백엔드 사가가 등록된 빌링키로 처리하며, `/payment/[id]`는 조회 전용 영수증이다.
  */
 
 type V2Invoice = Schemas['InvoiceResponse'];
@@ -56,33 +54,4 @@ export async function getPaymentInfo({
     cache: 'no-cache',
   });
   return toPaymentInfo(invoice);
-}
-
-export async function postConfirmPayment({
-  accessToken,
-  orderId,
-  paymentKey,
-  amount,
-}: {
-  accessToken: string;
-  orderId: number;
-  paymentKey: string;
-  amount: number;
-}) {
-  // ⚠️ 보류(F1 M-7): 실 Toss paymentKey가 필요해 로컬/e2e 라이브 검증 불가 — PG 콘솔
-  //    준비 시 아래로 배선한다(브라우저 Kakao 보류와 동일).
-  // const client = createV2Client({ accessToken });
-  // return client.request<Schemas['PaymentResponse']>(
-  //   `/api/v2/payments/pay?orderId=${orderId}`,
-  //   { method: 'POST', idempotencyKey: newIdempotencyKey(), body: { pgProvider: 'TOSS', paymentKey } },
-  // );
-
-  // --- MOCK DATA (PG 콘솔 준비 전까지 사용) ---
-  const data = {
-    id: orderId,
-    status: 'PAYMENT_COMPLETED',
-    paymentKey,
-    confirmedAmount: amount,
-  };
-  return data;
 }

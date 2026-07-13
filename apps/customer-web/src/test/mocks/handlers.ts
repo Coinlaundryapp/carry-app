@@ -111,7 +111,6 @@ const mockOrderResponse = {
   desiredPickupAt: '2024-01-15T10:00:00Z',
   desiredDeliveryAt: '2024-01-16T18:00:00Z',
   carrierId: null,
-  totalAmount: 15000,
 };
 
 // v2 주문 목록 — getMyOrders는 OrderResponse[]. 상세(getOrder)도 동일 OrderResponse를 쓴다.

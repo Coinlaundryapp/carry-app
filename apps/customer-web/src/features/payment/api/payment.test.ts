@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '@/test/mocks/server';
-import { getPaymentInfo, postConfirmPayment } from './payment';
+import { getPaymentInfo } from './payment';
 
 const TOKEN = 'test-access-token';
 
@@ -67,22 +67,6 @@ describe('payment API', () => {
         ),
       );
       await expect(getPaymentInfo({ orderId: 99, accessToken: TOKEN })).rejects.toThrow();
-    });
-  });
-
-  describe('postConfirmPayment (보류 — 목 유지)', () => {
-    it('실 Toss PG 키 부재로 목 응답 반환(콘솔 준비 시 v2 배선)', async () => {
-      const result = await postConfirmPayment({
-        accessToken: TOKEN,
-        orderId: 1,
-        paymentKey: 'toss_payment_key_xyz',
-        amount: 15550,
-      });
-      expect(result).toMatchObject({
-        id: 1,
-        status: 'PAYMENT_COMPLETED',
-        confirmedAmount: 15550,
-      });
     });
   });
 });

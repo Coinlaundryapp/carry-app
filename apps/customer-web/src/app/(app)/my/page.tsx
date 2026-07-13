@@ -54,6 +54,11 @@ const SETTINGS_SECTIONS = [
         path: '#',
       },
       {
+        id: 'payment-method',
+        title: '결제수단',
+        path: '/my/payment',
+      },
+      {
         id: 'account-settings',
         title: '계정 설정',
         path: '#',

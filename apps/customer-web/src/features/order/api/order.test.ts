@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { http, HttpResponse } from 'msw';
+import { ApiError } from '@carry/api';
 import { server } from '@/test/mocks/server';
 import { mockData } from '@/test/mocks/handlers';
 import { getPrices, postOrder } from './order';
@@ -133,7 +134,7 @@ describe('order API', () => {
       expect(idempotencyKey).toBeTruthy();
     });
 
-    it('에러 시 "주문에 실패했습니다." 에러 발생', async () => {
+    it('에러 시 ApiError를 그대로 전파한다', async () => {
       server.use(
         http.post('*/api/v2/orders', () => {
           return HttpResponse.json(
@@ -143,7 +144,22 @@ describe('order API', () => {
         }),
       );
 
-      await expect(postOrder(orderParams)).rejects.toThrow('주문에 실패했습니다.');
+      await expect(postOrder(orderParams)).rejects.toBeInstanceOf(ApiError);
+    });
+
+    it('createOrder 409 시 ApiError를 코드와 함께 전파한다', async () => {
+      server.use(
+        http.post('*/api/v2/orders', () =>
+          HttpResponse.json(
+            { status: 409, code: 'BILLING_KEY_REQUIRED', message: '카드 필요' },
+            { status: 409 },
+          ),
+        ),
+      );
+
+      await expect(postOrder(orderParams)).rejects.toMatchObject({
+        code: 'BILLING_KEY_REQUIRED',
+      });
     });
   });
 });

@@ -7,8 +7,9 @@ import { loginCoordinatorUI } from '../fixtures/ui-auth';
  *
  * 코디네이터가 **브라우저로** 결제 완료(PAID) 주문을 취소해 환불 보상 사가를 구동하고, 주문이
  * 환불완료(REFUNDED)에 이르는 과정을 실증한다. PAID 주문은 API로 arrange(고객·배달원 소관 전 사가:
- * 주문→선점→수거→인보이스→스텁 PG 결제), 코디는 실 dev-login으로 로그인해 `/orders` 상세에서
- * **취소(UI)** → 환불 표면을 확인한다. ADMIN role 가드(`/admin` 대시보드)도 함께 검증한다.
+ * 빌링키 등록→주문→선점→수거→인보이스 발행→자동과금 COMPLETED, 수동 `/payments/pay` 없음),
+ * 코디는 실 dev-login으로 로그인해 `/orders` 상세에서 **취소(UI)** → 환불 표면을 확인한다.
+ * ADMIN role 가드(`/admin` 대시보드)도 함께 검증한다.
  *
  * 환불은 비동기(markRefundPending → RefundRetrySweeper → REFUNDED)라 새로고침으로 대기한다.
  * 로컬 기동 시 `CARRY_PAYMENT_REFUND_RETRY_INTERVAL_MS`를 낮춰 가속한다.
@@ -74,7 +75,16 @@ async function uploadPhoto(carrier: APIRequestContext, name: string): Promise<nu
   return (await res.json()).data.id as number;
 }
 
-/** 주문→선점→수거→인보이스→스텁 PG 결제까지 API로 진행해 **PAID 주문**의 id를 돌려준다. */
+/** authKey로 빌링키를 등록한다(목 PG: authKey 문자열을 그대로 수용). */
+async function registerBillingKeyApi(customer: APIRequestContext, authKey: string): Promise<void> {
+  const res = await customer.post('/api/v2/billing-keys', {
+    headers: { 'Idempotency-Key': `e2e-bk-${authKey}` },
+    data: { authKey },
+  });
+  expect(res.status(), await res.text()).toBe(201);
+}
+
+/** 주문→선점→수거→인보이스 발행→자동과금까지 API로 진행해 **PAID 주문**의 id를 돌려준다. */
 async function arrangePaidOrder(): Promise<number> {
   const admin = await authedContext('ADMIN');
   const customer = await authedContext('CUSTOMER');
@@ -97,6 +107,10 @@ async function arrangePaidOrder(): Promise<number> {
     const meRes = await customer.get('/api/v2/users/me');
     expect(meRes.ok()).toBeTruthy();
     const customerId = (await meRes.json()).data.id as number;
+
+    // 빌링키 재설계 이후 주문 생성이 등록된 빌링키를 전제한다 — 주문 생성 전에 arrange.
+    await registerBillingKeyApi(customer, `e2e-coord-billing-${Date.now()}`);
+
     const addressId = await ensureAddress(customer);
 
     const orderRes = await customer.post('/api/v2/orders', {
@@ -155,11 +169,17 @@ async function arrangePaidOrder(): Promise<number> {
       return res.ok() ? (await res.json()).data : null;
     });
 
-    const payRes = await customer.post(`/api/v2/payments/pay?orderId=${orderId}`, {
-      headers: { 'Idempotency-Key': `e2e-coord-pay-${orderId}` },
-      data: { pgProvider: 'TOSS_PAYMENTS', paymentKey: `stub-${orderId}` },
-    });
-    expect(payRes.status(), await payRes.text()).toBe(201);
+    // 인보이스 발행이 자동과금을 트리거 → 결제 COMPLETED 대기(수동 /payments/pay 없음).
+    await poll(
+      '자동과금 완료(COMPLETED)',
+      async () => {
+        const res = await customer.get(`/api/v2/payments/${orderId}/payment`);
+        if (!res.ok()) return null;
+        const data = (await res.json()).data as { status: string };
+        return data.status === 'COMPLETED' ? data : null;
+      },
+      60_000,
+    );
 
     await poll('주문 PAID', async () => {
       const res = await customer.get(`/api/v2/orders/${orderId}`);

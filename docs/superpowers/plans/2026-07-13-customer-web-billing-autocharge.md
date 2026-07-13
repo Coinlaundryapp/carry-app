@@ -29,6 +29,7 @@
 - Modify(생성): `packages/types/src/generated/v2.ts` (직접 편집 금지 — `pnpm gen:types`로 재생성)
 - Modify: `apps/customer-web/src/features/status/api/getOrderDetail.ts:52`
 - Modify: `apps/customer-web/src/features/status/api/getOrderList.ts:28`
+- Modify: `apps/customer-web/src/features/status/api/status-api.test.ts` (netAmount 단언 갱신 — 아래 Step 4)
 
 - [ ] **Step 1: 타입 재생성**
 
@@ -47,17 +48,21 @@ Expected: `getOrderDetail.ts:52`, `getOrderList.ts:28`의 `order.totalAmount` �
 
 `getOrderDetail.ts`의 `paymentDetails.netAmount: order.totalAmount ?? 0` → `netAmount: 0`으로 변경하고 위에 주석: `// 금액은 인보이스 조회로 이관(Task 8) — 주문 응답엔 더 이상 없음`. `getOrderList.ts:28`도 동일하게 `netAmount: 0`. (목록은 금액 미표시가 최종 — Task 8에서 확정.)
 
-- [ ] **Step 4: tsc + 기존 테스트 통과 확인**
+- [ ] **Step 4: 깨지는 테스트 단언 갱신**
+
+`status-api.test.ts`가 `expect(result.paymentDetails.netAmount).toBe(order.totalAmount)`(=15000)를 단언한다. 매퍼가 `netAmount: 0`이 됐으므로 이 단언을 `toBe(0)`으로 바꾸거나 삭제(금액은 Task 8에서 인보이스로 이관되므로 주문 매퍼 금액 단언은 의미 없음). ⚠️ 이건 tsc에 안 잡히고(픽스처가 untyped literal) 런타임 실패로만 드러난다. 겸사겸사 `src/test/mocks/handlers.ts`의 `mockOrderResponse`에서 죽은 `totalAmount: 15000`도 제거.
+
+- [ ] **Step 5: tsc + 기존 테스트 통과 확인**
 
 Run: `pnpm --filter customer-web exec tsc --noEmit`
 Expected: 에러 없음.
 Run: `pnpm --filter customer-web test`
-Expected: 기존 테스트 전부 통과(실행 수 > 0 확인). `payment.test.ts`의 invoice 매핑 테스트는 `InvoiceResponse` 무변경이라 그대로 통과.
+Expected: 기존 테스트 전부 통과(실행 수 > 0 확인).
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add packages/types/src/generated/v2.ts apps/customer-web/src/features/status/api/getOrderDetail.ts apps/customer-web/src/features/status/api/getOrderList.ts
+git add packages/types/src/generated/v2.ts apps/customer-web/src/features/status/api/getOrderDetail.ts apps/customer-web/src/features/status/api/getOrderList.ts apps/customer-web/src/features/status/api/status-api.test.ts apps/customer-web/src/test/mocks/handlers.ts
 git commit -m "feat: openapi 타입 재생성 — 빌링키 계약 반영, OrderResponse.totalAmount 제거 파급 수정"
 ```
 
@@ -320,8 +325,9 @@ export function useRegisterBillingKey() {
 
 - [ ] **Step 2: 훅 테스트** (React Query + MSW; QueryClientProvider 래퍼 + next-auth/react 목 — setup.ts는 next-auth를 목하지 않으므로 테스트 파일에서 `vi.mock('next-auth/react', ...)`)
 
-```ts
+```tsx
 import { describe, it, expect, vi } from 'vitest';
+import { type ReactNode } from 'react';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
@@ -332,7 +338,7 @@ vi.mock('next-auth/react', () => ({
   useSession: () => ({ data: { user: { accessToken: 'test-access-token' } } }),
 }));
 
-function wrapper({ children }: { children: React.ReactNode }) {
+function wrapper({ children }: { children: ReactNode }) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return <QueryClientProvider client={qc}>{children}</QueryClientProvider>;
 }
@@ -435,22 +441,32 @@ git commit -m "fix: postOrder가 ApiError를 전파하도록 — 409 인터셉 �
 - [ ] **Step 1: 인터셉 로직 구현**
 
 `OrderSubmitDrawer.tsx` 확정 핸들러 재작성:
-1. `const { data: billingKey, isLoading } = useMyBillingKey();`
-2. 확정 버튼 클릭 시: `billingKey`가 없으면(`null`) `BillingKeyRegistrationSheet` 오픈(로컬 `useState`), 시트 `onSuccess`에서 `mutation.mutate()` 이어 실행. 있으면 바로 `mutation.mutate()`.
-3. `mutation.onError`에서 `error instanceof ApiError`면 `error.code` 분기:
+1. `const { data: billingKey, isLoading } = useMyBillingKey();` — `data`는 로딩 중 `undefined`, 카드 없음 `null`, 있음 `BillingKey`.
+2. **로딩 가드**: `isLoading`이면 확정 버튼 `disabled`(빌링키 조회 미완 상태에서 클릭 방지).
+3. 확정 클릭 시: `billingKey == null`(undefined/null 모두)이면 `BillingKeyRegistrationSheet` 오픈(로컬 `useState`), 시트 `onSuccess`에서 `mutation.mutate()` 이어 실행. 있으면 바로 `mutation.mutate()`.
+4. `mutation.onError`에서 `error instanceof ApiError`면 `error.code` 분기:
    - `ORDER_ERROR_CODE.BILLING_KEY_REQUIRED` → 등록 시트 오픈(레이스 폴백).
    - `ORDER_ERROR_CODE.OVERDUE_INVOICE_EXISTS` → `router.push('/billing/overdue')`(Task 11).
    - 그 외 → 기존 토스트.
-4. `onSuccess` → `reset()` + `router.replace('/status/${data.id}')`(기존 유지).
-`BillingKeyRegistrationSheet`를 렌더(제어형 open state)한다.
+5. `onSuccess` → `reset()` + `router.replace('/status/${data.id}')`(기존 유지).
+
+⚠️ **Drawer 구조 주의**: 현재 확정 버튼은 `<DrawerClose asChild>` 안에 있어 클릭 시 무조건 Drawer를 닫고 `DrawerContent`를 언마운트한다. 인터셉을 위해: (a) 확정 버튼에서 `DrawerClose` 래퍼를 제거하고(직접 `onClick` 핸들러로 분기 처리 — 카드 있으면 제출 후 성공 시 라우팅이 닫음, 없으면 시트 오픈), (b) `BillingKeyRegistrationSheet`는 **바깥 `<Drawer>`의 형제**(최상위)로 렌더해 Drawer가 닫혀도 시트가 유지되게 한다.
 
 - [ ] **Step 2: 컴포넌트 테스트** (`.test.tsx`, MSW + next-auth 목 + QueryClientProvider; 앱 최초 컴포넌트 테스트)
 
-케이스(RTL `render` + `userEvent`):
-- 카드 있음 → 확정 클릭 → `POST /api/v2/orders` 호출됨(핸들러 spy) → `/status/{id}` 이동(`next/navigation` 목의 replace 호출).
-- 카드 없음 → 확정 클릭 → 등록 시트 노출(등록 버튼 보임), 주문 미호출.
-- createOrder 409 OVERDUE → `router.push('/billing/overdue')` 호출.
-(`next/navigation`은 setup.ts에서 목됨 — replace/push spy 활용. `next-auth/react`는 테스트에서 `vi.mock`.)
+⚠️ **네비게이션 목**: `setup.ts`의 `next/navigation` 목은 `useRouter()` 호출마다 **새 spy 객체**를 반환해 테스트가 같은 spy를 잡을 수 없다. 테스트 파일에서 모듈 레벨 안정 spy로 재목(override):
+```tsx
+const replace = vi.fn(); const push = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ replace, push, back: vi.fn(), refresh: vi.fn(), prefetch: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+vi.mock('next-auth/react', () => ({ useSession: () => ({ data: { user: { accessToken: 'test-access-token' } } }) }));
+```
+케이스(RTL `render` + `userEvent`, `beforeEach`에서 spy `mockClear`):
+- 카드 있음(`/me` 200) → 확정 클릭 → `POST /api/v2/orders` 호출됨 → `expect(replace).toHaveBeenCalledWith('/status/…')`.
+- 카드 없음(`/me` 404) → 확정 클릭 → 등록 시트 노출(등록 버튼 보임), 주문 미호출.
+- createOrder 409 OVERDUE(`/me` 200 + orders 409) → `expect(push).toHaveBeenCalledWith('/billing/overdue')`.
 
 - [ ] **Step 3: 실패→통과**
 
@@ -511,6 +527,13 @@ describe('toPaymentBadge', () => {
   it('REFUNDED → 환불 완료', () => {
     expect(toPaymentBadge({ status: 'REFUNDED' } as any, { status: 'REFUNDED' } as any))
       .toMatchObject({ label: '환불 완료' });
+  });
+  it('ISSUED + PENDING → 결제 처리중(fallthrough)', () => {
+    expect(toPaymentBadge({ status: 'ISSUED' } as any, { status: 'PENDING' } as any))
+      .toMatchObject({ label: '결제 처리중', needsAction: false });
+  });
+  it('Invoice CANCELLED(미과금 취소) → null(배지 숨김)', () => {
+    expect(toPaymentBadge({ status: 'CANCELLED' } as any, null)).toBeNull();
   });
 });
 ```
@@ -586,22 +609,50 @@ props를 `{ variant: 'list' | 'detail'; orderStatus: string; paymentBadge?: Paym
 - `paymentBadge.needsAction`이면 "카드 확인 필요" 배너 + CTA(→ `/my/payment` 또는 `/billing/overdue`).
 구 `status`/`LaundryStatusType` 인라인 라벨 매핑 제거.
 
-- [ ] **Step 2: 상세 페이지 인보이스 병렬 조회**
+- [ ] **Step 2: 상세 페이지 인보이스 병렬 조회 + 낡은 헤더 정리**
 
-`status/[id]/page.tsx`: 기존 `getOrderDetail` 쿼리에 더해 인보이스·결제 병렬 `useQuery`:
+`status/[id]/page.tsx`: 기존 `getOrderDetail` 쿼리에 더해 `getInvoiceStatus`(Step 3에서 정의) 병렬 `useQuery`:
 ```ts
 const invoiceQ = useQuery({
-  queryKey: ['invoice', orderId],
-  queryFn: () => getPaymentInfoRaw(accessToken, Number(orderId)), // invoice+payment 원본 조회(신규 얇은 fn) — 404는 null
+  queryKey: ['invoiceStatus', orderId],
+  queryFn: () => getInvoiceStatus(accessToken, Number(orderId)), // { invoice, payment } — 각 404는 null
   enabled: !!accessToken,
   retry: false,
 });
+const badge = toPaymentBadge(invoiceQ.data?.invoice ?? null, invoiceQ.data?.payment ?? null);
 ```
-`toPaymentBadge(invoice, payment)`로 배지 계산해 `<StatusCard variant="detail" orderStatus={orderDetail.status} paymentBadge={badge} .../>`. 인보이스 404(수거 전)는 badge=null → 숨김. (원본 invoice/payment 조회용 얇은 함수는 `features/status/api`에 추가하거나 기존 `getPaymentInfo`를 재사용하되 status 필드를 보존하도록 조정 — Step 3.)
+`<StatusCard variant="detail" orderStatus={orderDetail!.status} paymentBadge={badge} info={orderDetail!} hasButton={false} />`.
+⚠️ **낡은 헤더 제거**: 이 페이지 상단(현재 30–54행)의 제목/부제 조건 블록은 구 어휘(`ORDER_CANCELED/ORDER_COMPLETED/PAYMENT_COMPLETED/REFUND_*`)에 keyed돼 있고 "세탁 진행 후 결제를 해주셔야…" 배너는 자동과금 모델과 모순된다. 물리 6상태에선 모두 false로 평가돼 빈 헤더 + 틀린 배너가 남는다. 이 블록을 `toDeliveryProgress(orderDetail.status).label` 기반 제목으로 재작성하고 결제 안내 배너는 삭제한다.
 
-- [ ] **Step 3: 원본 상태 보존 조회 함수**
+- [ ] **Step 3: 원본 상태 보존 조회 함수 `getInvoiceStatus`**
 
-`features/payment/api/payment.ts`의 `getPaymentInfo`는 금액만 매핑하고 status를 버린다. 배지엔 status가 필요하므로 `features/status/api/getInvoiceStatus.ts` 신규: invoice(`GET /{orderId}/invoice`)와 payment(`GET /{orderId}/payment`)를 조회해 `{ invoice: {status,totalAmount} | null, payment: {status} | null }` 반환(각 404→null). 상세 페이지는 이걸 사용.
+`features/payment/api/payment.ts`의 `getPaymentInfo`는 금액만 매핑하고 status를 버린다. 배지엔 status가 필요하므로 `features/status/api/getInvoiceStatus.ts` 신규:
+```ts
+import type { Schemas } from '@carry/types';
+import { ApiError } from '@carry/api';
+import { createV2Client } from '@shared/api/v2-client';
+
+export type InvoiceStatusInfo = {
+  invoice: Pick<Schemas['InvoiceResponse'], 'status' | 'totalAmount'> | null;
+  payment: Pick<Schemas['PaymentResponse'], 'status'> | null;
+};
+
+async function getOr404Null<T>(fn: () => Promise<T>): Promise<T | null> {
+  try { return await fn(); } catch (e) { if (e instanceof ApiError && e.status === 404) return null; throw e; }
+}
+
+export async function getInvoiceStatus(accessToken: string, orderId: number): Promise<InvoiceStatusInfo> {
+  const client = createV2Client({ accessToken });
+  const [invoice, payment] = await Promise.all([
+    getOr404Null(() => client.request<Schemas['InvoiceResponse']>(`/api/v2/payments/${orderId}/invoice`, { method: 'GET', cache: 'no-cache' })),
+    getOr404Null(() => client.request<Schemas['PaymentResponse']>(`/api/v2/payments/${orderId}/payment`, { method: 'GET', cache: 'no-cache' })),
+  ]);
+  return {
+    invoice: invoice ? { status: invoice.status, totalAmount: invoice.totalAmount } : null,
+    payment: payment ? { status: payment.status } : null,
+  };
+}
+```
 
 - [ ] **Step 4: 목록 페이지**
 
@@ -640,11 +691,11 @@ git commit -m "feat: 상태 화면 2지표 — 배송 진행 + 결제 배지(상
 
 - [ ] **Step 1: 영수증 페이지 재작성**
 
-`payment/[id]/page.tsx`에서 Toss SDK 로드·`generateCustomerKey`·`requestPayment`·결제수단 UI·`@tosspayments` import 전부 제거. `getPaymentInfo`(기존)로 항목별 비용·총액·결제일을 읽어 **읽기전용 영수증**으로 렌더(TopNavigation "영수증", 세탁비/배달비/수수료/총액/결제일). 결제 버튼 없음.
+`payment/[id]/page.tsx`에서 Toss SDK 로드·`generateCustomerKey`·`requestPayment`·결제수단 UI·`@tosspayments` import 전부 제거. `getPaymentInfo`(기존)로 항목별 비용·총액을 읽어 **읽기전용 영수증**으로 렌더(TopNavigation "영수증", 세탁비/배달비/수수료/총액/주문일). ⚠️ `PaymentInfo`엔 결제일(paid-at) 필드가 없고 `orderedAt`(=invoice.createdAt)만 있으므로 "주문일"로 표기(진짜 결제일 아님). 결제 버튼 없음.
 
 - [ ] **Step 2: 삭제·정리**
 
-`payment/success/page.tsx` 삭제. `payment.ts`에서 `postConfirmPayment` 삭제. `index.ts`에서 `postConfirmPayment`·`PAYMENT_METHODS`·`INSTALLMENT_OPTIONS` export 제거(`getPaymentInfo`, `PaymentInfo`, `CARD_INSTITUTIONS` 유지). `constants.ts`에서 `PAYMENT_METHODS`/`INSTALLMENT_OPTIONS`/`PaymentMethod` 제거. `package.json`에서 `@tosspayments/tosspayments-sdk` 제거(다른 사용처 없음 — 인벤토리 확인됨). `payment.test.ts`의 `postConfirmPayment` 테스트(케이스4) 제거.
+`payment/success/page.tsx` 삭제. `payment.ts`에서 `postConfirmPayment` 삭제. `index.ts`에서 `postConfirmPayment`·`PAYMENT_METHODS`·`INSTALLMENT_OPTIONS` export 제거(`getPaymentInfo`, `PaymentInfo`, `CARD_INSTITUTIONS` 유지 — 등록 시트가 사용). `constants.ts`에서 `PAYMENT_METHODS`/`INSTALLMENT_OPTIONS`/`PaymentMethod` 제거. `package.json`에서 `@tosspayments/tosspayments-sdk` 제거(다른 사용처 없음 — 인벤토리 확인됨). `payment.test.ts`: `postConfirmPayment` 테스트(케이스4) 제거 **+ 상단 import를 `import { getPaymentInfo } from './payment'`로 트림**(제거된 심볼 import 잔존 시 TS 에러).
 
 - [ ] **Step 3: 그래프 정리 확인**
 
@@ -675,7 +726,7 @@ git commit -m "refactor!: 수동 Toss 결제창 제거 → /payment/[id] 영수�
 
 - [ ] **Step 2: 라우트·진입**
 
-`my/payment/page.tsx`가 `MyCardSection` 렌더. `my/page.tsx`의 `SETTINGS_SECTIONS` `member-info` items에 `{ label: '결제수단', href: '/my/payment' }` 추가(기존 '배송지 관리'·'계정 설정' 옆).
+`my/payment/page.tsx`가 `MyCardSection` 렌더. `my/page.tsx`의 `SETTINGS_SECTIONS` `member-info` items에 항목 추가 — ⚠️ `MenuItem` 인터페이스(`shared/ui/Menu/Menu.tsx`)는 `{ id, title, path, rightText? }` 형태다(`label/href` 아님). 정확히 `{ id: 'payment-method', title: '결제수단', path: '/my/payment' }`로 추가(기존 '배송지 관리'·'계정 설정' 옆).
 
 - [ ] **Step 3: 테스트**
 
@@ -727,7 +778,7 @@ git commit -m "feat: 연체 해소 화면 — 카드 재등록 후 안내(스위
 
 - [ ] **Step 1: 기존 e2e 구조 확인**
 
-`e2e/`의 스펙·픽스처·config를 읽어 현재 저니 구동 방식(백엔드 stub PG, API로 결제 구동)을 파악. 목 카드 등록은 이제 UI로 가능하므로 고객 결제 흐름을 UI로 태울 수 있다.
+`e2e/`의 스펙·픽스처·`playwright.config.ts`를 읽어 프로젝트 구성을 파악: UI 저니는 `customer-ui` 프로젝트(Pixel 5, baseURL 있음), 백엔드 자동과금/스위퍼 구동은 API 레벨(`refund-journey`/`api` 패턴, baseURL 없이 `request` 컨텍스트). **신규 스펙은 UI 저니는 `customer-ui`에 두고, 자동과금은 그 안에서 `request` 컨텍스트로 백엔드를 구동**하는 혼합 구조로 작성(baseURL 없는 `api` 프로젝트에 UI 테스트를 넣지 말 것). `devLogin` 픽스처 재사용.
 
 - [ ] **Step 2: 시나리오 확장**
 

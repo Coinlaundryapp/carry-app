@@ -111,20 +111,16 @@ export async function postOrder({
   orderSchedule: OrderSchedule;
 }): Promise<V2Order> {
   const client = createV2Client({ accessToken });
-  try {
-    return await client.request<V2Order>('/api/v2/orders', {
-      method: 'POST',
-      idempotencyKey: newIdempotencyKey(),
-      body: {
-        shippingAddressId: addressId,
-        laundromatId,
-        laundryItemType: orderContent.laundryItemType ?? '',
-        selectedOptions: buildSelectedOptions(orderContent),
-        desiredPickupAt: new Date(orderSchedule.desiredPickupDateTime).toISOString(),
-        desiredDeliveryAt: new Date(orderSchedule.desiredDeliveryDateTime).toISOString(),
-      },
-    });
-  } catch (error) {
-    throw new Error('주문에 실패했습니다.');
-  }
+  return client.request<V2Order>('/api/v2/orders', {
+    method: 'POST',
+    idempotencyKey: newIdempotencyKey(),
+    body: {
+      shippingAddressId: addressId,
+      laundromatId,
+      laundryItemType: orderContent.laundryItemType ?? '',
+      selectedOptions: buildSelectedOptions(orderContent),
+      desiredPickupAt: new Date(orderSchedule.desiredPickupDateTime).toISOString(),
+      desiredDeliveryAt: new Date(orderSchedule.desiredDeliveryDateTime).toISOString(),
+    },
+  });
 }

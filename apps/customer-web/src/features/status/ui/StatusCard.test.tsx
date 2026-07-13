@@ -87,7 +87,6 @@ describe('StatusCard', () => {
         orderStatus="COMPLETED"
         paymentBadge={paidBadge}
         info={makeInfo()}
-        hasButton={false}
       />,
     );
 
@@ -102,7 +101,6 @@ describe('StatusCard', () => {
         orderStatus="IN_PROGRESS"
         paymentBadge={overdueBadge}
         info={makeInfo()}
-        hasButton={false}
       />,
     );
 
@@ -118,7 +116,6 @@ describe('StatusCard', () => {
         orderStatus="COMPLETED"
         paymentBadge={paidBadge}
         info={makeInfo()}
-        hasButton
       />,
     );
 
@@ -128,13 +125,7 @@ describe('StatusCard', () => {
 
   it('CANCELLED 주문 상태 → "취소"를 렌더한다', () => {
     render(
-      <StatusCard
-        variant="detail"
-        orderStatus="CANCELLED"
-        paymentBadge={null}
-        info={makeInfo()}
-        hasButton={false}
-      />,
+      <StatusCard variant="detail" orderStatus="CANCELLED" paymentBadge={null} info={makeInfo()} />,
     );
 
     expect(screen.getByText('취소')).toBeInTheDocument();

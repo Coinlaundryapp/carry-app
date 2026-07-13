@@ -1,6 +1,5 @@
 import type { Schemas } from '@carry/types';
 import { OrderDetailRes } from '@shared/types/api-types';
-import { LaundryStatusType } from '@features/status/types/laundry-status-type';
 import { createV2Client } from '@shared/api/v2-client';
 
 type V2Order = Schemas['OrderResponse'];
@@ -20,7 +19,7 @@ function subOption(order: V2Order, optionType: string): string {
 export function toOrderDetail(order: V2Order): OrderDetailRes {
   return {
     id: order.id,
-    status: order.status as LaundryStatusType,
+    status: order.status,
     orderContent: {
       orderUnitType: 'SOLO', // v2 미보유 — PoC 기본
       orderRequestType: 'NEW',

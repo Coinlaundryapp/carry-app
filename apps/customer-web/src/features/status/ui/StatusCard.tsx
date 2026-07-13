@@ -24,7 +24,6 @@ interface StatusCardProps {
   orderStatus: string;
   paymentBadge?: PaymentBadge | null;
   info: OrderDetailRes | OrderListRes;
-  hasButton: boolean;
 }
 
 const StatusCard = ({ variant, orderStatus, paymentBadge: badge, info }: StatusCardProps) => {

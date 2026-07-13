@@ -49,7 +49,6 @@ export default function MyOrderStatusPage({ params }: { params: { id: string } }
             orderStatus={orderDetail.status}
             paymentBadge={badge}
             info={orderDetail}
-            hasButton={false}
           />
         )}
       </div>

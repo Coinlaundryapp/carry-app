@@ -27,13 +27,7 @@ const Page = () => {
       </div>
       <div className="flex flex-col gap-[20px]">
         {orderList?.map((order) => (
-          <StatusCard
-            key={order.id}
-            variant="list"
-            info={order}
-            orderStatus={order.status}
-            hasButton
-          />
+          <StatusCard key={order.id} variant="list" info={order} orderStatus={order.status} />
         ))}
       </div>
     </div>

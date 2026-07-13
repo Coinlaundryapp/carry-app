@@ -1,6 +1,5 @@
 import type { Schemas } from '@carry/types';
 import { OrderListRes } from '@shared/types/api-types';
-import { LaundryStatusType } from '@features/status/types/laundry-status-type';
 import { createV2Client } from '@shared/api/v2-client';
 
 type V2Order = Schemas['OrderResponse'];
@@ -15,7 +14,7 @@ export function toOrderListItem(order: V2Order): OrderListRes {
   return {
     id: order.id,
     orderedAt: order.createdAt ?? '',
-    status: order.status as LaundryStatusType,
+    status: order.status,
     orderContent: {
       orderUnitType: 'SOLO',
       orderRequestType: 'NEW',

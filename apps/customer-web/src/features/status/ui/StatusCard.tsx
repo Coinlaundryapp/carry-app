@@ -1,50 +1,62 @@
 import { cn } from '@shared/lib/utils';
-import { LaundryStatusType } from '@features/status/types/laundry-status-type';
 import { cva } from 'class-variance-authority';
+import Link from 'next/link';
 import Seperate from '@assets/icons/separateWash.svg';
 import Economic from '@assets/icons/economiWash.svg';
 import InfoIcon from '@assets/icons/information-circle-red.svg';
 import { OrderDetailRes, OrderListRes } from '@shared/types/api-types';
+import { toDeliveryProgress, type PaymentBadge } from '@features/status/lib/status-mappers';
 
-const statusBadge = cva(
-  'flex items-center justify-center rounded-xl bg-primary px-[8px] py-[4px]',
-  {
-    variants: {
-      status: {
-        ORDER_COMPLETED: 'bg-cyan-50 text-primary-normal',
-        ORDER_CANCELED: 'bg-fill-normal text-[#FF4D4F]',
-        PAYMENT_PENDING: '',
-        PAYMENT_COMPLETED: 'bg-cyan-50 text-primary-normal',
-        DELIVERY_COMPLETED: '',
-        REFUND_PENDING: 'bg-fill-normal text-[#FF4D4F]',
-        REFUND_REQUEST_CANCELED: 'bg-fill-normal text-[#FF4D4F]',
-        REFUND_COMPLETED: '',
-      },
+const DELIVERY_TOTAL_STEPS = 4;
+
+const badgeStyle = cva('flex w-fit items-center justify-center rounded-xl px-[8px] py-[4px]', {
+  variants: {
+    tone: {
+      success: 'bg-cyan-50 text-primary-normal',
+      info: 'bg-fill-normal text-label-alternative',
+      danger: 'bg-fill-normal text-[#FF4D4F]',
     },
   },
-);
+});
 
 interface StatusCardProps {
-  status: LaundryStatusType | undefined;
+  variant: 'list' | 'detail';
+  orderStatus: string;
+  paymentBadge?: PaymentBadge | null;
   info: OrderDetailRes | OrderListRes;
   hasButton: boolean;
 }
 
-const StatusCard = ({ status, info, hasButton }: StatusCardProps) => {
+const StatusCard = ({ variant, orderStatus, paymentBadge: badge, info }: StatusCardProps) => {
   if (!info) return null;
+
+  const progress = toDeliveryProgress(orderStatus);
+  // list 화면은 인보이스를 조회하지 않으므로(N+1 회피) badge를 항상 무시한다.
+  const shownBadge = variant === 'detail' ? badge : null;
 
   return (
     <div className="bg-background-normal border-line-neutral flex w-full flex-col justify-center gap-[20px] self-stretch rounded-lg border p-[20px]">
-      <div className="flex flex-col items-start gap-[8px]">
-        <div className={cn(statusBadge({ status }))}>
-          <span className="font_label_2 font-semibold">
-            {status === 'PAYMENT_COMPLETED' && '결제 완료'}
-            {status === 'ORDER_COMPLETED' && '신청 완료'}
-            {status === 'ORDER_CANCELED' && '주문 취소'}
-            {status === 'REFUND_PENDING' && '환불 대기'}
-            {status === 'REFUND_REQUEST_CANCELED' && '환불 요청 취소'}
-          </span>
-        </div>
+      <div className="flex flex-col items-start gap-[8px] self-stretch">
+        {progress.cancelled ? (
+          <div className={cn(badgeStyle({ tone: 'danger' }))}>
+            <span className="font_label_2 font-semibold">취소</span>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-[8px] self-stretch">
+            <div className="flex items-center gap-[4px] self-stretch">
+              {Array.from({ length: DELIVERY_TOTAL_STEPS }).map((_, i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    'h-[4px] flex-1 rounded-full',
+                    i < progress.step ? 'bg-primary-normal' : 'bg-fill-normal',
+                  )}
+                />
+              ))}
+            </div>
+            <span className="font_label_2 text-primary-normal font-semibold">{progress.label}</span>
+          </div>
+        )}
         <p className="font_label_1_normal text-label-alternative">주문번호 {info.id}</p>
       </div>
       <div className="flex gap-[12px] self-stretch">
@@ -67,18 +79,27 @@ const StatusCard = ({ status, info, hasButton }: StatusCardProps) => {
               {info.laundromatName}
             </span>
           </div>
-          <span className="font_label_1_normal font-semibold">{}원</span>
+          {shownBadge?.amount != null && (
+            <span className="font_label_1_normal font-semibold">
+              {shownBadge.amount.toLocaleString()}원
+            </span>
+          )}
         </div>
       </div>
-      {status === 'ORDER_CANCELED' && (
-        <div className="flex gap-[4px]">
-          <InfoIcon width={16} height={16} />
-          <p className="font_caption_1 text-label-alternative flex-1">
-            카드사에서 8/9(금) 이내 환불 완료 예정입니다.
-          </p>
+      {shownBadge && (
+        <div className={cn(badgeStyle({ tone: shownBadge.tone }))}>
+          <span className="font_label_2 font-semibold">{shownBadge.label}</span>
         </div>
       )}
-      {hasButton && <>{status === 'ORDER_COMPLETED' && <></>}</>}
+      {shownBadge?.needsAction && (
+        <div className="flex items-center gap-[4px]">
+          <InfoIcon width={16} height={16} />
+          <p className="font_caption_1 text-label-alternative flex-1">카드 확인 필요</p>
+          <Link href="/my/payment" className="font_caption_1 text-primary-normal font-semibold">
+            카드 확인하기
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

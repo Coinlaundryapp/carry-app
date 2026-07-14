@@ -170,10 +170,10 @@ const mockLaundromats = [
 // ── 핸들러 ──
 
 export const handlers = [
-  // Kakao 로그인 (v2 — kakaoAccessToken 서버 검증)
+  // 소셜 로그인 (v2 일반화 — { provider, accessToken } 서버 검증)
   http.post('*/api/v2/auth/login', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>;
-    if (body.kakaoAccessToken) {
+    if (body.accessToken && body.provider) {
       return HttpResponse.json(
         {
           data: {
@@ -189,7 +189,7 @@ export const handlers = [
       );
     }
     return HttpResponse.json(
-      { status: 400, code: 'INVALID_INPUT', message: 'kakaoAccessToken required' },
+      { status: 400, code: 'INVALID_INPUT', message: 'provider/accessToken required' },
       { status: 400 },
     );
   }),

@@ -24,8 +24,6 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_BACKEND_URL: z.string().url(),
     NEXT_PUBLIC_NAVER_ID: z.string().min(1),
-    NEXT_PUBLIC_KAKAO_REST_API_KEY: z.string().min(1),
-    NEXT_PUBLIC_KAKAO_REDIRECT_URL: z.string().url(),
   },
 
   /**
@@ -42,8 +40,6 @@ export const env = createEnv({
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
     NEXT_PUBLIC_NAVER_ID: process.env.NEXT_PUBLIC_NAVER_ID,
-    NEXT_PUBLIC_KAKAO_REST_API_KEY: process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY,
-    NEXT_PUBLIC_KAKAO_REDIRECT_URL: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL,
   },
 
   /**

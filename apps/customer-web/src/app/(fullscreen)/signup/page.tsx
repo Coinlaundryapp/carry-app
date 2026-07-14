@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@features/auth/api/auth';
+import { sanitizeCallbackUrl } from '@shared/lib/sanitizeCallbackUrl';
 import SignupForm from '@features/auth/ui/SignupForm';
 
 /**
@@ -19,8 +20,8 @@ export default async function SignupPage({
   // 가입 대기 세션이 아니면 → 로그인.
   if (!session?.signupToken) redirect('/login');
 
-  const callbackUrl =
-    typeof searchParams.callbackUrl === 'string' ? searchParams.callbackUrl : '/login-done';
+  // Open Redirect 방지 — 같은 오리진 상대 경로만 허용, 그 외엔 안전한 기본값.
+  const callbackUrl = sanitizeCallbackUrl(searchParams.callbackUrl);
 
   return (
     <SignupForm

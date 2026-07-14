@@ -7,6 +7,7 @@ import { ApiError } from '@carry/api';
 import { Input } from '@shared/ui/Input';
 import Button from '@shared/ui/Button';
 import { formatPhoneNumber } from '@shared/lib/formatPhoneNumber';
+import { sanitizeCallbackUrl } from '@shared/lib/sanitizeCallbackUrl';
 import { postSignup } from '@features/auth/api/signup';
 
 interface SignupFormProps {
@@ -34,6 +35,8 @@ export default function SignupForm({
 }: SignupFormProps) {
   const router = useRouter();
   const emailLocked = Boolean(prefillEmail);
+  // 방어적 재검증 — prop이 이미 정제되었더라도 Open Redirect를 이중 차단한다.
+  const safeCallbackUrl = sanitizeCallbackUrl(callbackUrl);
 
   const [name, setName] = useState(prefillNickname ?? '');
   const [phone, setPhone] = useState('');
@@ -70,7 +73,7 @@ export default function SignupForm({
         return;
       }
 
-      router.replace(callbackUrl);
+      router.replace(safeCallbackUrl);
     } catch (error) {
       setSubmitting(false);
       if (error instanceof ApiError && error.status === 409) {

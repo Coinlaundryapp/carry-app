@@ -86,6 +86,18 @@ describe('SignupForm', () => {
     expect(postSignupMock.mock.calls[0][0].email).toBe('verified@carry.com');
   });
 
+  it('악성 callbackUrl(외부 URL)은 방어적으로 안전한 기본값으로 대체되어 replace된다', async () => {
+    render(<SignupForm signupToken="st" callbackUrl="https://evil.com" />);
+
+    fill(/이름/, '홍길동');
+    fill(/전화번호/, '010-1234-5678');
+    fill(/이메일/, 'me@carry.com');
+    fireEvent.click(screen.getByRole('button', { name: /가입/ }));
+
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith('/login-done'));
+    expect(replaceMock).not.toHaveBeenCalledWith('https://evil.com');
+  });
+
   it('409(이메일 중복) → "이미 사용 중인 이메일" 메시지 노출, signIn 미호출', async () => {
     postSignupMock.mockRejectedValue(new ApiError(409, 'EMAIL_CONFLICT', 'conflict'));
     render(<SignupForm signupToken="st" callbackUrl="/login-done" />);

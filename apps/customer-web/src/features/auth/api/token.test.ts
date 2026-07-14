@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '@/test/mocks/server';
-import { devLogin, loginWithKakao, refreshAccessToken } from './token';
+import { devLogin, loginWithKakao, exchangeOAuth, refreshAccessToken } from './token';
 
 describe('token API (v2)', () => {
   describe('loginWithKakao', () => {
@@ -12,6 +12,32 @@ describe('token API (v2)', () => {
         accessToken: 'mock-access-token',
         refreshToken: 'mock-refresh-token',
       });
+    });
+
+    it('요청 바디는 { provider: "KAKAO", accessToken } (v2 일반화 계약)', async () => {
+      let captured: Record<string, unknown> | undefined;
+      server.use(
+        http.post('*/api/v2/auth/login', async ({ request }) => {
+          captured = (await request.json()) as Record<string, unknown>;
+          return HttpResponse.json(
+            {
+              data: {
+                status: 'REGISTERED',
+                accessToken: 'mock-access-token',
+                refreshToken: 'mock-refresh-token',
+              },
+              status: 200,
+              code: 'SUCCESS',
+              message: 'ok',
+            },
+            { status: 200 },
+          );
+        }),
+      );
+
+      await loginWithKakao('kakao-access-token');
+
+      expect(captured).toEqual({ provider: 'KAKAO', accessToken: 'kakao-access-token' });
     });
 
     it('REGISTRATION_REQUIRED 응답 → registration_required 에러(가입 흐름 후속)', async () => {
@@ -30,6 +56,62 @@ describe('token API (v2)', () => {
       );
 
       await expect(loginWithKakao('new-user-token')).rejects.toThrow('registration_required');
+    });
+  });
+
+  describe('exchangeOAuth', () => {
+    it('provider를 대문자로 보내고 REGISTERED LoginResponse를 그대로 반환', async () => {
+      let captured: Record<string, unknown> | undefined;
+      server.use(
+        http.post('*/api/v2/auth/login', async ({ request }) => {
+          captured = (await request.json()) as Record<string, unknown>;
+          return HttpResponse.json(
+            {
+              data: {
+                status: 'REGISTERED',
+                accessToken: 'mock-access-token',
+                refreshToken: 'mock-refresh-token',
+              },
+              status: 200,
+              code: 'SUCCESS',
+              message: 'ok',
+            },
+            { status: 200 },
+          );
+        }),
+      );
+
+      const res = await exchangeOAuth('google', 'oauth-access-token');
+
+      expect(captured).toEqual({ provider: 'GOOGLE', accessToken: 'oauth-access-token' });
+      expect(res.status).toBe('REGISTERED');
+      expect(res.accessToken).toBe('mock-access-token');
+      expect(res.refreshToken).toBe('mock-refresh-token');
+    });
+
+    it('REGISTRATION_REQUIRED → signupToken 담긴 LoginResponse 반환(throw 없음)', async () => {
+      server.use(
+        http.post('*/api/v2/auth/login', () =>
+          HttpResponse.json(
+            {
+              data: {
+                status: 'REGISTRATION_REQUIRED',
+                signupToken: 'signup-token',
+                prefill: { email: 'a@b.com', nickname: '길동' },
+              },
+              status: 200,
+              code: 'SUCCESS',
+              message: 'ok',
+            },
+            { status: 200 },
+          ),
+        ),
+      );
+
+      const res = await exchangeOAuth('naver', 'new-user-oauth-token');
+
+      expect(res.status).toBe('REGISTRATION_REQUIRED');
+      expect(res.signupToken).toBe('signup-token');
     });
   });
 

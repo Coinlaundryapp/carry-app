@@ -65,19 +65,21 @@ const PROVIDER_CONFIG: Record<
 
 interface SocialLoginButtonProps {
   provider: SocialProvider;
+  /** OAuth 성공 후 복귀 경로(로그인 딥링크 유지) — 미지정 시 NextAuth 기본값. */
+  callbackUrl?: string;
 }
 
 /**
- * 브라우저 소셜 로그인 버튼 — 클릭 시 NextAuth `signIn(providerId)`로 OAuth 시작.
- * WebView 전용 네이티브 브릿지 흐름은 KakaoLoginButton이 담당한다.
+ * 브라우저 소셜 로그인 버튼 — 클릭 시 NextAuth `signIn(providerId, { callbackUrl })`로 OAuth 시작.
+ * callbackUrl로 원래 요청한 딥링크로 복귀한다. WebView 네이티브 브릿지 흐름은 KakaoLoginButton 담당.
  */
-export default function SocialLoginButton({ provider }: SocialLoginButtonProps) {
+export default function SocialLoginButton({ provider, callbackUrl }: SocialLoginButtonProps) {
   const config = PROVIDER_CONFIG[provider];
 
   return (
     <button
       type="button"
-      onClick={() => void signIn(config.id)}
+      onClick={() => void signIn(config.id, callbackUrl ? { callbackUrl } : undefined)}
       className={`font-body-1-reading flex w-full items-center justify-center gap-1 rounded-lg p-4 font-bold ${config.className}`}
     >
       {config.icon}

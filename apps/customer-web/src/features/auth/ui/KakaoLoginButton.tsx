@@ -86,5 +86,5 @@ export default function KakaoLoginButton({ redirectUrl = '/login-done' }: KakaoL
     );
   }
 
-  return <SocialLoginButton provider="KAKAO" />;
+  return <SocialLoginButton provider="KAKAO" callbackUrl={redirectUrl} />;
 }

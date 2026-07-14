@@ -19,6 +19,8 @@ declare module 'next-auth' {
   interface Session {
     // 가입 대기 상태(백엔드가 REGISTRATION_REQUIRED로 signupToken 발급) — 후속 가입 게이트가 사용.
     signupToken?: string;
+    // 가입 폼 prefill(검증 이메일/닉네임) — 검증 이메일이 있으면 폼에서 email을 고정.
+    prefill?: { email?: string; nickname?: string };
     user: {
       accessToken?: string;
       refreshToken?: string;
@@ -36,17 +38,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Google,
     Credentials({
       credentials: {
-        // WebView Kakao(네이티브 토큰), 로컬·e2e dev-login(역할).
+        // WebView Kakao(네이티브 토큰), 로컬·e2e dev-login(역할), 2단계 가입 후 토큰 주입.
         kakaoAccessToken: {},
         devRole: {},
+        signupAccessToken: {},
+        signupRefreshToken: {},
       },
       authorize: async (credentials) => {
         try {
           const kakaoAccessToken = credentials.kakaoAccessToken as string | undefined;
           const devRole = credentials.devRole as string | undefined;
+          const signupAccessToken = credentials.signupAccessToken as string | undefined;
+          const signupRefreshToken = credentials.signupRefreshToken as string | undefined;
 
           let res;
-          if (devRole) {
+          if (signupAccessToken && signupRefreshToken) {
+            // 2단계 소셜 가입 완료: signup.ts가 백엔드에서 발급받은 토큰을 세션으로 확립.
+            // 토큰은 백엔드 서명 검증을 매 API 호출마다 통과해야 하므로 위조 주입은 무력.
+            res = { accessToken: signupAccessToken, refreshToken: signupRefreshToken };
+          } else if (devRole) {
             // 비프로덕션 dev-login: 역할별 토큰(Kakao 불요).
             res = await devLogin(devRole);
           } else if (kakaoAccessToken) {
@@ -78,9 +88,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.accessToken = res.accessToken;
           token.refreshToken = res.refreshToken;
           token.signupToken = undefined;
+          token.prefill = undefined;
         } else {
-          // REGISTRATION_REQUIRED — 가입 대기 세션: signupToken 보관, accessToken은 빈 문자열.
+          // REGISTRATION_REQUIRED — 가입 대기 세션: signupToken·prefill 보관, accessToken은 빈 문자열.
           token.signupToken = res.signupToken;
+          token.prefill = res.prefill;
           token.accessToken = '';
         }
         return token;
@@ -119,6 +131,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const updatedSession = {
         ...session,
         signupToken: token.signupToken as string | undefined,
+        prefill: token.prefill as { email?: string; nickname?: string } | undefined,
         user: updatedUser,
       };
       return updatedSession;

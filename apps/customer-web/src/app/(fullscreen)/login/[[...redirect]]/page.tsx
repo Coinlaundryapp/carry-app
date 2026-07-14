@@ -42,8 +42,8 @@ export default async function Login({
 
       <div className="flex w-full flex-col gap-2">
         <KakaoLoginButton redirectUrl={webViewRedirectUrl} />
-        <SocialLoginButton provider="NAVER" />
-        <SocialLoginButton provider="GOOGLE" />
+        <SocialLoginButton provider="NAVER" callbackUrl={webViewRedirectUrl} />
+        <SocialLoginButton provider="GOOGLE" callbackUrl={webViewRedirectUrl} />
       </div>
     </main>
   );

@@ -19,10 +19,10 @@ describe('SocialLoginButton', () => {
   });
 
   it.each([
-    ['KAKAO', '카카오로 시작하기', 'kakao'],
-    ['NAVER', '네이버로 시작하기', 'naver'],
-    ['GOOGLE', '구글로 시작하기', 'google'],
-  ] as const)('%s 버튼: 라벨 렌더 + 클릭 시 signIn(%s, {callbackUrl})', (provider, label, id) => {
+    ['KAKAO', 'kakao', '카카오로 시작하기'],
+    ['NAVER', 'naver', '네이버로 시작하기'],
+    ['GOOGLE', 'google', '구글로 시작하기'],
+  ] as const)('%s 버튼: 라벨 렌더 + 클릭 시 signIn(%s, {callbackUrl})', (provider, id, label) => {
     render(<SocialLoginButton provider={provider} callbackUrl="/login-done/payment/1" />);
 
     const button = screen.getByRole('button', { name: new RegExp(label) });

@@ -89,9 +89,8 @@ export default function OrderDetailPage({ params }: { params: { id: string } }) 
             <Row label="고객" value={`#${order.customerId}`} />
             <Row label="세탁소" value={`#${order.laundromatId}`} />
             <Row label="품목" value={order.laundryItemType} />
-            {order.totalAmount != null && (
-              <Row label="총액" value={`${order.totalAmount.toLocaleString()}원`} />
-            )}
+            {/* 총액은 청구서(Invoice) 소관이라 OrderResponse 에 없다(결제·물리 흐름 분리).
+                코디네이터용 인보이스 조회 API 가 생기면 여기에 붙인다. */}
             {order.carrierId != null && <Row label="배달원" value={`#${order.carrierId}`} />}
             {order.cancelReason && <Row label="취소 사유" value={order.cancelReason} />}
           </dl>

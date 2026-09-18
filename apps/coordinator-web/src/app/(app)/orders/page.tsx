@@ -8,7 +8,9 @@ import { getOrders, orderStatusLabel, ORDER_STATUS_FILTERS, type Order } from '@
  * 주문 운영 목록 — 상태 필터로 거른 전체 주문(코디네이터). 상세에서 취소·환불을 진행한다.
  */
 export default function OrdersPage() {
-  const [status, setStatus] = useState<string>('PAID');
+  // 기본값은 '전체'. 예전 기본값이던 'PAID' 는 결제·물리 흐름 분리로 사라진 상태라
+  // 목록이 항상 빈 화면으로 열렸다. 코디네이터는 진행 중·종결을 모두 훑어야 하므로 전체가 기본이다.
+  const [status, setStatus] = useState<string>('');
   const [items, setItems] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,10 +73,10 @@ export default function OrdersPage() {
                   <span className="font-semibold">주문 #{o.id}</span>
                   <span className="text-xs text-gray-500">{orderStatusLabel(o.status)}</span>
                 </div>
-                <p className="mt-1 text-sm text-gray-500">
-                  고객 #{o.customerId}
-                  {o.totalAmount != null && ` · ${o.totalAmount.toLocaleString()}원`}
-                </p>
+                {/* 금액은 주문이 아니라 청구서(Invoice)의 것이다 — 결제·물리 흐름 분리 이후
+                    OrderResponse 에 totalAmount 가 없다. 코디네이터가 볼 수 있는 인보이스 조회
+                    API 도 아직 없어(고객 소유권 검증) 목록에서는 금액을 보여주지 않는다. */}
+                <p className="mt-1 text-sm text-gray-500">고객 #{o.customerId}</p>
               </Link>
             </li>
           ))}

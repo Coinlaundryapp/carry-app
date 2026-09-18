@@ -10,11 +10,11 @@ const ok = <T,>(data: T) =>
 const order = (over: Record<string, unknown> = {}) => ({
   id: 7,
   customerId: 3,
-  status: 'PAID',
+  // 주문 상태는 물리 사실만 — 결제 상태(PAID 등)는 주문에 없다(Invoice/Payment 소관).
+  status: 'PICKED_UP',
   laundromatId: 5,
   laundryItemType: 'REGULAR',
   selectedOptions: [],
-  totalAmount: 15000,
   carrierId: null,
   cancelReason: null,
   ...over,
@@ -27,28 +27,39 @@ describe('OrderDetailPage', () => {
     vi.restoreAllMocks();
   });
 
-  it('주문 상세를 보여주고 결제 완료 주문엔 환불 보상 취소 버튼을 노출한다', async () => {
+  it('주문 상세를 보여주고 수거 이후 주문엔 환불 보상 취소 버튼을 노출한다', async () => {
+    // 청구서는 수거 완료 시 발행되므로 PICKED_UP 부터 환불 보상 대상이 된다.
     server.use(http.get('*/api/v2/coordinator/orders/7', () => ok(order())));
     render(<OrderDetailPage params={{ id: '7' }} />);
-    expect(await screen.findByText('결제완료')).toBeInTheDocument();
+    expect(await screen.findByText('수거됨')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /환불 보상/ })).toBeInTheDocument();
+  });
+
+  it('수거 전 주문은 환불 보상 문구 없이 일반 취소 버튼만 노출한다', async () => {
+    server.use(
+      http.get('*/api/v2/coordinator/orders/7', () => ok(order({ status: 'DISPATCHED' }))),
+    );
+    render(<OrderDetailPage params={{ id: '7' }} />);
+    await screen.findByText('배차됨');
+    expect(screen.getByRole('button', { name: '주문 취소' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /환불 보상/ })).not.toBeInTheDocument();
   });
 
   it('취소 시 사유를 담아 호출하고 환불 안내를 표시한다', async () => {
     let body: unknown;
-    let status = 'PAID';
+    let status = 'PICKED_UP';
     server.use(
       http.get('*/api/v2/coordinator/orders/7', () => ok(order({ status }))),
       http.post('*/api/v2/coordinator/orders/7/cancel', async ({ request }) => {
         body = await request.json();
-        status = 'REFUND_PENDING';
+        status = 'CANCELLED';
         return new HttpResponse(null, { status: 204 });
       }),
     );
     vi.spyOn(window, 'prompt').mockReturnValue('운영 취소');
 
     render(<OrderDetailPage params={{ id: '7' }} />);
-    await screen.findByText('결제완료');
+    await screen.findByText('수거됨');
     await userEvent.click(screen.getByRole('button', { name: /주문 취소/ }));
 
     await waitFor(() => expect(body).toEqual({ reason: '운영 취소' }));

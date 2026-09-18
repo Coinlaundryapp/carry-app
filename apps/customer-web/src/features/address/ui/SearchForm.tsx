@@ -7,14 +7,16 @@ import { debounce } from 'es-toolkit';
 import DefaultSearch from './DefaultSearch';
 import { getAddressSearchList } from '@features/address/api/addressApi';
 import type { TGetAddressSearchListRes } from '@shared/types/api-types';
+import type { AddressSelection } from '@features/address/lib/useAddressForm';
 
 type AddressSearchItem = TGetAddressSearchListRes['content'][number];
 
 type TPros = {
-  onAddressChange: (value: string) => void;
+  /** 선택한 주소(지번)와 geocode 좌표·우편번호를 폼으로 전달한다. */
+  onAddressSelect: (selected: AddressSelection) => void;
 };
 
-function SearchForm({ onAddressChange }: TPros) {
+function SearchForm({ onAddressSelect }: TPros) {
   const { addressModalOpen, setAddressModalOpen } = useAddressStore();
   const [value, setValue] = useState('');
   const [page, setPage] = useState(1);
@@ -26,7 +28,12 @@ function SearchForm({ onAddressChange }: TPros) {
 
   const handleClick = (address: AddressSearchItem) => {
     setValue(address.regionAddress.addressName);
-    onAddressChange(address.regionAddress.addressName);
+    onAddressSelect({
+      addressName: address.regionAddress.addressName,
+      latitude: address.latitude,
+      longitude: address.longitude,
+      zipCode: address.zipCode,
+    });
     setAddressModalOpen(false);
     setAddressSearchState(false);
   };

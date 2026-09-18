@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { http, HttpResponse } from 'msw';
+import { ApiError } from '@carry/api';
 import { server } from '@/test/mocks/server';
 import { mockData } from '@/test/mocks/handlers';
 import { getPrices, postOrder } from './order';
@@ -18,9 +19,9 @@ describe('order API', () => {
 
     it('에러 응답 → ApiError 발생', async () => {
       server.use(
-        http.get('*/api/v1/prices', () => {
+        http.get('*/api/v2/prices', () => {
           return HttpResponse.json(
-            { data: null, status: 500, message: 'Internal Server Error' },
+            { status: 500, code: 'INTERNAL_ERROR', message: 'Internal Server Error' },
             { status: 500 },
           );
         }),
@@ -33,6 +34,41 @@ describe('order API', () => {
           laundryItemType: 'REGULAR',
         }),
       ).rejects.toThrow();
+    });
+
+    it('일부 옵션만 온 정책 → 누락 옵션은 {selectable:false, price:null}', async () => {
+      server.use(
+        http.get('*/api/v2/prices', () =>
+          HttpResponse.json(
+            {
+              data: {
+                id: 2,
+                orderUnitType: 'SOLO',
+                orderRequestType: 'NEW',
+                laundryItemType: 'REGULAR',
+                optionPrices: [
+                  { optionType: 'WASH', subOptionType: 'STANDARD', price: 4000, selectable: true },
+                ],
+              },
+              status: 200,
+              code: 'SUCCESS',
+              message: 'success',
+            },
+            { status: 200 },
+          ),
+        ),
+      );
+
+      const result = await getPrices({
+        orderUnitType: 'SOLO',
+        orderRequestType: 'NEW',
+        laundryItemType: 'REGULAR',
+      });
+
+      expect(result.washOption.standard).toEqual({ selectable: true, price: 4000 });
+      expect(result.washOption.hotWater).toEqual({ selectable: false, price: null });
+      expect(result.dryOption.lowHeat).toEqual({ selectable: false, price: null });
+      expect(result.additionalOption.addSoftener).toEqual({ selectable: false, price: null });
     });
   });
 
@@ -56,19 +92,22 @@ describe('order API', () => {
       },
     };
 
-    it('정상 주문 생성 → OrderResponse 반환', async () => {
+    it('정상 주문 생성 → v2 OrderResponse 반환(화면은 id 사용)', async () => {
       const result = await postOrder(orderParams);
       expect(result).toEqual(mockData.orderResponse);
+      expect(result.id).toBe(1);
     });
 
-    it('요청 본문에 LAUNDRY_WEIGHT spec 주입 + 날짜 포맷 변환', async () => {
+    it('v2 요청 본문 매핑 + Idempotency-Key 헤더', async () => {
       let capturedBody: Record<string, unknown> | null = null;
+      let idempotencyKey: string | null = null;
 
       server.use(
-        http.post('*/api/v1/orders', async ({ request }) => {
+        http.post('*/api/v2/orders', async ({ request }) => {
           capturedBody = (await request.json()) as Record<string, unknown>;
+          idempotencyKey = request.headers.get('Idempotency-Key');
           return HttpResponse.json(
-            { data: mockData.orderResponse, status: 201, message: 'created' },
+            { data: mockData.orderResponse, status: 201, code: 'SUCCESS', message: 'created' },
             { status: 201 },
           );
         }),
@@ -76,36 +115,51 @@ describe('order API', () => {
 
       await postOrder(orderParams);
 
-      expect(capturedBody).not.toBeNull();
       const body = capturedBody as unknown as Record<string, unknown>;
-      const content = body.orderContent as Record<string, unknown>;
-      const specs = content.laundrySpecs as { laundrySpec: string; value: number }[];
-
-      // LAUNDRY_WEIGHT spec이 주입되었는지 확인
-      expect(specs).toContainEqual({ laundrySpec: 'LAUNDRY_WEIGHT', value: 5 });
-
-      // 기존 spec도 유지되는지 확인
-      expect(specs).toContainEqual({ laundrySpec: 'LAUNDRY_COLOR', value: 1 });
-
-      // 날짜 포맷이 'yyyy-MM-dd HH:mm:ss EEE' 패턴인지 확인
-      const schedule = body.orderSchedule as Record<string, string>;
-      expect(schedule.desiredPickupDateTime).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \w{3}$/);
-      expect(schedule.desiredDeliveryDateTime).toMatch(
-        /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \w{3}$/,
-      );
+      // v1 분리 옵션 → v2 selectedOptions 평탄화
+      expect(body.selectedOptions).toEqual([
+        { optionType: 'WASH', subOptionType: 'STANDARD' },
+        { optionType: 'DRY', subOptionType: 'LOW_HEAT' },
+        { optionType: 'ADDITIONAL', subOptionType: 'FOLD_LAUNDRY' },
+      ]);
+      expect(body.shippingAddressId).toBe(1);
+      expect(body.laundromatId).toBe(1);
+      expect(body.laundryItemType).toBe('REGULAR');
+      // 날짜는 ISO date-time
+      expect(body.desiredPickupAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
+      // v2 계약에 없는 필드는 전송 안 함
+      expect(body.orderContent).toBeUndefined();
+      expect(body.orderUnitType).toBeUndefined();
+      // 멱등 키 부착
+      expect(idempotencyKey).toBeTruthy();
     });
 
-    it('에러 시 "주문에 실패했습니다." 에러 발생', async () => {
+    it('에러 시 ApiError를 그대로 전파한다', async () => {
       server.use(
-        http.post('*/api/v1/orders', () => {
+        http.post('*/api/v2/orders', () => {
           return HttpResponse.json(
-            { data: null, status: 500, message: 'Internal Server Error' },
+            { status: 500, code: 'INTERNAL_ERROR', message: 'Internal Server Error' },
             { status: 500 },
           );
         }),
       );
 
-      await expect(postOrder(orderParams)).rejects.toThrow('주문에 실패했습니다.');
+      await expect(postOrder(orderParams)).rejects.toBeInstanceOf(ApiError);
+    });
+
+    it('createOrder 409 시 ApiError를 코드와 함께 전파한다', async () => {
+      server.use(
+        http.post('*/api/v2/orders', () =>
+          HttpResponse.json(
+            { status: 409, code: 'BILLING_KEY_REQUIRED', message: '카드 필요' },
+            { status: 409 },
+          ),
+        ),
+      );
+
+      await expect(postOrder(orderParams)).rejects.toMatchObject({
+        code: 'BILLING_KEY_REQUIRED',
+      });
     });
   });
 });

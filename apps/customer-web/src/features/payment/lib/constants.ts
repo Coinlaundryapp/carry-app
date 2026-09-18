@@ -1,11 +1,3 @@
-export type PaymentMethod = 'KAKAOPAY' | 'NAVERPAY' | 'card';
-
-export const PAYMENT_METHODS: { label: string; value: PaymentMethod }[] = [
-  { label: '카카오페이', value: 'KAKAOPAY' },
-  { label: '네이버페이', value: 'NAVERPAY' },
-  { label: '일반 결제(카드사 앱 결제)', value: 'card' },
-];
-
 export const CARD_INSTITUTIONS = [
   { label: '기업 BC', value: 'IBK_BC' },
   { label: '광주은행', value: 'GWANGJUBANK' },
@@ -32,19 +24,4 @@ export const CARD_INSTITUTIONS = [
   { label: 'Sh수협은행', value: 'SUHYEOP' },
   { label: '페이코', value: 'PCP' },
   { label: 'KB증권', value: 'KBS' },
-] as const;
-
-export const INSTALLMENT_OPTIONS = [
-  { value: '0', label: '일시불' },
-  { value: '2', label: '2개월' },
-  { value: '3', label: '3개월' },
-  { value: '4', label: '4개월' },
-  { value: '5', label: '5개월' },
-  { value: '6', label: '6개월' },
-  { value: '7', label: '7개월' },
-  { value: '8', label: '8개월' },
-  { value: '9', label: '9개월' },
-  { value: '10', label: '10개월' },
-  { value: '11', label: '11개월' },
-  { value: '12', label: '12개월' },
 ] as const;

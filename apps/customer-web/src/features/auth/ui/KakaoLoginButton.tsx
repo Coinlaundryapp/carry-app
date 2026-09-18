@@ -4,25 +4,21 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import * as Sentry from '@sentry/nextjs';
-import Link from 'next/link';
 import { KakaoIcon } from '@assets/icons';
 import { useWebView } from '@shared/lib/useWebView';
+import SocialLoginButton from '@features/auth/ui/SocialLoginButton';
 
 interface KakaoLoginButtonProps {
-  oauthUrl: string;
   /** WebView 로그인 완료 후 리다이렉트 경로 (예: /login-done/payment/123) */
   redirectUrl?: string;
 }
 
 /**
  * 카카오 로그인 버튼
- * - 일반 브라우저: OAuth URL로 리다이렉트 (Link 컴포넌트)
+ * - 일반 브라우저: NextAuth `signIn('kakao')`로 OAuth 시작 (SocialLoginButton 위임)
  * - WebView: 네이티브에 로그인 처리 위임 → onLoginComplete 콜백으로 토큰 수신 → signIn
  */
-export default function KakaoLoginButton({
-  oauthUrl,
-  redirectUrl = '/login-done',
-}: KakaoLoginButtonProps) {
+export default function KakaoLoginButton({ redirectUrl = '/login-done' }: KakaoLoginButtonProps) {
   const { isInWebView, callBridge, registerCallback } = useWebView();
   const router = useRouter();
   const isProcessingRef = useRef(false);
@@ -71,8 +67,8 @@ export default function KakaoLoginButton({
     callBridge(
       (bridge) => bridge.requestLogin(),
       () => {
-        // Bridge 호출 실패 시 fallback: 일반 리다이렉트
-        window.location.href = oauthUrl;
+        // Bridge 호출 실패 시 fallback: 브라우저 OAuth(signIn)로 전환.
+        void signIn('kakao');
       },
     );
   };
@@ -90,13 +86,5 @@ export default function KakaoLoginButton({
     );
   }
 
-  return (
-    <Link
-      href={oauthUrl}
-      className="font-body-1-reading flex w-full items-center justify-center gap-1 rounded-lg bg-[#FEE500] p-4 font-bold"
-    >
-      <KakaoIcon />
-      <p>카카오로 시작하기</p>
-    </Link>
-  );
+  return <SocialLoginButton provider="KAKAO" callbackUrl={redirectUrl} />;
 }

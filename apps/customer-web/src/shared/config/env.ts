@@ -8,6 +8,13 @@ export const env = createEnv({
    */
   server: {
     AUTH_SECRET: z.string().min(1),
+    // 소셜 OAuth 앱 자격증명 — NextAuth v5가 AUTH_<PROVIDER>_ID/SECRET를 자동 로드한다.
+    AUTH_KAKAO_ID: z.string(),
+    AUTH_KAKAO_SECRET: z.string(),
+    AUTH_NAVER_ID: z.string(),
+    AUTH_NAVER_SECRET: z.string(),
+    AUTH_GOOGLE_ID: z.string(),
+    AUTH_GOOGLE_SECRET: z.string(),
   },
 
   /**
@@ -17,9 +24,6 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_BACKEND_URL: z.string().url(),
     NEXT_PUBLIC_NAVER_ID: z.string().min(1),
-    NEXT_PUBLIC_KAKAO_REST_API_KEY: z.string().min(1),
-    NEXT_PUBLIC_KAKAO_REDIRECT_URL: z.string().url(),
-    NEXT_PUBLIC_TOSS_CLIENT_KEY: z.string().min(1),
   },
 
   /**
@@ -28,11 +32,14 @@ export const env = createEnv({
    */
   runtimeEnv: {
     AUTH_SECRET: process.env.AUTH_SECRET,
+    AUTH_KAKAO_ID: process.env.AUTH_KAKAO_ID,
+    AUTH_KAKAO_SECRET: process.env.AUTH_KAKAO_SECRET,
+    AUTH_NAVER_ID: process.env.AUTH_NAVER_ID,
+    AUTH_NAVER_SECRET: process.env.AUTH_NAVER_SECRET,
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
     NEXT_PUBLIC_NAVER_ID: process.env.NEXT_PUBLIC_NAVER_ID,
-    NEXT_PUBLIC_KAKAO_REST_API_KEY: process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY,
-    NEXT_PUBLIC_KAKAO_REDIRECT_URL: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL,
-    NEXT_PUBLIC_TOSS_CLIENT_KEY: process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY,
   },
 
   /**

@@ -107,6 +107,35 @@ describe('address-form-utils', () => {
 
       expect(result.deliveryNotes).toBe('벨 누르지 마세요');
     });
+
+    it('geo 인자 → 좌표·우편번호·권역이 페이로드에 포함', () => {
+      const result = buildAddressPayload(
+        { addressLabel: '집', name: '홍길동', phone: '010-1234-5678' },
+        { main: '서울시 강남구', detail: '101호' },
+        { value: '1', text: '' },
+        { value: '1', requestText: '' },
+        { latitude: 37.5, longitude: 127.03, zipCode: '06234', areaCode: 'GANGNAM' },
+      );
+
+      expect(result).toMatchObject({
+        latitude: 37.5,
+        longitude: 127.03,
+        zipCode: '06234',
+        areaCode: 'GANGNAM',
+      });
+    });
+
+    it('geo 미지정 → 지오 필드 undefined(매핑 레이어가 기본값 보정)', () => {
+      const result = buildAddressPayload(
+        { addressLabel: '집', name: '홍길동', phone: '010-1234-5678' },
+        { main: '서울시 강남구', detail: '101호' },
+        { value: '1', text: '' },
+        { value: '1', requestText: '' },
+      );
+
+      expect(result.latitude).toBeUndefined();
+      expect(result.areaCode).toBeUndefined();
+    });
   });
 
   describe('addressResponseToFormData', () => {
@@ -142,6 +171,23 @@ describe('address-form-utils', () => {
       });
       expect(result.request.value).toBe('1');
       expect(result.request.requestText).toBe('문 앞에 놓아주세요.');
+    });
+
+    it('지오 필드 → geo로 라운드트립 보존', () => {
+      const withGeo: TAddressRes = {
+        ...mockResponse,
+        latitude: 37.5065,
+        longitude: 127.0536,
+        zipCode: '06234',
+        areaCode: 'GANGNAM',
+      };
+      const result = addressResponseToFormData(withGeo);
+      expect(result.geo).toEqual({
+        latitude: 37.5065,
+        longitude: 127.0536,
+        zipCode: '06234',
+        areaCode: 'GANGNAM',
+      });
     });
 
     it('커스텀 deliveryNotes → request value 4', () => {

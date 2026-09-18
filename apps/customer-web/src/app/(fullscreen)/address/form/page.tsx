@@ -48,7 +48,7 @@ const AddressAddPage = () => {
     <div className="flex h-full w-full flex-col overflow-scroll pb-16">
       {addressModalOpen ? (
         <div className="relative z-50 max-h-full w-full max-w-full overflow-hidden bg-white">
-          <SearchForm onAddressChange={form.handleMainAddressChange} />
+          <SearchForm onAddressSelect={form.handleAddressSelect} />
         </div>
       ) : (
         <>

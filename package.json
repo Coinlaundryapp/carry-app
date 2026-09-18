@@ -15,6 +15,7 @@
     "format": "prettier --write \"apps/*/src/**/*.{ts,tsx,css}\"",
     "format:check": "prettier --check \"apps/*/src/**/*.{ts,tsx,css}\"",
     "validate": "turbo run lint typecheck test",
+    "gen:types": "openapi-typescript ../carry-platform/docs/api/openapi-v2.json -o packages/types/src/generated/v2.ts",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -29,8 +30,10 @@
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "openapi-typescript": "^7.5.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.6.5",
-    "turbo": "^2.5.4"
+    "turbo": "^2.5.4",
+    "typescript": "^5.7.2"
   }
 }

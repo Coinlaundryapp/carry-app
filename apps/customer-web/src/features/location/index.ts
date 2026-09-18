@@ -1,9 +1,4 @@
 // Location feature — public API
-export { getServiceAvailabiltyRegion } from './api/getServiceAvailabilityRegion';
-export { ACTIVATED_CITY } from './lib/activate-region';
+// 지오로케이션·위치 스토어만 유지(map 공유). 서비스 가용성/권역 선택(출시-전 대기명단)은 폐기.
 export { useGeoLocation } from './lib/useGeoLocation';
 export { useLocationStore } from './model/location-store';
-
-// UI
-export { default as SeoulMap } from './ui/SeoulMap';
-export { default as IncheonMap } from './ui/IncheonMap';

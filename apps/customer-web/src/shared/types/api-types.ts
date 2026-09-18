@@ -1,5 +1,3 @@
-import { LaundryStatusType } from '@features/status/types/laundry-status-type';
-
 export interface ApiResponse<T> {
   data: T;
   status: number;
@@ -21,6 +19,10 @@ export type TGetAddressSearchListRes = {
     addressType: string;
     regionAddress: { addressName: string };
     roadAddress: string | null;
+    /** v2 geocode가 동봉하는 지오 필드 — 검색 결과 선택 시 배송지 폼에 채워진다. */
+    latitude?: number;
+    longitude?: number;
+    zipCode?: string;
   }[];
   pagination: {
     hasNext: boolean;
@@ -39,41 +41,16 @@ export type TAddressRes = {
   entranceDetail: string;
   entranceType: string;
   id: number;
-  isDefaultAddress: false;
+  isDefaultAddress: boolean;
   recipientName: string;
   recipientPhone: string;
   userId: number;
+  /** v2 라운드트립용 지오 필드 — 편집 저장 시 그대로 다시 전송한다. */
+  latitude?: number;
+  longitude?: number;
+  zipCode?: string;
+  areaCode?: string;
 };
-
-// 서비스 가능 여부 api
-type ServiceAvailabilityLevel = 'AVAILABLE' | 'POTENTIALLY_AVAILABLE' | 'UNAVAILABLE';
-
-export interface ServiceAvailabilityResponse {
-  serviceAvailabilityLevel: ServiceAvailabilityLevel;
-  region: {
-    city: string;
-    district: string | null;
-  };
-}
-
-export interface ServiceAvailabiltyRegionRes {
-  city: 'SEOUL_SI' | 'INCHEON_SI';
-  district: string;
-  latitude: number;
-  longitude: number;
-}
-
-// 서비스 오픈 알림 등록 api
-type NotificationType = 'ALARM_TALK' | 'SMS' | 'EMAIL';
-
-export interface NotificationBody {
-  region: {
-    city: string;
-    district: string;
-  };
-  notificationType: NotificationType;
-  contact: string;
-}
 
 export interface ErrorResponse {
   status: number;
@@ -99,7 +76,9 @@ export type Address = {
 // 주문 명세서 조회 api
 export interface OrderDetailRes {
   id: number;
-  status: LaundryStatusType;
+  // v2 OrderResponse.status는 문자열(ORDER_STATUS 값)로 온다. 구 LaundryStatusType
+  // 유니온과 값 집합이 다르므로 string으로 둔다(소비자는 toDeliveryProgress 등 문자열 매퍼).
+  status: string;
   orderContent: {
     orderUnitType: 'SOLO' | 'ECONOMY' | 'TEAM';
     orderRequestType: string;
@@ -146,7 +125,7 @@ export interface OrderDetailRes {
 export interface OrderListRes {
   id: number; // orderId, 주문 번호
   orderedAt: string; // 주문 일자
-  status: LaundryStatusType; // [Enum] 주문 명세서 상태
+  status: string; // v2 ORDER_STATUS 값(구 LaundryStatusType 유니온과 값 집합이 다름)
   orderContent: {
     orderUnitType: 'SOLO' | 'ECONOMY' | 'TEAM';
     orderRequestType: string;

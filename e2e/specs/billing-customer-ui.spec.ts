@@ -194,9 +194,13 @@ test.describe('customer-web 빌링키 자동결제 여정', () => {
 
     // 반복 실행 대비: 기존 등록 카드가 있으면 "변경", 없으면 "카드 등록" 버튼이 보인다.
     // 어느 쪽이든 같은 등록 시트를 연다.
+    // ⚠️ 카드 요약은 비동기 로드(MyCardSection 은 로딩 중 두 버튼 모두 안 그린다)라, 즉시 판정
+    // (isVisible)으로 분기하면 로드 전에 "카드 등록" 쪽으로 빠진다. 같은 dev 고객에 다른 스펙이 카드를
+    // 이미 등록해 뒀으면 끝내 안 뜨는 버튼을 기다리다 타임아웃난다 — 둘 중 하나가 뜬 뒤 분기한다.
     const registerBtn = page.getByRole('button', { name: '카드 등록', exact: true });
     const changeBtn = page.getByRole('button', { name: '변경' });
-    if (await changeBtn.isVisible().catch(() => false)) {
+    await expect(registerBtn.or(changeBtn)).toBeVisible();
+    if (await changeBtn.isVisible()) {
       await changeBtn.click();
     } else {
       await registerBtn.click();

@@ -89,6 +89,33 @@ describe('DeliveryDetailPage (상태기계)', () => {
     await waitFor(() => expect(screen.queryByRole('status')).not.toBeInTheDocument());
   });
 
+  it('세탁 완료 상태에선 사진 없이 배달 출발을 호출하고, 배달 중이 되면 배달 완료 폼으로 바뀐다', async () => {
+    let status = 'LAUNDRY_COMPLETE';
+    let started = false;
+    server.use(
+      http.get('*/api/v2/deliveries/1', () => ok(delivery({ status, actualWeight: 3.5 }))),
+      http.post('*/api/v2/deliveries/1/start-delivery', () => {
+        started = true;
+        status = 'DELIVERY_PENDING';
+        return ok(delivery({ status: 'DELIVERY_PENDING', actualWeight: 3.5 }));
+      }),
+    );
+    render(<DeliveryDetailPage params={{ id: '1' }} />);
+
+    // 배달 출발은 증빙 사진이 없다 — 업로더 없이 바로 누를 수 있다.
+    const start = await screen.findByRole('button', { name: '배달 출발' });
+    expect(start).toBeEnabled();
+    expect(screen.queryByLabelText('사진 추가')).not.toBeInTheDocument();
+
+    await userEvent.click(start);
+
+    await waitFor(() => expect(started).toBe(true));
+    // 전이 후: 상태는 배달 중, 다음 액션은 사진이 필요한 배달 완료.
+    expect(await screen.findByText('배달 중')).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: '배달 완료' })).toBeDisabled();
+    expect(screen.getByLabelText('사진 추가')).toBeInTheDocument();
+  });
+
   it('배달 완료(DELIVERED) 상태면 액션 폼 없이 완료 메시지를 보여준다', async () => {
     server.use(
       http.get('*/api/v2/deliveries/1', () =>

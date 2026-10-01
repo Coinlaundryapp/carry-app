@@ -5,7 +5,8 @@ import { createV2Client } from '@shared/api/v2-client';
  * 배달 API — carry-platform v2(`/api/v2/deliveries`). 배달원이 배차 수락(ACCEPTED) 후
  * 사가가 생성한 Delivery를 상태기계로 진행한다:
  * `PICKUP_PENDING →(pickup)→ PICKED_UP →(washing)→ IN_LAUNDRY →(drying)→ LAUNDRY_COMPLETE
- * →(delivery)→ DELIVERED`. 각 전이는 증빙 사진(photoIds)을 요구하고 pickup은 무게도 받는다.
+ * →(start-delivery)→ DELIVERY_PENDING →(delivery)→ DELIVERED`. 각 전이는 증빙 사진(photoIds)을
+ * 요구하고 pickup은 무게도 받는다. 배달 출발(start-delivery)만 본문이 없다.
  */
 
 export type Delivery = Schemas['DeliveryResponse'];
@@ -86,5 +87,14 @@ function stepCommand(path: string) {
 export const startWashing = stepCommand('washing');
 /** 건조 완료(→ LAUNDRY_COMPLETE). */
 export const completeDrying = stepCommand('drying');
-/** 배달 완료(→ DELIVERED). */
+
+/** 배달 출발(LAUNDRY_COMPLETE → DELIVERY_PENDING). 증빙 사진 없음 — 본문 없이 호출한다. */
+export async function startDelivery(deliveryId: number): Promise<Delivery> {
+  const client = createV2Client();
+  return client.request<Delivery>(`/api/v2/deliveries/${deliveryId}/start-delivery`, {
+    method: 'POST',
+  });
+}
+
+/** 배달 완료(DELIVERY_PENDING → DELIVERED). */
 export const completeDelivery = stepCommand('delivery');

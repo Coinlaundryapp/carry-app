@@ -9,14 +9,15 @@ import {
   deliveryStatusLabel,
   getDelivery,
   nextAction,
+  startDelivery,
   startWashing,
   type Delivery,
 } from '@features/delivery';
 import { PhotoUploader } from '@features/media';
 
 /**
- * 배달 상태기계 드라이버 — 현재 status가 다음 액션(수거/세탁/건조/배달)을 결정하고,
- * 각 액션은 증빙 사진(+수거는 무게)을 받아 전이를 호출한다.
+ * 배달 상태기계 드라이버 — 현재 status가 다음 액션(수거/세탁/건조/배달 출발/배달 완료)을
+ * 결정하고, 각 액션은 증빙 사진(+수거는 무게)을 받아 전이를 호출한다. 배달 출발만 사진이 없다.
  */
 export default function DeliveryDetailPage({ params }: { params: { id: string } }) {
   const id = Number(params.id);
@@ -42,7 +43,10 @@ export default function DeliveryDetailPage({ params }: { params: { id: string } 
 
   const action = delivery ? nextAction(delivery.status) : null;
   const canSubmit =
-    !!action && photoIds.length > 0 && (!action.needsWeight || Number(weight) > 0) && !busy;
+    !!action &&
+    (!action.needsPhotos || photoIds.length > 0) &&
+    (!action.needsWeight || Number(weight) > 0) &&
+    !busy;
 
   async function handleSubmit() {
     if (!action) return;
@@ -58,6 +62,9 @@ export default function DeliveryDetailPage({ params }: { params: { id: string } 
           break;
         case 'drying':
           await completeDrying(id, photoIds);
+          break;
+        case 'start-delivery':
+          await startDelivery(id);
           break;
         case 'delivery':
           await completeDelivery(id, photoIds);
@@ -125,8 +132,12 @@ export default function DeliveryDetailPage({ params }: { params: { id: string } 
             </label>
           )}
 
-          <PhotoUploader onUploaded={(mid) => setPhotoIds((prev) => [...prev, mid])} />
-          <p className="text-xs text-gray-500">사진 {photoIds.length}장 첨부됨</p>
+          {action.needsPhotos && (
+            <>
+              <PhotoUploader onUploaded={(mid) => setPhotoIds((prev) => [...prev, mid])} />
+              <p className="text-xs text-gray-500">사진 {photoIds.length}장 첨부됨</p>
+            </>
+          )}
 
           <button
             type="button"

@@ -12,19 +12,19 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * �궡 �봽濡쒗븘 議고쉶
-         * @description �씤利앸맂 �궗�슜�옄�쓽 �봽濡쒗븘 �젙蹂대�� 議고쉶�빀�땲�떎
+         * 내 프로필 조회
+         * @description 인증된 사용자의 프로필 정보를 조회합니다
          */
         get: operations["getMyProfile"];
         /**
-         * �궡 �봽濡쒗븘 �닔�젙
-         * @description �씤利앸맂 �궗�슜�옄�쓽 �봽濡쒗븘 �젙蹂대�� �닔�젙�빀�땲�떎
+         * 내 프로필 수정
+         * @description 인증된 사용자의 프로필 정보를 수정합니다
          */
         put: operations["updateMyProfile"];
         post?: never;
         /**
-         * �쉶�썝 �깉�눜
-         * @description �씤利앸맂 �궗�슜�옄�쓽 怨꾩젙�쓣 鍮꾪솢�꽦�솕�빀�땲�떎
+         * 회원 탈퇴
+         * @description 인증된 사용자의 계정을 비활성화합니다
          */
         delete: operations["deactivateMyAccount"];
         options?: never;
@@ -40,10 +40,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** 諛곗넚吏� �닔�젙 */
+        /** 배송지 수정 */
         put: operations["updateAddress"];
         post?: never;
-        /** 諛곗넚吏� �궘�젣 */
+        /** 배송지 삭제 */
         delete: operations["deleteAddress"];
         options?: never;
         head?: never;
@@ -58,7 +58,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** 湲곕낯 諛곗넚吏� �꽕�젙 */
+        /** 기본 배송지 설정 */
         put: operations["setDefault"];
         post?: never;
         delete?: never;
@@ -74,12 +74,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 由щ럭 �긽�꽭 議고쉶 */
+        /** 리뷰 상세 조회 */
         get: operations["getReview"];
-        /** 由щ럭 �닔�젙 */
+        /** 리뷰 수정 */
         put: operations["updateReview"];
         post?: never;
-        /** 由щ럭 �궘�젣 */
+        /** 리뷰 삭제 */
         delete: operations["deleteReview"];
         options?: never;
         head?: never;
@@ -94,7 +94,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** �샃�뀡 媛�寃� �닔�젙 */
+        /** 옵션 가격 수정 */
         put: operations["updateOptionPrices"];
         post?: never;
         delete?: never;
@@ -110,9 +110,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** �꽭�긽�냼 �긽�꽭 議고쉶 */
+        /** 세탁소 상세 조회 */
         get: operations["getById"];
-        /** �꽭�긽�냼 �젙蹂� �닔�젙 */
+        /** 세탁소 정보 수정 */
         put: operations["updateInfo"];
         post?: never;
         delete?: never;
@@ -130,8 +130,8 @@ export interface paths {
         };
         get?: never;
         /**
-         * �꽭�긽�냼 �샃�뀡 �닔�젙
-         * @description �꽭�긽�냼�쓽 �꽌鍮꾩뒪 �샃�뀡�쓣 �닔�젙�빀�땲�떎
+         * 세탁소 옵션 수정
+         * @description 세탁소의 서비스 옵션을 수정합니다
          */
         put: operations["updateOptions"];
         post?: never;
@@ -149,10 +149,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** �빟愿� �닔�젙 */
+        /** 약관 수정 */
         put: operations["updateTerm"];
         post?: never;
-        /** �빟愿� 鍮꾪솢�꽦�솕 */
+        /** 약관 비활성화 */
         delete: operations["deactivateTerm"];
         options?: never;
         head?: never;
@@ -166,12 +166,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** �궡 諛곗넚吏� 紐⑸줉 議고쉶 */
+        /** 내 배송지 목록 조회 */
         get: operations["getMyAddresses"];
         put?: never;
         /**
-         * 諛곗넚吏� �벑濡�
-         * @description �깉 諛곗넚吏�瑜� �벑濡앺빀�땲�떎 (理쒕�� 5媛�)
+         * 배송지 등록
+         * @description 새 배송지를 등록합니다 (최대 5개)
          */
         post: operations["createAddress"];
         delete?: never;
@@ -190,8 +190,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * 由щ럭 �옉�꽦
-         * @description 由щ럭瑜� �옉�꽦�빀�땲�떎. Idempotency-Key �뿤�뜑 �젣怨� �떆 �룞�씪 �궎 �옱�슂泥���� 湲곗〈 由щ럭瑜� �옱�깮�빀�땲�떎(以묐났 �옉�꽦 諛⑹��).
+         * 리뷰 작성
+         * @description 리뷰를 작성합니다. Idempotency-Key 헤더 제공 시 동일 키 재요청은 기존 리뷰를 재생합니다(중복 작성 방지).
          */
         post: operations["createReview"];
         delete?: never;
@@ -208,12 +208,12 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 媛�寃� �젙梨� 議고쉶
-         * @description 議곌굔�뿉 留욌뒗 媛�寃� �젙梨낆쓣 議고쉶�빀�땲�떎
+         * 가격 정책 조회
+         * @description 조건에 맞는 가격 정책을 조회합니다
          */
         get: operations["getPolicy"];
         put?: never;
-        /** 媛�寃� �젙梨� �깮�꽦 */
+        /** 가격 정책 생성 */
         post: operations["createPolicy"];
         delete?: never;
         options?: never;
@@ -231,11 +231,365 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * 珥� 湲덉븸 怨꾩궛
-         * @description �꽑�깮�븳 �샃�뀡�뿉 ����븳 珥� 湲덉븸�쓣 怨꾩궛�빀�땲�떎
+         * 총 금액 계산
+         * @description 선택한 옵션에 대한 총 금액을 계산합니다
          */
         post: operations["calculateTotal"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 주문 생성
+         * @description 세탁물 수거/배달 주문을 생성합니다
+         */
+        post: operations["createOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/orders/{orderId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 주문 취소
+         * @description 생성된 주문을 취소합니다
+         */
+        post: operations["cancelOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/notifications/device-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 디바이스 토큰 등록
+         * @description FCM 웹 푸시 토큰을 등록/갱신합니다 (토큰 기준 멱등 upsert)
+         */
+        post: operations["registerDeviceToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/media/upload/{folder}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 파일 업로드
+         * @description 미디어 파일을 S3에 업로드합니다
+         */
+        post: operations["uploadFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/laundromats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 주변 세탁소 검색
+         * @description 현재 위치 기반으로 반경 내 세탁소를 검색합니다
+         */
+        get: operations["findNearby"];
+        put?: never;
+        /** 세탁소 등록 */
+        post: operations["registerLaundromat"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/laundromats/{id}/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 세탁소 이미지 추가 */
+        post: operations["addMediaResource"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/dispatches/{dispatchId}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 배차 거절
+         * @description 배정된 배차를 거절합니다
+         */
+        post: operations["rejectAssignment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/dispatches/{dispatchId}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 배차 선점
+         * @description 공개된 배차를 배달원이 선점합니다
+         */
+        post: operations["claimDispatch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/dispatches/{dispatchId}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 배차 수락
+         * @description 배정된 배차를 수락합니다
+         */
+        post: operations["acceptAssignment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/deliveries/{deliveryId}/washing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 세탁 시작
+         * @description 세탁기 투입 사진과 함께 세탁 시작을 기록합니다
+         */
+        post: operations["startWashing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/deliveries/{deliveryId}/start-delivery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 배달 출발
+         * @description 세탁 완료(LAUNDRY_COMPLETE)된 세탁물을 싣고 배달을 시작합니다(→ DELIVERY_PENDING). 배달 완료의 선행 단계입니다
+         */
+        post: operations["startDelivery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/deliveries/{deliveryId}/pickup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 수거 완료
+         * @description 세탁물 수거를 완료하고 무게를 기록합니다
+         */
+        post: operations["completePickup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/deliveries/{deliveryId}/drying": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 건조 완료
+         * @description 건조 완료 사진과 함께 건조 완료를 기록합니다
+         */
+        post: operations["completeDrying"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/deliveries/{deliveryId}/delivery": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 배달 완료
+         * @description 배달 완료 사진과 함께 배달 완료를 기록합니다. 배달 출발(DELIVERY_PENDING) 이후에만 가능합니다
+         */
+        post: operations["completeDelivery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/orders/{orderId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 주문 취소 (코디네이터)
+         * @description 코디네이터가 주문을 취소한다. 수거 후 취소 시 결제 모듈이 환불/과금중단을 처리한다.
+         */
+        post: operations["cancelOrder_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/dispatches/{dispatchId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 배차 취소 */
+        post: operations["cancelDispatch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/dispatches/{dispatchId}/assign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 배차 배정
+         * @description 특정 배달원에게 배차를 배정합니다
+         */
+        post: operations["assignDispatch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/carrier-areas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 배달원 권역 목록 조회 */
+        get: operations["getAreasByCarrier"];
+        put?: never;
+        /** 배달원 권역 등록 */
+        post: operations["registerArea"];
+        /** 배달원 권역 해제 */
+        delete: operations["removeArea"];
         options?: never;
         head?: never;
         patch?: never;
@@ -255,6 +609,670 @@ export interface paths {
          * @description PG SDK 카드 등록창 결과(authKey)로 자동결제 수단을 등록합니다. 이미 등록된 카드가 있으면 기존 키를 무효화하고 새 키로 교체합니다.
          */
         post: operations["registerBillingKey"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 회원가입 완료
+         * @description 가입 토큰과 폼(name/phone/email)으로 회원가입을 완료하고 토큰을 발급한다.
+         */
+        post: operations["signup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 토큰 재발급(회전)
+         * @description refresh 토큰을 회전한다. 새 access + 새 refresh를 발급하고 이전 refresh는 무효화된다.
+         */
+        post: operations["refresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 로그아웃
+         * @description refresh 토큰의 세션을 폐기한다. 멱등. 기존 access는 자연 만료까지 유효하므로 클라이언트가 폐기해야 한다.
+         */
+        post: operations["logout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * 소셜 로그인
+         * @description provider access token을 검증한다. 기존 유저면 토큰, 신규면 가입 토큰을 반환한다.
+         */
+        post: operations["login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/auth/dev-login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * dev-login (비프로덕션)
+         * @description 역할(CUSTOMER/CARRIER/COORDINATOR/ADMIN)로 결정적 dev 사용자를 get-or-create하고 토큰을 발급한다.
+         */
+        post: operations["devLogin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/admin/terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 약관 생성 */
+        post: operations["createTerm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/admin/dlq/redrive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * DLQ 재처리(redrive)
+         * @description 지정 토픽의 DLQ에서 최대 maxRecords건을 원본 토픽으로 재발행합니다. 재발행 한도(3회) 도달 메시지는 보류(parked)되어 DLQ에 남습니다. 민감 운영 작업으로 감사 로그에 기록됩니다.
+         */
+        post: operations["redrive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/admin/dlq/purge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * DLQ parked 메시지 폐기(purge)
+         * @description 지정 토픽 DLQ에서 redrive 그룹의 처리완료 지점(committed offset)까지 물리 절단해 잔류 메시지(재발행된 copy + parked poison)를 회수합니다. redrive가 아직 처리하지 않은 미처리분은 보존됩니다. 민감 운영 작업으로 감사 로그에 기록됩니다.
+         */
+        post: operations["purge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 활성 약관 목록 조회
+         * @description 현재 활성화된 모든 이용약관을 조회합니다
+         */
+        get: operations["getActiveTerms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/terms/required": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 필수 약관 목록 조회
+         * @description 동의가 필수인 약관만 조회합니다
+         */
+        get: operations["getRequiredTerms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/reviews/my": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 내 리뷰 목록 조회 */
+        get: operations["getMyReviews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/reviews/laundromat/{laundromatId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 세탁소 리뷰 목록 조회
+         * @description 커서 기반 페이지네이션으로 세탁소 리뷰를 조회합니다
+         */
+        get: operations["getReviewsByLaundromat"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/reviews/laundromat/{laundromatId}/statistics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 세탁소 리뷰 통계
+         * @description 세탁소의 리뷰 총 개수와 평균 평점을 조회합니다
+         */
+        get: operations["getStatistics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/payments/{orderId}/payment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 결제 정보 조회
+         * @description 주문의 결제 정보를 조회합니다
+         */
+        get: operations["getPayment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/payments/{orderId}/invoice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 청구서 조회
+         * @description 주문의 청구서를 조회합니다
+         */
+        get: operations["getInvoice"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 주문 상세 조회 */
+        get: operations["getOrder"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/orders/my": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 내 주문 목록 조회 */
+        get: operations["getMyOrders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/notifications/{notificationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 알림 상세 조회 */
+        get: operations["getNotification"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/notifications/my": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 내 알림 목록 조회
+         * @description 커서 기반 페이지네이션으로 내 알림을 조회합니다
+         */
+        get: operations["getMyNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/media/{accessKey}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 미디어 정보 조회 */
+        get: operations["getMedia"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/media/{accessKey}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 다운로드 URL 조회
+         * @description 미디어 파일의 임시 다운로드 URL을 생성합니다
+         */
+        get: operations["getDownloadUrl"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/geo/reverse-geocode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 좌표 → 주소 변환
+         * @description 위경도 좌표를 입력하여 주소를 조회합니다
+         */
+        get: operations["reverseGeocode"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/geo/geocode": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 주소 → 좌표 변환
+         * @description 주소를 입력하여 좌표를 조회합니다 (통합 검색)
+         */
+        get: operations["geocode"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/geo/geocode/road": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 도로명 주소 → 좌표 변환
+         * @description 도로명 주소를 입력하여 좌표를 조회합니다
+         */
+        get: operations["geocodeRoad"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/geo/geocode/jibun": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 지번 주소 → 좌표 변환
+         * @description 지번 주소를 입력하여 좌표를 조회합니다
+         */
+        get: operations["geocodeJibun"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/dispatches/{dispatchId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 배차 상세 조회 */
+        get: operations["getDispatch"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/dispatches/my": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 내 배차 목록 조회 */
+        get: operations["getMyDispatches"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/dispatches/available": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 수락 가능한 배차 목록 조회 */
+        get: operations["getAvailableDispatches"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/deliveries/{deliveryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 배달 상세 조회 */
+        get: operations["getDelivery"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/deliveries/my": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 배달원 배달 목록 조회 */
+        get: operations["getMyDeliveries"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 주문 목록 조회 (코디네이터)
+         * @description 코디네이터가 전체 주문을 상태로 필터해 조회한다. 소유자 검증 없음.
+         */
+        get: operations["getOrders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 주문 상세 조회 (코디네이터)
+         * @description 코디네이터가 소유자 검증 없이 주문 단건을 조회한다.
+         */
+        get: operations["getOrder_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/dispatches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 배차 목록 조회 (코디네이터)
+         * @description 상태·권역으로 필터해 전체 배차를 조회합니다. 미배정(PENDING) 배차 운영에 사용합니다.
+         */
+        get: operations["getDispatches"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/dispatches/{dispatchId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 배차 상세 조회 */
+        get: operations["getDispatch_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/coordinator/dispatches/carriers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 권역별 배달원 조회
+         * @description 특정 권역의 배달원 목록을 조회합니다
+         */
+        get: operations["getCarriersByArea"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -281,1004 +1299,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v2/orders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 二쇰Ц �깮�꽦
-         * @description �꽭�긽臾� �닔嫄�/諛곕떖 二쇰Ц�쓣 �깮�꽦�빀�땲�떎
-         */
-        post: operations["createOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/orders/{orderId}/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 二쇰Ц 痍⑥냼
-         * @description �깮�꽦�맂 二쇰Ц�쓣 痍⑥냼�빀�땲�떎
-         */
-        post: operations["cancelOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/notifications/device-tokens": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * �뵒諛붿씠�뒪 �넗�겙 �벑濡�
-         * @description FCM �쎒 �뫖�떆 �넗�겙�쓣 �벑濡�/媛깆떊�빀�땲�떎 (�넗�겙 湲곗�� 硫깅벑 upsert)
-         */
-        post: operations["registerDeviceToken"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/media/upload/{folder}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * �뙆�씪 �뾽濡쒕뱶
-         * @description 誘몃뵒�뼱 �뙆�씪�쓣 S3�뿉 �뾽濡쒕뱶�빀�땲�떎
-         */
-        post: operations["uploadFile"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/laundromats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 二쇰�� �꽭�긽�냼 寃��깋
-         * @description �쁽�옱 �쐞移� 湲곕컲�쑝濡� 諛섍꼍 �궡 �꽭�긽�냼瑜� 寃��깋�빀�땲�떎
-         */
-        get: operations["findNearby"];
-        put?: never;
-        /** �꽭�긽�냼 �벑濡� */
-        post: operations["registerLaundromat"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/laundromats/{id}/media": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** �꽭�긽�냼 �씠誘몄�� 異붽�� */
-        post: operations["addMediaResource"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/dispatches/{dispatchId}/reject": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 諛곗감 嫄곗젅
-         * @description 諛곗젙�맂 諛곗감瑜� 嫄곗젅�빀�땲�떎
-         */
-        post: operations["rejectAssignment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/dispatches/{dispatchId}/claim": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 諛곗감 �꽑�젏
-         * @description 怨듦컻�맂 諛곗감瑜� 諛곕떖�썝�씠 �꽑�젏�빀�땲�떎
-         */
-        post: operations["claimDispatch"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/dispatches/{dispatchId}/accept": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 諛곗감 �닔�씫
-         * @description 諛곗젙�맂 諛곗감瑜� �닔�씫�빀�땲�떎
-         */
-        post: operations["acceptAssignment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/deliveries/{deliveryId}/washing": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * �꽭�긽 �떆�옉
-         * @description �꽭�긽湲� �닾�엯 �궗吏꾧낵 �븿猿� �꽭�긽 �떆�옉�쓣 湲곕줉�빀�땲�떎
-         */
-        post: operations["startWashing"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/deliveries/{deliveryId}/pickup": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * �닔嫄� �셿猷�
-         * @description �꽭�긽臾� �닔嫄곕�� �셿猷뚰븯怨� 臾닿쾶瑜� 湲곕줉�빀�땲�떎
-         */
-        post: operations["completePickup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/deliveries/{deliveryId}/drying": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 嫄댁“ �셿猷�
-         * @description 嫄댁“ �셿猷� �궗吏꾧낵 �븿猿� 嫄댁“ �셿猷뚮�� 湲곕줉�빀�땲�떎
-         */
-        post: operations["completeDrying"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/deliveries/{deliveryId}/delivery": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 諛곕떖 �셿猷�
-         * @description 諛곕떖 �셿猷� �궗吏꾧낵 �븿猿� 諛곕떖 �셿猷뚮�� 湲곕줉�빀�땲�떎
-         */
-        post: operations["completeDelivery"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/coordinator/orders/{orderId}/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 二쇰Ц 痍⑥냼 (肄붾뵒�꽕�씠�꽣)
-         * @description 肄붾뵒�꽕�씠�꽣媛� 二쇰Ц�쓣 痍⑥냼�븳�떎. 寃곗젣 �셿猷�(PAID) 二쇰Ц��� 利됱떆 醫낅즺媛� �븘�땲�씪 �솚遺� 蹂댁긽 �듃�옖�옲�뀡�쓣 �떆�옉�븳�떎.
-         */
-        post: operations["cancelOrder_1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/coordinator/dispatches/{dispatchId}/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 諛곗감 痍⑥냼 */
-        post: operations["cancelDispatch"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/coordinator/dispatches/{dispatchId}/assign": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 諛곗감 諛곗젙
-         * @description �듅�젙 諛곕떖�썝�뿉寃� 諛곗감瑜� 諛곗젙�빀�땲�떎
-         */
-        post: operations["assignDispatch"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/carrier-areas": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 諛곕떖�썝 沅뚯뿭 紐⑸줉 議고쉶 */
-        get: operations["getAreasByCarrier"];
-        put?: never;
-        /** 諛곕떖�썝 沅뚯뿭 �벑濡� */
-        post: operations["registerArea"];
-        /** 諛곕떖�썝 沅뚯뿭 �빐�젣 */
-        delete: operations["removeArea"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/auth/signup": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * �쉶�썝媛��엯 �셿猷�
-         * @description 媛��엯 �넗�겙怨� �뤌(name/phone/email)�쑝濡� �쉶�썝媛��엯�쓣 �셿猷뚰븯怨� �넗�겙�쓣 諛쒓툒�븳�떎.
-         */
-        post: operations["signup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/auth/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * �넗�겙 �옱諛쒓툒(�쉶�쟾)
-         * @description refresh �넗�겙�쓣 �쉶�쟾�븳�떎. �깉 access + �깉 refresh瑜� 諛쒓툒�븯怨� �씠�쟾 refresh�뒗 臾댄슚�솕�맂�떎.
-         */
-        post: operations["refresh"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/auth/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * 濡쒓렇�븘�썐
-         * @description refresh �넗�겙�쓽 �꽭�뀡�쓣 �룓湲고븳�떎. 硫깅벑. 湲곗〈 access�뒗 �옄�뿰 留뚮즺源뚯�� �쑀�슚�븯誘�濡� �겢�씪�씠�뼵�듃媛� �룓湲고빐�빞 �븳�떎.
-         */
-        post: operations["logout"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/auth/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Kakao 濡쒓렇�씤
-         * @description Kakao access token�쓣 寃�利앺븳�떎. 湲곗〈 �쑀���硫� �넗�겙, �떊洹쒕㈃ 媛��엯 �넗�겙�쓣 諛섑솚�븳�떎.
-         */
-        post: operations["login"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/auth/dev-login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * dev-login (鍮꾪봽濡쒕뜒�뀡)
-         * @description �뿭�븷(CUSTOMER/CARRIER/COORDINATOR/ADMIN)濡� 寃곗젙�쟻 dev �궗�슜�옄瑜� get-or-create�븯怨� �넗�겙�쓣 諛쒓툒�븳�떎.
-         */
-        post: operations["devLogin"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/admin/terms": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** �빟愿� �깮�꽦 */
-        post: operations["createTerm"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/admin/dlq/redrive": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * DLQ �옱泥섎━(redrive)
-         * @description 吏��젙 �넗�뵿�쓽 DLQ�뿉�꽌 理쒕�� maxRecords嫄댁쓣 �썝蹂� �넗�뵿�쑝濡� �옱諛쒗뻾�빀�땲�떎. �옱諛쒗뻾 �븳�룄(3�쉶) �룄�떖 硫붿떆吏��뒗 蹂대쪟(parked)�릺�뼱 DLQ�뿉 �궓�뒿�땲�떎. 誘쇨컧 �슫�쁺 �옉�뾽�쑝濡� 媛먯궗 濡쒓렇�뿉 湲곕줉�맗�땲�떎.
-         */
-        post: operations["redrive"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/admin/dlq/purge": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * DLQ parked 硫붿떆吏� �룓湲�(purge)
-         * @description 吏��젙 �넗�뵿 DLQ�뿉�꽌 redrive 洹몃９�쓽 泥섎━�셿猷� 吏��젏(committed offset)源뚯�� 臾쇰━ �젅�떒�빐 �옍瑜� 硫붿떆吏�(�옱諛쒗뻾�맂 copy + parked poison)瑜� �쉶�닔�빀�땲�떎. redrive媛� �븘吏� 泥섎━�븯吏� �븡��� 誘몄쿂由щ텇��� 蹂댁〈�맗�땲�떎. 誘쇨컧 �슫�쁺 �옉�뾽�쑝濡� 媛먯궗 濡쒓렇�뿉 湲곕줉�맗�땲�떎.
-         */
-        post: operations["purge"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/terms": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * �솢�꽦 �빟愿� 紐⑸줉 議고쉶
-         * @description �쁽�옱 �솢�꽦�솕�맂 紐⑤뱺 �씠�슜�빟愿��쓣 議고쉶�빀�땲�떎
-         */
-        get: operations["getActiveTerms"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/terms/required": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * �븘�닔 �빟愿� 紐⑸줉 議고쉶
-         * @description �룞�쓽媛� �븘�닔�씤 �빟愿�留� 議고쉶�빀�땲�떎
-         */
-        get: operations["getRequiredTerms"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/reviews/my": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** �궡 由щ럭 紐⑸줉 議고쉶 */
-        get: operations["getMyReviews"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/reviews/laundromat/{laundromatId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * �꽭�긽�냼 由щ럭 紐⑸줉 議고쉶
-         * @description 而ㅼ꽌 湲곕컲 �럹�씠吏��꽕�씠�뀡�쑝濡� �꽭�긽�냼 由щ럭瑜� 議고쉶�빀�땲�떎
-         */
-        get: operations["getReviewsByLaundromat"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/reviews/laundromat/{laundromatId}/statistics": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * �꽭�긽�냼 由щ럭 �넻怨�
-         * @description �꽭�긽�냼�쓽 由щ럭 珥� 媛쒖닔��� �룊洹� �룊�젏�쓣 議고쉶�빀�땲�떎
-         */
-        get: operations["getStatistics"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/payments/{orderId}/payment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 寃곗젣 �젙蹂� 議고쉶
-         * @description 二쇰Ц�쓽 寃곗젣 �젙蹂대�� 議고쉶�빀�땲�떎
-         */
-        get: operations["getPayment"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/payments/{orderId}/invoice": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 泥�援ъ꽌 議고쉶
-         * @description 二쇰Ц�쓽 泥�援ъ꽌瑜� 議고쉶�빀�땲�떎
-         */
-        get: operations["getInvoice"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/orders/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 二쇰Ц �긽�꽭 議고쉶 */
-        get: operations["getOrder"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/orders/my": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** �궡 二쇰Ц 紐⑸줉 議고쉶 */
-        get: operations["getMyOrders"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/notifications/{notificationId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** �븣由� �긽�꽭 議고쉶 */
-        get: operations["getNotification"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/notifications/my": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * �궡 �븣由� 紐⑸줉 議고쉶
-         * @description 而ㅼ꽌 湲곕컲 �럹�씠吏��꽕�씠�뀡�쑝濡� �궡 �븣由쇱쓣 議고쉶�빀�땲�떎
-         */
-        get: operations["getMyNotifications"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/media/{accessKey}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 誘몃뵒�뼱 �젙蹂� 議고쉶 */
-        get: operations["getMedia"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/media/{accessKey}/download": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * �떎�슫濡쒕뱶 URL 議고쉶
-         * @description 誘몃뵒�뼱 �뙆�씪�쓽 �엫�떆 �떎�슫濡쒕뱶 URL�쓣 �깮�꽦�빀�땲�떎
-         */
-        get: operations["getDownloadUrl"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/geo/reverse-geocode": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 醫뚰몴 �넂 二쇱냼 蹂��솚
-         * @description �쐞寃쎈룄 醫뚰몴瑜� �엯�젰�븯�뿬 二쇱냼瑜� 議고쉶�빀�땲�떎
-         */
-        get: operations["reverseGeocode"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/geo/geocode": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 二쇱냼 �넂 醫뚰몴 蹂��솚
-         * @description 二쇱냼瑜� �엯�젰�븯�뿬 醫뚰몴瑜� 議고쉶�빀�땲�떎 (�넻�빀 寃��깋)
-         */
-        get: operations["geocode"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/geo/geocode/road": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * �룄濡쒕챸 二쇱냼 �넂 醫뚰몴 蹂��솚
-         * @description �룄濡쒕챸 二쇱냼瑜� �엯�젰�븯�뿬 醫뚰몴瑜� 議고쉶�빀�땲�떎
-         */
-        get: operations["geocodeRoad"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/geo/geocode/jibun": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 吏�踰� 二쇱냼 �넂 醫뚰몴 蹂��솚
-         * @description 吏�踰� 二쇱냼瑜� �엯�젰�븯�뿬 醫뚰몴瑜� 議고쉶�빀�땲�떎
-         */
-        get: operations["geocodeJibun"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/dispatches/{dispatchId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 諛곗감 �긽�꽭 議고쉶 */
-        get: operations["getDispatch"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/dispatches/my": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** �궡 諛곗감 紐⑸줉 議고쉶 */
-        get: operations["getMyDispatches"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/dispatches/available": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** �닔�씫 媛��뒫�븳 諛곗감 紐⑸줉 議고쉶 */
-        get: operations["getAvailableDispatches"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/deliveries/{deliveryId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 諛곕떖 �긽�꽭 議고쉶 */
-        get: operations["getDelivery"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/deliveries/my": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 諛곕떖�썝 諛곕떖 紐⑸줉 議고쉶 */
-        get: operations["getMyDeliveries"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/coordinator/orders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 二쇰Ц 紐⑸줉 議고쉶 (肄붾뵒�꽕�씠�꽣)
-         * @description 肄붾뵒�꽕�씠�꽣媛� �쟾泥� 二쇰Ц�쓣 �긽�깭濡� �븘�꽣�빐 議고쉶�븳�떎. �냼�쑀�옄 寃�利� �뾾�쓬.
-         */
-        get: operations["getOrders"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/coordinator/orders/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 二쇰Ц �긽�꽭 議고쉶 (肄붾뵒�꽕�씠�꽣)
-         * @description 肄붾뵒�꽕�씠�꽣媛� �냼�쑀�옄 寃�利� �뾾�씠 二쇰Ц �떒嫄댁쓣 議고쉶�븳�떎.
-         */
-        get: operations["getOrder_1"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/coordinator/dispatches": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 諛곗감 紐⑸줉 議고쉶 (肄붾뵒�꽕�씠�꽣)
-         * @description �긽�깭쨌沅뚯뿭�쑝濡� �븘�꽣�빐 �쟾泥� 諛곗감瑜� 議고쉶�빀�땲�떎. 誘몃같�젙(PENDING) 諛곗감 �슫�쁺�뿉 �궗�슜�빀�땲�떎.
-         */
-        get: operations["getDispatches"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/coordinator/dispatches/{dispatchId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 諛곗감 �긽�꽭 議고쉶 */
-        get: operations["getDispatch_1"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/coordinator/dispatches/carriers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * 沅뚯뿭蹂� 諛곕떖�썝 議고쉶
-         * @description �듅�젙 沅뚯뿭�쓽 諛곕떖�썝 紐⑸줉�쓣 議고쉶�빀�땲�떎
-         */
-        get: operations["getCarriersByArea"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v2/admin/dashboard/summary": {
         parameters: {
             query?: never;
@@ -1287,8 +1307,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * �슫�쁺 �슂�빟 議고쉶
-         * @description �삤�뒛�쓽 二쇰Ц, 諛곗감, 諛곕떖 �쁽�솴�쓣 �슂�빟�빀�땲�떎
+         * 운영 요약 조회
+         * @description 오늘의 주문, 배차, 배달 현황을 요약합니다
          */
         get: operations["getSummary"];
         put?: never;
@@ -1307,8 +1327,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 理쒓렐 �씠踰ㅽ듃 紐⑸줉 議고쉶
-         * @description �떆�뒪�뀥 �슫�쁺 �씠踰ㅽ듃瑜� 理쒖떊�닚�쑝濡� 議고쉶�빀�땲�떎
+         * 최근 이벤트 목록 조회
+         * @description 시스템 운영 이벤트를 최신순으로 조회합니다
          */
         get: operations["getRecentEvents"];
         put?: never;
@@ -1329,7 +1349,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** 媛�寃� �젙梨� �궘�젣 */
+        /** 가격 정책 삭제 */
         delete: operations["deletePolicy"];
         options?: never;
         head?: never;
@@ -1346,7 +1366,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** �꽭�긽�냼 �씠誘몄�� �궘�젣 */
+        /** 세탁소 이미지 삭제 */
         delete: operations["removeMediaResource"];
         options?: never;
         head?: never;
@@ -1357,642 +1377,1194 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @description �봽濡쒗븘 �닔�젙 �슂泥� */
+        /** @description 프로필 수정 요청 */
         UpdateProfileRequest: {
             /**
-             * @description �씠由�
-             * @example �솉湲몃룞
+             * @description 이름
+             * @example 홍길동
              */
             name: string;
             /**
-             * @description �쑕����쟾�솕踰덊샇
+             * @description 휴대전화번호
              * @example 010-1234-5678
              */
             phone: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseUserProfileResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["UserProfileResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description �궗�슜�옄 �봽濡쒗븘 �쓳�떟 */
+        /** @description 사용자 프로필 응답 */
         UserProfileResponse: {
             /**
              * Format: int64
-             * @description �궗�슜�옄 ID
+             * @description 사용자 ID
              * @example 1
              */
             id: number;
             /**
-             * @description �씠硫붿씪
+             * @description 이메일
              * @example user@example.com
              */
             email: string;
             /**
-             * @description �씠由�
-             * @example �솉湲몃룞
+             * @description 이름
+             * @example 홍길동
              */
             name: string;
             /**
-             * @description �쑕����쟾�솕踰덊샇
+             * @description 휴대전화번호
              * @example 010-1234-5678
              */
             phone: string;
             /**
-             * @description �뿭�븷
+             * @description 역할
              * @example CUSTOMER
              * @enum {string}
              */
             role: "CUSTOMER" | "CARRIER" | "ADMIN";
-            /** @description �솢�꽦 �긽�깭 */
+            /** @description 활성 상태 */
             isActive: boolean;
         };
-        /** @description 諛곗넚吏� �닔�젙 �슂泥� */
+        /** @description 배송지 수정 요청 */
         UpdateShippingAddressRequest: {
             /**
-             * @description 諛곗넚吏� 蹂꾩묶
-             * @example �슦由ъ쭛
+             * @description 배송지 별칭
+             * @example 우리집
              */
             alias: string;
             /**
-             * @description �룄濡쒕챸 二쇱냼
-             * @example �꽌�슱�떆 媛뺣궓援� �뀒�뿤���濡� 123
+             * @description 도로명 주소
+             * @example 서울시 강남구 테헤란로 123
              */
             roadAddress: string;
             /**
-             * @description �긽�꽭 二쇱냼
-             * @example 101�룞 1201�샇
+             * @description 상세 주소
+             * @example 101동 1201호
              */
             detailAddress: string;
             /**
-             * @description �슦�렪踰덊샇
+             * @description 우편번호
              * @example 06234
              */
             zipCode: string;
             /**
              * Format: double
-             * @description �쐞�룄
+             * @description 위도
              * @example 37.5665
              */
             latitude: number;
             /**
              * Format: double
-             * @description 寃쎈룄
+             * @description 경도
              * @example 126.978
              */
             longitude: number;
             /**
-             * @description �닔�졊�씤 �씠由�
-             * @example �솉湲몃룞
+             * @description 수령인 이름
+             * @example 홍길동
              */
             recipientName: string;
             /**
-             * @description �닔�졊�씤 �쟾�솕踰덊샇
+             * @description 수령인 전화번호
              * @example 010-1234-5678
              */
             recipientPhone: string;
             /**
-             * @description 異쒖엯 �젙蹂�
-             * @example 鍮꾨��踰덊샇 1234#
+             * @description 출입 정보
+             * @example 비밀번호 1234#
              */
             entranceInfo?: string | null;
             /**
-             * @description �꽌鍮꾩뒪 沅뚯뿭 肄붾뱶
+             * @description 서비스 권역 코드
              * @example GANGNAM
              */
             areaCode: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseShippingAddressResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["ShippingAddressResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 諛곗넚吏� �쓳�떟 */
+        /** @description 배송지 응답 */
         ShippingAddressResponse: {
             /**
              * Format: int64
-             * @description 諛곗넚吏� ID
+             * @description 배송지 ID
              */
             id: number;
-            /** @description 蹂꾩묶 */
+            /** @description 별칭 */
             alias: string;
-            /** @description �룄濡쒕챸 二쇱냼 */
+            /** @description 도로명 주소 */
             roadAddress: string;
-            /** @description �긽�꽭 二쇱냼 */
+            /** @description 상세 주소 */
             detailAddress: string;
-            /** @description �슦�렪踰덊샇 */
+            /** @description 우편번호 */
             zipCode: string;
             /**
              * Format: double
-             * @description �쐞�룄
+             * @description 위도
              */
             latitude: number;
             /**
              * Format: double
-             * @description 寃쎈룄
+             * @description 경도
              */
             longitude: number;
-            /** @description �닔�졊�씤 �씠由� */
+            /** @description 수령인 이름 */
             recipientName: string;
-            /** @description �닔�졊�씤 �쟾�솕踰덊샇 */
+            /** @description 수령인 전화번호 */
             recipientPhone: string;
-            /** @description 異쒖엯 �젙蹂� */
+            /** @description 출입 정보 */
             entranceInfo?: string | null;
-            /** @description �꽌鍮꾩뒪 沅뚯뿭 肄붾뱶 */
+            /** @description 서비스 권역 코드 */
             areaCode: string;
-            /** @description 湲곕낯 諛곗넚吏� �뿬遺� */
+            /** @description 기본 배송지 여부 */
             isDefault: boolean;
         };
-        /** @description 由щ럭 �닔�젙 �슂泥� */
+        /** @description 리뷰 수정 요청 */
         UpdateReviewRequest: {
-            /** @description 由щ럭 �궡�슜 */
+            /** @description 리뷰 내용 */
             comment?: string | null;
             /**
              * Format: int32
-             * @description �룊�젏 (1-5)
+             * @description 평점 (1-5)
              * @example 5
              */
             rating: number;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseReviewResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["ReviewResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 由щ럭 �쓳�떟 */
+        /** @description 리뷰 응답 */
         ReviewResponse: {
             /**
              * Format: int64
-             * @description 由щ럭 ID
+             * @description 리뷰 ID
              */
             id: number;
             /**
              * Format: int64
-             * @description �꽭�긽�냼 ID
+             * @description 세탁소 ID
              */
             laundromatId: number;
             /**
              * Format: int64
-             * @description 怨좉컼 ID
+             * @description 고객 ID
              */
             customerId: number;
-            /** @description 由щ럭 �궡�슜 */
+            /** @description 리뷰 내용 */
             comment?: string | null;
             /**
              * Format: int32
-             * @description �룊�젏
+             * @description 평점
              */
             rating: number;
-            /** @description 誘몃뵒�뼱 URL 紐⑸줉 */
+            /** @description 미디어 URL 목록 */
             mediaUrls: string[];
             /**
              * Format: date-time
-             * @description �깮�꽦 �떆媛�
+             * @description 생성 시간
              */
             createdAt: string;
             /**
              * Format: date-time
-             * @description �닔�젙 �떆媛�
+             * @description 수정 시간
              */
             updatedAt: string;
         };
-        /** @description �샃�뀡 媛�寃� */
+        /** @description 옵션 가격 */
         OptionPriceRequest: {
             /**
-             * @description �샃�뀡 �쑀�삎
+             * @description 옵션 유형
              * @enum {string}
              */
             optionType: "WASH" | "DRY" | "ADDITIONAL";
             /**
-             * @description �꽭遺� �샃�뀡 �쑀�삎
+             * @description 세부 옵션 유형
              * @enum {string}
              */
             subOptionType: "STANDARD" | "HOT_WATER" | "LOW_HEAT" | "HIGH_HEAT" | "FOLD_LAUNDRY" | "ADD_SOFTENER";
             /**
              * Format: int32
-             * @description 媛�寃�(�썝)
+             * @description 가격(원)
              * @example 5000
              */
             price: number;
-            /** @description �꽑�깮 媛��뒫 �뿬遺� */
+            /** @description 선택 가능 여부 */
             selectable: boolean;
         };
-        /** @description �샃�뀡 媛�寃� �닔�젙 �슂泥� */
+        /** @description 옵션 가격 수정 요청 */
         UpdateOptionPricesRequest: {
-            /** @description �샃�뀡 媛�寃� 紐⑸줉 */
+            /** @description 옵션 가격 목록 */
             optionPrices: components["schemas"]["OptionPriceRequest"][];
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponsePricePolicyResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["PricePolicyResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description �샃�뀡 媛�寃� �젙蹂� */
+        /** @description 옵션 가격 정보 */
         OptionPriceResponse: {
             /**
-             * @description �샃�뀡 �쑀�삎
+             * @description 옵션 유형
              * @enum {string}
              */
             optionType: "WASH" | "DRY" | "ADDITIONAL";
             /**
-             * @description �꽭遺� �샃�뀡 �쑀�삎
+             * @description 세부 옵션 유형
              * @enum {string}
              */
             subOptionType: "STANDARD" | "HOT_WATER" | "LOW_HEAT" | "HIGH_HEAT" | "FOLD_LAUNDRY" | "ADD_SOFTENER";
             /**
              * Format: int32
-             * @description 媛�寃�(�썝)
+             * @description 가격(원)
              */
             price: number;
-            /** @description �꽑�깮 媛��뒫 �뿬遺� */
+            /** @description 선택 가능 여부 */
             selectable: boolean;
         };
-        /** @description 媛�寃� �젙梨� �쓳�떟 */
+        /** @description 가격 정책 응답 */
         PricePolicyResponse: {
             /**
              * Format: int64
-             * @description �젙梨� ID
+             * @description 정책 ID
              */
             id: number;
-            /** @description 二쇰Ц �떒�쐞 �쑀�삎 */
+            /** @description 주문 단위 유형 */
             orderUnitType: string;
-            /** @description 二쇰Ц �슂泥� �쑀�삎 */
+            /** @description 주문 요청 유형 */
             orderRequestType: string;
-            /** @description �꽭�긽臾� 醫낅쪟 */
+            /** @description 세탁물 종류 */
             laundryItemType: string;
-            /** @description �샃�뀡 媛�寃� 紐⑸줉 */
+            /** @description 옵션 가격 목록 */
             optionPrices: components["schemas"]["OptionPriceResponse"][];
         };
-        /** @description �꽭�긽�냼 �젙蹂� �닔�젙 �슂泥� */
+        /** @description 세탁소 정보 수정 요청 */
         UpdateLaundromatInfoRequest: {
             /**
-             * @description �꽭�긽�냼 �씠由�
-             * @example �겢由곗꽭�긽
+             * @description 세탁소 이름
+             * @example 클린세탁
              */
             name: string;
             /**
-             * @description �룄濡쒕챸 二쇱냼
-             * @example �꽌�슱�떆 媛뺣궓援� �뀒�뿤���濡� 123
+             * @description 도로명 주소
+             * @example 서울시 강남구 테헤란로 123
              */
             roadAddress: string;
-            /** @description �긽�꽭 二쇱냼 */
+            /** @description 상세 주소 */
             detailAddress?: string | null;
-            /** @description �슦�렪踰덊샇 */
+            /** @description 우편번호 */
             zipCode?: string | null;
             /**
              * Format: double
-             * @description �쐞�룄
+             * @description 위도
              * @example 37.5665
              */
             latitude: number;
             /**
              * Format: double
-             * @description 寃쎈룄
+             * @description 경도
              * @example 126.978
              */
             longitude: number;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseLaundromatResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["LaundromatResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description �꽭�긽�냼 �쓳�떟 */
+        /** @description 세탁소 응답 */
         LaundromatResponse: {
             /**
              * Format: int64
-             * @description �꽭�긽�냼 ID
+             * @description 세탁소 ID
              */
             id: number;
-            /** @description �꽭�긽�냼 �씠由� */
+            /** @description 세탁소 이름 */
             name: string;
-            /** @description �룄濡쒕챸 二쇱냼 */
+            /** @description 도로명 주소 */
             roadAddress: string;
-            /** @description �긽�꽭 二쇱냼 */
+            /** @description 상세 주소 */
             detailAddress?: string | null;
-            /** @description �슦�렪踰덊샇 */
+            /** @description 우편번호 */
             zipCode?: string | null;
             /**
              * Format: double
-             * @description �쐞�룄
+             * @description 위도
              */
             latitude: number;
             /**
              * Format: double
-             * @description 寃쎈룄
+             * @description 경도
              */
             longitude: number;
-            /** @description �샃�뀡 紐⑸줉 */
+            /** @description 옵션 목록 */
             options: ("WASHING_MACHINE" | "DRYER" | "SNEAKERS")[];
-            /** @description �씠誘몄�� 紐⑸줉 */
+            /** @description 이미지 목록 */
             mediaResources: components["schemas"]["MediaResourceResponse"][];
         };
-        /** @description �씠誘몄�� �쓳�떟 */
+        /** @description 이미지 응답 */
         MediaResourceResponse: {
             /**
              * Format: int64
-             * @description �씠誘몄�� ID
+             * @description 이미지 ID
              */
             id: number;
-            /** @description �씠誘몄�� URL */
+            /** @description 이미지 URL */
             url: string;
-            /** @description �뙆�씪 �솗�옣�옄 */
+            /** @description 파일 확장자 */
             extension: string;
         };
-        /** @description �꽭�긽�냼 �샃�뀡 �닔�젙 �슂泥� */
+        /** @description 세탁소 옵션 수정 요청 */
         UpdateOptionsRequest: {
-            /** @description �샃�뀡 紐⑸줉 */
+            /** @description 옵션 목록 */
             options: ("WASHING_MACHINE" | "DRYER" | "SNEAKERS")[];
         };
-        /** @description �빟愿� �닔�젙 �슂泥� */
+        /** @description 약관 수정 요청 */
         UpdateTermRequest: {
-            /** @description �빟愿� �젣紐� */
+            /** @description 약관 제목 */
             title: string;
-            /** @description �빟愿� �궡�슜 */
+            /** @description 약관 내용 */
             content: string;
-            /** @description �븘�닔 �룞�쓽 �뿬遺� */
+            /** @description 필수 동의 여부 */
             required: boolean;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseTermResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["TermResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description �씠�슜�빟愿� �쓳�떟 */
+        /** @description 이용약관 응답 */
         TermResponse: {
             /**
              * Format: int64
-             * @description �빟愿� ID
+             * @description 약관 ID
              */
             id: number;
-            /** @description �젣紐� */
+            /** @description 제목 */
             title: string;
-            /** @description �궡�슜 */
+            /** @description 내용 */
             content: string;
-            /** @description �빟愿� �쑀�삎 */
+            /** @description 약관 유형 */
             type: string;
-            /** @description �븘�닔 �뿬遺� */
+            /** @description 필수 여부 */
             required: boolean;
             /**
              * Format: int32
-             * @description 踰꾩쟾
+             * @description 버전
              */
             version: number;
-            /** @description �솢�꽦 �긽�깭 */
+            /** @description 활성 상태 */
             active: boolean;
             /**
              * Format: date-time
-             * @description �깮�꽦 �떆媛�
+             * @description 생성 시간
              */
             createdAt: string;
             /**
              * Format: date-time
-             * @description �닔�젙 �떆媛�
+             * @description 수정 시간
              */
             updatedAt: string;
         };
-        /** @description 諛곗넚吏� �벑濡� �슂泥� */
+        /** @description 배송지 등록 요청 */
         CreateShippingAddressRequest: {
             /**
-             * @description 諛곗넚吏� 蹂꾩묶
-             * @example �슦由ъ쭛
+             * @description 배송지 별칭
+             * @example 우리집
              */
             alias: string;
             /**
-             * @description �룄濡쒕챸 二쇱냼
-             * @example �꽌�슱�떆 媛뺣궓援� �뀒�뿤���濡� 123
+             * @description 도로명 주소
+             * @example 서울시 강남구 테헤란로 123
              */
             roadAddress: string;
             /**
-             * @description �긽�꽭 二쇱냼
-             * @example 101�룞 1201�샇
+             * @description 상세 주소
+             * @example 101동 1201호
              */
             detailAddress: string;
             /**
-             * @description �슦�렪踰덊샇
+             * @description 우편번호
              * @example 06234
              */
             zipCode: string;
             /**
              * Format: double
-             * @description �쐞�룄
+             * @description 위도
              * @example 37.5665
              */
             latitude: number;
             /**
              * Format: double
-             * @description 寃쎈룄
+             * @description 경도
              * @example 126.978
              */
             longitude: number;
             /**
-             * @description �닔�졊�씤 �씠由�
-             * @example �솉湲몃룞
+             * @description 수령인 이름
+             * @example 홍길동
              */
             recipientName: string;
             /**
-             * @description �닔�졊�씤 �쟾�솕踰덊샇
+             * @description 수령인 전화번호
              * @example 010-1234-5678
              */
             recipientPhone: string;
             /**
-             * @description 異쒖엯 �젙蹂�
-             * @example 鍮꾨��踰덊샇 1234#
+             * @description 출입 정보
+             * @example 비밀번호 1234#
              */
             entranceInfo?: string | null;
             /**
-             * @description �꽌鍮꾩뒪 沅뚯뿭 肄붾뱶
+             * @description 서비스 권역 코드
              * @example GANGNAM
              */
             areaCode: string;
         };
-        /** @description 由щ럭 �옉�꽦 �슂泥� */
+        /** @description 리뷰 작성 요청 */
         CreateReviewRequest: {
             /**
              * Format: int64
-             * @description �꽭�긽�냼 ID
+             * @description 세탁소 ID
              */
             laundromatId: number;
-            /** @description 由щ럭 �궡�슜 */
+            /** @description 리뷰 내용 */
             comment?: string | null;
             /**
              * Format: int32
-             * @description �룊�젏 (1-5)
+             * @description 평점 (1-5)
              * @example 5
              */
             rating: number;
-            /** @description 誘몃뵒�뼱 URL 紐⑸줉 */
+            /** @description 미디어 URL 목록 */
             mediaUrls: string[];
         };
-        /** @description 媛�寃� �젙梨� �깮�꽦 �슂泥� */
+        /** @description 가격 정책 생성 요청 */
         CreatePricePolicyRequest: {
             /**
-             * @description 二쇰Ц �떒�쐞 �쑀�삎
+             * @description 주문 단위 유형
              * @example KG
              */
             orderUnitType: string;
             /**
-             * @description 二쇰Ц �슂泥� �쑀�삎
+             * @description 주문 요청 유형
              * @example WASH
              */
             orderRequestType: string;
             /**
-             * @description �꽭�긽臾� 醫낅쪟
+             * @description 세탁물 종류
              * @example CLOTHING
              */
             laundryItemType: string;
-            /** @description �샃�뀡 媛�寃� 紐⑸줉 */
+            /** @description 옵션 가격 목록 */
             optionPrices: components["schemas"]["OptionPriceRequest"][];
         };
-        /** @description 珥� 湲덉븸 怨꾩궛 �슂泥� */
+        /** @description 총 금액 계산 요청 */
         CalculateTotalRequest: {
-            /** @description �꽑�깮 �샃�뀡 紐⑸줉 */
+            /** @description 선택 옵션 목록 */
             selectedOptions: components["schemas"]["SelectedOption"][];
         };
-        /** @description �꽑�깮 �샃�뀡 */
+        /** @description 선택 옵션 */
         SelectedOption: {
             /**
-             * @description �샃�뀡 �쑀�삎
+             * @description 옵션 유형
              * @enum {string}
              */
             optionType: "WASH" | "DRY" | "ADDITIONAL";
             /**
-             * @description �꽭遺� �샃�뀡 �쑀�삎
+             * @description 세부 옵션 유형
              * @enum {string}
              */
             subOptionType: "STANDARD" | "HOT_WATER" | "LOW_HEAT" | "HIGH_HEAT" | "FOLD_LAUNDRY" | "ADD_SOFTENER";
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseCalculateTotalResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["CalculateTotalResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 珥� 湲덉븸 �쓳�떟 */
+        /** @description 총 금액 응답 */
         CalculateTotalResponse: {
             /**
              * Format: int32
-             * @description 珥� 湲덉븸(�썝)
+             * @description 총 금액(원)
              */
             totalAmount: number;
+        };
+        /** @description 주문 생성 요청 */
+        CreateOrderRequest: {
+            /**
+             * Format: int64
+             * @description 배송지 ID
+             * @example 1
+             */
+            shippingAddressId: number;
+            /**
+             * Format: int64
+             * @description 세탁소 ID
+             * @example 1
+             */
+            laundromatId: number;
+            /**
+             * @description 세탁물 종류
+             * @example CLOTHING
+             */
+            laundryItemType: string;
+            /** @description 선택 옵션 목록 */
+            selectedOptions: components["schemas"]["SelectedOptionRequest"][];
+            /**
+             * Format: date-time
+             * @description 희망 수거 시간
+             */
+            desiredPickupAt: string;
+            /**
+             * Format: date-time
+             * @description 희망 배달 시간
+             */
+            desiredDeliveryAt: string;
+        };
+        /** @description 선택 옵션 */
+        SelectedOptionRequest: {
+            /**
+             * @description 옵션 유형
+             * @example WASH_TYPE
+             */
+            optionType: string;
+            /**
+             * @description 세부 옵션 유형
+             * @example DRY_CLEANING
+             */
+            subOptionType: string;
+        };
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseOrderResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["OrderResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
+            traceId?: string;
+        };
+        /** @description 주문 응답 */
+        OrderResponse: {
+            /**
+             * Format: int64
+             * @description 주문 ID
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 고객 ID
+             */
+            customerId: number;
+            /** @description 주문 상태 */
+            status: string;
+            /**
+             * Format: int64
+             * @description 세탁소 ID
+             */
+            laundromatId: number;
+            /** @description 세탁물 종류 */
+            laundryItemType: string;
+            /** @description 선택 옵션 목록 */
+            selectedOptions: components["schemas"]["SelectedOptionResponse"][];
+            /** @description 도로명 주소 */
+            roadAddress: string;
+            /** @description 상세 주소 */
+            detailAddress: string;
+            /** @description 수령인 이름 */
+            recipientName: string;
+            /** @description 수령인 전화번호 */
+            recipientPhone: string;
+            /**
+             * Format: date-time
+             * @description 희망 수거 시간
+             */
+            desiredPickupAt: string;
+            /**
+             * Format: date-time
+             * @description 희망 배달 시간
+             */
+            desiredDeliveryAt: string;
+            /**
+             * Format: int64
+             * @description 배달원 ID
+             */
+            carrierId?: number | null;
+            /** @description 실제 무게(kg) */
+            actualWeight?: number | null;
+            /** @description 취소 사유 */
+            cancelReason?: string | null;
+            /**
+             * Format: date-time
+             * @description 완료 시간
+             */
+            completedAt?: string | null;
+            /**
+             * Format: date-time
+             * @description 생성 시간
+             */
+            createdAt: string;
+        };
+        /** @description 선택 옵션 정보 */
+        SelectedOptionResponse: {
+            /** @description 옵션 유형 */
+            optionType: string;
+            /** @description 세부 옵션 유형 */
+            subOptionType: string;
+        };
+        /** @description 주문 취소 요청 */
+        CancelOrderRequest: {
+            /**
+             * @description 취소 사유
+             * @example 고객 변심
+             */
+            reason: string;
+        };
+        /** @description 디바이스 토큰 등록 요청 */
+        RegisterDeviceTokenRequest: {
+            /**
+             * @description FCM registration token
+             * @example fcm_registration_token_value
+             */
+            token: string;
+            /**
+             * @description 플랫폼 (현재 web만 지원)
+             * @default web
+             * @example web
+             */
+            platform: string;
+        };
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseDeviceTokenResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["DeviceTokenResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
+            traceId?: string;
+        };
+        /** @description 디바이스 토큰 등록 응답 */
+        DeviceTokenResponse: {
+            /** @description 등록된 토큰 */
+            token: string;
+            /** @description 플랫폼 */
+            platform: string;
+            /**
+             * Format: date-time
+             * @description 최근 등록/갱신 시각
+             */
+            lastSeenAt: string;
+        };
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseMediaResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["MediaResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
+            traceId?: string;
+        };
+        /** @description 미디어 파일 응답 */
+        MediaResponse: {
+            /**
+             * Format: int64
+             * @description 미디어 ID
+             */
+            id: number;
+            /** @description 폴더 */
+            folder: string;
+            /**
+             * Format: uuid
+             * @description 접근 키
+             */
+            accessKey: string;
+            /** @description 원본 파일명 */
+            originalFilename: string;
+            /** @description 확장자 */
+            extension: string;
+            /** @description 콘텐츠 타입 */
+            contentType: string;
+            /** @description 상태 */
+            status: string;
+            /**
+             * Format: int64
+             * @description 파일 크기(bytes)
+             */
+            fileSize?: number | null;
+            /**
+             * Format: int64
+             * @description 업로드한 사용자 ID
+             */
+            uploadedBy: number;
+            /**
+             * Format: date-time
+             * @description 생성 시간
+             */
+            createdAt: string;
+        };
+        /** @description 세탁소 등록 요청 */
+        RegisterLaundromatRequest: {
+            /**
+             * @description 세탁소 이름
+             * @example 클린세탁
+             */
+            name: string;
+            /**
+             * @description 도로명 주소
+             * @example 서울시 강남구 테헤란로 123
+             */
+            roadAddress: string;
+            /** @description 상세 주소 */
+            detailAddress?: string | null;
+            /** @description 우편번호 */
+            zipCode?: string | null;
+            /**
+             * Format: double
+             * @description 위도
+             * @example 37.5665
+             */
+            latitude: number;
+            /**
+             * Format: double
+             * @description 경도
+             * @example 126.978
+             */
+            longitude: number;
+            /** @description 세탁소 옵션 목록 */
+            options: ("WASHING_MACHINE" | "DRYER" | "SNEAKERS")[];
+        };
+        /** @description 이미지 추가 요청 */
+        AddMediaResourceRequest: {
+            /** @description 이미지 URL */
+            url: string;
+            /**
+             * @description 파일 확장자
+             * @example jpg
+             */
+            extension: string;
+        };
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseDispatchResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["DispatchResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
+            traceId?: string;
+        };
+        /** @description 배차 응답 */
+        DispatchResponse: {
+            /**
+             * Format: int64
+             * @description 배차 ID
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 주문 ID
+             */
+            orderId: number;
+            /**
+             * Format: int64
+             * @description 세탁소 ID
+             */
+            laundromatId: number;
+            /** @description 배차 상태 */
+            status: string;
+            /**
+             * Format: int64
+             * @description 배달원 ID
+             */
+            carrierId?: number | null;
+            /** @description 권역 코드 */
+            areaCode: string;
+            /**
+             * Format: date-time
+             * @description 희망 수거 시간
+             */
+            desiredPickupAt: string;
+            /** @description 배정 방식 */
+            assignedBy?: string | null;
+            /**
+             * Format: date-time
+             * @description 배정 시간
+             */
+            assignedAt?: string | null;
+            /**
+             * Format: date-time
+             * @description 수락 시간
+             */
+            acceptedAt?: string | null;
+            /** @description 취소 사유 */
+            cancelReason?: string | null;
+            /**
+             * Format: date-time
+             * @description 생성 시간
+             */
+            createdAt: string;
+        };
+        /** @description 단계별 사진 요청 */
+        StepPhotoRequest: {
+            /** @description 사진 ID 목록 */
+            photoIds: number[];
+        };
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseDeliveryResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["DeliveryResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
+            traceId?: string;
+        };
+        /** @description 배달 응답 */
+        DeliveryResponse: {
+            /**
+             * Format: int64
+             * @description 배달 ID
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 주문 ID
+             */
+            orderId: number;
+            /**
+             * Format: int64
+             * @description 배차 ID
+             */
+            dispatchId: number;
+            /**
+             * Format: int64
+             * @description 배달원 ID
+             */
+            carrierId: number;
+            /**
+             * Format: int64
+             * @description 세탁소 ID
+             */
+            laundromatId: number;
+            /** @description 배달 상태 */
+            status: string;
+            /** @description 실제 무게(kg) */
+            actualWeight?: number | null;
+            /** @description 배달 단계 목록 */
+            steps: components["schemas"]["DeliveryStepResponse"][];
+            /**
+             * Format: date-time
+             * @description 생성 시간
+             */
+            createdAt: string;
+        };
+        /** @description 배달 단계 정보 */
+        DeliveryStepResponse: {
+            /**
+             * Format: int64
+             * @description 단계 ID
+             */
+            id?: number | null;
+            /** @description 단계 유형 */
+            stepType: string;
+            /** @description 단계 상태 */
+            status: string;
+            /** @description 미디어 ID 목록 */
+            mediaIds: number[];
+            /** @description 비고 */
+            note?: string | null;
+            /**
+             * Format: date-time
+             * @description 완료 시간
+             */
+            completedAt?: string | null;
+        };
+        /** @description 수거 완료 요청 */
+        CompletePickupRequest: {
+            /**
+             * @description 세탁물 무게(kg)
+             * @example 3.5
+             */
+            weight: number;
+            /** @description 사진 ID 목록 */
+            photoIds: number[];
+            /**
+             * Format: int64
+             * @description 고객 ID
+             */
+            customerId: number;
+            /** @description 세탁물 종류 */
+            laundryItemType: string;
+            /** @description 주문 단위 유형 */
+            orderUnitType: string;
+            /** @description 주문 요청 유형 */
+            orderRequestType: string;
+            /** @description 선택 옵션 목록 */
+            selectedOptions: components["schemas"]["SelectedOptionSnapshot"][];
+        };
+        /** @description 선택 옵션 목록 */
+        SelectedOptionSnapshot: {
+            optionType: string;
+            subOptionType: string;
+        };
+        /** @description 배차 취소 요청 */
+        CancelDispatchRequest: {
+            /** @description 취소 사유 */
+            reason: string;
+        };
+        /** @description 배차 배정 요청 */
+        AssignDispatchRequest: {
+            /**
+             * Format: int64
+             * @description 배달원 ID
+             */
+            carrierId: number;
+        };
+        /** @description 권역 등록 요청 */
+        RegisterAreaRequest: {
+            /**
+             * @description 권역 코드
+             * @example GANGNAM
+             */
+            areaCode: string;
+            /**
+             * @description 권역명
+             * @example 강남구
+             */
+            areaName: string;
+        };
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseCarrierAreaResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["CarrierAreaResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
+            traceId?: string;
+        };
+        /** @description 배달원 권역 응답 */
+        CarrierAreaResponse: {
+            /**
+             * Format: int64
+             * @description 권역 매핑 ID
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 배달원 ID
+             */
+            carrierId: number;
+            /** @description 권역 코드 */
+            areaCode: string;
+            /** @description 권역명 */
+            areaName: string;
+            /** @description 활성 여부 */
+            active: boolean;
+            /**
+             * Format: date-time
+             * @description 생성 시간
+             */
+            createdAt: string;
         };
         /** @description 빌링키 등록 요청 */
         BillingKeyRegisterRequest: {
@@ -2002,19 +2574,7 @@ export interface components {
              */
             authKey: string;
         };
-        /** @description 빌링키 등록 응답 — 카드 마스킹 정보만 제공, 원본 billingKey/customerKey 는 노출하지 않는다 */
-        BillingKeyResponse: {
-            /** @description 카드사 */
-            cardCompany: string;
-            /** @description 카드 뒷 4자리 */
-            cardLast4: string;
-            /**
-             * Format: date-time
-             * @description 등록 시각
-             */
-            registeredAt: string;
-        };
-        /** @description 표준 API 응답 봉투 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseBillingKeyResponse: {
             /**
              * Format: int32
@@ -2033,700 +2593,98 @@ export interface components {
              */
             message: string;
             data?: components["schemas"]["BillingKeyResponse"];
-            /** @description 트레이싱 ID (요청 추적용, 선택적 필드) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponsePaymentResponse: {
-            /**
-             * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
-             * @example 200
-             */
-            status: number;
-            /**
-             * @description �쓳�떟 肄붾뱶
-             * @example SUCCESS
-             */
-            code: string;
-            /**
-             * @description �쓳�떟 硫붿떆吏�
-             * @example Success
-             */
-            message: string;
-            data?: components["schemas"]["PaymentResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
-            traceId?: string;
-        };
-        /** @description 寃곗젣 �쓳�떟 */
-        PaymentResponse: {
-            /**
-             * Format: int64
-             * @description 寃곗젣 ID
-             */
-            id: number;
-            /**
-             * Format: int64
-             * @description 泥�援ъ꽌 ID
-             */
-            invoiceId: number;
-            /**
-             * Format: int64
-             * @description 二쇰Ц ID
-             */
-            orderId: number;
-            /**
-             * Format: int64
-             * @description 怨좉컼 ID
-             */
-            customerId: number;
-            /** @description 寃곗젣 �긽�깭 */
-            status: string;
-            /** @description PG�궗 */
-            pgProvider: string;
-            /** @description PG 嫄곕옒 ID */
-            pgTransactionId?: string | null;
-            /**
-             * Format: int64
-             * @description 寃곗젣 湲덉븸(�썝)
-             */
-            amount: number;
+        /** @description 빌링키 등록 응답 — 카드 마스킹 정보만 제공, 원본 billingKey/customerKey 는 노출하지 않는다 */
+        BillingKeyResponse: {
+            /** @description 카드사 */
+            cardCompany: string;
+            /** @description 카드 뒷 4자리 */
+            cardLast4: string;
             /**
              * Format: date-time
-             * @description 寃곗젣 �떆媛�
+             * @description 등록 시각
              */
-            paidAt?: string | null;
-            /** @description �떎�뙣 �궗�쑀 */
-            failReason?: string | null;
-            /**
-             * Format: date-time
-             * @description �깮�꽦 �떆媛�
-             */
-            createdAt: string;
+            registeredAt: string;
         };
-        /** @description 二쇰Ц �깮�꽦 �슂泥� */
-        CreateOrderRequest: {
-            /**
-             * Format: int64
-             * @description 諛곗넚吏� ID
-             * @example 1
-             */
-            shippingAddressId: number;
-            /**
-             * Format: int64
-             * @description �꽭�긽�냼 ID
-             * @example 1
-             */
-            laundromatId: number;
-            /**
-             * @description �꽭�긽臾� 醫낅쪟
-             * @example CLOTHING
-             */
-            laundryItemType: string;
-            /** @description �꽑�깮 �샃�뀡 紐⑸줉 */
-            selectedOptions: components["schemas"]["SelectedOptionRequest"][];
-            /**
-             * Format: date-time
-             * @description �씗留� �닔嫄� �떆媛�
-             */
-            desiredPickupAt: string;
-            /**
-             * Format: date-time
-             * @description �씗留� 諛곕떖 �떆媛�
-             */
-            desiredDeliveryAt: string;
-        };
-        /** @description �꽑�깮 �샃�뀡 */
-        SelectedOptionRequest: {
-            /**
-             * @description �샃�뀡 �쑀�삎
-             * @example WASH_TYPE
-             */
-            optionType: string;
-            /**
-             * @description �꽭遺� �샃�뀡 �쑀�삎
-             * @example DRY_CLEANING
-             */
-            subOptionType: string;
-        };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseOrderResponse: {
-            /**
-             * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
-             * @example 200
-             */
-            status: number;
-            /**
-             * @description �쓳�떟 肄붾뱶
-             * @example SUCCESS
-             */
-            code: string;
-            /**
-             * @description �쓳�떟 硫붿떆吏�
-             * @example Success
-             */
-            message: string;
-            data?: components["schemas"]["OrderResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
-            traceId?: string;
-        };
-        /** @description 二쇰Ц �쓳�떟 */
-        OrderResponse: {
-            /**
-             * Format: int64
-             * @description 二쇰Ц ID
-             */
-            id: number;
-            /**
-             * Format: int64
-             * @description 怨좉컼 ID
-             */
-            customerId: number;
-            /** @description 二쇰Ц �긽�깭 */
-            status: string;
-            /**
-             * Format: int64
-             * @description �꽭�긽�냼 ID
-             */
-            laundromatId: number;
-            /** @description �꽭�긽臾� 醫낅쪟 */
-            laundryItemType: string;
-            /** @description �꽑�깮 �샃�뀡 紐⑸줉 */
-            selectedOptions: components["schemas"]["SelectedOptionResponse"][];
-            /** @description �룄濡쒕챸 二쇱냼 */
-            roadAddress: string;
-            /** @description �긽�꽭 二쇱냼 */
-            detailAddress: string;
-            /** @description �닔�졊�씤 �씠由� */
-            recipientName: string;
-            /** @description �닔�졊�씤 �쟾�솕踰덊샇 */
-            recipientPhone: string;
-            /**
-             * Format: date-time
-             * @description �씗留� �닔嫄� �떆媛�
-             */
-            desiredPickupAt: string;
-            /**
-             * Format: date-time
-             * @description �씗留� 諛곕떖 �떆媛�
-             */
-            desiredDeliveryAt: string;
-            /**
-             * Format: int64
-             * @description 諛곕떖�썝 ID
-             */
-            carrierId?: number | null;
-            /** @description �떎�젣 臾닿쾶(kg) */
-            actualWeight?: number | null;
-            /** @description 痍⑥냼 �궗�쑀 */
-            cancelReason?: string | null;
-            /**
-             * Format: date-time
-             * @description �셿猷� �떆媛�
-             */
-            completedAt?: string | null;
-            /**
-             * Format: date-time
-             * @description �깮�꽦 �떆媛�
-             */
-            createdAt: string;
-        };
-        /** @description �꽑�깮 �샃�뀡 �젙蹂� */
-        SelectedOptionResponse: {
-            /** @description �샃�뀡 �쑀�삎 */
-            optionType: string;
-            /** @description �꽭遺� �샃�뀡 �쑀�삎 */
-            subOptionType: string;
-        };
-        /** @description 二쇰Ц 痍⑥냼 �슂泥� */
-        CancelOrderRequest: {
-            /**
-             * @description 痍⑥냼 �궗�쑀
-             * @example 怨좉컼 蹂��떖
-             */
-            reason: string;
-        };
-        /** @description �뵒諛붿씠�뒪 �넗�겙 �벑濡� �슂泥� */
-        RegisterDeviceTokenRequest: {
-            /**
-             * @description FCM registration token
-             * @example fcm_registration_token_value
-             */
-            token: string;
-            /**
-             * @description �뵆�옯�뤌 (�쁽�옱 web留� 吏��썝)
-             * @default web
-             * @example web
-             */
-            platform: string;
-        };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseDeviceTokenResponse: {
-            /**
-             * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
-             * @example 200
-             */
-            status: number;
-            /**
-             * @description �쓳�떟 肄붾뱶
-             * @example SUCCESS
-             */
-            code: string;
-            /**
-             * @description �쓳�떟 硫붿떆吏�
-             * @example Success
-             */
-            message: string;
-            data?: components["schemas"]["DeviceTokenResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
-            traceId?: string;
-        };
-        /** @description �뵒諛붿씠�뒪 �넗�겙 �벑濡� �쓳�떟 */
-        DeviceTokenResponse: {
-            /** @description �벑濡앸맂 �넗�겙 */
-            token: string;
-            /** @description �뵆�옯�뤌 */
-            platform: string;
-            /**
-             * Format: date-time
-             * @description 理쒓렐 �벑濡�/媛깆떊 �떆媛�
-             */
-            lastSeenAt: string;
-        };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseMediaResponse: {
-            /**
-             * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
-             * @example 200
-             */
-            status: number;
-            /**
-             * @description �쓳�떟 肄붾뱶
-             * @example SUCCESS
-             */
-            code: string;
-            /**
-             * @description �쓳�떟 硫붿떆吏�
-             * @example Success
-             */
-            message: string;
-            data?: components["schemas"]["MediaResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
-            traceId?: string;
-        };
-        /** @description 誘몃뵒�뼱 �뙆�씪 �쓳�떟 */
-        MediaResponse: {
-            /**
-             * Format: int64
-             * @description 誘몃뵒�뼱 ID
-             */
-            id: number;
-            /** @description �뤃�뜑 */
-            folder: string;
-            /**
-             * Format: uuid
-             * @description �젒洹� �궎
-             */
-            accessKey: string;
-            /** @description �썝蹂� �뙆�씪紐� */
-            originalFilename: string;
-            /** @description �솗�옣�옄 */
-            extension: string;
-            /** @description 肄섑뀗痢� ����엯 */
-            contentType: string;
-            /** @description �긽�깭 */
-            status: string;
-            /**
-             * Format: int64
-             * @description �뙆�씪 �겕湲�(bytes)
-             */
-            fileSize?: number | null;
-            /**
-             * Format: int64
-             * @description �뾽濡쒕뱶�븳 �궗�슜�옄 ID
-             */
-            uploadedBy: number;
-            /**
-             * Format: date-time
-             * @description �깮�꽦 �떆媛�
-             */
-            createdAt: string;
-        };
-        /** @description �꽭�긽�냼 �벑濡� �슂泥� */
-        RegisterLaundromatRequest: {
-            /**
-             * @description �꽭�긽�냼 �씠由�
-             * @example �겢由곗꽭�긽
-             */
-            name: string;
-            /**
-             * @description �룄濡쒕챸 二쇱냼
-             * @example �꽌�슱�떆 媛뺣궓援� �뀒�뿤���濡� 123
-             */
-            roadAddress: string;
-            /** @description �긽�꽭 二쇱냼 */
-            detailAddress?: string | null;
-            /** @description �슦�렪踰덊샇 */
-            zipCode?: string | null;
-            /**
-             * Format: double
-             * @description �쐞�룄
-             * @example 37.5665
-             */
-            latitude: number;
-            /**
-             * Format: double
-             * @description 寃쎈룄
-             * @example 126.978
-             */
-            longitude: number;
-            /** @description �꽭�긽�냼 �샃�뀡 紐⑸줉 */
-            options: ("WASHING_MACHINE" | "DRYER" | "SNEAKERS")[];
-        };
-        /** @description �씠誘몄�� 異붽�� �슂泥� */
-        AddMediaResourceRequest: {
-            /** @description �씠誘몄�� URL */
-            url: string;
-            /**
-             * @description �뙆�씪 �솗�옣�옄
-             * @example jpg
-             */
-            extension: string;
-        };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseDispatchResponse: {
-            /**
-             * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
-             * @example 200
-             */
-            status: number;
-            /**
-             * @description �쓳�떟 肄붾뱶
-             * @example SUCCESS
-             */
-            code: string;
-            /**
-             * @description �쓳�떟 硫붿떆吏�
-             * @example Success
-             */
-            message: string;
-            data?: components["schemas"]["DispatchResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
-            traceId?: string;
-        };
-        /** @description 諛곗감 �쓳�떟 */
-        DispatchResponse: {
-            /**
-             * Format: int64
-             * @description 諛곗감 ID
-             */
-            id: number;
-            /**
-             * Format: int64
-             * @description 二쇰Ц ID
-             */
-            orderId: number;
-            /**
-             * Format: int64
-             * @description �꽭�긽�냼 ID
-             */
-            laundromatId: number;
-            /** @description 諛곗감 �긽�깭 */
-            status: string;
-            /**
-             * Format: int64
-             * @description 諛곕떖�썝 ID
-             */
-            carrierId?: number | null;
-            /** @description 沅뚯뿭 肄붾뱶 */
-            areaCode: string;
-            /**
-             * Format: date-time
-             * @description �씗留� �닔嫄� �떆媛�
-             */
-            desiredPickupAt: string;
-            /** @description 諛곗젙 諛⑹떇 */
-            assignedBy?: string | null;
-            /**
-             * Format: date-time
-             * @description 諛곗젙 �떆媛�
-             */
-            assignedAt?: string | null;
-            /**
-             * Format: date-time
-             * @description �닔�씫 �떆媛�
-             */
-            acceptedAt?: string | null;
-            /** @description 痍⑥냼 �궗�쑀 */
-            cancelReason?: string | null;
-            /**
-             * Format: date-time
-             * @description �깮�꽦 �떆媛�
-             */
-            createdAt: string;
-        };
-        /** @description �떒怨꾨퀎 �궗吏� �슂泥� */
-        StepPhotoRequest: {
-            /** @description �궗吏� ID 紐⑸줉 */
-            photoIds: number[];
-        };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseDeliveryResponse: {
-            /**
-             * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
-             * @example 200
-             */
-            status: number;
-            /**
-             * @description �쓳�떟 肄붾뱶
-             * @example SUCCESS
-             */
-            code: string;
-            /**
-             * @description �쓳�떟 硫붿떆吏�
-             * @example Success
-             */
-            message: string;
-            data?: components["schemas"]["DeliveryResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
-            traceId?: string;
-        };
-        /** @description 諛곕떖 �쓳�떟 */
-        DeliveryResponse: {
-            /**
-             * Format: int64
-             * @description 諛곕떖 ID
-             */
-            id: number;
-            /**
-             * Format: int64
-             * @description 二쇰Ц ID
-             */
-            orderId: number;
-            /**
-             * Format: int64
-             * @description 諛곗감 ID
-             */
-            dispatchId: number;
-            /**
-             * Format: int64
-             * @description 諛곕떖�썝 ID
-             */
-            carrierId: number;
-            /**
-             * Format: int64
-             * @description �꽭�긽�냼 ID
-             */
-            laundromatId: number;
-            /** @description 諛곕떖 �긽�깭 */
-            status: string;
-            /** @description �떎�젣 臾닿쾶(kg) */
-            actualWeight?: number | null;
-            /** @description 諛곕떖 �떒怨� 紐⑸줉 */
-            steps: components["schemas"]["DeliveryStepResponse"][];
-            /**
-             * Format: date-time
-             * @description �깮�꽦 �떆媛�
-             */
-            createdAt: string;
-        };
-        /** @description 諛곕떖 �떒怨� �젙蹂� */
-        DeliveryStepResponse: {
-            /**
-             * Format: int64
-             * @description �떒怨� ID
-             */
-            id?: number | null;
-            /** @description �떒怨� �쑀�삎 */
-            stepType: string;
-            /** @description �떒怨� �긽�깭 */
-            status: string;
-            /** @description 誘몃뵒�뼱 ID 紐⑸줉 */
-            mediaIds: number[];
-            /** @description 鍮꾧퀬 */
-            note?: string | null;
-            /**
-             * Format: date-time
-             * @description �셿猷� �떆媛�
-             */
-            completedAt?: string | null;
-        };
-        /** @description �닔嫄� �셿猷� �슂泥� */
-        CompletePickupRequest: {
-            /**
-             * @description �꽭�긽臾� 臾닿쾶(kg)
-             * @example 3.5
-             */
-            weight: number;
-            /** @description �궗吏� ID 紐⑸줉 */
-            photoIds: number[];
-            /**
-             * Format: int64
-             * @description 怨좉컼 ID
-             */
-            customerId: number;
-            /** @description �꽭�긽臾� 醫낅쪟 */
-            laundryItemType: string;
-            /** @description 二쇰Ц �떒�쐞 �쑀�삎 */
-            orderUnitType: string;
-            /** @description 二쇰Ц �슂泥� �쑀�삎 */
-            orderRequestType: string;
-            /** @description �꽑�깮 �샃�뀡 紐⑸줉 */
-            selectedOptions: components["schemas"]["SelectedOptionSnapshot"][];
-        };
-        /** @description �꽑�깮 �샃�뀡 紐⑸줉 */
-        SelectedOptionSnapshot: {
-            optionType: string;
-            subOptionType: string;
-        };
-        /** @description 諛곗감 痍⑥냼 �슂泥� */
-        CancelDispatchRequest: {
-            /** @description 痍⑥냼 �궗�쑀 */
-            reason: string;
-        };
-        /** @description 諛곗감 諛곗젙 �슂泥� */
-        AssignDispatchRequest: {
-            /**
-             * Format: int64
-             * @description 諛곕떖�썝 ID
-             */
-            carrierId: number;
-        };
-        /** @description 沅뚯뿭 �벑濡� �슂泥� */
-        RegisterAreaRequest: {
-            /**
-             * @description 沅뚯뿭 肄붾뱶
-             * @example GANGNAM
-             */
-            areaCode: string;
-            /**
-             * @description 沅뚯뿭紐�
-             * @example 媛뺣궓援�
-             */
-            areaName: string;
-        };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseCarrierAreaResponse: {
-            /**
-             * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
-             * @example 200
-             */
-            status: number;
-            /**
-             * @description �쓳�떟 肄붾뱶
-             * @example SUCCESS
-             */
-            code: string;
-            /**
-             * @description �쓳�떟 硫붿떆吏�
-             * @example Success
-             */
-            message: string;
-            data?: components["schemas"]["CarrierAreaResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
-            traceId?: string;
-        };
-        /** @description 諛곕떖�썝 沅뚯뿭 �쓳�떟 */
-        CarrierAreaResponse: {
-            /**
-             * Format: int64
-             * @description 沅뚯뿭 留ㅽ븨 ID
-             */
-            id: number;
-            /**
-             * Format: int64
-             * @description 諛곕떖�썝 ID
-             */
-            carrierId: number;
-            /** @description 沅뚯뿭 肄붾뱶 */
-            areaCode: string;
-            /** @description 沅뚯뿭紐� */
-            areaName: string;
-            /** @description �솢�꽦 �뿬遺� */
-            active: boolean;
-            /**
-             * Format: date-time
-             * @description �깮�꽦 �떆媛�
-             */
-            createdAt: string;
-        };
-        /** @description �쉶�썝媛��엯 �셿猷� �슂泥� */
+        /** @description 회원가입 완료 요청 */
         SignupRequest: {
-            /** @description 濡쒓렇�씤 �떒怨꾩뿉�꽌 諛쏆�� 媛��엯 �넗�겙 */
+            /** @description 로그인 단계에서 받은 가입 토큰 */
             signupToken: string;
-            /** @description �씠由� */
+            /** @description 이름 */
             name: string;
-            /** @description �쟾�솕踰덊샇 */
+            /** @description 전화번호 */
             phone: string;
-            /** @description �씠硫붿씪 */
+            /** @description 이메일 */
             email: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseTokenResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["TokenResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description access/refresh �넗�겙 �쓳�떟 */
+        /** @description access/refresh 토큰 응답 */
         TokenResponse: {
             accessToken: string;
             refreshToken: string;
         };
-        /** @description �넗�겙 �옱諛쒓툒 �슂泥� */
+        /** @description 토큰 재발급 요청 */
         RefreshRequest: {
             /** @description refresh token */
             refreshToken: string;
         };
-        /** @description Kakao 濡쒓렇�씤 �슂泥� */
+        /** @description 소셜 로그인 요청 */
         LoginRequest: {
-            /** @description Kakao access token */
-            kakaoAccessToken: string;
+            /**
+             * @description OAuth provider
+             * @example KAKAO
+             * @enum {string}
+             */
+            provider: "KAKAO" | "NAVER" | "GOOGLE";
+            /** @description provider access token */
+            accessToken: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseLoginResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["LoginResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 濡쒓렇�씤 �쓳�떟 (status濡� 遺꾧린) */
+        /** @description 로그인 응답 (status로 분기) */
         LoginResponse: {
             /** @description REGISTERED | REGISTRATION_REQUIRED */
             status: string;
@@ -2735,726 +2693,794 @@ export interface components {
             signupToken?: string;
             prefill?: components["schemas"]["PrefillResponse"];
         };
-        /** @description 媛��엯 �뤌 prefill */
+        /** @description 가입 폼 prefill */
         PrefillResponse: {
             email?: string;
             nickname?: string;
         };
-        /** @description dev-login �슂泥� (鍮꾪봽濡쒕뜒�뀡) */
+        /** @description dev-login 요청 (비프로덕션) */
         DevLoginRequest: {
             /**
-             * @description �뿭�븷
+             * @description 역할
              * @example CUSTOMER
              * @enum {string}
              */
             role: "CUSTOMER" | "CARRIER" | "COORDINATOR" | "ADMIN";
         };
-        /** @description �빟愿� �깮�꽦 �슂泥� */
+        /** @description 약관 생성 요청 */
         CreateTermRequest: {
-            /** @description �빟愿� �젣紐� */
+            /** @description 약관 제목 */
             title: string;
-            /** @description �빟愿� �궡�슜 */
+            /** @description 약관 내용 */
             content: string;
             /**
-             * @description �빟愿� �쑀�삎
+             * @description 약관 유형
              * @enum {string}
              */
             type: "SERVICE" | "PRIVACY" | "MARKETING" | "LOCATION";
-            /** @description �븘�닔 �룞�쓽 �뿬遺� */
+            /** @description 필수 동의 여부 */
             required: boolean;
         };
-        /** @description DLQ �옱泥섎━ �슂泥� */
+        /** @description DLQ 재처리 요청 */
         DlqRedriveRequest: {
             /**
-             * @description �썝蹂� �넗�뵿紐�(.DLQ �젒誘몄궗 �젣�쇅)
+             * @description 원본 토픽명(.DLQ 접미사 제외)
              * @example order.event
              */
             topic: string;
             /**
              * Format: int32
-             * @description �씠踰� �샇異쒖뿉�꽌 泥섎━�븷 理쒕�� 嫄댁닔
+             * @description 이번 호출에서 처리할 최대 건수
              * @default 100
              * @example 100
              */
             maxRecords: number;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseDlqRedriveResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["DlqRedriveResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description DLQ �옱泥섎━ 寃곌낵 */
+        /** @description DLQ 재처리 결과 */
         DlqRedriveResponse: {
             /**
              * Format: int32
-             * @description �썝蹂� �넗�뵿�쑝濡� �옱諛쒗뻾�맂 嫄댁닔
+             * @description 원본 토픽으로 재발행된 건수
              */
             redriven: number;
             /**
              * Format: int32
-             * @description �옱諛쒗뻾 �븳�룄 �룄�떖濡� 蹂대쪟�맂 嫄댁닔(DLQ �옍瑜�, �닔�룞 寃��넗 ����긽)
+             * @description 재발행 한도 도달로 보류된 건수(DLQ 잔류, 수동 검토 대상)
              */
             parked: number;
         };
-        /** @description DLQ �룓湲� �슂泥� */
+        /** @description DLQ 폐기 요청 */
         DlqPurgeRequest: {
             /**
-             * @description �썝蹂� �넗�뵿紐�(.DLQ �젒誘몄궗 �젣�쇅)
+             * @description 원본 토픽명(.DLQ 접미사 제외)
              * @example order.event
              */
             topic: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseDlqPurgeResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["DlqPurgeResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description DLQ �룓湲� 寃곌낵 */
+        /** @description DLQ 폐기 결과 */
         DlqPurgeResponse: {
             /**
              * Format: int32
-             * @description 臾쇰━ �젅�떒�쑝濡� �룓湲곕맂 �젅肄붾뱶 嫄댁닔
+             * @description 물리 절단으로 폐기된 레코드 건수
              */
             purged: number;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListTermResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["TermResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListShippingAddressResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["ShippingAddressResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListReviewResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["ReviewResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseReviewStatisticsResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["ReviewStatisticsResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 由щ럭 �넻怨� �쓳�떟 */
+        /** @description 리뷰 통계 응답 */
         ReviewStatisticsResponse: {
             /**
              * Format: int64
-             * @description �꽭�긽�냼 ID
+             * @description 세탁소 ID
              */
             laundromatId: number;
             /**
              * Format: int64
-             * @description 珥� 由щ럭 �닔
+             * @description 총 리뷰 수
              */
             totalCount: number;
             /**
              * Format: double
-             * @description �룊洹� �룊�젏
+             * @description 평균 평점
              */
             averageRating: number;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseInvoiceResponse: {
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponsePaymentResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            data?: components["schemas"]["InvoiceResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            data?: components["schemas"]["PaymentResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 泥�援ъ꽌 �빆紐� */
-        InvoiceLineItemResponse: {
-            /** @description �슂湲� �쑀�삎 */
-            chargeType: string;
-            /** @description �꽕紐� */
-            description: string;
+        /** @description 결제 응답 */
+        PaymentResponse: {
             /**
              * Format: int64
-             * @description 湲덉븸(�썝)
-             */
-            amount: number;
-        };
-        /** @description 泥�援ъ꽌 �쓳�떟 */
-        InvoiceResponse: {
-            /**
-             * Format: int64
-             * @description 泥�援ъ꽌 ID
+             * @description 결제 ID
              */
             id: number;
             /**
              * Format: int64
-             * @description 二쇰Ц ID
+             * @description 청구서 ID
+             */
+            invoiceId: number;
+            /**
+             * Format: int64
+             * @description 주문 ID
              */
             orderId: number;
             /**
              * Format: int64
-             * @description 怨좉컼 ID
+             * @description 고객 ID
              */
             customerId: number;
-            /** @description 泥�援ъ꽌 �긽�깭 */
+            /** @description 결제 상태 */
             status: string;
-            /** @description 泥�援ъ꽌 �빆紐� 紐⑸줉 */
-            lineItems: components["schemas"]["InvoiceLineItemResponse"][];
-            /** @description 臾닿쾶(kg) */
-            weight: number;
+            /** @description PG사 */
+            pgProvider: string;
+            /** @description PG 거래 ID */
+            pgTransactionId?: string | null;
             /**
              * Format: int64
-             * @description 珥� 湲덉븸(�썝)
+             * @description 결제 금액(원)
              */
-            totalAmount: number;
+            amount: number;
             /**
              * Format: date-time
-             * @description �깮�꽦 �떆媛�
+             * @description 결제 시간
+             */
+            paidAt?: string | null;
+            /** @description 실패 사유 */
+            failReason?: string | null;
+            /**
+             * Format: date-time
+             * @description 생성 시간
              */
             createdAt: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseListOrderResponse: {
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseInvoiceResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
-            data?: components["schemas"]["OrderResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            data?: components["schemas"]["InvoiceResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
-        ApiResponseNotificationResponse: {
-            /**
-             * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
-             * @example 200
-             */
-            status: number;
-            /**
-             * @description �쓳�떟 肄붾뱶
-             * @example SUCCESS
-             */
-            code: string;
-            /**
-             * @description �쓳�떟 硫붿떆吏�
-             * @example Success
-             */
-            message: string;
-            data?: components["schemas"]["NotificationResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
-            traceId?: string;
-        };
-        /** @description �븣由� �쓳�떟 */
-        NotificationResponse: {
+        /** @description 청구서 항목 */
+        InvoiceLineItemResponse: {
+            /** @description 요금 유형 */
+            chargeType: string;
+            /** @description 설명 */
+            description: string;
             /**
              * Format: int64
-             * @description �븣由� ID
+             * @description 금액(원)
+             */
+            amount: number;
+        };
+        /** @description 청구서 응답 */
+        InvoiceResponse: {
+            /**
+             * Format: int64
+             * @description 청구서 ID
              */
             id: number;
             /**
              * Format: int64
-             * @description �닔�떊�옄 ID
+             * @description 주문 ID
+             */
+            orderId: number;
+            /**
+             * Format: int64
+             * @description 고객 ID
+             */
+            customerId: number;
+            /** @description 청구서 상태 */
+            status: string;
+            /** @description 청구서 항목 목록 */
+            lineItems: components["schemas"]["InvoiceLineItemResponse"][];
+            /** @description 무게(kg) */
+            weight: number;
+            /**
+             * Format: int64
+             * @description 총 금액(원)
+             */
+            totalAmount: number;
+            /**
+             * Format: date-time
+             * @description 생성 시간
+             */
+            createdAt: string;
+        };
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseListOrderResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            /** @description 응답 데이터 */
+            data?: components["schemas"]["OrderResponse"][];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
+            traceId?: string;
+        };
+        /** @description 공통 API 응답 래퍼 */
+        ApiResponseNotificationResponse: {
+            /**
+             * Format: int32
+             * @description HTTP 상태 코드
+             * @example 200
+             */
+            status: number;
+            /**
+             * @description 응답 코드
+             * @example SUCCESS
+             */
+            code: string;
+            /**
+             * @description 응답 메시지
+             * @example Success
+             */
+            message: string;
+            data?: components["schemas"]["NotificationResponse"];
+            /** @description 트레이스 ID (에러 응답 시 포함) */
+            traceId?: string;
+        };
+        /** @description 알림 응답 */
+        NotificationResponse: {
+            /**
+             * Format: int64
+             * @description 알림 ID
+             */
+            id: number;
+            /**
+             * Format: int64
+             * @description 수신자 ID
              */
             recipientId: number;
-            /** @description �닔�떊�옄 �뿰�씫泥� */
+            /** @description 수신자 연락처 */
             recipientContact: string;
-            /** @description �븣由� �쑀�삎 */
+            /** @description 알림 유형 */
             type: string;
-            /** @description �븣由� 梨꾨꼸 */
+            /** @description 알림 채널 */
             channel: string;
-            /** @description �젣紐� */
+            /** @description 제목 */
             title: string;
-            /** @description �궡�슜 */
+            /** @description 내용 */
             content: string;
-            /** @description �긽�깭 */
+            /** @description 상태 */
             status: string;
-            /** @description 李몄“ �쑀�삎 */
+            /** @description 참조 유형 */
             referenceType?: string | null;
             /**
              * Format: int64
-             * @description 李몄“ ID
+             * @description 참조 ID
              */
             referenceId?: number | null;
             /**
              * Format: date-time
-             * @description 諛쒖넚 �떆媛�
+             * @description 발송 시간
              */
             sentAt?: string | null;
-            /** @description �떎�뙣 �궗�쑀 */
+            /** @description 실패 사유 */
             failReason?: string | null;
             /**
              * Format: date-time
-             * @description �깮�꽦 �떆媛�
+             * @description 생성 시간
              */
             createdAt: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListNotificationResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["NotificationResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseDownloadUrlResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["DownloadUrlResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description �떎�슫濡쒕뱶 URL �쓳�떟 */
+        /** @description 다운로드 URL 응답 */
         DownloadUrlResponse: {
             /** @description S3 Presigned URL */
             downloadUrl: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListNearbyLaundromatResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["NearbyLaundromatResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 二쇰�� �꽭�긽�냼 �쓳�떟 */
+        /** @description 주변 세탁소 응답 */
         NearbyLaundromatResponse: {
             laundromat: components["schemas"]["LaundromatResponse"];
             /**
              * Format: double
-             * @description 嫄곕━(誘명꽣)
+             * @description 거리(미터)
              */
             distanceMeters: number;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseReverseGeocodingResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["ReverseGeocodingResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description �뿭吏��삤肄붾뵫 寃곌낵 */
+        /** @description 역지오코딩 결과 */
         ReverseGeocodingResponse: {
-            /** @description 援�媛� */
+            /** @description 국가 */
             country: string;
-            /** @description �떆 */
+            /** @description 시 */
             si: string;
-            /** @description 援� */
+            /** @description 구 */
             gu: string;
-            /** @description �룞 */
+            /** @description 동 */
             dong: string;
-            /** @description �쟾泥� 二쇱냼 */
+            /** @description 전체 주소 */
             fullAddress: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListGeocodingResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["GeocodingResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 吏��삤肄붾뵫 寃곌낵 */
+        /** @description 지오코딩 결과 */
         GeocodingResponse: {
-            /** @description 吏�踰� 二쇱냼 */
+            /** @description 지번 주소 */
             jibunAddress: string;
-            /** @description �룄濡쒕챸 二쇱냼 */
+            /** @description 도로명 주소 */
             roadAddress: string;
             /**
              * Format: double
-             * @description �쐞�룄
+             * @description 위도
              * @example 37.5665
              */
             latitude: number;
             /**
              * Format: double
-             * @description 寃쎈룄
+             * @description 경도
              * @example 126.978
              */
             longitude: number;
-            /** @description �떆/�룄 */
+            /** @description 시/도 */
             sido?: string | null;
-            /** @description �떆/援�/援� */
+            /** @description 시/군/구 */
             sigungu?: string | null;
-            /** @description �룞/硫� */
+            /** @description 동/면 */
             dongmyun?: string | null;
-            /** @description 由� */
+            /** @description 리 */
             ri?: string | null;
-            /** @description �룄濡쒕챸 */
+            /** @description 도로명 */
             roadName?: string | null;
-            /** @description 嫄대Ъ紐� */
+            /** @description 건물명 */
             buildingName?: string | null;
-            /** @description 吏�踰� */
+            /** @description 지번 */
             landNumber?: string | null;
-            /** @description �슦�렪踰덊샇 */
+            /** @description 우편번호 */
             postalCode?: string | null;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListDispatchResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["DispatchResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListDeliveryResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["DeliveryResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListCarrierAreaResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["CarrierAreaResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseOperationSummaryResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
             data?: components["schemas"]["OperationSummaryResponse"];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description �슫�쁺 �슂�빟 �쓳�떟 */
+        /** @description 운영 요약 응답 */
         OperationSummaryResponse: {
             /**
              * Format: int64
-             * @description �삤�뒛 珥� 二쇰Ц �닔
+             * @description 오늘 총 주문 수
              */
             totalOrdersToday: number;
             /**
              * Format: int64
-             * @description ���湲� 以� 諛곗감 �닔
+             * @description 대기 중 배차 수
              */
             pendingDispatches: number;
             /**
              * Format: int64
-             * @description 吏꾪뻾 以� 諛곕떖 �닔
+             * @description 진행 중 배달 수
              */
             activeDeliveries: number;
             /**
              * Format: int64
-             * @description �삤�뒛 �셿猷� �닔
+             * @description 오늘 완료 수
              */
             completedToday: number;
             /**
              * Format: int64
-             * @description �삤�뒛 痍⑥냼 �닔
+             * @description 오늘 취소 수
              */
             cancelledToday: number;
         };
-        /** @description 怨듯넻 API �쓳�떟 �옒�띁 */
+        /** @description 공통 API 응답 래퍼 */
         ApiResponseListOperationEventResponse: {
             /**
              * Format: int32
-             * @description HTTP �긽�깭 肄붾뱶
+             * @description HTTP 상태 코드
              * @example 200
              */
             status: number;
             /**
-             * @description �쓳�떟 肄붾뱶
+             * @description 응답 코드
              * @example SUCCESS
              */
             code: string;
             /**
-             * @description �쓳�떟 硫붿떆吏�
+             * @description 응답 메시지
              * @example Success
              */
             message: string;
-            /** @description �쓳�떟 �뜲�씠�꽣 */
+            /** @description 응답 데이터 */
             data?: components["schemas"]["OperationEventResponse"][];
-            /** @description �듃�젅�씠�뒪 ID (�뿉�윭 �쓳�떟 �떆 �룷�븿) */
+            /** @description 트레이스 ID (에러 응답 시 포함) */
             traceId?: string;
         };
-        /** @description �슫�쁺 �씠踰ㅽ듃 �쓳�떟 */
+        /** @description 운영 이벤트 응답 */
         OperationEventResponse: {
             /**
              * Format: int64
-             * @description �씠踰ㅽ듃 ID
+             * @description 이벤트 ID
              */
             id: number;
-            /** @description �씠踰ㅽ듃 �쑀�삎 */
+            /** @description 이벤트 유형 */
             eventType: string;
-            /** @description 吏묓빀泥� �쑀�삎 */
+            /** @description 집합체 유형 */
             aggregateType: string;
             /**
              * Format: int64
-             * @description 吏묓빀泥� ID
+             * @description 집합체 ID
              */
             aggregateId: number;
-            /** @description �슂�빟 */
+            /** @description 요약 */
             summary: string;
             /**
              * Format: date-time
-             * @description �깮�꽦 �떆媛�
+             * @description 생성 시간
              */
             createdAt: string;
         };
@@ -3476,7 +3502,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �봽濡쒗븘 議고쉶 �꽦怨� */
+            /** @description 프로필 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3485,7 +3511,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseUserProfileResponse"];
                 };
             };
-            /** @description �궗�슜�옄瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 사용자를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3509,7 +3535,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description �봽濡쒗븘 �닔�젙 �꽦怨� */
+            /** @description 프로필 수정 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3518,7 +3544,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseUserProfileResponse"];
                 };
             };
-            /** @description �옒紐삳맂 �슂泥� */
+            /** @description 잘못된 요청 */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3527,7 +3553,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseUserProfileResponse"];
                 };
             };
-            /** @description �궗�슜�옄瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 사용자를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3547,14 +3573,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �깉�눜 �꽦怨� */
+            /** @description 탈퇴 성공 */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description �궗�슜�옄瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 사용자를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3578,7 +3604,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 諛곗넚吏� �닔�젙 �꽦怨� */
+            /** @description 배송지 수정 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3587,7 +3613,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseShippingAddressResponse"];
                 };
             };
-            /** @description 諛곗넚吏�瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 배송지를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3609,7 +3635,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곗넚吏� �궘�젣 �꽦怨� */
+            /** @description 배송지 삭제 성공 */
             204: {
                 headers: {
                     [name: string]: unknown;
@@ -3629,14 +3655,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 湲곕낯 諛곗넚吏� �꽕�젙 �꽦怨� */
+            /** @description 기본 배송지 설정 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 諛곗넚吏�瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 배송지를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3656,7 +3682,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 由щ럭 議고쉶 �꽦怨� */
+            /** @description 리뷰 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3665,7 +3691,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseReviewResponse"];
                 };
             };
-            /** @description 由щ럭瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 리뷰를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3691,7 +3717,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 由щ럭 �닔�젙 �꽦怨� */
+            /** @description 리뷰 수정 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3700,7 +3726,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseReviewResponse"];
                 };
             };
-            /** @description �닔�젙 沅뚰븳 �뾾�쓬 */
+            /** @description 수정 권한 없음 */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -3709,7 +3735,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseReviewResponse"];
                 };
             };
-            /** @description 由щ럭瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 리뷰를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3731,14 +3757,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 由щ럭 �궘�젣 �꽦怨� */
+            /** @description 리뷰 삭제 성공 */
             204: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description �궘�젣 沅뚰븳 �뾾�쓬 */
+            /** @description 삭제 권한 없음 */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -3762,7 +3788,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description �샃�뀡 媛�寃� �닔�젙 �꽦怨� */
+            /** @description 옵션 가격 수정 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3771,7 +3797,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponsePricePolicyResponse"];
                 };
             };
-            /** @description 媛�寃� �젙梨낆쓣 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 가격 정책을 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3793,7 +3819,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �꽭�긽�냼 議고쉶 �꽦怨� */
+            /** @description 세탁소 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3802,7 +3828,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
                 };
             };
-            /** @description �꽭�긽�냼瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 세탁소를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3828,7 +3854,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description �꽭�긽�냼 �닔�젙 �꽦怨� */
+            /** @description 세탁소 수정 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3837,7 +3863,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
                 };
             };
-            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
+            /** @description 운영 역할(COORDINATOR·ADMIN) 권한 없음 */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -3846,7 +3872,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
                 };
             };
-            /** @description �꽭�긽�냼瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 세탁소를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3872,7 +3898,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description �샃�뀡 �닔�젙 �꽦怨� */
+            /** @description 옵션 수정 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3881,7 +3907,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
                 };
             };
-            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
+            /** @description 운영 역할(COORDINATOR·ADMIN) 권한 없음 */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -3907,7 +3933,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description �빟愿� �닔�젙 �꽦怨� */
+            /** @description 약관 수정 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3916,7 +3942,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseTermResponse"];
                 };
             };
-            /** @description �빟愿��쓣 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 약관을 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -3938,7 +3964,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �빟愿� 鍮꾪솢�꽦�솕 �꽦怨� */
+            /** @description 약관 비활성화 성공 */
             204: {
                 headers: {
                     [name: string]: unknown;
@@ -3956,7 +3982,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곗넚吏� 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 배송지 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3980,7 +4006,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 諛곗넚吏� �벑濡� �꽦怨� */
+            /** @description 배송지 등록 성공 */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -3989,7 +4015,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseShippingAddressResponse"];
                 };
             };
-            /** @description �옒紐삳맂 �슂泥� */
+            /** @description 잘못된 요청 */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3998,7 +4024,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseShippingAddressResponse"];
                 };
             };
-            /** @description 諛곗넚吏� 媛쒖닔 珥덇낵 */
+            /** @description 배송지 개수 초과 */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4024,7 +4050,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 由щ럭 �옉�꽦 �꽦怨� */
+            /** @description 리뷰 작성 성공 */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -4033,7 +4059,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseReviewResponse"];
                 };
             };
-            /** @description �씠誘� �옉�꽦�븳 由щ럭 / �룞�씪 Idempotency-Key �슂泥� 吏꾪뻾 以� */
+            /** @description 이미 작성한 리뷰 / 동일 Idempotency-Key 요청 진행 중 */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4057,7 +4083,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 媛�寃� �젙梨� 議고쉶 �꽦怨� */
+            /** @description 가격 정책 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -4066,7 +4092,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponsePricePolicyResponse"];
                 };
             };
-            /** @description 媛�寃� �젙梨낆쓣 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 가격 정책을 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -4090,7 +4116,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 媛�寃� �젙梨� �깮�꽦 �꽦怨� */
+            /** @description 가격 정책 생성 성공 */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -4099,7 +4125,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponsePricePolicyResponse"];
                 };
             };
-            /** @description �씠誘� 議댁옱�븯�뒗 媛�寃� �젙梨� */
+            /** @description 이미 존재하는 가격 정책 */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4127,7 +4153,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description 湲덉븸 怨꾩궛 �꽦怨� */
+            /** @description 금액 계산 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -4135,6 +4161,685 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ApiResponseCalculateTotalResponse"];
                 };
+            };
+        };
+    };
+    createOrder: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description 중복 생성 방지용 멱등성 키(재시도 시 동일 값 전송) */
+                "Idempotency-Key"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description 주문 생성 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
+                };
+            };
+            /** @description 활성 빌링키 없음 또는 연체 인보이스 존재 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
+                };
+            };
+            /** @description 서비스 불가 지역 또는 시간 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
+                };
+            };
+        };
+    };
+    cancelOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CancelOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description 주문 취소 성공 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 취소할 수 없는 상태 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 주문을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    registerDeviceToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterDeviceTokenRequest"];
+            };
+        };
+        responses: {
+            /** @description 토큰 등록 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeviceTokenResponse"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeviceTokenResponse"];
+                };
+            };
+            /** @description 인증 필요 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeviceTokenResponse"];
+                };
+            };
+        };
+    };
+    uploadFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folder: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description 업로드 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseMediaResponse"];
+                };
+            };
+            /** @description 잘못된 파일 형식 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseMediaResponse"];
+                };
+            };
+        };
+    };
+    findNearby: {
+        parameters: {
+            query: {
+                /**
+                 * @description 위도
+                 * @example 37.5665
+                 */
+                latitude: number;
+                /**
+                 * @description 경도
+                 * @example 126.978
+                 */
+                longitude: number;
+                /**
+                 * @description 검색 반경(미터)
+                 * @example 3000
+                 */
+                radiusMeters?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 검색 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseListNearbyLaundromatResponse"];
+                };
+            };
+        };
+    };
+    registerLaundromat: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterLaundromatRequest"];
+            };
+        };
+        responses: {
+            /** @description 세탁소 등록 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+            /** @description 운영 역할(COORDINATOR·ADMIN) 권한 없음 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+            /** @description 이미 존재하는 세탁소 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+        };
+    };
+    addMediaResource: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddMediaResourceRequest"];
+            };
+        };
+        responses: {
+            /** @description 이미지 추가 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+            /** @description 운영 역할(COORDINATOR·ADMIN) 권한 없음 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
+                };
+            };
+        };
+    };
+    rejectAssignment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dispatchId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 배차 거절 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
+                };
+            };
+        };
+    };
+    claimDispatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dispatchId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 배차 선점 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
+                };
+            };
+            /** @description 이미 선점된 배차 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
+                };
+            };
+        };
+    };
+    acceptAssignment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dispatchId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 배차 수락 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
+                };
+            };
+        };
+    };
+    startWashing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deliveryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StepPhotoRequest"];
+            };
+        };
+        responses: {
+            /** @description 세탁 시작 처리 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
+                };
+            };
+        };
+    };
+    startDelivery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deliveryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 배달 출발 처리 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
+                };
+            };
+        };
+    };
+    completePickup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deliveryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompletePickupRequest"];
+            };
+        };
+        responses: {
+            /** @description 수거 완료 처리 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
+                };
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
+                };
+            };
+        };
+    };
+    completeDrying: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deliveryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StepPhotoRequest"];
+            };
+        };
+        responses: {
+            /** @description 건조 완료 처리 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
+                };
+            };
+        };
+    };
+    completeDelivery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                deliveryId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StepPhotoRequest"];
+            };
+        };
+        responses: {
+            /** @description 배달 완료 처리 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
+                };
+            };
+        };
+    };
+    cancelOrder_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CancelOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description 주문 취소 성공 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 잘못된 요청 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 권한 없음 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 주문을 찾을 수 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 취소할 수 없는 상태 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    cancelDispatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dispatchId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CancelDispatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 배차 취소 성공 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    assignDispatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dispatchId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignDispatchRequest"];
+            };
+        };
+        responses: {
+            /** @description 배차 배정 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
+                };
+            };
+        };
+    };
+    getAreasByCarrier: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 권역 목록 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseListCarrierAreaResponse"];
+                };
+            };
+        };
+    };
+    registerArea: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterAreaRequest"];
+            };
+        };
+        responses: {
+            /** @description 권역 등록 성공 */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseCarrierAreaResponse"];
+                };
+            };
+            /** @description 이미 등록된 권역 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseCarrierAreaResponse"];
+                };
+            };
+        };
+    };
+    removeArea: {
+        parameters: {
+            query: {
+                areaCode: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 권역 해제 성공 */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -4177,692 +4882,6 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
                 };
-            };
-        };
-    };
-    getActive: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 빌링키 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
-                };
-            };
-            /** @description 등록된 빌링키 없음 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
-                };
-            };
-        };
-    };
-    createOrder: {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description 以묐났 �깮�꽦 諛⑹���슜 硫깅벑�꽦 �궎(�옱�떆�룄 �떆 �룞�씪 媛� �쟾�넚) */
-                "Idempotency-Key"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateOrderRequest"];
-            };
-        };
-        responses: {
-            /** @description 二쇰Ц �깮�꽦 �꽦怨� */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
-                };
-            };
-            /** @description �옒紐삳맂 �슂泥� */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
-                };
-            };
-            /** @description 주문 생성 전제조건 미충족 — BILLING_KEY_REQUIRED(활성 빌링키 없음) 또는 OVERDUE_INVOICE_EXISTS(연체 인보이스 존재) */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
-                };
-            };
-            /** @description �꽌鍮꾩뒪 遺덇�� 吏��뿭 �삉�뒗 �떆媛� */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseOrderResponse"];
-                };
-            };
-        };
-    };
-    cancelOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CancelOrderRequest"];
-            };
-        };
-        responses: {
-            /** @description 二쇰Ц 痍⑥냼 �꽦怨� */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 痍⑥냼�븷 �닔 �뾾�뒗 �긽�깭 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 二쇰Ц�쓣 李얠쓣 �닔 �뾾�쓬 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    registerDeviceToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegisterDeviceTokenRequest"];
-            };
-        };
-        responses: {
-            /** @description �넗�겙 �벑濡� �꽦怨� */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDeviceTokenResponse"];
-                };
-            };
-            /** @description �옒紐삳맂 �슂泥� */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDeviceTokenResponse"];
-                };
-            };
-            /** @description �씤利� �븘�슂 */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDeviceTokenResponse"];
-                };
-            };
-        };
-    };
-    uploadFile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folder: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    /** Format: binary */
-                    file: string;
-                };
-            };
-        };
-        responses: {
-            /** @description �뾽濡쒕뱶 �꽦怨� */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseMediaResponse"];
-                };
-            };
-            /** @description �옒紐삳맂 �뙆�씪 �삎�떇 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseMediaResponse"];
-                };
-            };
-        };
-    };
-    findNearby: {
-        parameters: {
-            query: {
-                /**
-                 * @description �쐞�룄
-                 * @example 37.5665
-                 */
-                latitude: number;
-                /**
-                 * @description 寃쎈룄
-                 * @example 126.978
-                 */
-                longitude: number;
-                /**
-                 * @description 寃��깋 諛섍꼍(誘명꽣)
-                 * @example 3000
-                 */
-                radiusMeters?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 寃��깋 �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseListNearbyLaundromatResponse"];
-                };
-            };
-        };
-    };
-    registerLaundromat: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegisterLaundromatRequest"];
-            };
-        };
-        responses: {
-            /** @description �꽭�긽�냼 �벑濡� �꽦怨� */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
-                };
-            };
-            /** @description �옒紐삳맂 �슂泥� */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
-                };
-            };
-            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
-                };
-            };
-            /** @description �씠誘� 議댁옱�븯�뒗 �꽭�긽�냼 */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
-                };
-            };
-        };
-    };
-    addMediaResource: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AddMediaResourceRequest"];
-            };
-        };
-        responses: {
-            /** @description �씠誘몄�� 異붽�� �꽦怨� */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
-                };
-            };
-            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
-                };
-            };
-        };
-    };
-    rejectAssignment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                dispatchId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 諛곗감 嫄곗젅 �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
-                };
-            };
-        };
-    };
-    claimDispatch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                dispatchId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 諛곗감 �꽑�젏 �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
-                };
-            };
-            /** @description �씠誘� �꽑�젏�맂 諛곗감 */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
-                };
-            };
-        };
-    };
-    acceptAssignment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                dispatchId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 諛곗감 �닔�씫 �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
-                };
-            };
-        };
-    };
-    startWashing: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                deliveryId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StepPhotoRequest"];
-            };
-        };
-        responses: {
-            /** @description �꽭�긽 �떆�옉 泥섎━ �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
-                };
-            };
-        };
-    };
-    completePickup: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                deliveryId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CompletePickupRequest"];
-            };
-        };
-        responses: {
-            /** @description �닔嫄� �셿猷� 泥섎━ �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
-                };
-            };
-            /** @description �옒紐삳맂 �슂泥� */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
-                };
-            };
-        };
-    };
-    completeDrying: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                deliveryId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StepPhotoRequest"];
-            };
-        };
-        responses: {
-            /** @description 嫄댁“ �셿猷� 泥섎━ �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
-                };
-            };
-        };
-    };
-    completeDelivery: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                deliveryId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StepPhotoRequest"];
-            };
-        };
-        responses: {
-            /** @description 諛곕떖 �셿猷� 泥섎━ �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
-                };
-            };
-        };
-    };
-    cancelOrder_1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CancelOrderRequest"];
-            };
-        };
-        responses: {
-            /** @description 二쇰Ц 痍⑥냼 �꽦怨� */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description �옒紐삳맂 �슂泥� */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 沅뚰븳 �뾾�쓬 */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 二쇰Ц�쓣 李얠쓣 �닔 �뾾�쓬 */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 痍⑥냼�븷 �닔 �뾾�뒗 �긽�깭 */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    cancelDispatch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                dispatchId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CancelDispatchRequest"];
-            };
-        };
-        responses: {
-            /** @description 諛곗감 痍⑥냼 �꽦怨� */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    assignDispatch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                dispatchId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AssignDispatchRequest"];
-            };
-        };
-        responses: {
-            /** @description 諛곗감 諛곗젙 �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseDispatchResponse"];
-                };
-            };
-        };
-    };
-    getAreasByCarrier: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 沅뚯뿭 紐⑸줉 議고쉶 �꽦怨� */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseListCarrierAreaResponse"];
-                };
-            };
-        };
-    };
-    registerArea: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegisterAreaRequest"];
-            };
-        };
-        responses: {
-            /** @description 沅뚯뿭 �벑濡� �꽦怨� */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseCarrierAreaResponse"];
-                };
-            };
-            /** @description �씠誘� �벑濡앸맂 沅뚯뿭 */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiResponseCarrierAreaResponse"];
-                };
-            };
-        };
-    };
-    removeArea: {
-        parameters: {
-            query: {
-                areaCode: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 沅뚯뿭 �빐�젣 �꽦怨� */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -4997,7 +5016,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description �빟愿� �깮�꽦 �꽦怨� */
+            /** @description 약관 생성 성공 */
             201: {
                 headers: {
                     [name: string]: unknown;
@@ -5006,7 +5025,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseTermResponse"];
                 };
             };
-            /** @description �옒紐삳맂 �슂泥� */
+            /** @description 잘못된 요청 */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -5030,7 +5049,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description �옱泥섎━ �셿猷� */
+            /** @description 재처리 완료 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5039,7 +5058,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseDlqRedriveResponse"];
                 };
             };
-            /** @description �옒紐삳맂 �넗�뵿紐� �삉�뒗 maxRecords 踰붿쐞 珥덇낵 */
+            /** @description 잘못된 토픽명 또는 maxRecords 범위 초과 */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -5048,7 +5067,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseDlqRedriveResponse"];
                 };
             };
-            /** @description ADMIN 沅뚰븳 �뾾�쓬 */
+            /** @description ADMIN 권한 없음 */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5072,7 +5091,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description �룓湲� �셿猷� */
+            /** @description 폐기 완료 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5081,7 +5100,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseDlqPurgeResponse"];
                 };
             };
-            /** @description �옒紐삳맂 �넗�뵿紐�(.DLQ �젒誘몄궗 �룷�븿 �삉�뒗 怨듬갚) */
+            /** @description 잘못된 토픽명(.DLQ 접미사 포함 또는 공백) */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -5090,7 +5109,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseDlqPurgeResponse"];
                 };
             };
-            /** @description ADMIN 沅뚰븳 �뾾�쓬 */
+            /** @description ADMIN 권한 없음 */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5110,7 +5129,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �빟愿� 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 약관 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5130,7 +5149,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �븘�닔 �빟愿� 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 필수 약관 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5153,7 +5172,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �궡 由щ럭 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 내 리뷰 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5167,10 +5186,10 @@ export interface operations {
     getReviewsByLaundromat: {
         parameters: {
             query?: {
-                /** @description 而ㅼ꽌 (留덉��留� 由щ럭 ID) */
+                /** @description 커서 (마지막 리뷰 ID) */
                 cursor?: number;
                 /**
-                 * @description �럹�씠吏� �겕湲�
+                 * @description 페이지 크기
                  * @example 20
                  */
                 size?: number;
@@ -5183,7 +5202,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 由щ럭 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 리뷰 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5205,7 +5224,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �넻怨� 議고쉶 �꽦怨� */
+            /** @description 통계 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5227,7 +5246,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 寃곗젣 議고쉶 �꽦怨� */
+            /** @description 결제 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5236,7 +5255,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponsePaymentResponse"];
                 };
             };
-            /** @description 寃곗젣瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 결제를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5258,7 +5277,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 泥�援ъ꽌 議고쉶 �꽦怨� */
+            /** @description 청구서 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5267,7 +5286,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseInvoiceResponse"];
                 };
             };
-            /** @description 泥�援ъ꽌瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 청구서를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5289,7 +5308,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 二쇰Ц 議고쉶 �꽦怨� */
+            /** @description 주문 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5298,7 +5317,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseOrderResponse"];
                 };
             };
-            /** @description 二쇰Ц�쓣 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 주문을 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5312,9 +5331,9 @@ export interface operations {
     getMyOrders: {
         parameters: {
             query?: {
-                /** @description 留덉��留됱쑝濡� 議고쉶�븳 二쇰Ц ID (泥� �럹�씠吏��뒗 �깮�왂) */
+                /** @description 마지막으로 조회한 주문 ID (첫 페이지는 생략) */
                 cursor?: number;
-                /** @description �럹�씠吏� �겕湲� */
+                /** @description 페이지 크기 */
                 size?: number;
             };
             header?: never;
@@ -5323,7 +5342,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 二쇰Ц 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 주문 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5345,7 +5364,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �븣由� 議고쉶 �꽦怨� */
+            /** @description 알림 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5354,7 +5373,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseNotificationResponse"];
                 };
             };
-            /** @description �븣由쇱쓣 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 알림을 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5368,10 +5387,10 @@ export interface operations {
     getMyNotifications: {
         parameters: {
             query?: {
-                /** @description 而ㅼ꽌 (留덉��留� �븣由� ID) */
+                /** @description 커서 (마지막 알림 ID) */
                 cursor?: number;
                 /**
-                 * @description �럹�씠吏� �겕湲�
+                 * @description 페이지 크기
                  * @example 20
                  */
                 size?: number;
@@ -5382,7 +5401,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �븣由� 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 알림 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5404,7 +5423,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 誘몃뵒�뼱 議고쉶 �꽦怨� */
+            /** @description 미디어 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5413,7 +5432,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseMediaResponse"];
                 };
             };
-            /** @description 誘몃뵒�뼱瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 미디어를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5435,7 +5454,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �떎�슫濡쒕뱶 URL �깮�꽦 �꽦怨� */
+            /** @description 다운로드 URL 생성 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5444,7 +5463,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseDownloadUrlResponse"];
                 };
             };
-            /** @description 誘몃뵒�뼱瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 미디어를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5459,12 +5478,12 @@ export interface operations {
         parameters: {
             query: {
                 /**
-                 * @description �쐞�룄
+                 * @description 위도
                  * @example 37.5665
                  */
                 latitude: number;
                 /**
-                 * @description 寃쎈룄
+                 * @description 경도
                  * @example 126.978
                  */
                 longitude: number;
@@ -5475,7 +5494,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �뿭吏��삤肄붾뵫 �꽦怨� */
+            /** @description 역지오코딩 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5490,8 +5509,8 @@ export interface operations {
         parameters: {
             query: {
                 /**
-                 * @description 寃��깋�븷 二쇱냼
-                 * @example �꽌�슱�떆 媛뺣궓援� �뀒�뿤���濡� 123
+                 * @description 검색할 주소
+                 * @example 서울시 강남구 테헤란로 123
                  */
                 address: string;
             };
@@ -5501,7 +5520,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 吏��삤肄붾뵫 �꽦怨� */
+            /** @description 지오코딩 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5516,8 +5535,8 @@ export interface operations {
         parameters: {
             query: {
                 /**
-                 * @description �룄濡쒕챸 二쇱냼
-                 * @example �꽌�슱�떆 媛뺣궓援� �뀒�뿤���濡� 123
+                 * @description 도로명 주소
+                 * @example 서울시 강남구 테헤란로 123
                  */
                 address: string;
             };
@@ -5527,7 +5546,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 吏��삤肄붾뵫 �꽦怨� */
+            /** @description 지오코딩 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5542,8 +5561,8 @@ export interface operations {
         parameters: {
             query: {
                 /**
-                 * @description 吏�踰� 二쇱냼
-                 * @example �꽌�슱�떆 媛뺣궓援� �뿭�궪�룞 123-45
+                 * @description 지번 주소
+                 * @example 서울시 강남구 역삼동 123-45
                  */
                 address: string;
             };
@@ -5553,7 +5572,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 吏��삤肄붾뵫 �꽦怨� */
+            /** @description 지오코딩 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5575,7 +5594,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곗감 議고쉶 �꽦怨� */
+            /** @description 배차 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5584,7 +5603,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseDispatchResponse"];
                 };
             };
-            /** @description 諛곗감瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 배차를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5598,10 +5617,10 @@ export interface operations {
     getMyDispatches: {
         parameters: {
             query?: {
-                /** @description 而ㅼ꽌 (留덉��留� 諛곗감 ID) */
+                /** @description 커서 (마지막 배차 ID) */
                 cursor?: number;
                 /**
-                 * @description �럹�씠吏� �겕湲�
+                 * @description 페이지 크기
                  * @example 20
                  */
                 size?: number;
@@ -5612,7 +5631,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곗감 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 배차 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5626,10 +5645,10 @@ export interface operations {
     getAvailableDispatches: {
         parameters: {
             query?: {
-                /** @description 而ㅼ꽌 (留덉��留� 諛곗감 ID) */
+                /** @description 커서 (마지막 배차 ID) */
                 cursor?: number;
                 /**
-                 * @description �럹�씠吏� �겕湲�
+                 * @description 페이지 크기
                  * @example 20
                  */
                 size?: number;
@@ -5640,7 +5659,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곗감 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 배차 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5662,7 +5681,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곕떖 議고쉶 �꽦怨� */
+            /** @description 배달 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5671,7 +5690,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseDeliveryResponse"];
                 };
             };
-            /** @description 諛곕떖�쓣 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 배달을 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5685,9 +5704,9 @@ export interface operations {
     getMyDeliveries: {
         parameters: {
             query?: {
-                /** @description 留덉��留됱쑝濡� 議고쉶�븳 諛곕떖 ID (泥� �럹�씠吏��뒗 �깮�왂) */
+                /** @description 마지막으로 조회한 배달 ID (첫 페이지는 생략) */
                 cursor?: number;
-                /** @description �럹�씠吏� �겕湲� */
+                /** @description 페이지 크기 */
                 size?: number;
             };
             header?: never;
@@ -5696,7 +5715,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곕떖 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 배달 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5710,11 +5729,11 @@ export interface operations {
     getOrders: {
         parameters: {
             query?: {
-                /** @description 二쇰Ц �긽�깭 �븘�꽣(�깮�왂 �떆 �쟾泥�) */
+                /** @description 주문 상태 필터(생략 시 전체) */
                 status?: "CREATED" | "DISPATCHED" | "PICKED_UP" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
-                /** @description 留덉��留됱쑝濡� 議고쉶�븳 二쇰Ц ID (泥� �럹�씠吏��뒗 �깮�왂) */
+                /** @description 마지막으로 조회한 주문 ID (첫 페이지는 생략) */
                 cursor?: number;
-                /** @description �럹�씠吏� �겕湲� */
+                /** @description 페이지 크기 */
                 size?: number;
             };
             header?: never;
@@ -5723,7 +5742,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 二쇰Ц 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 주문 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5745,7 +5764,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 二쇰Ц 議고쉶 �꽦怨� */
+            /** @description 주문 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5754,7 +5773,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseOrderResponse"];
                 };
             };
-            /** @description 二쇰Ц�쓣 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 주문을 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5779,7 +5798,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곗감 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 배차 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5801,7 +5820,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곗감 議고쉶 �꽦怨� */
+            /** @description 배차 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5810,7 +5829,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseDispatchResponse"];
                 };
             };
-            /** @description 諛곗감瑜� 李얠쓣 �닔 �뾾�쓬 */
+            /** @description 배차를 찾을 수 없음 */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -5832,13 +5851,42 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 諛곕떖�썝 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 배달원 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["ApiResponseListCarrierAreaResponse"];
+                };
+            };
+        };
+    };
+    getActive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 빌링키 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
+                };
+            };
+            /** @description 등록된 빌링키 없음 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiResponseBillingKeyResponse"];
                 };
             };
         };
@@ -5852,7 +5900,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �슂�빟 議고쉶 �꽦怨� */
+            /** @description 요약 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5867,7 +5915,7 @@ export interface operations {
         parameters: {
             query?: {
                 /**
-                 * @description 議고쉶�븷 �씠踰ㅽ듃 �닔
+                 * @description 조회할 이벤트 수
                  * @example 50
                  */
                 limit?: number;
@@ -5878,7 +5926,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �씠踰ㅽ듃 紐⑸줉 議고쉶 �꽦怨� */
+            /** @description 이벤트 목록 조회 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5900,7 +5948,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 媛�寃� �젙梨� �궘�젣 �꽦怨� */
+            /** @description 가격 정책 삭제 성공 */
             204: {
                 headers: {
                     [name: string]: unknown;
@@ -5921,7 +5969,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description �씠誘몄�� �궘�젣 �꽦怨� */
+            /** @description 이미지 삭제 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5930,7 +5978,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiResponseLaundromatResponse"];
                 };
             };
-            /** @description �슫�쁺 �뿭�븷(COORDINATOR쨌ADMIN) 沅뚰븳 �뾾�쓬 */
+            /** @description 운영 역할(COORDINATOR·ADMIN) 권한 없음 */
             403: {
                 headers: {
                     [name: string]: unknown;

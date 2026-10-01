@@ -1,17 +1,19 @@
-import { test, expect, request, type APIRequestContext, type Page } from '@playwright/test';
+import { test, expect, request, type APIRequestContext } from '@playwright/test';
 import { devLogin, type Role } from '../fixtures/auth';
 import { loginCoordinatorUI } from '../fixtures/ui-auth';
 
 /**
  * F4 U4-3 — coordinator-web **UI-level 핵심경로**.
  *
- * 코디네이터가 **브라우저로** 결제 완료(PAID) 주문을 취소해 환불 보상 사가를 구동하고, 주문이
- * 환불완료(REFUNDED)에 이르는 과정을 실증한다. PAID 주문은 API로 arrange(고객·배달원 소관 전 사가:
- * 빌링키 등록→주문→선점→수거→인보이스 발행→자동과금 COMPLETED, 수동 `/payments/pay` 없음),
- * 코디는 실 dev-login으로 로그인해 `/orders` 상세에서 **취소(UI)** → 환불 표면을 확인한다.
- * ADMIN role 가드(`/admin` 대시보드)도 함께 검증한다.
+ * 코디네이터가 **브라우저로** 자동과금까지 끝난 수거 주문을 취소해 환불 보상 사가를 구동한다.
+ * 주문은 API로 arrange(고객·배달원 소관 전 사가: 빌링키 등록→주문→선점→수거→인보이스 발행→
+ * 자동과금 COMPLETED, 수동 `/payments/pay` 없음), 코디는 실 dev-login으로 로그인해 `/orders` 상세에서
+ * **취소(UI)** → 취소됨 표면을 확인한다. ADMIN role 가드(`/admin` 대시보드)도 함께 검증한다.
  *
- * 환불은 비동기(markRefundPending → RefundRetrySweeper → REFUNDED)라 새로고침으로 대기한다.
+ * 결제·물리 흐름 분리(V29) 이후 주문 상태는 물리 사실만 기술한다 — 결제가 끝나도 주문은 수거됨
+ * (PICKED_UP)이고, 취소하면 취소됨(CANCELLED)이다. 환불 완료는 결제(Payment) 소관인데 코디네이터용
+ * 결제 조회 API가 없어 화면에 표면이 없다 → 환불 완료(REFUNDED)는 고객 결제 API로 확인한다.
+ * 환불은 비동기(markRefundPending → RefundRetrySweeper → REFUNDED)라 폴링으로 대기한다.
  * 로컬 기동 시 `CARRY_PAYMENT_REFUND_RETRY_INTERVAL_MS`를 낮춰 가속한다.
  *
  * **전제**: 백엔드 풀스택 기동(BACKEND_URL 기본 8081, local 프로파일=스텁 PG). coordinator 브라우저→
@@ -84,8 +86,8 @@ async function registerBillingKeyApi(customer: APIRequestContext, authKey: strin
   expect(res.status(), await res.text()).toBe(201);
 }
 
-/** 주문→선점→수거→인보이스 발행→자동과금까지 API로 진행해 **PAID 주문**의 id를 돌려준다. */
-async function arrangePaidOrder(): Promise<number> {
+/** 주문→선점→수거→인보이스 발행→자동과금까지 API로 진행해 **결제 완료된 수거 주문**의 id를 돌려준다. */
+async function arrangeChargedPickedUpOrder(): Promise<number> {
   const admin = await authedContext('ADMIN');
   const customer = await authedContext('CUSTOMER');
   const carrier = await authedContext('CARRIER');
@@ -181,10 +183,12 @@ async function arrangePaidOrder(): Promise<number> {
       60_000,
     );
 
-    await poll('주문 PAID', async () => {
+    // 결제는 주문 상태를 바꾸지 않는다 — 주문은 수거됨(PICKED_UP)에 머문다.
+    // PickupCompletedEvent 를 주문·결제가 각자 소비하므로 주문 쪽 반영을 기다린다.
+    await poll('주문 PICKED_UP', async () => {
       const res = await customer.get(`/api/v2/orders/${orderId}`);
       if (!res.ok()) return null;
-      return (await res.json()).data.status === 'PAID' ? true : null;
+      return (await res.json()).data.status === 'PICKED_UP' ? true : null;
     });
 
     return orderId;
@@ -192,20 +196,6 @@ async function arrangePaidOrder(): Promise<number> {
     await admin.dispose();
     await customer.dispose();
     await carrier.dispose();
-  }
-}
-
-/** 상세 페이지를 새로고침하며 "상태" 행이 기대 라벨이 될 때까지 기다린다(환불 사가 비동기). */
-async function reloadUntilStatus(page: Page, label: string, timeoutMs = 60_000): Promise<void> {
-  const start = Date.now();
-  for (;;) {
-    try {
-      await page.getByText(label, { exact: true }).first().waitFor({ state: 'visible', timeout: 5_000 });
-      return;
-    } catch {
-      if (Date.now() - start > timeoutMs) throw new Error(`상태 대기 타임아웃: "${label}" (${timeoutMs}ms)`);
-      await page.reload();
-    }
   }
 }
 
@@ -224,25 +214,43 @@ test.describe('coordinator-web UI', () => {
     await expect(page.getByRole('heading', { name: '운영 대시보드 (ADMIN)' })).toBeVisible();
   });
 
-  test('PAID 주문을 브라우저로 취소하면 환불 보상이 진행돼 환불완료가 된다', async ({ page }) => {
-    const orderId = await arrangePaidOrder();
+  test('자동과금된 수거 주문을 브라우저로 취소하면 취소됨이 되고 환불 보상이 완료된다', async ({ page }) => {
+    // arrange(주문→배차→수거→인보이스→자동과금) + 환불 스위퍼 주기라 기본 30s 로는 부족하다.
+    test.setTimeout(180_000);
+    const orderId = await arrangeChargedPickedUpOrder();
 
     // window.prompt(취소 사유)를 수락한다.
     page.on('dialog', (dialog) => dialog.accept('E2E 환불 보상 검증'));
 
     await loginCoordinatorUI(page, 'COORDINATOR');
 
-    // 주문 운영(기본 PAID 필터)에서 그 주문 상세로 진입한다.
     await page.goto(`/orders/${orderId}`);
     await expect(page.getByRole('heading', { name: `주문 #${orderId}` })).toBeVisible();
-    await expect(page.getByText('결제완료', { exact: true })).toBeVisible();
+    await expect(page.getByText('수거됨', { exact: true })).toBeVisible();
 
-    // 취소(환불 보상) → notice + 환불 보상 사가 시작.
+    // 수거 이후 취소는 환불 보상으로 이어질 수 있어 버튼·안내 문구가 그것을 알린다.
     await page.getByRole('button', { name: /주문 취소 \(환불 보상\)/ }).click();
     await expect(page.getByRole('status')).toContainText('환불 보상');
 
-    // 환불 보상 사가 완료까지 새로고침 대기 → 상태가 환불완료(REFUNDED)가 된다.
-    await reloadUntilStatus(page, '환불완료');
+    // 취소는 주문 트랜잭션 안에서 동기 전이 → 재조회한 상세가 곧바로 취소됨, 취소 버튼은 사라진다.
+    await expect(page.getByText('취소됨', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: /주문 취소/ })).toHaveCount(0);
+
+    // 환불 완료는 결제 소관이고 코디 화면엔 결제 표면이 없다 → 고객 결제 API로 확인한다.
+    const customer = await authedContext('CUSTOMER');
+    try {
+      await poll(
+        '환불 완료(결제 REFUNDED)',
+        async () => {
+          const res = await customer.get(`/api/v2/payments/${orderId}/payment`);
+          if (!res.ok()) return null;
+          return (await res.json()).data.status === 'REFUNDED' ? true : null;
+        },
+        120_000,
+      );
+    } finally {
+      await customer.dispose();
+    }
   });
 
   // 네거티브 — 미인증으로 보호 라우트 진입 시 로그인 화면으로 가드된다(거부=무변경, 비파괴).

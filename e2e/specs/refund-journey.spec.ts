@@ -4,12 +4,15 @@ import { request, type APIRequestContext } from '@playwright/test';
 /**
  * F3 — **환불 보상 사가 관통(3-role: customer → carrier → coordinator)**을 라이브로 실증한다.
  *
- * F2 2-role 여정이 결제 벽(PG 어댑터 미구현)에 막혀 ORDER_NOT_PAID(402) 경계까지였다면,
- * F3는 **스텁 PG 어댑터(#134, local 프로파일)**로 그 벽을 허문다:
+ * **스텁 PG 어댑터(#134, local 프로파일)**로 결제·환불을 실제로 돈다:
  *   customer 빌링키 등록 → 주문 → carrier 선점·수거(→ PickupCompletedEvent → 인보이스 발행) →
  *   자동과금(등록된 빌링키로 즉시 COMPLETED, 수동 `/payments/pay` 없음) → **coordinator 주문 취소** →
- *   환불 보상 사가(markRefundPending → RefundRetrySweeper PG 환불 → RefundCompletedEvent) →
- *   주문 REFUNDED.
+ *   주문 CANCELLED + 환불 보상 사가(OrderCancelledEvent → markRefundPending → RefundRetrySweeper
+ *   PG 환불) → **결제 REFUNDED**.
+ *
+ * 결제·물리 흐름 분리(V29) 이후 **주문 상태는 물리 사실만** 기술한다 — PAID·REFUND_PENDING·REFUNDED
+ * 같은 주문 상태는 없다. 결제가 끝나도 주문은 수거 상태(PICKED_UP)에 머물고, 환불 완료는 결제
+ * (Payment) 쪽에서 관찰한다.
  *
  * 빌링키 재설계(F1~F11) 이후 주문 생성 자체가 등록된 빌링키를 전제하므로, 주문 생성 전에
  * `POST /api/v2/billing-keys`로 빌링키를 먼저 arrange한다(billing-customer-ui.spec.ts와 동일 패턴).
@@ -193,38 +196,39 @@ test.describe('F3 환불 보상 여정 (3-role 라이브 사가)', () => {
       );
       expect(payment.status).toBe('COMPLETED');
 
-      // ── 6. 사가 홉: 결제 완료 → 주문 PAID 대기 ──
-      await poll('주문 PAID', async () => {
+      // ── 6. 결제가 끝나도 주문은 물리 상태(PICKED_UP)에 머문다 — 결제는 주문 상태를 바꾸지 않는다 ──
+      // PickupCompletedEvent 를 주문·결제가 각자 소비하므로 주문 쪽 반영을 기다린다.
+      await poll('주문 PICKED_UP', async () => {
         const res = await customer.get(`/api/v2/orders/${orderId}`);
         if (!res.ok()) return null;
-        return (await res.json()).data.status === 'PAID' ? true : null;
+        return (await res.json()).data.status === 'PICKED_UP' ? true : null;
       });
 
-      // ── 7. COORDINATOR: 주문 취소 → 환불 보상 시작(PAID → REFUND_PENDING) ──
+      // ── 7. COORDINATOR: 주문 취소 → 환불 보상 시작(결제 COMPLETED → REFUND_PENDING) ──
       const cancelRes = await coordinator.post(`/api/v2/coordinator/orders/${orderId}/cancel`, {
         data: { reason: 'E2E 환불 보상 검증' },
       });
       expect(cancelRes.status(), await cancelRes.text()).toBe(204);
 
-      // ── 8. 환불 보상 사가 완료 대기 → REFUNDED ──
-      // markRefundPending → RefundRetrySweeper가 스텁 PG 환불 성공 → RefundCompletedEvent →
-      // 주문 사가 markRefunded. 코디 단건 조회(A2)로 소유자 검증 없이 상태를 본다.
-      const finalStatus = await poll(
-        '환불 완료(REFUNDED)',
+      // ── 8. 주문은 즉시 CANCELLED(취소는 주문 트랜잭션 안에서 전이) ──
+      // 코디 단건 조회(A2)로 소유자 검증 없이 상태를 본다.
+      const orderRes2 = await coordinator.get(`/api/v2/coordinator/orders/${orderId}`);
+      expect(orderRes2.ok(), await orderRes2.text()).toBeTruthy();
+      expect((await orderRes2.json()).data.status).toBe('CANCELLED');
+
+      // ── 9. 환불 보상 사가 완료 대기 → 결제 REFUNDED ──
+      // OrderCancelledEvent → markRefundPending → RefundRetrySweeper 가 스텁 PG 환불 성공 → REFUNDED.
+      const refunded = await poll(
+        '환불 완료(결제 REFUNDED)',
         async () => {
-          const res = await coordinator.get(`/api/v2/coordinator/orders/${orderId}`);
+          const res = await customer.get(`/api/v2/payments/${orderId}/payment`);
           if (!res.ok()) return null;
-          const status = (await res.json()).data.status as string;
-          return status === 'REFUNDED' ? status : null;
+          const data = (await res.json()).data as { status: string };
+          return data.status === 'REFUNDED' ? data : null;
         },
         120_000,
       );
-      expect(finalStatus).toBe('REFUNDED');
-
-      // ── 9. 결제도 환불 완료 상태인지 확인 ──
-      const paymentRes = await customer.get(`/api/v2/payments/${orderId}/payment`);
-      expect(paymentRes.ok()).toBeTruthy();
-      expect((await paymentRes.json()).data.status).toBe('REFUNDED');
+      expect(refunded.status).toBe('REFUNDED');
     } finally {
       await admin.dispose();
       await customer.dispose();

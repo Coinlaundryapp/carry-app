@@ -12,6 +12,9 @@ import { request, type APIRequestContext } from '@playwright/test';
  * 결제 승인(Toss PG)은 라이브 불가라 건너뛴다. 배송지 좌표는 직접 주입(geocode 우회),
  * 세탁소는 ADMIN으로 등록(findNearby PostGIS 우회), 결제는 청구서 단계까지 두지 않는다.
  *
+ * 빌링키 재설계 이후 주문 생성은 **활성 빌링키**를 전제한다(없으면 409 BILLING_KEY_REQUIRED).
+ * 다른 스펙이 같은 dev 고객에 남긴 빌링키에 기대지 않도록 이 여정이 직접 등록한다(재등록=교체).
+ *
  * **전제**: 백엔드 풀스택이 BACKEND_URL(기본 8081)에 기동. 미기동이면 dev-login에서 실패한다.
  */
 
@@ -83,6 +86,13 @@ test.describe('F1 핵심 여정 (라이브 v2)', () => {
 
       const setDefault = await customer.put(`/api/v2/shipping-addresses/${addressId}/default`);
       expect(setDefault.ok()).toBeTruthy();
+
+      // ── 3-1. 빌링키 등록 — 주문 생성의 전제(목 PG는 authKey를 그대로 수용) ──
+      const billingKeyRes = await customer.post('/api/v2/billing-keys', {
+        headers: { 'Idempotency-Key': `e2e-f1-bk-${laundromatId}` },
+        data: { authKey: `e2e-f1-billing-${laundromatId}` },
+      });
+      expect(billingKeyRes.status(), await billingKeyRes.text()).toBe(201);
 
       // ── 4. 주문 생성 (M-6) — selectedOptions 평탄화 + Idempotency-Key ──
       const createOrder = await customer.post('/api/v2/orders', {

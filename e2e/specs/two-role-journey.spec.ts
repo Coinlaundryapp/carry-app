@@ -7,9 +7,14 @@ import { request, type APIRequestContext } from '@playwright/test';
  * customer가 주문하면 OrderCreatedEvent → carry-dispatch가 PENDING 배차 생성. carrier가
  * 권역을 등록하고 그 배차를 선점하면(self-claim은 PENDING→ACCEPTED 직행) DispatchAcceptedEvent
  * → carry-delivery가 Delivery를 생성(PICKUP_PENDING). carrier가 상태기계(수거→세탁→건조)를
- * 관통해 LAUNDRY_COMPLETE에 도달한다. 두 비동기 핸드오프(주문→배차, 선점→배달)는 Kafka 경유라
- * polling으로 대기한다. 최종 배달(→DELIVERED)은 주문 PAID를 요구하는데 결제 사가(PG 어댑터)가
- * 보류 상태라, 그 경계를 ORDER_NOT_PAID(402)로 명시 단언한다.
+ * 관통하고(수거→세탁→건조→배달 출발→배달 완료), 배달 완료(DeliveryCompletedEvent)로 주문이
+ * COMPLETED가 된다. 비동기 핸드오프(주문→배차, 선점→배달, 배달 완료→주문)는 Kafka 경유라
+ * polling으로 대기한다.
+ *
+ * 빌링키 재설계 이후 **결제는 물리 흐름의 게이트가 아니다** — 과거 이 여정은 배달 완료에서
+ * ORDER_NOT_PAID(402)를 단언했지만 그 게이트는 제거됐다. 그 402가 상태 검사보다 먼저 응답하던
+ * 동안 `LAUNDRY_COMPLETE → DELIVERY_PENDING`(배달 출발) REST 경로가 없다는 사실이 가려져 있었다
+ * (carry-platform #206). 대신 주문 생성이 활성 빌링키를 전제하므로 직접 등록해 arrange한다.
  *
  * carrier-web의 feature API가 치는 바로 그 v2 엔드포인트들을 dev-login 토큰으로 호출한다 —
  * 단위 테스트(msw)가 고정한 계약이 실 백엔드·사가와 일치함을 증명한다.
@@ -61,7 +66,7 @@ test.describe('F2 2-role 여정 (라이브 사가)', () => {
   // 사가 2홉(각 polling) + 미디어 업로드 + 4단계 전이라 기본 타임아웃을 늘린다.
   test.setTimeout(180_000);
 
-  test('customer 주문 → carrier 선점·세탁 완료 (배달 완료는 결제 의존)', async () => {
+  test('customer 주문 → carrier 선점·세탁·배달 완료 → 주문 완료', async () => {
     const admin = await authedContext('ADMIN');
     const customer = await authedContext('CUSTOMER');
     const carrier = await authedContext('CARRIER');
@@ -103,6 +108,13 @@ test.describe('F2 2-role 여정 (라이브 사가)', () => {
       });
       expect(addrRes.status(), await addrRes.text()).toBe(201);
       const addressId = (await addrRes.json()).data.id as number;
+
+      // 주문 생성은 활성 빌링키를 전제한다(없으면 409 BILLING_KEY_REQUIRED). 재등록=교체.
+      const billingKeyRes = await customer.post('/api/v2/billing-keys', {
+        headers: { 'Idempotency-Key': `e2e2r-bk-${laundromatId}` },
+        data: { authKey: `e2e2r-billing-${laundromatId}` },
+      });
+      expect(billingKeyRes.status(), await billingKeyRes.text()).toBe(201);
 
       const orderRes = await customer.post('/api/v2/orders', {
         headers: { 'Idempotency-Key': `e2e2r-${addressId}-${laundromatId}-${Date.now()}` },
@@ -182,23 +194,30 @@ test.describe('F2 2-role 여정 (라이브 사가)', () => {
       expect(dryingRes.status(), await dryingRes.text()).toBe(200);
       expect((await dryingRes.json()).data.status).toBe('LAUNDRY_COMPLETE');
 
-      // ── 7. 최종 배달(→DELIVERED)은 주문 PAID를 요구한다 ──
-      // 결제 사가는 보류 상태다(PgProvider TOSS_PAYMENTS 어댑터 미구현 → 주문이 PAID에 도달
-      // 불가, F1서 Toss PG로 보류한 그 결제). 따라서 이 결제 경계를 ORDER_NOT_PAID(402)로
-      // **명시 단언**한다 — 2-role(customer↔carrier) 사가 핸드오프와 배달 상태기계(수거→세탁→
-      // 건조)는 여기까지 완전히 관통됨이 증명된다. PG 어댑터 배선 시 DELIVERED까지 확장한다.
+      // ── 7. 배달 출발(→DELIVERY_PENDING) — 본문 없음. 배달 완료의 선행 단계 ──
+      const startRes = await carrier.post(`/api/v2/deliveries/${deliveryId}/start-delivery`);
+      expect(startRes.status(), await startRes.text()).toBe(200);
+      expect((await startRes.json()).data.status).toBe('DELIVERY_PENDING');
+
+      // ── 8. 배달 완료(→DELIVERED) — 결제와 무관하게 진행된다 ──
       const deliveryRes = await carrier.post(`/api/v2/deliveries/${deliveryId}/delivery`, {
         data: { photoIds: [await uploadPhoto(carrier, 'delivery.jpg')] },
       });
-      expect(deliveryRes.status(), await deliveryRes.text()).toBe(402);
-      expect((await deliveryRes.json()).code).toBe('ORDER_NOT_PAID');
+      expect(deliveryRes.status(), await deliveryRes.text()).toBe(200);
+      expect((await deliveryRes.json()).data.status).toBe('DELIVERED');
 
-      // ── 8. 최종 단언: 배달은 LAUNDRY_COMPLETE에 머물고 수거 무게가 기록돼 있다 ──
       const finalRes = await carrier.get(`/api/v2/deliveries/${deliveryId}`);
       expect(finalRes.ok()).toBeTruthy();
       const final = (await finalRes.json()).data;
-      expect(final.status).toBe('LAUNDRY_COMPLETE');
+      expect(final.status).toBe('DELIVERED');
       expect(Number(final.actualWeight)).toBe(3.5);
+
+      // ── 9. 사가 홉: DeliveryCompletedEvent → 주문 COMPLETED ──
+      await poll('주문 COMPLETED', async () => {
+        const res = await customer.get(`/api/v2/orders/${orderId}`);
+        if (!res.ok()) return null;
+        return (await res.json()).data.status === 'COMPLETED' ? true : null;
+      });
     } finally {
       await admin.dispose();
       await customer.dispose();

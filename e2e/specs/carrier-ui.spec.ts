@@ -72,6 +72,14 @@ async function arrangeOrder(): Promise<number> {
     const laundromatId = (await laundromatRes.json()).data.id as number;
     const addressId = await ensureAddress(customer);
 
+    // 주문 생성은 활성 빌링키를 전제한다(없으면 409 BILLING_KEY_REQUIRED). 다른 스펙이 남긴 키에
+    // 기대지 않도록 직접 등록한다(재등록=교체, 목 PG는 authKey를 그대로 수용).
+    const billingKeyRes = await customer.post('/api/v2/billing-keys', {
+      headers: { 'Idempotency-Key': `e2e-carrier-bk-${laundromatId}` },
+      data: { authKey: `e2e-carrier-billing-${laundromatId}` },
+    });
+    expect(billingKeyRes.status(), await billingKeyRes.text()).toBe(201);
+
     const orderRes = await customer.post('/api/v2/orders', {
       headers: { 'Idempotency-Key': `e2e-carrier-${addressId}-${laundromatId}-${Date.now()}` },
       data: {

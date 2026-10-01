@@ -6,6 +6,7 @@ import {
   completeDrying,
   completePickup,
   getMyDeliveries,
+  startDelivery,
   startWashing,
 } from './deliveryApi';
 
@@ -85,5 +86,17 @@ describe('deliveryApi', () => {
     expect(washingBody).toEqual({ photoIds: [1] });
     expect((await completeDrying(1, [2])).status).toBe('LAUNDRY_COMPLETE');
     expect((await completeDelivery(1, [3])).status).toBe('DELIVERED');
+  });
+
+  it('startDelivery는 본문 없이 배달 출발을 호출해 DELIVERY_PENDING을 반환한다', async () => {
+    let rawBody: string | undefined;
+    server.use(
+      http.post('*/api/v2/deliveries/1/start-delivery', async ({ request }) => {
+        rawBody = await request.text();
+        return ok(delivery({ status: 'DELIVERY_PENDING' }));
+      }),
+    );
+    expect((await startDelivery(1)).status).toBe('DELIVERY_PENDING');
+    expect(rawBody).toBe('');
   });
 });

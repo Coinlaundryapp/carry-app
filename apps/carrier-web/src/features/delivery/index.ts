@@ -4,6 +4,7 @@ export {
   completePickup,
   startWashing,
   completeDrying,
+  startDelivery,
   completeDelivery,
   type Delivery,
   type PickupInput,

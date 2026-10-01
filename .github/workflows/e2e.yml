@@ -34,6 +34,11 @@ jobs:
     steps:
       - name: Checkout carry-app (frontend·e2e)
         uses: actions/checkout@v4
+        with:
+          # 야간(schedule) 실행은 기본 브랜치(main)의 워크플로 파일로 돌지만 검증 대상은 통합 브랜치
+          # develop 이다. 백엔드도 develop 을 받으므로 양쪽을 맞춘다 — main 을 받으면 승격 전 develop 의
+          # 계약 변화와 어긋나 거짓 실패가 난다. PR·수동 실행은 기본값(그 이벤트의 ref)을 쓴다.
+          ref: ${{ github.event_name == 'schedule' && 'develop' || '' }}
 
       - name: Checkout carry-platform (backend)
         uses: actions/checkout@v4
@@ -76,7 +81,7 @@ jobs:
           nohup ./gradlew :carry-app:bootRun > "$GITHUB_WORKSPACE/backend.log" 2>&1 &
           echo "backend pid $!"
 
-      - name: Wait for backend health (스키마 ddl-auto 생성 포함)
+      - name: Wait for backend health (Flyway 스키마 마이그레이션 포함)
         run: |
           for i in $(seq 1 120); do
             if curl -sf http://localhost:8081/actuator/health 2>/dev/null | grep -q '"status":"UP"'; then
@@ -87,12 +92,12 @@ jobs:
           echo "backend not healthy"; tail -120 "$GITHUB_WORKSPACE/backend.log"; exit 1
 
       - name: Seed (service_areas·schedules·price policies)
-        # local 프로파일은 ddl-auto:update로 스키마를 만든다 → 백엔드 기동(스키마 생성) 후 주입한다.
+        # 스키마는 백엔드 기동 시 Flyway가 만든다(local 도 ddl-auto:validate) → 기동 후 주입한다.
         run: docker exec -i carry-postgres psql -U carry -d carry < backend/carry-loadtest/src/gatling/resources/seed.sql
 
       - name: Register Debezium outbox connector
         # connector json은 로컬(Docker Desktop)용 host.docker.internal을 쓴다 → CI(compose 네트워크)에선
-        # 컨테이너명 carry-postgres로 치환한다. outbox_events 테이블은 백엔드 ddl-auto가 만든 뒤라야 한다.
+        # 컨테이너명 carry-postgres로 치환한다. outbox_events 테이블은 백엔드 Flyway가 만든 뒤라야 한다.
         run: |
           sed 's/host\.docker\.internal/carry-postgres/g' backend/infra/debezium/register-connector.json > /tmp/connector.json
           for i in $(seq 1 60); do

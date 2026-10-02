@@ -74,7 +74,10 @@ jobs:
         env:
           SPRING_PROFILES_ACTIVE: local
           SERVER_PORT: '8081'
-          MANAGEMENT_TRACING_ENABLED: 'false'
+          # Spring Boot 4 에서 management.tracing.enabled 는 지원 종료(무시됨) — 내보내기를 끄는 키는
+          # management.tracing.export.enabled 다. 켜져 있으면 OTLP exporter 가 없는 수집기(4318)로 계속
+          # 내보내려다 요청을 늦춘다(로컬 실측: E2E 1.5분 → 4.0분, "Failed to export spans" 46회).
+          MANAGEMENT_TRACING_EXPORT_ENABLED: 'false'
           # 환불 보상 스위퍼를 가속해 refund 여정이 합리적 시간에 REFUNDED에 도달하게 한다.
           CARRY_PAYMENT_REFUND_RETRY_INTERVAL_MS: '5000'
         run: |

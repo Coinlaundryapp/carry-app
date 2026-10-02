@@ -8,7 +8,7 @@
    ```bash
    # carry-platform 에서
    docker compose up -d postgres redis kafka-1 kafka-2 kafka-3
-   SPRING_PROFILES_ACTIVE=local SERVER_PORT=8081 MANAGEMENT_TRACING_ENABLED=false ./gradlew :carry-app:bootRun
+   SPRING_PROFILES_ACTIVE=local SERVER_PORT=8081 MANAGEMENT_TRACING_EXPORT_ENABLED=false ./gradlew :carry-app:bootRun
    ```
    dev-login(#128)으로 Kakao 없이 역할별 토큰을 발급한다.
 
